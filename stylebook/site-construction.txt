@@ -1,0 +1,86 @@
+
+The XALAN svnsubpub repository:
+
+   http://svn.apache.org/repos/asf/xalan/site/docs/xalan
+
+The XALAN svnsubpub directory tree
+
+   xalan/              -- The Xalan Top-Level Web Pages
+      resources/       css and logo graphics for TLP
+      xalan-c/	       -- The Xalan-C Project Web Pages
+        resources/
+        apiDocs/       doxygen/graphviz constructed api docs
+      xalan-j/         -- The Xalan-J Project Web Pages
+        resources/
+        design/
+          resources/
+        xsltc/
+          resources/
+        apiDocs/       javadoc constructed api docs
+
+The XALAN web page maintenance tree
+
+   http://svn.apache.org/repos/asf/xalan/site/stylebook
+
+      This directory contains the standard stylebook tools
+      that are used to construct the XALAN family of web pages.
+
+   http://svn.apache.org/repos/asf/xalan/site/xdocs
+
+      xdocs/
+        style/
+          dtd/                    -- DTD validation + Entities
+            blocks.ent
+            book.dtd
+            changes.dtd
+            characters.ent
+            document.dtd
+            faqs.dtd
+            links.ent
+            markup.ent
+
+        sources/
+          entities.ent            -- document dependent entities
+          make-book-org.bat       -- main web page constructor
+          make-xalan-org.bat      -- section constructor
+          stylebook.xslt          -- the stylebook transformation
+          xalan-apache-org-site.xml    -- the <book> navigation xml
+
+          xalan-apache-org/       -- the chapter stylebook sources
+          xslt-resources/         -- the css and graphic logos
+
+   Working Directories, NOT SAVED IN SUBVERSION (../bin)(../build/docs)
+
+   http://svn.apache.org/repos/asf/xalan/site/bin/
+
+       -- Contains the xalan.exe program and DLLs
+
+   http://svn.apache.org/repos/asf/xalan/site/build/docs/
+
+       -- Contains the target for web page builds
+
+       build/docs/xalan/          -- The Xalan TLP Web Pages
+       build/docs/xalan/xalan-c/  -- The Xalan-C Project Web Pages
+       build/docs/xalan/xalan-j/  -- The Xalan-J Project Web Pages
+
+NOTE:  The (../build/docs/xalan) can be checked into the repository
+if you wish the pages to be reviewed by others before committing
+them to the actual svnsubpub area for the Xalan projects.
+
+NOTE:  The constructed apiDocs content can be quite large and 
+should not be placed in the (../build/docs/xalan) tree.  Other
+means to review the apiDocs is available (i.e. from a committer's
+web page).
+
+
+PUBLISHING
+
+   After new content in the (../build/docs/) path has been reviewed,
+the files can be moved to the svnsubpub area and checked in.
+
+   https://svn.apache.org/repos/asf/xalan/site/docs/xalan
+
+Apache infrastructure will capture the svn checkin and update the
+network of web servers with the new project content.
+
+

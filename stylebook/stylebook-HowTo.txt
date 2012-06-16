@@ -1,0 +1,78 @@
+
+STYLEBOOK  DOCUMENT  MARKUP
+
+The Apache Stylebook is a basic XML markup format from which documentation
+web pages can be created.
+
+The original stylebook processor was a java program and implemented the
+functionality of a specialized URL type.  The old URL prefix has been
+replaced by a relative path by which to locate the validating doctype
+definitions.
+
+Web pages are now created using a "stylebook.xslt" stylesheet and a
+standards compliant XSLT command line processor. The "xalan.exe" program
+is called by Windows command (.BAT) files to create the web pages.
+
+The "xalan" executable on Linux or Unix systems can also be used with
+shell scripts.
+
+The current set of web pages are constructed on Windows platforms.
+
+The "stylbook.xslt" transformation remains faithful to the test examples
+that are part of the Java stylebook program.
+
+The constructed web pages are rendered using the "apache-xalan.css"
+cascading stylesheet for modern web browsers.
+
+Care has been taken to make the web pages highly scalable to accommodate
+both high-resolution desktops and low-resolution display tablets.  Tests
+have also shown that pages are useful with browsers do not use cascading
+stylesheets.
+
+New features can be added to the "stylebook.xml" when needed.
+
+Display rendering is controlled by the "apache-xalan.css" cascading
+stylesheet.  New display renderings can be placed here.
+
+The web pages are generated as strict XHTML, but care has been taken to
+insert some non-breaking whitespace for specific elements when needed so 
+that they do not collapse. Token collapsing causes many HTML browsers to
+misbehave.
+
+Tables are implemented with scalable column widths to accommodate a wide
+variety of display resolutions.
+
+-------------------------------------------------------------
+
+The left-panel navigation is handled by an XML document containing
+the <book/> document element.
+
+Most of the XML documents define book sections.  There is a special
+section format for frequently asked questions.
+
+  +-------------------------------------------------------------------+
+  +  LOGO-GRAPHIC  |               PROJECT-TITLE                      | Div = "title"
+  +  <graph-Link>  |           Project Subtitle Line                  |
+  +-------------------------------------------------------------------|
+  |            [Link 1][Link 2][Link 3][Link 4][Link 5]               |
+  +===================================================================+
+  |  Div =     |                                                      |
+  | "navLeft"  |           Div = "content"                            |
+  |            |                                                      |
+  | Contents   |   The section heads have ending links to [top]       |
+  | from       |                                                      |
+  | <book>     |                                                      |
+  | element    |                                                      |
+  |            |                                                      |
+  +===================================================================+
+  |     Div = "footer"   Contains copyright information               |
+  +-------------------------------------------------------------------+
+
+
+  The book XML references the book.dtd which also brings in the entities.ent
+  file for document specific general entity definitions.
+
+
+
+
+
