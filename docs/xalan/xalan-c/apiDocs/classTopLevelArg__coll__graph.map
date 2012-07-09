@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classXObjectPtr.html" title="Class to hold XObjectPtr return types." alt="" coords="380,419,471,448"/>
+<area shape="rect" id="node4" href="$classXObject.html" title="Class to hold XPath return types." alt="" coords="315,320,387,349"/>
+<area shape="rect" id="node6" href="$classXalanReferenceCountedObject.html" title="Class to hold reference count information." alt="" coords="5,101,224,131"/>
+<area shape="rect" id="node8" href="$classXObjectFactory.html" title="This class handles the creation of XObjects and manages their lifetime." alt="" coords="248,101,365,131"/>
+<area shape="rect" id="node10" href="$classXalanDOMString.html" title="XalanDOMString" alt="" coords="591,101,719,131"/>
+<area shape="rect" id="node14" href="$classXalanQNameByValue.html" title="XalanQNameByValue" alt="" coords="637,419,795,448"/>
+<area shape="rect" id="node16" href="$classXalanQName.html" title="Class to represent a qualified name." alt="" coords="829,320,936,349"/>
+<area shape="rect" id="node12" href="$classXalanVector.html" title="XalanVector\&lt; XalanDOMChar \&gt;" alt="" coords="541,5,768,35"/>
+</map>

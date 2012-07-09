@@ -1,0 +1,36 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classXalanCDATASection.html" title="XalanCDATASection" alt="" coords="2193,5,2343,35"/>
+<area shape="rect" id="node4" href="$classXalanText.html" title="XalanText" alt="" coords="1705,5,1791,35"/>
+<area shape="rect" id="node6" href="$classXalanCharacterData.html" title="XalanCharacterData" alt="" coords="1013,24,1165,53"/>
+<area shape="rect" id="node8" href="$classXalanNode.html" title="XalanNode" alt="" coords="465,163,559,192"/>
+<area shape="rect" id="node10" href="$classXercesWrapperNavigator.html" title="XercesWrapperNavigator" alt="" coords="999,291,1180,320"/>
+<area shape="rect" id="node14" href="$classXalanDocument.html" title="XalanDocument" alt="" coords="1401,65,1527,95"/>
+<area shape="rect" id="node35" href="$classXalanElement.html" title="XalanElement" alt="" coords="1961,163,2073,192"/>
+<area shape="rect" id="node55" href="$classXalanDocumentType.html" title="XalanDocumentType" alt="" coords="1387,472,1541,501"/>
+<area shape="rect" id="node12" href="$classXercesDocumentWrapper.html" title="XercesDocumentWrapper" alt="" coords="2631,540,2817,569"/>
+<area shape="rect" id="node30" href="$classXercesNodeListWrapper.html" title="XercesNodeListWrapper" alt="" coords="1660,496,1836,525"/>
+<area shape="rect" id="node53" href="$classXercesDocumentTypeWrapper.html" title="XercesDocumentTypeWrapper" alt="" coords="2160,409,2376,439"/>
+<area shape="rect" id="node58" href="$classXercesNamedNodeMapWrapper.html" title="XercesNamedNodeMapWrapper" alt="" coords="1635,392,1861,421"/>
+<area shape="rect" id="node17" href="$classXercesWrapperToXalanNodeMap.html" title="XercesWrapperToXalanNodeMap" alt="" coords="2152,593,2384,623"/>
+<area shape="rect" id="node19" href="$classXalanMap.html" title="XalanMap\&lt; const DOMNodeType *, XalanNode * \&gt;" alt="" coords="1573,615,1923,644"/>
+<area shape="rect" id="node21" href="$classXalanVector.html" title="XalanVector\&lt; BucketType, ConstructWithMemoryManagerTraits\&lt; BucketType \&gt; \&gt;" alt="" coords="817,560,1361,589"/>
+<area shape="rect" id="node23" href="$structXalanMapKeyTraits.html" title="XalanMapKeyTraits\&lt; const DOMNodeType * \&gt;" alt="" coords="931,691,1248,720"/>
+<area shape="rect" id="node25" href="$classXalanList.html" title="XalanList\&lt; Entry \&gt;" alt="" coords="1017,631,1161,660"/>
+<area shape="rect" id="node27" href="$structXalanList_1_1Node.html" title="XalanList\&lt; Type \&gt;::Node" alt="" coords="421,689,603,719"/>
+<area shape="rect" id="node50" href="$classXalanList.html" title="XalanList\&lt; ArenaBlock\&lt; ObjectType \&gt; * \&gt;" alt="" coords="943,744,1236,773"/>
+<area shape="rect" id="node32" href="$classXalanNodeList.html" title="XalanNodeList" alt="" coords="1032,507,1147,536"/>
+<area shape="rect" id="node38" href="$classXercesElementWrapperAllocator.html" title="XercesElementWrapperAllocator" alt="" coords="2153,860,2383,889"/>
+<area shape="rect" id="node40" href="$classArenaAllocator.html" title="ArenaAllocator\&lt; ObjectType \&gt;" alt="" coords="1640,772,1856,801"/>
+<area shape="rect" id="node69" href="$classXercesAttrWrapperAllocator.html" title="XercesAttrWrapperAllocator" alt="" coords="2168,647,2368,676"/>
+<area shape="rect" id="node72" href="$classXercesTextWrapperAllocator.html" title="XercesTextWrapperAllocator" alt="" coords="2167,700,2369,729"/>
+<area shape="rect" id="node75" href="$classXercesWrapperNavigatorAllocator.html" title="XercesWrapperNavigatorAllocator" alt="" coords="2149,807,2387,836"/>
+<area shape="rect" id="node42" href="$classArenaBlock.html" title="ArenaBlock\&lt; ObjectType \&gt;" alt="" coords="992,797,1187,827"/>
+<area shape="rect" id="node44" href="$classArenaBlockBase.html" title="ArenaBlockBase\&lt; ObjectType, size_t \&gt;" alt="" coords="377,797,647,827"/>
+<area shape="rect" id="node48" href="$classXalanAllocator.html" title="XalanAllocator\&lt; ObjectType \&gt;" alt="" coords="13,824,227,853"/>
+<area shape="rect" id="node60" href="$classXalanNamedNodeMap.html" title="XalanNamedNodeMap" alt="" coords="1007,403,1172,432"/>
+<area shape="rect" id="node65" href="$classXalanMemMgrAutoPtr.html" title="XalanMemMgrAutoPtr\&lt; XalanDOMStringPool \&gt;" alt="" coords="2105,540,2431,569"/>
+<area shape="rect" id="node67" href="$classXalanMemMgrAutoPtr_1_1MemMgrAutoPtrData.html" title="XalanMemMgrAutoPtr\&lt; Type \&gt;::MemMgrAutoPtrData" alt="" coords="1565,549,1931,579"/>
+<area shape="rect" id="node78" href="$classXalanVector.html" title="XalanVector\&lt; XalanNode * \&gt;" alt="" coords="2163,753,2373,783"/>
+<area shape="rect" id="node81" href="$classXalanDOMString.html" title="XalanDOMString" alt="" coords="448,492,576,521"/>
+<area shape="rect" id="node83" href="$classXalanVector.html" title="XalanVector\&lt; XalanDOMChar \&gt;" alt="" coords="7,492,233,521"/>
+</map>

@@ -1,0 +1,16 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$XalanSourceTreeDefinitions_8hpp.html" title="xalanc/XalanSourceTree/XalanSourceTreeDefinitions.hpp" alt="" coords="5,160,389,189"/>
+<area shape="rect" id="node13" href="$XalanSourceTreeAttr_8hpp.html" title="xalanc/XalanSourceTree/XalanSourceTreeAttr.hpp" alt="" coords="327,83,665,112"/>
+<area shape="rect" id="node5" href="$PlatformDefinitions_8hpp.html" title="xalanc/Include/PlatformDefinitions.hpp" alt="" coords="688,547,952,576"/>
+<area shape="rect" id="node11" href="$XalanVersion_8hpp.html" title="XalanVersion.hpp" alt="" coords="953,624,1087,653"/>
+<area shape="rect" id="node16" href="$XalanAttr_8hpp.html" title="xalanc/XalanDOM/XalanAttr.hpp" alt="" coords="413,160,640,189"/>
+<area shape="rect" id="node24" href="$XalanDOMString_8hpp.html" title="xalanc/XalanDOM/XalanDOMString.hpp" alt="" coords="807,160,1079,189"/>
+<area shape="rect" id="node18" href="$XalanDOMDefinitions_8hpp.html" title="xalanc/XalanDOM/XalanDOMDefinitions.hpp" alt="" coords="556,315,857,344"/>
+<area shape="rect" id="node21" href="$XalanNode_8hpp.html" title="xalanc/XalanDOM/XalanNode.hpp" alt="" coords="247,237,484,267"/>
+<area shape="rect" id="node29" href="$STLHelper_8hpp.html" title="xalanc/Include/STLHelper.hpp" alt="" coords="980,237,1188,267"/>
+<area shape="rect" id="node45" href="$XalanVector_8hpp.html" title="xalanc/Include/XalanVector.hpp" alt="" coords="1489,392,1711,421"/>
+<area shape="rect" id="node57" href="$XalanMemoryManagement_8hpp.html" title="xalanc/Include/XalanMemoryManagement.hpp" alt="" coords="1009,469,1327,499"/>
+<area shape="rect" id="node77" href="$XalanDOMException_8hpp.html" title="xalanc/XalanDOM/XalanDOMException.hpp" alt="" coords="559,237,855,267"/>
+<area shape="rect" id="node36" href="$XalanMap_8hpp.html" title="xalanc/Include/XalanMap.hpp" alt="" coords="1197,315,1405,344"/>
+<area shape="rect" id="node65" href="$XalanList_8hpp.html" title="xalanc/Include/XalanList.hpp" alt="" coords="1263,392,1465,421"/>
+</map>

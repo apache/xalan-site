@@ -1,0 +1,25 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$FormatterToDeprecatedXercesDOM_8hpp.html" title="FormatterToDeprecatedXercesDOM.hpp" alt="" coords="113,83,391,112"/>
+<area shape="rect" id="node5" href="$XercesAttrBridge_8hpp.html" title="XercesAttrBridge.hpp" alt="" coords="632,160,792,189"/>
+<area shape="rect" id="node11" href="$XercesBridgeHelper_8hpp.html" title="XercesBridgeHelper.hpp" alt="" coords="1659,160,1835,189"/>
+<area shape="rect" id="node13" href="$XercesBridgeNavigator_8hpp.html" title="XercesBridgeNavigator.hpp" alt="" coords="1517,83,1715,112"/>
+<area shape="rect" id="node17" href="$XercesCDATASectionBridge_8hpp.html" title="XercesCDATASectionBridge.hpp" alt="" coords="1840,83,2067,112"/>
+<area shape="rect" id="node19" href="$XercesCommentBridge_8hpp.html" title="XercesCommentBridge.hpp" alt="" coords="2091,83,2291,112"/>
+<area shape="rect" id="node21" href="$XercesDocumentTypeBridge_8hpp.html" title="XercesDocumentTypeBridge.hpp" alt="" coords="2315,83,2547,112"/>
+<area shape="rect" id="node23" href="$XercesDOM__NodeHack_8hpp.html" title="XercesDOM_NodeHack.hpp" alt="" coords="415,83,612,112"/>
+<area shape="rect" id="node38" href="$XercesDOMImplementationBridge_8hpp.html" title="XercesDOMImplementationBridge.hpp" alt="" coords="2571,83,2837,112"/>
+<area shape="rect" id="node40" href="$XercesEntityReferenceBridge_8hpp.html" title="XercesEntityReferenceBridge.hpp" alt="" coords="1349,160,1584,189"/>
+<area shape="rect" id="node42" href="$XercesNodeListBridge_8hpp.html" title="XercesNodeListBridge.hpp" alt="" coords="928,83,1120,112"/>
+<area shape="rect" id="node52" href="$XercesNotationBridge_8hpp.html" title="XercesNotationBridge.hpp" alt="" coords="2861,83,3051,112"/>
+<area shape="rect" id="node54" href="$XercesProcessingInstructionBridge_8hpp.html" title="XercesProcessingInstructionBridge.hpp" alt="" coords="3075,83,3347,112"/>
+<area shape="rect" id="node56" href="$XercesTreeWalker_8hpp.html" title="XercesTreeWalker.hpp" alt="" coords="1724,237,1887,267"/>
+<area shape="rect" id="node7" href="$XercesAttributeBridgeAllocator_8hpp.html" title="XercesAttributeBridgeAllocator.hpp" alt="" coords="741,237,987,267"/>
+<area shape="rect" id="node9" href="$XercesDocumentBridge_8hpp.html" title="XercesDocumentBridge.hpp" alt="" coords="763,315,965,344"/>
+<area shape="rect" id="node25" href="$XercesElementBridge_8hpp.html" title="XercesElementBridge.hpp" alt="" coords="419,160,608,189"/>
+<area shape="rect" id="node30" href="$XercesTextBridge_8hpp.html" title="XercesTextBridge.hpp" alt="" coords="89,160,252,189"/>
+<area shape="rect" id="node35" href="$XercesToXalanNodeMap_8hpp.html" title="XercesToXalanNodeMap.hpp" alt="" coords="245,237,451,267"/>
+<area shape="rect" id="node27" href="$XercesElementBridgeAllocator_8hpp.html" title="XercesElementBridgeAllocator.hpp" alt="" coords="475,237,717,267"/>
+<area shape="rect" id="node32" href="$XercesTextBridgeAllocator_8hpp.html" title="XercesTextBridgeAllocator.hpp" alt="" coords="5,237,221,267"/>
+<area shape="rect" id="node46" href="$XercesDocumentFragmentBridge_8hpp.html" title="XercesDocumentFragmentBridge.hpp" alt="" coords="1061,160,1325,189"/>
+<area shape="rect" id="node49" href="$XercesEntityBridge_8hpp.html" title="XercesEntityBridge.hpp" alt="" coords="816,160,987,189"/>
+</map>

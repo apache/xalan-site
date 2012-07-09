@@ -1,0 +1,35 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classXPathExecutionContext.html" title="XPathExecutionContext" alt="" coords="3949,55,4123,84"/>
+<area shape="rect" id="node4" href="$classExecutionContext.html" title="ExecutionContext" alt="" coords="2943,59,3076,88"/>
+<area shape="rect" id="node6" href="$classProblemListenerBase.html" title="This is the abstract class that is used when reporting a problem some kind, that requires a message..." alt="" coords="2369,89,2527,119"/>
+<area shape="rect" id="node46" href="$classXPathEnvSupport.html" title="XPathEnvSupport" alt="" coords="3241,111,3375,140"/>
+<area shape="rect" id="node8" href="$classXObjectFactory.html" title="This class handles the creation of XObjects and manages their lifetime." alt="" coords="2951,5,3068,35"/>
+<area shape="rect" id="node10" href="$classXalanDOMStringCache.html" title="XalanDOMStringCache" alt="" coords="3952,173,4120,203"/>
+<area shape="rect" id="node12" href="$classXalanDOMStringReusableAllocator.html" title="XalanDOMStringReusableAllocator" alt="" coords="2888,163,3131,192"/>
+<area shape="rect" id="node14" href="$classReusableArenaAllocator.html" title="ReusableArenaAllocator\&lt; data_type \&gt;" alt="" coords="2315,163,2581,192"/>
+<area shape="rect" id="node16" href="$classArenaAllocator.html" title="ArenaAllocator\&lt; data_type, ReusableArenaBlock\&lt; data_type \&gt; \&gt;" alt="" coords="1653,163,2096,192"/>
+<area shape="rect" id="node18" href="$classXalanList.html" title="XalanList\&lt; ReusableArenaBlock\&lt; data_type \&gt; * \&gt;" alt="" coords="1176,135,1523,164"/>
+<area shape="rect" id="node20" href="$structXalanList_1_1Node.html" title="XalanList\&lt; Type \&gt;::Node" alt="" coords="756,135,937,164"/>
+<area shape="rect" id="node23" href="$classReusableArenaBlock.html" title="ReusableArenaBlock\&lt; data_type \&gt;" alt="" coords="1227,188,1472,217"/>
+<area shape="rect" id="node25" href="$classArenaBlockBase.html" title="ArenaBlockBase\&lt; data_type, unsigned short \&gt;" alt="" coords="685,188,1008,217"/>
+<area shape="rect" id="node27" href="$classXalanAllocator.html" title="XalanAllocator\&lt; data_type \&gt;" alt="" coords="335,181,543,211"/>
+<area shape="rect" id="node29" href="$classXalanDOMString.html" title="XalanDOMString" alt="" coords="375,300,503,329"/>
+<area shape="rect" id="node37" href="$classXalanQNameByValue.html" title="XalanQNameByValue" alt="" coords="1271,279,1428,308"/>
+<area shape="rect" id="node39" href="$classXalanQName.html" title="Class to represent a qualified name." alt="" coords="793,248,900,277"/>
+<area shape="rect" id="node31" href="$classXalanVector.html" title="XalanVector\&lt; XalanDOMChar \&gt;" alt="" coords="7,300,233,329"/>
+<area shape="rect" id="node33" href="$classXalanVector.html" title="XalanVector\&lt; XalanDOMString * \&gt;" alt="" coords="2887,227,3132,256"/>
+<area shape="rect" id="node35" href="$classXalanVector.html" title="XalanVector\&lt; const NodeRefListBase * \&gt;" alt="" coords="3892,227,4180,256"/>
+<area shape="rect" id="node43" href="$classPrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs..." alt="" coords="3981,331,4091,360"/>
+<area shape="rect" id="node49" href="$structXPathExecutionContextDefault_1_1ContextNodeListPositionCache.html" title="XPathExecutionContextDefault::ContextNodeListPositionCache" alt="" coords="3825,435,4247,464"/>
+<area shape="rect" id="node51" href="$classXalanNode.html" title="XalanNode" alt="" coords="2963,435,3056,464"/>
+<area shape="rect" id="node53" href="$classDOMSupport.html" title="DOMSupport" alt="" coords="3984,488,4088,517"/>
+<area shape="rect" id="node55" href="$classNodeRefList.html" title="Local implementation of NodeRefList." alt="" coords="3987,541,4085,571"/>
+<area shape="rect" id="node57" href="$classNodeRefListBase.html" title="Local implementation of NodeRefList." alt="" coords="2944,516,3075,545"/>
+<area shape="rect" id="node59" href="$classXalanVector.html" title="XalanVector\&lt; XalanNode * \&gt;" alt="" coords="2904,573,3115,603"/>
+<area shape="rect" id="node61" href="$classXalanObjectCache.html" title="XalanObjectCache\&lt; MutableNodeRefList, DefaultCacheCreateFunctorMemMgr\&lt; MutableNodeRefList \&gt;, DeleteFunctor\&lt; MutableNodeRefList \&gt;, ClearCacheResetFunctor\&lt; MutableNodeRefList \&gt; \&gt;" alt="" coords="3400,685,4672,715"/>
+<area shape="rect" id="node63" href="$structDeleteFunctor.html" title="DeleteFunctor\&lt; MutableNodeRefList \&gt;" alt="" coords="2875,792,3144,821"/>
+<area shape="rect" id="node65" href="$classstd_1_1unary__function.html" title="std::unary_function\&lt;const MutableNodeRefList *, void\&gt;" alt="" coords="2260,792,2636,821"/>
+<area shape="rect" id="node67" href="$classDefaultCacheCreateFunctorMemMgr.html" title="DefaultCacheCreateFunctorMemMgr\&lt; MutableNodeRefList \&gt;" alt="" coords="2804,632,3215,661"/>
+<area shape="rect" id="node69" href="$classXalanVector.html" title="XalanVector\&lt; MutableNodeRefList * \&gt;" alt="" coords="2876,685,3143,715"/>
+<area shape="rect" id="node71" href="$classClearCacheResetFunctor.html" title="ClearCacheResetFunctor\&lt; MutableNodeRefList \&gt;" alt="" coords="2841,739,3177,768"/>
+</map>

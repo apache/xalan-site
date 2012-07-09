@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classXalanObjectCache.html" title="XalanObjectCache\&lt; ObjectType, DefaultCacheCreateFunctor\&lt; ObjectType \&gt;, DeleteFunctor\&lt; ObjectType \&gt;, DefaultCacheResetFunctor\&lt; ObjectType \&gt; \&gt;" alt="" coords="748,33,1748,63"/>
+<area shape="rect" id="node4" href="$structDeleteFunctor.html" title="DeleteFunctor\&lt; ObjectType \&gt;" alt="" coords="377,5,588,35"/>
+<area shape="rect" id="node6" href="$classstd_1_1unary__function.html" title="std::unary_function\&lt;const ObjectType *, void\&gt;" alt="" coords="5,5,325,35"/>
+<area shape="rect" id="node8" href="$classXalanVector.html" title="XalanVector\&lt; ObjectType * \&gt;" alt="" coords="377,59,588,88"/>
+</map>

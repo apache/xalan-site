@@ -1,0 +1,15 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$XStringBase_8hpp.html" title="XStringBase.hpp" alt="" coords="443,83,573,112"/>
+<area shape="rect" id="node5" href="$XString_8hpp.html" title="XString.hpp" alt="" coords="59,160,157,189"/>
+<area shape="rect" id="node13" href="$XStringAdapter_8hpp.html" title="XStringAdapter.hpp" alt="" coords="236,160,383,189"/>
+<area shape="rect" id="node18" href="$XStringCached_8hpp.html" title="XStringCached.hpp" alt="" coords="435,160,581,189"/>
+<area shape="rect" id="node23" href="$XStringReference_8hpp.html" title="XStringReference.hpp" alt="" coords="632,160,795,189"/>
+<area shape="rect" id="node28" href="$XTokenStringAdapter_8hpp.html" title="XTokenStringAdapter.hpp" alt="" coords="872,160,1056,189"/>
+<area shape="rect" id="node7" href="$XStringAllocator_8hpp.html" title="XStringAllocator.hpp" alt="" coords="5,237,157,267"/>
+<area shape="rect" id="node9" href="$XObjectFactoryDefault_8hpp.html" title="XObjectFactoryDefault.hpp" alt="" coords="412,315,604,344"/>
+<area shape="rect" id="node11" href="$XalanTransformer_8hpp.html" title="XalanTransformer.hpp" alt="" coords="427,392,589,421"/>
+<area shape="rect" id="node15" href="$XStringAdapterAllocator_8hpp.html" title="XStringAdapterAllocator.hpp" alt="" coords="181,237,384,267"/>
+<area shape="rect" id="node20" href="$XStringCachedAllocator_8hpp.html" title="XStringCachedAllocator.hpp" alt="" coords="408,237,608,267"/>
+<area shape="rect" id="node25" href="$XStringReferenceAllocator_8hpp.html" title="XStringReferenceAllocator.hpp" alt="" coords="632,237,848,267"/>
+<area shape="rect" id="node30" href="$XTokenStringAdapterAllocator_8hpp.html" title="XTokenStringAdapterAllocator.hpp" alt="" coords="872,237,1112,267"/>
+</map>

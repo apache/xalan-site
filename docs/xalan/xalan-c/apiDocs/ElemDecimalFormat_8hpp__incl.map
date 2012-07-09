@@ -1,0 +1,32 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$XSLTDefinitions_8hpp.html" title="XSLTDefinitions.hpp" alt="" coords="3005,237,3155,267"/>
+<area shape="rect" id="node13" href="$ElemTemplateElement_8hpp.html" title="ElemTemplateElement.hpp" alt="" coords="2535,83,2729,112"/>
+<area shape="rect" id="node161" href="$XalanDecimalFormatSymbols_8hpp.html" title="xalanc/PlatformSupport/XalanDecimalFormatSymbols.hpp" alt="" coords="2777,547,3172,576"/>
+<area shape="rect" id="node5" href="$PlatformDefinitions_8hpp.html" title="xalanc/Include/PlatformDefinitions.hpp" alt="" coords="1259,1011,1523,1040"/>
+<area shape="rect" id="node11" href="$XalanVersion_8hpp.html" title="XalanVersion.hpp" alt="" coords="1524,1088,1657,1117"/>
+<area shape="rect" id="node16" href="$XalanDOMString_8hpp.html" title="xalanc/XalanDOM/XalanDOMString.hpp" alt="" coords="1965,624,2237,653"/>
+<area shape="rect" id="node74" href="$XalanNode_8hpp.html" title="xalanc/XalanDOM/XalanNode.hpp" alt="" coords="2727,392,2964,421"/>
+<area shape="rect" id="node77" href="$DOMStringHelper_8hpp.html" title="xalanc/PlatformSupport/DOMStringHelper.hpp" alt="" coords="844,469,1159,499"/>
+<area shape="rect" id="node104" href="$PrefixResolver_8hpp.html" title="xalanc/PlatformSupport/PrefixResolver.hpp" alt="" coords="2361,315,2652,344"/>
+<area shape="rect" id="node107" href="$XalanLocator_8hpp.html" title="xalanc/PlatformSupport/XalanLocator.hpp" alt="" coords="2217,469,2505,499"/>
+<area shape="rect" id="node112" href="$XalanQNameByReference_8hpp.html" title="xalanc/XPath/XalanQNameByReference.hpp" alt="" coords="1684,160,1988,189"/>
+<area shape="rect" id="node151" href="$NamespacesHandler_8hpp.html" title="xalanc/XSLT/NamespacesHandler.hpp" alt="" coords="700,160,964,189"/>
+<area shape="rect" id="node18" href="$XalanDOMDefinitions_8hpp.html" title="xalanc/XalanDOM/XalanDOMDefinitions.hpp" alt="" coords="1859,779,2160,808"/>
+<area shape="rect" id="node23" href="$STLHelper_8hpp.html" title="xalanc/Include/STLHelper.hpp" alt="" coords="827,701,1035,731"/>
+<area shape="rect" id="node39" href="$XalanVector_8hpp.html" title="xalanc/Include/XalanVector.hpp" alt="" coords="512,856,733,885"/>
+<area shape="rect" id="node51" href="$XalanMemoryManagement_8hpp.html" title="xalanc/Include/XalanMemoryManagement.hpp" alt="" coords="195,933,512,963"/>
+<area shape="rect" id="node71" href="$XalanDOMException_8hpp.html" title="xalanc/XalanDOM/XalanDOMException.hpp" alt="" coords="1953,701,2249,731"/>
+<area shape="rect" id="node30" href="$XalanMap_8hpp.html" title="xalanc/Include/XalanMap.hpp" alt="" coords="649,779,857,808"/>
+<area shape="rect" id="node59" href="$XalanList_8hpp.html" title="xalanc/Include/XalanList.hpp" alt="" coords="757,856,960,885"/>
+<area shape="rect" id="node79" href="$PlatformSupportDefinitions_8hpp.html" title="xalanc/PlatformSupport/PlatformSupportDefinitions.hpp" alt="" coords="1565,624,1941,653"/>
+<area shape="rect" id="node92" href="$FormatterListener_8hpp.html" title="xalanc/PlatformSupport/FormatterListener.hpp" alt="" coords="1780,547,2097,576"/>
+<area shape="rect" id="node98" href="$XalanUnicode_8hpp.html" title="xalanc/PlatformSupport/XalanUnicode.hpp" alt="" coords="1140,547,1433,576"/>
+<area shape="rect" id="node101" href="$XalanXMLChar_8hpp.html" title="xalanc/PlatformSupport/XalanXMLChar.hpp" alt="" coords="1457,547,1756,576"/>
+<area shape="rect" id="node114" href="$XPathDefinitions_8hpp.html" title="xalanc/XPath/XPathDefinitions.hpp" alt="" coords="1745,392,1988,421"/>
+<area shape="rect" id="node117" href="$XalanQName_8hpp.html" title="xalanc/XPath/XalanQName.hpp" alt="" coords="889,237,1113,267"/>
+<area shape="rect" id="node121" href="$XalanDeque_8hpp.html" title="xalanc/Include/XalanDeque.hpp" alt="" coords="245,779,467,808"/>
+<area shape="rect" id="node130" href="$NameSpace_8hpp.html" title="xalanc/XPath/NameSpace.hpp" alt="" coords="579,315,795,344"/>
+<area shape="rect" id="node141" href="$XalanXPathException_8hpp.html" title="xalanc/XPath/XalanXPathException.hpp" alt="" coords="2063,315,2337,344"/>
+<area shape="rect" id="node133" href="$XalanMemMgrAutoPtr_8hpp.html" title="xalanc/Include/XalanMemMgrAutoPtr.hpp" alt="" coords="101,547,384,576"/>
+<area shape="rect" id="node146" href="$XSLException_8hpp.html" title="xalanc/PlatformSupport/XSLException.hpp" alt="" coords="2063,392,2353,421"/>
+</map>

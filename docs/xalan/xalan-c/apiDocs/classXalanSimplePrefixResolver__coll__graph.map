@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classPrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs..." alt="" coords="5,101,115,131"/>
+<area shape="rect" id="node4" href="$classXalanDOMString.html" title="XalanDOMString" alt="" coords="139,101,267,131"/>
+<area shape="rect" id="node6" href="$classXalanVector.html" title="XalanVector\&lt; XalanDOMChar \&gt;" alt="" coords="89,5,316,35"/>
+</map>

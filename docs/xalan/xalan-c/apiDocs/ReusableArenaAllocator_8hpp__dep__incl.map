@@ -1,0 +1,31 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$XalanElemEmptyAllocator_8hpp.html" title="XalanElemEmptyAllocator.hpp" alt="" coords="5,83,219,112"/>
+<area shape="rect" id="node7" href="$XalanElemTextAllocator_8hpp.html" title="XalanElemTextAllocator.hpp" alt="" coords="244,83,444,112"/>
+<area shape="rect" id="node10" href="$XalanElemTextLiteralAllocator_8hpp.html" title="XalanElemTextLiteralAllocator.hpp" alt="" coords="1271,160,1508,189"/>
+<area shape="rect" id="node16" href="$XalanSourceTreeDocumentAllocator_8hpp.html" title="XalanSourceTreeDocumentAllocator.hpp" alt="" coords="219,160,499,189"/>
+<area shape="rect" id="node27" href="$XalanSourceTreeDocumentFragmentAllocator_8hpp.html" title="XalanSourceTreeDocumentFragmentAllocator.hpp" alt="" coords="299,237,640,267"/>
+<area shape="rect" id="node30" href="$XResultTreeFragAllocator_8hpp.html" title="XResultTreeFragAllocator.hpp" alt="" coords="573,160,781,189"/>
+<area shape="rect" id="node33" href="$XalanDOMStringReusableAllocator_8hpp.html" title="XalanDOMStringReusableAllocator.hpp" alt="" coords="624,83,893,112"/>
+<area shape="rect" id="node46" href="$XNodeSetAllocator_8hpp.html" title="XNodeSetAllocator.hpp" alt="" coords="1509,83,1680,112"/>
+<area shape="rect" id="node52" href="$XNodeSetNodeProxyAllocator_8hpp.html" title="XNodeSetNodeProxyAllocator.hpp" alt="" coords="1704,83,1944,112"/>
+<area shape="rect" id="node55" href="$XNumberAllocator_8hpp.html" title="XNumberAllocator.hpp" alt="" coords="1968,83,2133,112"/>
+<area shape="rect" id="node58" href="$XStringAdapterAllocator_8hpp.html" title="XStringAdapterAllocator.hpp" alt="" coords="2157,83,2360,112"/>
+<area shape="rect" id="node61" href="$XStringAllocator_8hpp.html" title="XStringAllocator.hpp" alt="" coords="2384,83,2536,112"/>
+<area shape="rect" id="node64" href="$XStringCachedAllocator_8hpp.html" title="XStringCachedAllocator.hpp" alt="" coords="2560,83,2760,112"/>
+<area shape="rect" id="node67" href="$XStringReferenceAllocator_8hpp.html" title="XStringReferenceAllocator.hpp" alt="" coords="2784,83,3000,112"/>
+<area shape="rect" id="node70" href="$XTokenNumberAdapterAllocator_8hpp.html" title="XTokenNumberAdapterAllocator.hpp" alt="" coords="968,83,1221,112"/>
+<area shape="rect" id="node73" href="$XTokenStringAdapterAllocator_8hpp.html" title="XTokenStringAdapterAllocator.hpp" alt="" coords="1245,83,1485,112"/>
+<area shape="rect" id="node5" href="$StylesheetHandler_8hpp.html" title="StylesheetHandler.hpp" alt="" coords="29,160,195,189"/>
+<area shape="rect" id="node12" href="$StylesheetConstructionContextDefault_8hpp.html" title="StylesheetConstructionContextDefault.hpp" alt="" coords="1275,237,1568,267"/>
+<area shape="rect" id="node14" href="$XalanCompiledStylesheetDefault_8hpp.html" title="XalanCompiledStylesheetDefault.hpp" alt="" coords="1059,392,1320,421"/>
+<area shape="rect" id="node18" href="$StylesheetExecutionContextDefault_8hpp.html" title="StylesheetExecutionContextDefault.hpp" alt="" coords="527,315,801,344"/>
+<area shape="rect" id="node21" href="$ICUBridgeCollationCompareFunctorImpl_8hpp.html" title="ICUBridgeCollationCompareFunctorImpl.hpp" alt="" coords="219,392,520,421"/>
+<area shape="rect" id="node23" href="$ICUFormatNumberFunctor_8hpp.html" title="ICUFormatNumberFunctor.hpp" alt="" coords="544,392,760,421"/>
+<area shape="rect" id="node25" href="$ICUXalanNumberFormatFactory_8hpp.html" title="ICUXalanNumberFormatFactory.hpp" alt="" coords="784,392,1035,421"/>
+<area shape="rect" id="node35" href="$XalanDOMStringCache_8hpp.html" title="XalanDOMStringCache.hpp" alt="" coords="913,160,1108,189"/>
+<area shape="rect" id="node38" href="$XPathConstructionContextDefault_8hpp.html" title="XPathConstructionContextDefault.hpp" alt="" coords="984,237,1251,267"/>
+<area shape="rect" id="node43" href="$XPathExecutionContextDefault_8hpp.html" title="XPathExecutionContextDefault.hpp" alt="" coords="715,237,960,267"/>
+<area shape="rect" id="node40" href="$XSLTEngineImpl_8hpp.html" title="XSLTEngineImpl.hpp" alt="" coords="1065,315,1217,344"/>
+<area shape="rect" id="node48" href="$XObjectFactoryDefault_8hpp.html" title="XObjectFactoryDefault.hpp" alt="" coords="1955,160,2147,189"/>
+<area shape="rect" id="node50" href="$XalanTransformer_8hpp.html" title="XalanTransformer.hpp" alt="" coords="1969,237,2132,267"/>
+</map>

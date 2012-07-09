@@ -1,0 +1,20 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$classXalanReferenceCountedObject.html" title="Class to hold reference count information." alt="" coords="5,219,224,248"/>
+<area shape="rect" id="node3" href="$classXObject.html" title="Class to hold XPath return types." alt="" coords="273,219,345,248"/>
+<area shape="rect" id="node5" href="$classXBoolean.html" title="XBoolean" alt="" coords="417,32,500,61"/>
+<area shape="rect" id="node7" href="$classXNodeSetBase.html" title="Class to hold XPath return types." alt="" coords="399,85,519,115"/>
+<area shape="rect" id="node13" href="$classXNumberBase.html" title="XNumberBase" alt="" coords="401,165,516,195"/>
+<area shape="rect" id="node19" href="$classXResultTreeFrag.html" title="XResultTreeFrag" alt="" coords="396,219,521,248"/>
+<area shape="rect" id="node21" href="$classXStringBase.html" title="XStringBase" alt="" coords="408,272,509,301"/>
+<area shape="rect" id="node33" href="$classXToken.html" title="XToken" alt="" coords="424,325,493,355"/>
+<area shape="rect" id="node35" href="$classXUnknown.html" title="XUnknown" alt="" coords="413,379,504,408"/>
+<area shape="rect" id="node9" href="$classXNodeSet.html" title="Class to hold XPath return types." alt="" coords="613,5,701,35"/>
+<area shape="rect" id="node11" href="$classXNodeSetNodeProxy.html" title="Class to hold XPath return types." alt="" coords="579,59,736,88"/>
+<area shape="rect" id="node15" href="$classXNumber.html" title="XNumber" alt="" coords="616,112,699,141"/>
+<area shape="rect" id="node17" href="$classXTokenNumberAdapter.html" title="XTokenNumberAdapter" alt="" coords="572,165,743,195"/>
+<area shape="rect" id="node23" href="$classXString.html" title="XString" alt="" coords="623,219,692,248"/>
+<area shape="rect" id="node25" href="$classXStringAdapter.html" title="XStringAdapter" alt="" coords="597,272,717,301"/>
+<area shape="rect" id="node27" href="$classXStringCached.html" title="XStringCached" alt="" coords="599,325,716,355"/>
+<area shape="rect" id="node29" href="$classXStringReference.html" title="XStringReference" alt="" coords="591,379,724,408"/>
+<area shape="rect" id="node31" href="$classXTokenStringAdapter.html" title="XTokenStringAdapter" alt="" coords="579,432,736,461"/>
+</map>

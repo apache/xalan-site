@@ -1,0 +1,13 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classXObject.html" title="Class to hold XPath return types." alt="" coords="340,400,412,429"/>
+<area shape="rect" id="node4" href="$classXalanReferenceCountedObject.html" title="Class to hold reference count information." alt="" coords="207,181,425,211"/>
+<area shape="rect" id="node6" href="$classXObjectFactory.html" title="This class handles the creation of XObjects and manages their lifetime." alt="" coords="429,85,547,115"/>
+<area shape="rect" id="node19" href="$classXPathExecutionContext.html" title="XPathExecutionContext" alt="" coords="563,181,736,211"/>
+<area shape="rect" id="node8" href="$classXalanDOMString.html" title="XalanDOMString" alt="" coords="55,181,183,211"/>
+<area shape="rect" id="node10" href="$classXalanVector.html" title="XalanVector\&lt; XalanDOMChar \&gt;" alt="" coords="5,85,232,115"/>
+<area shape="rect" id="node12" href="$classXalanDocumentFragment.html" title="XalanDocumentFragment" alt="" coords="705,400,892,429"/>
+<area shape="rect" id="node14" href="$classXalanNode.html" title="XalanNode" alt="" coords="760,181,853,211"/>
+<area shape="rect" id="node17" href="$classStylesheetExecutionContext.html" title="StylesheetExecutionContext" alt="" coords="445,400,648,429"/>
+<area shape="rect" id="node21" href="$classExecutionContext.html" title="ExecutionContext" alt="" coords="584,85,717,115"/>
+<area shape="rect" id="node23" href="$classProblemListenerBase.html" title="This is the abstract class that is used when reporting a problem some kind, that requires a message..." alt="" coords="572,5,729,35"/>
+</map>

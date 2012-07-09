@@ -1,0 +1,80 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classXalanProcessingInstruction.html" title="XalanProcessingInstruction" alt="" coords="5555,148,5749,177"/>
+<area shape="rect" id="node4" href="$classXalanNode.html" title="XalanNode" alt="" coords="4891,224,4984,253"/>
+<area shape="rect" id="node6" href="$classXalanSourceTreeDocument.html" title="XalanSourceTreeDocument" alt="" coords="5775,2053,5972,2083"/>
+<area shape="rect" id="node8" href="$classXalanDocument.html" title="XalanDocument" alt="" coords="5307,367,5432,396"/>
+<area shape="rect" id="node206" href="$classXalanSourceTreeElement.html" title="XalanSourceTreeElement" alt="" coords="6201,369,6385,399"/>
+<area shape="rect" id="node208" href="$classXalanElement.html" title="XalanElement" alt="" coords="5596,189,5708,219"/>
+<area shape="rect" id="node11" href="$classXalanArrayAllocator.html" title="XalanArrayAllocator\&lt; XalanSourceTreeAttr * \&gt;" alt="" coords="1755,2221,2077,2251"/>
+<area shape="rect" id="node13" href="$classXalanList.html" title="XalanList\&lt; ListEntryType \&gt;" alt="" coords="579,2404,773,2433"/>
+<area shape="rect" id="node15" href="$structXalanList_1_1Node.html" title="XalanList\&lt; Type \&gt;::Node" alt="" coords="29,2383,211,2412"/>
+<area shape="rect" id="node24" href="$classXalanList.html" title="XalanList\&lt; Entry \&gt;" alt="" coords="604,2044,748,2073"/>
+<area shape="rect" id="node146" href="$classXalanList.html" title="XalanList\&lt; ArenaBlock\&lt; data_type \&gt; * \&gt;" alt="" coords="973,2351,1261,2380"/>
+<area shape="rect" id="node169" href="$classXalanList.html" title="XalanList\&lt; ArenaBlock\&lt; ObjectType \&gt; * \&gt;" alt="" coords="2316,2457,2609,2487"/>
+<area shape="rect" id="node18" href="$classXalanMap.html" title="XalanMap\&lt; const XalanDOMChar *, XalanSourceTreeElement * \&gt;" alt="" coords="1285,1953,1731,1983"/>
+<area shape="rect" id="node20" href="$classXalanVector.html" title="XalanVector\&lt; BucketType, ConstructWithMemoryManagerTraits\&lt; BucketType \&gt; \&gt;" alt="" coords="404,1443,948,1472"/>
+<area shape="rect" id="node45" href="$classXalanMap.html" title="XalanMap\&lt; const XalanDOMString *, const XalanDOMString * \&gt;" alt="" coords="1291,1301,1725,1331"/>
+<area shape="rect" id="node99" href="$classXalanMap.html" title="XalanMap\&lt; XalanDOMString, ExtensionNSHandler * \&gt;" alt="" coords="1323,1631,1693,1660"/>
+<area shape="rect" id="node113" href="$classXalanMap.html" title="XalanMap\&lt; XalanDOMString, PatternTableVectorType \&gt;" alt="" coords="1319,1699,1697,1728"/>
+<area shape="rect" id="node128" href="$classXalanMap.html" title="XalanMap\&lt; const XalanQName *, AttributeSetVectorType \&gt;" alt="" coords="1304,1847,1712,1876"/>
+<area shape="rect" id="node135" href="$classXalanMap.html" title="XalanMap\&lt; XalanQNameByReference, const ElemTemplate * \&gt;" alt="" coords="1293,1789,1723,1819"/>
+<area shape="rect" id="node184" href="$classXalanMap.html" title="XalanMap\&lt; XalanDOMString, XalanDOMString \&gt;" alt="" coords="1340,1900,1676,1929"/>
+<area shape="rect" id="node22" href="$structXalanMapKeyTraits_3_01const_01XalanDOMChar_01_5_01_4.html" title="XalanMapKeyTraits\&lt; const XalanDOMChar * \&gt;" alt="" coords="516,2297,836,2327"/>
+<area shape="rect" id="node27" href="$classXalanDOMStringAllocator.html" title="XalanDOMStringAllocator" alt="" coords="4845,597,5029,627"/>
+<area shape="rect" id="node149" href="$classXalanDOMStringPool.html" title="XalanDOMStringPool" alt="" coords="5292,624,5447,653"/>
+<area shape="rect" id="node29" href="$classArenaAllocator.html" title="ArenaAllocator\&lt; data_type \&gt;" alt="" coords="4429,597,4640,627"/>
+<area shape="rect" id="node31" href="$classArenaBlock.html" title="ArenaBlock\&lt; data_type \&gt;" alt="" coords="4011,597,4197,627"/>
+<area shape="rect" id="node33" href="$classArenaBlockBase.html" title="ArenaBlockBase\&lt; data_type, size_t \&gt;" alt="" coords="3508,597,3772,627"/>
+<area shape="rect" id="node35" href="$classElemValueOf.html" title="ElemValueOf" alt="" coords="3096,604,3197,633"/>
+<area shape="rect" id="node37" href="$classElemTemplateElement.html" title="ElemTemplateElement" alt="" coords="2636,709,2801,739"/>
+<area shape="rect" id="node55" href="$classElemTextLiteral.html" title="ElemTextLiteral" alt="" coords="3088,731,3205,760"/>
+<area shape="rect" id="node73" href="$classElemTemplate.html" title="ElemTemplate" alt="" coords="3091,992,3203,1021"/>
+<area shape="rect" id="node125" href="$classStylesheetRoot.html" title="This acts as the stylesheet root of the stylesheet tree, and holds values that are shared by all styl..." alt="" coords="4045,1200,4163,1229"/>
+<area shape="rect" id="node39" href="$classPrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs..." alt="" coords="2141,929,2251,959"/>
+<area shape="rect" id="node96" href="$classStylesheet.html" title="This class represents the base stylesheet or an &quot;import&quot; stylesheet." alt="" coords="3595,1237,3685,1267"/>
+<area shape="rect" id="node41" href="$classNamespacesHandler.html" title="NamespacesHandler" alt="" coords="2119,1196,2273,1225"/>
+<area shape="rect" id="node43" href="$classXalanVector.html" title="XalanVector\&lt; Namespace \&gt;" alt="" coords="1405,1141,1611,1171"/>
+<area shape="rect" id="node48" href="$structXalanMapKeyTraits_3_01const_01XalanDOMString_01_5_01_4.html" title="XalanMapKeyTraits\&lt; const XalanDOMString * \&gt;" alt="" coords="512,1251,840,1280"/>
+<area shape="rect" id="node51" href="$classXalanVector.html" title="XalanVector\&lt; const XalanDOMString * \&gt;" alt="" coords="1365,1195,1651,1224"/>
+<area shape="rect" id="node53" href="$classXalanVector.html" title="XalanVector\&lt; NamespaceExtended \&gt;" alt="" coords="1375,1248,1641,1277"/>
+<area shape="rect" id="node58" href="$classXalanQNameByReference.html" title="XalanQNameByReference" alt="" coords="2103,756,2289,785"/>
+<area shape="rect" id="node60" href="$classXalanQName.html" title="Class to represent a qualified name." alt="" coords="1455,855,1561,884"/>
+<area shape="rect" id="node62" href="$classXalanDOMString.html" title="XalanDOMString" alt="" coords="612,647,740,676"/>
+<area shape="rect" id="node67" href="$classElemTemplateElement_1_1LocatorProxy.html" title="ElemTemplateElement::LocatorProxy" alt="" coords="1380,603,1636,632"/>
+<area shape="rect" id="node76" href="$classXPath.html" title="XPath" alt="" coords="2165,876,2227,905"/>
+<area shape="rect" id="node84" href="$classXPathExpression.html" title="XPathExpression" alt="" coords="1443,959,1573,988"/>
+<area shape="rect" id="node64" href="$classXalanVector.html" title="XalanVector\&lt; XalanDOMChar \&gt;" alt="" coords="7,647,233,676"/>
+<area shape="rect" id="node69" href="$classXalanLocator.html" title="This class defines a base class for Locator derivations in Xalan." alt="" coords="623,364,729,393"/>
+<area shape="rect" id="node78" href="$classXPathFunctionTable.html" title="Class defines a table of functions that can be called in XPath expresions." alt="" coords="1435,1088,1581,1117"/>
+<area shape="rect" id="node80" href="$classFunction.html" title="Function" alt="" coords="639,1120,713,1149"/>
+<area shape="rect" id="node82" href="$structXPathFunctionTable_1_1FunctionNameTableEntry.html" title="XPathFunctionTable::FunctionNameTableEntry" alt="" coords="519,1185,833,1215"/>
+<area shape="rect" id="node86" href="$classXalanVector.html" title="XalanVector\&lt; XToken \&gt;" alt="" coords="588,953,764,983"/>
+<area shape="rect" id="node88" href="$classXalanVector.html" title="XalanVector\&lt; int \&gt;" alt="" coords="603,1007,749,1036"/>
+<area shape="rect" id="node90" href="$classXalanVector.html" title="XalanVector\&lt; double \&gt;" alt="" coords="589,1060,763,1089"/>
+<area shape="rect" id="node103" href="$structXalanMapKeyTraits_3_01XalanDOMString_01_4.html" title="XalanMapKeyTraits\&lt; XalanDOMString \&gt;" alt="" coords="537,1687,815,1716"/>
+<area shape="rect" id="node106" href="$classXalanVector.html" title="XalanVector\&lt; Stylesheet * \&gt;" alt="" coords="3043,1147,3251,1176"/>
+<area shape="rect" id="node108" href="$classXalanVector.html" title="XalanVector\&lt; ElemVariable * \&gt;" alt="" coords="3035,1251,3259,1280"/>
+<area shape="rect" id="node111" href="$classXalanVector.html" title="XalanVector\&lt; XalanSpaceNodeTester \&gt;" alt="" coords="3007,1304,3287,1333"/>
+<area shape="rect" id="node118" href="$classXalanVector.html" title="XalanVector\&lt; Type, ConstructionTraits \&gt;" alt="" coords="3005,1419,3288,1448"/>
+<area shape="rect" id="node120" href="$classXalanVector.html" title="XalanVector\&lt; XalanDOMString \&gt;" alt="" coords="3029,1472,3264,1501"/>
+<area shape="rect" id="node123" href="$classXalanVector.html" title="XalanVector\&lt; ElemDecimalFormat * \&gt;" alt="" coords="3012,1525,3281,1555"/>
+<area shape="rect" id="node139" href="$classXalanDeque.html" title="Xalan implementation of deque." alt="" coords="3005,1579,3288,1608"/>
+<area shape="rect" id="node141" href="$classXalanVector.html" title="XalanVector\&lt; KeyDeclaration \&gt;" alt="" coords="3033,1632,3260,1661"/>
+<area shape="rect" id="node144" href="$classXalanAllocator.html" title="XalanAllocator\&lt; data_type \&gt;" alt="" coords="3043,551,3251,580"/>
+<area shape="rect" id="node152" href="$classXalanDOMStringHashTable.html" title="XalanDOMStringHashTable" alt="" coords="4840,651,5035,680"/>
+<area shape="rect" id="node154" href="$classXalanVector.html" title="XalanVector\&lt; BucketType, ConstructionTraits \&gt;" alt="" coords="4372,651,4697,680"/>
+<area shape="rect" id="node157" href="$classXalanSourceTreeElementNAAllocator.html" title="XalanSourceTreeElementNAAllocator" alt="" coords="5240,2372,5499,2401"/>
+<area shape="rect" id="node159" href="$classArenaAllocator.html" title="ArenaAllocator\&lt; ObjectType \&gt;" alt="" coords="4829,2372,5045,2401"/>
+<area shape="rect" id="node172" href="$classXalanSourceTreeAttributeAllocator.html" title="XalanSourceTreeAttributeAllocator" alt="" coords="5248,2425,5491,2455"/>
+<area shape="rect" id="node175" href="$classXalanSourceTreeProcessingInstructionAllocator.html" title="XalanSourceTreeProcessingInstructionAllocator" alt="" coords="5208,2479,5531,2508"/>
+<area shape="rect" id="node178" href="$classXalanSourceTreeElementAAllocator.html" title="XalanSourceTreeElementAAllocator" alt="" coords="5245,2532,5493,2561"/>
+<area shape="rect" id="node181" href="$classXalanSourceTreeAttributeNSAllocator.html" title="XalanSourceTreeAttributeNSAllocator" alt="" coords="5239,2585,5500,2615"/>
+<area shape="rect" id="node189" href="$classXalanSourceTreeCommentAllocator.html" title="XalanSourceTreeCommentAllocator" alt="" coords="5244,2105,5495,2135"/>
+<area shape="rect" id="node193" href="$classXalanSourceTreeTextIWSAllocator.html" title="XalanSourceTreeTextIWSAllocator" alt="" coords="5252,2159,5487,2188"/>
+<area shape="rect" id="node196" href="$classXalanSourceTreeElementANSAllocator.html" title="XalanSourceTreeElementANSAllocator" alt="" coords="5236,2212,5503,2241"/>
+<area shape="rect" id="node200" href="$classXalanSourceTreeTextAllocator.html" title="XalanSourceTreeTextAllocator" alt="" coords="5263,2265,5476,2295"/>
+<area shape="rect" id="node203" href="$classXalanSourceTreeElementNANSAllocator.html" title="XalanSourceTreeElementNANSAllocator" alt="" coords="5231,2319,5508,2348"/>
+<area shape="rect" id="node161" href="$classArenaBlock.html" title="ArenaBlock\&lt; ObjectType \&gt;" alt="" coords="4437,2372,4632,2401"/>
+<area shape="rect" id="node163" href="$classArenaBlockBase.html" title="ArenaBlockBase\&lt; ObjectType, size_t \&gt;" alt="" coords="3969,2372,4239,2401"/>
+<area shape="rect" id="node167" href="$classXalanAllocator.html" title="XalanAllocator\&lt; ObjectType \&gt;" alt="" coords="3533,2377,3747,2407"/>
+</map>
