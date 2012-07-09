@@ -1,0 +1,367 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: XRTreeFrag.java 469368 2006-10-31 04:41:36Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    package org.apache.xpath.objects;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    import org.apache.xml.dtm.DTM;<a name="line.23"></a>
+<FONT color="green">024</FONT>    import org.apache.xml.dtm.DTMIterator;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import org.apache.xml.utils.XMLString;<a name="line.25"></a>
+<FONT color="green">026</FONT>    import org.apache.xpath.Expression;<a name="line.26"></a>
+<FONT color="green">027</FONT>    import org.apache.xpath.ExpressionNode;<a name="line.27"></a>
+<FONT color="green">028</FONT>    import org.apache.xpath.XPathContext;<a name="line.28"></a>
+<FONT color="green">029</FONT>    import org.apache.xpath.axes.RTFIterator;<a name="line.29"></a>
+<FONT color="green">030</FONT>    <a name="line.30"></a>
+<FONT color="green">031</FONT>    import org.w3c.dom.NodeList;<a name="line.31"></a>
+<FONT color="green">032</FONT>    <a name="line.32"></a>
+<FONT color="green">033</FONT>    /**<a name="line.33"></a>
+<FONT color="green">034</FONT>     * This class represents an XPath result tree fragment object, and is capable of<a name="line.34"></a>
+<FONT color="green">035</FONT>     * converting the RTF to other types, such as a string.<a name="line.35"></a>
+<FONT color="green">036</FONT>     * @xsl.usage general<a name="line.36"></a>
+<FONT color="green">037</FONT>     */<a name="line.37"></a>
+<FONT color="green">038</FONT>    public class XRTreeFrag extends XObject implements Cloneable<a name="line.38"></a>
+<FONT color="green">039</FONT>    {<a name="line.39"></a>
+<FONT color="green">040</FONT>        static final long serialVersionUID = -3201553822254911567L;<a name="line.40"></a>
+<FONT color="green">041</FONT>      private DTMXRTreeFrag m_DTMXRTreeFrag;<a name="line.41"></a>
+<FONT color="green">042</FONT>      private int m_dtmRoot = DTM.NULL;<a name="line.42"></a>
+<FONT color="green">043</FONT>      protected boolean m_allowRelease = false;<a name="line.43"></a>
+<FONT color="green">044</FONT>    <a name="line.44"></a>
+<FONT color="green">045</FONT>    <a name="line.45"></a>
+<FONT color="green">046</FONT>      /**<a name="line.46"></a>
+<FONT color="green">047</FONT>       * Create an XRTreeFrag Object.<a name="line.47"></a>
+<FONT color="green">048</FONT>       *<a name="line.48"></a>
+<FONT color="green">049</FONT>       */<a name="line.49"></a>
+<FONT color="green">050</FONT>      public XRTreeFrag(int root, XPathContext xctxt, ExpressionNode parent)<a name="line.50"></a>
+<FONT color="green">051</FONT>      {<a name="line.51"></a>
+<FONT color="green">052</FONT>        super(null);<a name="line.52"></a>
+<FONT color="green">053</FONT>        exprSetParent(parent);<a name="line.53"></a>
+<FONT color="green">054</FONT>        initDTM(root, xctxt);    <a name="line.54"></a>
+<FONT color="green">055</FONT>      }<a name="line.55"></a>
+<FONT color="green">056</FONT>      <a name="line.56"></a>
+<FONT color="green">057</FONT>      /**<a name="line.57"></a>
+<FONT color="green">058</FONT>       * Create an XRTreeFrag Object.<a name="line.58"></a>
+<FONT color="green">059</FONT>       *<a name="line.59"></a>
+<FONT color="green">060</FONT>       */<a name="line.60"></a>
+<FONT color="green">061</FONT>      public XRTreeFrag(int root, XPathContext xctxt)<a name="line.61"></a>
+<FONT color="green">062</FONT>      {<a name="line.62"></a>
+<FONT color="green">063</FONT>        super(null); <a name="line.63"></a>
+<FONT color="green">064</FONT>       initDTM(root, xctxt); <a name="line.64"></a>
+<FONT color="green">065</FONT>      }<a name="line.65"></a>
+<FONT color="green">066</FONT>      <a name="line.66"></a>
+<FONT color="green">067</FONT>      private final void initDTM(int root, XPathContext xctxt){<a name="line.67"></a>
+<FONT color="green">068</FONT>        m_dtmRoot = root;<a name="line.68"></a>
+<FONT color="green">069</FONT>        final DTM dtm = xctxt.getDTM(root);<a name="line.69"></a>
+<FONT color="green">070</FONT>        if(dtm != null){<a name="line.70"></a>
+<FONT color="green">071</FONT>          m_DTMXRTreeFrag = xctxt.getDTMXRTreeFrag(xctxt.getDTMIdentity(dtm));<a name="line.71"></a>
+<FONT color="green">072</FONT>        }<a name="line.72"></a>
+<FONT color="green">073</FONT>      }<a name="line.73"></a>
+<FONT color="green">074</FONT>      <a name="line.74"></a>
+<FONT color="green">075</FONT>      /**<a name="line.75"></a>
+<FONT color="green">076</FONT>       * Return a java object that's closest to the representation<a name="line.76"></a>
+<FONT color="green">077</FONT>       * that should be handed to an extension.<a name="line.77"></a>
+<FONT color="green">078</FONT>       *<a name="line.78"></a>
+<FONT color="green">079</FONT>       * @return The object that this class wraps<a name="line.79"></a>
+<FONT color="green">080</FONT>       */<a name="line.80"></a>
+<FONT color="green">081</FONT>      public Object object()<a name="line.81"></a>
+<FONT color="green">082</FONT>      {<a name="line.82"></a>
+<FONT color="green">083</FONT>        if (m_DTMXRTreeFrag.getXPathContext() != null)<a name="line.83"></a>
+<FONT color="green">084</FONT>          return new org.apache.xml.dtm.ref.DTMNodeIterator((DTMIterator)(new org.apache.xpath.NodeSetDTM(m_dtmRoot, m_DTMXRTreeFrag.getXPathContext().getDTMManager())));<a name="line.84"></a>
+<FONT color="green">085</FONT>        else<a name="line.85"></a>
+<FONT color="green">086</FONT>          return super.object();<a name="line.86"></a>
+<FONT color="green">087</FONT>      }<a name="line.87"></a>
+<FONT color="green">088</FONT>      <a name="line.88"></a>
+<FONT color="green">089</FONT>      /**<a name="line.89"></a>
+<FONT color="green">090</FONT>       * Create an XRTreeFrag Object.<a name="line.90"></a>
+<FONT color="green">091</FONT>       *<a name="line.91"></a>
+<FONT color="green">092</FONT>       */<a name="line.92"></a>
+<FONT color="green">093</FONT>      public XRTreeFrag(Expression expr)<a name="line.93"></a>
+<FONT color="green">094</FONT>      {<a name="line.94"></a>
+<FONT color="green">095</FONT>        super(expr);<a name="line.95"></a>
+<FONT color="green">096</FONT>      }<a name="line.96"></a>
+<FONT color="green">097</FONT>        <a name="line.97"></a>
+<FONT color="green">098</FONT>      /**<a name="line.98"></a>
+<FONT color="green">099</FONT>       * Specify if it's OK for detach to release the iterator for reuse.<a name="line.99"></a>
+<FONT color="green">100</FONT>       * <a name="line.100"></a>
+<FONT color="green">101</FONT>       * @param allowRelease true if it is OK for detach to release this iterator <a name="line.101"></a>
+<FONT color="green">102</FONT>       * for pooling.<a name="line.102"></a>
+<FONT color="green">103</FONT>       */<a name="line.103"></a>
+<FONT color="green">104</FONT>      public void allowDetachToRelease(boolean allowRelease)<a name="line.104"></a>
+<FONT color="green">105</FONT>      {<a name="line.105"></a>
+<FONT color="green">106</FONT>        m_allowRelease = allowRelease;<a name="line.106"></a>
+<FONT color="green">107</FONT>      }<a name="line.107"></a>
+<FONT color="green">108</FONT>    <a name="line.108"></a>
+<FONT color="green">109</FONT>      /**<a name="line.109"></a>
+<FONT color="green">110</FONT>       * Detaches the &lt;code&gt;DTMIterator&lt;/code&gt; from the set which it iterated<a name="line.110"></a>
+<FONT color="green">111</FONT>       * over, releasing any computational resources and placing the iterator<a name="line.111"></a>
+<FONT color="green">112</FONT>       * in the INVALID state. After &lt;code&gt;detach&lt;/code&gt; has been invoked,<a name="line.112"></a>
+<FONT color="green">113</FONT>       * calls to &lt;code&gt;nextNode&lt;/code&gt; or &lt;code&gt;previousNode&lt;/code&gt; will<a name="line.113"></a>
+<FONT color="green">114</FONT>       * raise a runtime exception.<a name="line.114"></a>
+<FONT color="green">115</FONT>       * <a name="line.115"></a>
+<FONT color="green">116</FONT>       * In general, detach should only be called once on the object.<a name="line.116"></a>
+<FONT color="green">117</FONT>       */<a name="line.117"></a>
+<FONT color="green">118</FONT>      public void detach(){<a name="line.118"></a>
+<FONT color="green">119</FONT>        if(m_allowRelease){<a name="line.119"></a>
+<FONT color="green">120</FONT>            m_DTMXRTreeFrag.destruct();<a name="line.120"></a>
+<FONT color="green">121</FONT>          setObject(null);<a name="line.121"></a>
+<FONT color="green">122</FONT>        }<a name="line.122"></a>
+<FONT color="green">123</FONT>      }<a name="line.123"></a>
+<FONT color="green">124</FONT>      <a name="line.124"></a>
+<FONT color="green">125</FONT>      /**<a name="line.125"></a>
+<FONT color="green">126</FONT>       * Tell what kind of class this is.<a name="line.126"></a>
+<FONT color="green">127</FONT>       *<a name="line.127"></a>
+<FONT color="green">128</FONT>       * @return type CLASS_RTREEFRAG <a name="line.128"></a>
+<FONT color="green">129</FONT>       */<a name="line.129"></a>
+<FONT color="green">130</FONT>      public int getType()<a name="line.130"></a>
+<FONT color="green">131</FONT>      {<a name="line.131"></a>
+<FONT color="green">132</FONT>        return CLASS_RTREEFRAG;<a name="line.132"></a>
+<FONT color="green">133</FONT>      }<a name="line.133"></a>
+<FONT color="green">134</FONT>    <a name="line.134"></a>
+<FONT color="green">135</FONT>      /**<a name="line.135"></a>
+<FONT color="green">136</FONT>       * Given a request type, return the equivalent string.<a name="line.136"></a>
+<FONT color="green">137</FONT>       * For diagnostic purposes.<a name="line.137"></a>
+<FONT color="green">138</FONT>       *<a name="line.138"></a>
+<FONT color="green">139</FONT>       * @return type string "#RTREEFRAG"<a name="line.139"></a>
+<FONT color="green">140</FONT>       */<a name="line.140"></a>
+<FONT color="green">141</FONT>      public String getTypeString()<a name="line.141"></a>
+<FONT color="green">142</FONT>      {<a name="line.142"></a>
+<FONT color="green">143</FONT>        return "#RTREEFRAG";<a name="line.143"></a>
+<FONT color="green">144</FONT>      }<a name="line.144"></a>
+<FONT color="green">145</FONT>    <a name="line.145"></a>
+<FONT color="green">146</FONT>      /**<a name="line.146"></a>
+<FONT color="green">147</FONT>       * Cast result object to a number.<a name="line.147"></a>
+<FONT color="green">148</FONT>       *<a name="line.148"></a>
+<FONT color="green">149</FONT>       * @return The result tree fragment as a number or NaN<a name="line.149"></a>
+<FONT color="green">150</FONT>       */<a name="line.150"></a>
+<FONT color="green">151</FONT>      public double num()<a name="line.151"></a>
+<FONT color="green">152</FONT>        throws javax.xml.transform.TransformerException<a name="line.152"></a>
+<FONT color="green">153</FONT>      {<a name="line.153"></a>
+<FONT color="green">154</FONT>    <a name="line.154"></a>
+<FONT color="green">155</FONT>        XMLString s = xstr();<a name="line.155"></a>
+<FONT color="green">156</FONT>    <a name="line.156"></a>
+<FONT color="green">157</FONT>        return s.toDouble();<a name="line.157"></a>
+<FONT color="green">158</FONT>      }<a name="line.158"></a>
+<FONT color="green">159</FONT>    <a name="line.159"></a>
+<FONT color="green">160</FONT>      /**<a name="line.160"></a>
+<FONT color="green">161</FONT>       * Cast result object to a boolean.  This always returns true for a RTreeFrag<a name="line.161"></a>
+<FONT color="green">162</FONT>       * because it is treated like a node-set with a single root node.<a name="line.162"></a>
+<FONT color="green">163</FONT>       *<a name="line.163"></a>
+<FONT color="green">164</FONT>       * @return true<a name="line.164"></a>
+<FONT color="green">165</FONT>       */<a name="line.165"></a>
+<FONT color="green">166</FONT>      public boolean bool()<a name="line.166"></a>
+<FONT color="green">167</FONT>      {<a name="line.167"></a>
+<FONT color="green">168</FONT>        return true;<a name="line.168"></a>
+<FONT color="green">169</FONT>      }<a name="line.169"></a>
+<FONT color="green">170</FONT>      <a name="line.170"></a>
+<FONT color="green">171</FONT>      private XMLString m_xmlStr = null;<a name="line.171"></a>
+<FONT color="green">172</FONT>      <a name="line.172"></a>
+<FONT color="green">173</FONT>      /**<a name="line.173"></a>
+<FONT color="green">174</FONT>       * Cast result object to an XMLString.<a name="line.174"></a>
+<FONT color="green">175</FONT>       *<a name="line.175"></a>
+<FONT color="green">176</FONT>       * @return The document fragment node data or the empty string. <a name="line.176"></a>
+<FONT color="green">177</FONT>       */<a name="line.177"></a>
+<FONT color="green">178</FONT>      public XMLString xstr()<a name="line.178"></a>
+<FONT color="green">179</FONT>      {<a name="line.179"></a>
+<FONT color="green">180</FONT>        if(null == m_xmlStr)<a name="line.180"></a>
+<FONT color="green">181</FONT>          m_xmlStr = m_DTMXRTreeFrag.getDTM().getStringValue(m_dtmRoot);<a name="line.181"></a>
+<FONT color="green">182</FONT>        <a name="line.182"></a>
+<FONT color="green">183</FONT>        return m_xmlStr;<a name="line.183"></a>
+<FONT color="green">184</FONT>      }<a name="line.184"></a>
+<FONT color="green">185</FONT>      <a name="line.185"></a>
+<FONT color="green">186</FONT>      /**<a name="line.186"></a>
+<FONT color="green">187</FONT>       * Cast result object to a string.<a name="line.187"></a>
+<FONT color="green">188</FONT>       *<a name="line.188"></a>
+<FONT color="green">189</FONT>       * @return The string this wraps or the empty string if null<a name="line.189"></a>
+<FONT color="green">190</FONT>       */<a name="line.190"></a>
+<FONT color="green">191</FONT>      public void appendToFsb(org.apache.xml.utils.FastStringBuffer fsb)<a name="line.191"></a>
+<FONT color="green">192</FONT>      {<a name="line.192"></a>
+<FONT color="green">193</FONT>        XString xstring = (XString)xstr();<a name="line.193"></a>
+<FONT color="green">194</FONT>        xstring.appendToFsb(fsb);<a name="line.194"></a>
+<FONT color="green">195</FONT>      }<a name="line.195"></a>
+<FONT color="green">196</FONT>    <a name="line.196"></a>
+<FONT color="green">197</FONT>    <a name="line.197"></a>
+<FONT color="green">198</FONT>      /**<a name="line.198"></a>
+<FONT color="green">199</FONT>       * Cast result object to a string.<a name="line.199"></a>
+<FONT color="green">200</FONT>       *<a name="line.200"></a>
+<FONT color="green">201</FONT>       * @return The document fragment node data or the empty string. <a name="line.201"></a>
+<FONT color="green">202</FONT>       */<a name="line.202"></a>
+<FONT color="green">203</FONT>      public String str()<a name="line.203"></a>
+<FONT color="green">204</FONT>      {<a name="line.204"></a>
+<FONT color="green">205</FONT>        String str = m_DTMXRTreeFrag.getDTM().getStringValue(m_dtmRoot).toString();<a name="line.205"></a>
+<FONT color="green">206</FONT>    <a name="line.206"></a>
+<FONT color="green">207</FONT>        return (null == str) ? "" : str;<a name="line.207"></a>
+<FONT color="green">208</FONT>      }<a name="line.208"></a>
+<FONT color="green">209</FONT>    <a name="line.209"></a>
+<FONT color="green">210</FONT>      /**<a name="line.210"></a>
+<FONT color="green">211</FONT>       * Cast result object to a result tree fragment.<a name="line.211"></a>
+<FONT color="green">212</FONT>       *<a name="line.212"></a>
+<FONT color="green">213</FONT>       * @return The document fragment this wraps<a name="line.213"></a>
+<FONT color="green">214</FONT>       */<a name="line.214"></a>
+<FONT color="green">215</FONT>      public int rtf()<a name="line.215"></a>
+<FONT color="green">216</FONT>      {<a name="line.216"></a>
+<FONT color="green">217</FONT>        return m_dtmRoot;<a name="line.217"></a>
+<FONT color="green">218</FONT>      }<a name="line.218"></a>
+<FONT color="green">219</FONT>    <a name="line.219"></a>
+<FONT color="green">220</FONT>      /**<a name="line.220"></a>
+<FONT color="green">221</FONT>       * Cast result object to a DTMIterator.<a name="line.221"></a>
+<FONT color="green">222</FONT>       * dml - modified to return an RTFIterator for<a name="line.222"></a>
+<FONT color="green">223</FONT>       * benefit of EXSLT object-type function in <a name="line.223"></a>
+<FONT color="green">224</FONT>       * {@link org.apache.xalan.lib.ExsltCommon}.<a name="line.224"></a>
+<FONT color="green">225</FONT>       * @return The document fragment as a DTMIterator<a name="line.225"></a>
+<FONT color="green">226</FONT>       */<a name="line.226"></a>
+<FONT color="green">227</FONT>      public DTMIterator asNodeIterator()<a name="line.227"></a>
+<FONT color="green">228</FONT>      {<a name="line.228"></a>
+<FONT color="green">229</FONT>        return new RTFIterator(m_dtmRoot, m_DTMXRTreeFrag.getXPathContext().getDTMManager());<a name="line.229"></a>
+<FONT color="green">230</FONT>      }<a name="line.230"></a>
+<FONT color="green">231</FONT>    <a name="line.231"></a>
+<FONT color="green">232</FONT>      /**<a name="line.232"></a>
+<FONT color="green">233</FONT>       * Cast result object to a nodelist. (special function).<a name="line.233"></a>
+<FONT color="green">234</FONT>       *<a name="line.234"></a>
+<FONT color="green">235</FONT>       * @return The document fragment as a nodelist<a name="line.235"></a>
+<FONT color="green">236</FONT>       */<a name="line.236"></a>
+<FONT color="green">237</FONT>      public NodeList convertToNodeset()<a name="line.237"></a>
+<FONT color="green">238</FONT>      {<a name="line.238"></a>
+<FONT color="green">239</FONT>    <a name="line.239"></a>
+<FONT color="green">240</FONT>        if (m_obj instanceof NodeList)<a name="line.240"></a>
+<FONT color="green">241</FONT>          return (NodeList) m_obj;<a name="line.241"></a>
+<FONT color="green">242</FONT>        else<a name="line.242"></a>
+<FONT color="green">243</FONT>          return new org.apache.xml.dtm.ref.DTMNodeList(asNodeIterator());<a name="line.243"></a>
+<FONT color="green">244</FONT>      }<a name="line.244"></a>
+<FONT color="green">245</FONT>    <a name="line.245"></a>
+<FONT color="green">246</FONT>      /**<a name="line.246"></a>
+<FONT color="green">247</FONT>       * Tell if two objects are functionally equal.<a name="line.247"></a>
+<FONT color="green">248</FONT>       *<a name="line.248"></a>
+<FONT color="green">249</FONT>       * @param obj2 Object to compare this to<a name="line.249"></a>
+<FONT color="green">250</FONT>       *<a name="line.250"></a>
+<FONT color="green">251</FONT>       * @return True if the two objects are equal<a name="line.251"></a>
+<FONT color="green">252</FONT>       *<a name="line.252"></a>
+<FONT color="green">253</FONT>       * @throws javax.xml.transform.TransformerException<a name="line.253"></a>
+<FONT color="green">254</FONT>       */<a name="line.254"></a>
+<FONT color="green">255</FONT>      public boolean equals(XObject obj2)<a name="line.255"></a>
+<FONT color="green">256</FONT>      {<a name="line.256"></a>
+<FONT color="green">257</FONT>    <a name="line.257"></a>
+<FONT color="green">258</FONT>        try<a name="line.258"></a>
+<FONT color="green">259</FONT>        {<a name="line.259"></a>
+<FONT color="green">260</FONT>          if (XObject.CLASS_NODESET == obj2.getType())<a name="line.260"></a>
+<FONT color="green">261</FONT>          {<a name="line.261"></a>
+<FONT color="green">262</FONT>      <a name="line.262"></a>
+<FONT color="green">263</FONT>            // In order to handle the 'all' semantics of <a name="line.263"></a>
+<FONT color="green">264</FONT>            // nodeset comparisons, we always call the <a name="line.264"></a>
+<FONT color="green">265</FONT>            // nodeset function.<a name="line.265"></a>
+<FONT color="green">266</FONT>            return obj2.equals(this);<a name="line.266"></a>
+<FONT color="green">267</FONT>          }<a name="line.267"></a>
+<FONT color="green">268</FONT>          else if (XObject.CLASS_BOOLEAN == obj2.getType())<a name="line.268"></a>
+<FONT color="green">269</FONT>          {<a name="line.269"></a>
+<FONT color="green">270</FONT>            return bool() == obj2.bool();<a name="line.270"></a>
+<FONT color="green">271</FONT>          }<a name="line.271"></a>
+<FONT color="green">272</FONT>          else if (XObject.CLASS_NUMBER == obj2.getType())<a name="line.272"></a>
+<FONT color="green">273</FONT>          {<a name="line.273"></a>
+<FONT color="green">274</FONT>            return num() == obj2.num();<a name="line.274"></a>
+<FONT color="green">275</FONT>          }<a name="line.275"></a>
+<FONT color="green">276</FONT>          else if (XObject.CLASS_NODESET == obj2.getType())<a name="line.276"></a>
+<FONT color="green">277</FONT>          {<a name="line.277"></a>
+<FONT color="green">278</FONT>            return xstr().equals(obj2.xstr());<a name="line.278"></a>
+<FONT color="green">279</FONT>          }<a name="line.279"></a>
+<FONT color="green">280</FONT>          else if (XObject.CLASS_STRING == obj2.getType())<a name="line.280"></a>
+<FONT color="green">281</FONT>          {<a name="line.281"></a>
+<FONT color="green">282</FONT>            return xstr().equals(obj2.xstr());<a name="line.282"></a>
+<FONT color="green">283</FONT>          }<a name="line.283"></a>
+<FONT color="green">284</FONT>          else if (XObject.CLASS_RTREEFRAG == obj2.getType())<a name="line.284"></a>
+<FONT color="green">285</FONT>          {<a name="line.285"></a>
+<FONT color="green">286</FONT>      <a name="line.286"></a>
+<FONT color="green">287</FONT>            // Probably not so good.  Think about this.<a name="line.287"></a>
+<FONT color="green">288</FONT>            return xstr().equals(obj2.xstr());<a name="line.288"></a>
+<FONT color="green">289</FONT>          }<a name="line.289"></a>
+<FONT color="green">290</FONT>          else<a name="line.290"></a>
+<FONT color="green">291</FONT>          {<a name="line.291"></a>
+<FONT color="green">292</FONT>            return super.equals(obj2);<a name="line.292"></a>
+<FONT color="green">293</FONT>          }<a name="line.293"></a>
+<FONT color="green">294</FONT>        }<a name="line.294"></a>
+<FONT color="green">295</FONT>        catch(javax.xml.transform.TransformerException te)<a name="line.295"></a>
+<FONT color="green">296</FONT>        {<a name="line.296"></a>
+<FONT color="green">297</FONT>          throw new org.apache.xml.utils.WrappedRuntimeException(te);<a name="line.297"></a>
+<FONT color="green">298</FONT>        }<a name="line.298"></a>
+<FONT color="green">299</FONT>      }<a name="line.299"></a>
+<FONT color="green">300</FONT>    <a name="line.300"></a>
+<FONT color="green">301</FONT>    }<a name="line.301"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,1479 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: XConnection.java 468638 2006-10-28 06:52:06Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    package org.apache.xalan.lib.sql;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    import java.sql.Connection;<a name="line.23"></a>
+<FONT color="green">024</FONT>    import java.sql.SQLException;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import java.sql.SQLWarning;<a name="line.25"></a>
+<FONT color="green">026</FONT>    import java.util.Properties;<a name="line.26"></a>
+<FONT color="green">027</FONT>    import java.util.StringTokenizer;<a name="line.27"></a>
+<FONT color="green">028</FONT>    import java.util.Vector;<a name="line.28"></a>
+<FONT color="green">029</FONT>    <a name="line.29"></a>
+<FONT color="green">030</FONT>    import javax.xml.transform.ErrorListener;<a name="line.30"></a>
+<FONT color="green">031</FONT>    import javax.xml.transform.TransformerException;<a name="line.31"></a>
+<FONT color="green">032</FONT>    <a name="line.32"></a>
+<FONT color="green">033</FONT>    import org.apache.xalan.extensions.ExpressionContext;<a name="line.33"></a>
+<FONT color="green">034</FONT>    import org.apache.xml.dtm.DTM;<a name="line.34"></a>
+<FONT color="green">035</FONT>    import org.apache.xml.dtm.DTMIterator;<a name="line.35"></a>
+<FONT color="green">036</FONT>    import org.apache.xml.dtm.DTMManager;<a name="line.36"></a>
+<FONT color="green">037</FONT>    import org.apache.xml.dtm.ref.DTMManagerDefault;<a name="line.37"></a>
+<FONT color="green">038</FONT>    import org.apache.xml.dtm.ref.DTMNodeIterator;<a name="line.38"></a>
+<FONT color="green">039</FONT>    import org.apache.xml.dtm.ref.DTMNodeProxy;<a name="line.39"></a>
+<FONT color="green">040</FONT>    import org.apache.xpath.XPathContext;<a name="line.40"></a>
+<FONT color="green">041</FONT>    import org.apache.xpath.objects.XBooleanStatic;<a name="line.41"></a>
+<FONT color="green">042</FONT>    import org.apache.xpath.objects.XNodeSet;<a name="line.42"></a>
+<FONT color="green">043</FONT>    import org.w3c.dom.Element;<a name="line.43"></a>
+<FONT color="green">044</FONT>    import org.w3c.dom.NamedNodeMap;<a name="line.44"></a>
+<FONT color="green">045</FONT>    import org.w3c.dom.Node;<a name="line.45"></a>
+<FONT color="green">046</FONT>    import org.w3c.dom.NodeList;<a name="line.46"></a>
+<FONT color="green">047</FONT>    <a name="line.47"></a>
+<FONT color="green">048</FONT>    /**<a name="line.48"></a>
+<FONT color="green">049</FONT>     * An XSLT extension that allows a stylesheet to<a name="line.49"></a>
+<FONT color="green">050</FONT>     * access JDBC data.<a name="line.50"></a>
+<FONT color="green">051</FONT>     *<a name="line.51"></a>
+<FONT color="green">052</FONT>     * It is accessed by specifying a namespace URI as follows:<a name="line.52"></a>
+<FONT color="green">053</FONT>     * &lt;pre&gt;<a name="line.53"></a>
+<FONT color="green">054</FONT>     *    xmlns:sql="http://xml.apache.org/xalan/sql"<a name="line.54"></a>
+<FONT color="green">055</FONT>     * &lt;/pre&gt;<a name="line.55"></a>
+<FONT color="green">056</FONT>     *<a name="line.56"></a>
+<FONT color="green">057</FONT>     * From the stylesheet perspective,<a name="line.57"></a>
+<FONT color="green">058</FONT>     * XConnection provides 3 extension functions: new(),<a name="line.58"></a>
+<FONT color="green">059</FONT>     * query(), and close().<a name="line.59"></a>
+<FONT color="green">060</FONT>     * Use new() to call one of XConnection constructors, which<a name="line.60"></a>
+<FONT color="green">061</FONT>     * establishes a JDBC driver connection to a data source and<a name="line.61"></a>
+<FONT color="green">062</FONT>     * returns an XConnection object.<a name="line.62"></a>
+<FONT color="green">063</FONT>     * Then use the XConnection object query() method to return a<a name="line.63"></a>
+<FONT color="green">064</FONT>     * result set in the form of a row-set element.<a name="line.64"></a>
+<FONT color="green">065</FONT>     * When you have finished working with the row-set, call the<a name="line.65"></a>
+<FONT color="green">066</FONT>     * XConnection object close() method to terminate the connection.<a name="line.66"></a>
+<FONT color="green">067</FONT>     */<a name="line.67"></a>
+<FONT color="green">068</FONT>    public class XConnection<a name="line.68"></a>
+<FONT color="green">069</FONT>    {<a name="line.69"></a>
+<FONT color="green">070</FONT>    <a name="line.70"></a>
+<FONT color="green">071</FONT>      /**<a name="line.71"></a>
+<FONT color="green">072</FONT>       * Flag for DEBUG mode<a name="line.72"></a>
+<FONT color="green">073</FONT>       */<a name="line.73"></a>
+<FONT color="green">074</FONT>      private static final boolean DEBUG = false;<a name="line.74"></a>
+<FONT color="green">075</FONT>    <a name="line.75"></a>
+<FONT color="green">076</FONT>      /**<a name="line.76"></a>
+<FONT color="green">077</FONT>       * The Current Connection Pool in Use. An XConnection can only<a name="line.77"></a>
+<FONT color="green">078</FONT>       * represent one query at a time, prior to doing some type of query.<a name="line.78"></a>
+<FONT color="green">079</FONT>       */<a name="line.79"></a>
+<FONT color="green">080</FONT>      private ConnectionPool m_ConnectionPool = null;<a name="line.80"></a>
+<FONT color="green">081</FONT>    <a name="line.81"></a>
+<FONT color="green">082</FONT>      /**<a name="line.82"></a>
+<FONT color="green">083</FONT>       * The DBMS Connection used to produce this SQL Document.<a name="line.83"></a>
+<FONT color="green">084</FONT>       * Will be used to clear free up the database resources on<a name="line.84"></a>
+<FONT color="green">085</FONT>       * close.<a name="line.85"></a>
+<FONT color="green">086</FONT>       */<a name="line.86"></a>
+<FONT color="green">087</FONT>      private Connection m_Connection = null;<a name="line.87"></a>
+<FONT color="green">088</FONT>    <a name="line.88"></a>
+<FONT color="green">089</FONT>      /**<a name="line.89"></a>
+<FONT color="green">090</FONT>       * If a default Connection Pool is used. i.e. A connection Pool<a name="line.90"></a>
+<FONT color="green">091</FONT>       * that is created internally, then do we actually allow pools<a name="line.91"></a>
+<FONT color="green">092</FONT>       * to be created. Due to the archititure of the Xalan Extensions,<a name="line.92"></a>
+<FONT color="green">093</FONT>       * there is no notification of when the Extension is being unloaded and<a name="line.93"></a>
+<FONT color="green">094</FONT>       * as such, there is a good chance that JDBC COnnections are not closed.<a name="line.94"></a>
+<FONT color="green">095</FONT>       * A finalized is provided to try and catch this situation but since<a name="line.95"></a>
+<FONT color="green">096</FONT>       * support of finalizers is inconsistant across JVM's this may cause<a name="line.96"></a>
+<FONT color="green">097</FONT>       * a problem. The robustness of the JDBC Driver is also at issue here.<a name="line.97"></a>
+<FONT color="green">098</FONT>       * if a controlled shutdown is provided by the driver then default<a name="line.98"></a>
+<FONT color="green">099</FONT>       * conntectiom pools are OK.<a name="line.99"></a>
+<FONT color="green">100</FONT>       */<a name="line.100"></a>
+<FONT color="green">101</FONT>      private boolean m_DefaultPoolingEnabled = false;<a name="line.101"></a>
+<FONT color="green">102</FONT>    <a name="line.102"></a>
+<FONT color="green">103</FONT>    <a name="line.103"></a>
+<FONT color="green">104</FONT>      /**<a name="line.104"></a>
+<FONT color="green">105</FONT>       * As we do queries, we will produce SQL Documents. Any ony may produce<a name="line.105"></a>
+<FONT color="green">106</FONT>       * one or more SQL Documents so that the current connection information<a name="line.106"></a>
+<FONT color="green">107</FONT>       * may be easilly reused. This collection will hold a collection of all<a name="line.107"></a>
+<FONT color="green">108</FONT>       * the documents created. As Documents are closed, they will be removed<a name="line.108"></a>
+<FONT color="green">109</FONT>       * from the collection and told to free all the used resources.<a name="line.109"></a>
+<FONT color="green">110</FONT>       */<a name="line.110"></a>
+<FONT color="green">111</FONT>      private Vector m_OpenSQLDocuments = new Vector();<a name="line.111"></a>
+<FONT color="green">112</FONT>    <a name="line.112"></a>
+<FONT color="green">113</FONT>    <a name="line.113"></a>
+<FONT color="green">114</FONT>      /**<a name="line.114"></a>
+<FONT color="green">115</FONT>       * Let's keep a copy of the ConnectionPoolMgr in<a name="line.115"></a>
+<FONT color="green">116</FONT>       * alive here so we are keeping the static pool alive<a name="line.116"></a>
+<FONT color="green">117</FONT>       * We will also use this Pool Manager to register our default pools.<a name="line.117"></a>
+<FONT color="green">118</FONT>       */<a name="line.118"></a>
+<FONT color="green">119</FONT>      private ConnectionPoolManager m_PoolMgr = new ConnectionPoolManager();<a name="line.119"></a>
+<FONT color="green">120</FONT>    <a name="line.120"></a>
+<FONT color="green">121</FONT>      /**<a name="line.121"></a>
+<FONT color="green">122</FONT>       * For PreparedStatements, we need a place to<a name="line.122"></a>
+<FONT color="green">123</FONT>       * to store the parameters in a vector.<a name="line.123"></a>
+<FONT color="green">124</FONT>       */<a name="line.124"></a>
+<FONT color="green">125</FONT>      private Vector m_ParameterList = new Vector();<a name="line.125"></a>
+<FONT color="green">126</FONT>    <a name="line.126"></a>
+<FONT color="green">127</FONT>      /**<a name="line.127"></a>
+<FONT color="green">128</FONT>       * Allow the SQL Extensions to return null on error. The Error information will<a name="line.128"></a>
+<FONT color="green">129</FONT>       * be stored in a seperate Error Document that can easily be retrived using the<a name="line.129"></a>
+<FONT color="green">130</FONT>       * getError() method.<a name="line.130"></a>
+<FONT color="green">131</FONT>       * %REVIEW% This functionality will probably be buried inside the SQLDocument.<a name="line.131"></a>
+<FONT color="green">132</FONT>       */<a name="line.132"></a>
+<FONT color="green">133</FONT>      private Exception m_Error = null;<a name="line.133"></a>
+<FONT color="green">134</FONT>    <a name="line.134"></a>
+<FONT color="green">135</FONT>      /**<a name="line.135"></a>
+<FONT color="green">136</FONT>       * When the Stylesheet wants to review the errors from a paticular<a name="line.136"></a>
+<FONT color="green">137</FONT>       * document, it asks the XConnection. We need to track what document<a name="line.137"></a>
+<FONT color="green">138</FONT>       * in the list of managed documents caused the last error. As SetError<a name="line.138"></a>
+<FONT color="green">139</FONT>       * is called, it will record the document that had the error.<a name="line.139"></a>
+<FONT color="green">140</FONT>       */<a name="line.140"></a>
+<FONT color="green">141</FONT>      private SQLDocument     m_LastSQLDocumentWithError = null;<a name="line.141"></a>
+<FONT color="green">142</FONT>    <a name="line.142"></a>
+<FONT color="green">143</FONT>      /**<a name="line.143"></a>
+<FONT color="green">144</FONT>       * If true then full information should be returned about errors and warnings<a name="line.144"></a>
+<FONT color="green">145</FONT>       * in getError(). This includes chained errors and warnings.<a name="line.145"></a>
+<FONT color="green">146</FONT>       * If false (the default) then getError() returns just the first SQLException.<a name="line.146"></a>
+<FONT color="green">147</FONT>       */<a name="line.147"></a>
+<FONT color="green">148</FONT>      private boolean m_FullErrors = false;<a name="line.148"></a>
+<FONT color="green">149</FONT>    <a name="line.149"></a>
+<FONT color="green">150</FONT>    <a name="line.150"></a>
+<FONT color="green">151</FONT>    <a name="line.151"></a>
+<FONT color="green">152</FONT>      /**<a name="line.152"></a>
+<FONT color="green">153</FONT>       * One a per XConnection basis there is a master QueryParser that is responsible<a name="line.153"></a>
+<FONT color="green">154</FONT>       * for generating Query Parsers. This will allow us to cache previous instances<a name="line.154"></a>
+<FONT color="green">155</FONT>       * so the inline parser execution time is minimized.<a name="line.155"></a>
+<FONT color="green">156</FONT>       */<a name="line.156"></a>
+<FONT color="green">157</FONT>      private SQLQueryParser m_QueryParser = new SQLQueryParser();<a name="line.157"></a>
+<FONT color="green">158</FONT>    <a name="line.158"></a>
+<FONT color="green">159</FONT>      /**<a name="line.159"></a>
+<FONT color="green">160</FONT>       */<a name="line.160"></a>
+<FONT color="green">161</FONT>      private boolean m_IsDefaultPool = false;<a name="line.161"></a>
+<FONT color="green">162</FONT>    <a name="line.162"></a>
+<FONT color="green">163</FONT>      /**<a name="line.163"></a>
+<FONT color="green">164</FONT>       * This flag will be used to indicate to the SQLDocument to use<a name="line.164"></a>
+<FONT color="green">165</FONT>       * Streaming mode. Streeaming Mode will reduce the memory footprint<a name="line.165"></a>
+<FONT color="green">166</FONT>       * to a fixed amount but will not let you traverse the tree more than<a name="line.166"></a>
+<FONT color="green">167</FONT>       * once since the Row data will be reused for every Row in the Query.<a name="line.167"></a>
+<FONT color="green">168</FONT>       */<a name="line.168"></a>
+<FONT color="green">169</FONT>      private boolean m_IsStreamingEnabled = true;<a name="line.169"></a>
+<FONT color="green">170</FONT>    <a name="line.170"></a>
+<FONT color="green">171</FONT>      /**<a name="line.171"></a>
+<FONT color="green">172</FONT>       *<a name="line.172"></a>
+<FONT color="green">173</FONT>       */<a name="line.173"></a>
+<FONT color="green">174</FONT>       private boolean m_InlineVariables = false;<a name="line.174"></a>
+<FONT color="green">175</FONT>    <a name="line.175"></a>
+<FONT color="green">176</FONT>      /**<a name="line.176"></a>
+<FONT color="green">177</FONT>       * This flag will be used to indicate if multiple result sets are<a name="line.177"></a>
+<FONT color="green">178</FONT>       * supported from the database. If they are, then the metadata element is<a name="line.178"></a>
+<FONT color="green">179</FONT>       * moved to insude the row-set element and multiple row-set elements may<a name="line.179"></a>
+<FONT color="green">180</FONT>       * be included under the sql root element.<a name="line.180"></a>
+<FONT color="green">181</FONT>       */<a name="line.181"></a>
+<FONT color="green">182</FONT>      private boolean m_IsMultipleResultsEnabled = false;<a name="line.182"></a>
+<FONT color="green">183</FONT>    <a name="line.183"></a>
+<FONT color="green">184</FONT>      /**<a name="line.184"></a>
+<FONT color="green">185</FONT>       * This flag will be used to indicate if database preparedstatements<a name="line.185"></a>
+<FONT color="green">186</FONT>       * should be cached. This also controls if the Java statement object<a name="line.186"></a>
+<FONT color="green">187</FONT>       * should be cached.<a name="line.187"></a>
+<FONT color="green">188</FONT>       */<a name="line.188"></a>
+<FONT color="green">189</FONT>      private boolean m_IsStatementCachingEnabled = false;<a name="line.189"></a>
+<FONT color="green">190</FONT>    <a name="line.190"></a>
+<FONT color="green">191</FONT>      /**<a name="line.191"></a>
+<FONT color="green">192</FONT>       */<a name="line.192"></a>
+<FONT color="green">193</FONT>      public XConnection( )<a name="line.193"></a>
+<FONT color="green">194</FONT>      {<a name="line.194"></a>
+<FONT color="green">195</FONT>      }<a name="line.195"></a>
+<FONT color="green">196</FONT>    <a name="line.196"></a>
+<FONT color="green">197</FONT>      /**<a name="line.197"></a>
+<FONT color="green">198</FONT>       * Constructs a new XConnection and attempts to connect to a datasource as<a name="line.198"></a>
+<FONT color="green">199</FONT>       * defined in the<a name="line.199"></a>
+<FONT color="green">200</FONT>       * &lt;code&gt;connect(ExpressionContext exprContext, String connPoolName)&lt;/code&gt;<a name="line.200"></a>
+<FONT color="green">201</FONT>       * method.<a name="line.201"></a>
+<FONT color="green">202</FONT>       * &lt;code&gt;org.apache.xalan.lib.sql.ConnectionPool&lt;/code&gt; or a JNDI datasource.<a name="line.202"></a>
+<FONT color="green">203</FONT>       *<a name="line.203"></a>
+<FONT color="green">204</FONT>       * @param exprContext Context automatically passed from the XSLT sheet.<a name="line.204"></a>
+<FONT color="green">205</FONT>       * @param name The name of the ConnectionPool or the JNDI DataSource path.<a name="line.205"></a>
+<FONT color="green">206</FONT>       *<a name="line.206"></a>
+<FONT color="green">207</FONT>       */<a name="line.207"></a>
+<FONT color="green">208</FONT>      public XConnection( ExpressionContext exprContext, String connPoolName )<a name="line.208"></a>
+<FONT color="green">209</FONT>      {<a name="line.209"></a>
+<FONT color="green">210</FONT>        connect(exprContext, connPoolName);<a name="line.210"></a>
+<FONT color="green">211</FONT>      }<a name="line.211"></a>
+<FONT color="green">212</FONT>    <a name="line.212"></a>
+<FONT color="green">213</FONT>      /**<a name="line.213"></a>
+<FONT color="green">214</FONT>       * @param exprContext<a name="line.214"></a>
+<FONT color="green">215</FONT>       * @param driver<a name="line.215"></a>
+<FONT color="green">216</FONT>       * @param dbURL<a name="line.216"></a>
+<FONT color="green">217</FONT>       */<a name="line.217"></a>
+<FONT color="green">218</FONT>      public XConnection( ExpressionContext exprContext, String driver, String dbURL )<a name="line.218"></a>
+<FONT color="green">219</FONT>      {<a name="line.219"></a>
+<FONT color="green">220</FONT>        connect(exprContext, driver, dbURL);<a name="line.220"></a>
+<FONT color="green">221</FONT>      }<a name="line.221"></a>
+<FONT color="green">222</FONT>    <a name="line.222"></a>
+<FONT color="green">223</FONT>      /**<a name="line.223"></a>
+<FONT color="green">224</FONT>       * @param exprContext<a name="line.224"></a>
+<FONT color="green">225</FONT>       * @param list<a name="line.225"></a>
+<FONT color="green">226</FONT>       */<a name="line.226"></a>
+<FONT color="green">227</FONT>      public XConnection( ExpressionContext exprContext, NodeList list )<a name="line.227"></a>
+<FONT color="green">228</FONT>      {<a name="line.228"></a>
+<FONT color="green">229</FONT>        connect(exprContext, list);<a name="line.229"></a>
+<FONT color="green">230</FONT>      }<a name="line.230"></a>
+<FONT color="green">231</FONT>    <a name="line.231"></a>
+<FONT color="green">232</FONT>      /**<a name="line.232"></a>
+<FONT color="green">233</FONT>       * @param exprContext<a name="line.233"></a>
+<FONT color="green">234</FONT>       * @param driver<a name="line.234"></a>
+<FONT color="green">235</FONT>       * @param dbURL<a name="line.235"></a>
+<FONT color="green">236</FONT>       * @param user<a name="line.236"></a>
+<FONT color="green">237</FONT>       * @param password<a name="line.237"></a>
+<FONT color="green">238</FONT>       */<a name="line.238"></a>
+<FONT color="green">239</FONT>      public XConnection( ExpressionContext exprContext, String driver, String dbURL, String user, String password )<a name="line.239"></a>
+<FONT color="green">240</FONT>      {<a name="line.240"></a>
+<FONT color="green">241</FONT>        connect(exprContext, driver, dbURL, user, password);<a name="line.241"></a>
+<FONT color="green">242</FONT>      }<a name="line.242"></a>
+<FONT color="green">243</FONT>    <a name="line.243"></a>
+<FONT color="green">244</FONT>      /**<a name="line.244"></a>
+<FONT color="green">245</FONT>       * @param exprContext<a name="line.245"></a>
+<FONT color="green">246</FONT>       * @param driver<a name="line.246"></a>
+<FONT color="green">247</FONT>       * @param dbURL<a name="line.247"></a>
+<FONT color="green">248</FONT>       * @param protocolElem<a name="line.248"></a>
+<FONT color="green">249</FONT>       */<a name="line.249"></a>
+<FONT color="green">250</FONT>      public XConnection( ExpressionContext exprContext, String driver, String dbURL, Element protocolElem )<a name="line.250"></a>
+<FONT color="green">251</FONT>      {<a name="line.251"></a>
+<FONT color="green">252</FONT>        connect(exprContext, driver, dbURL, protocolElem);<a name="line.252"></a>
+<FONT color="green">253</FONT>      }<a name="line.253"></a>
+<FONT color="green">254</FONT>    <a name="line.254"></a>
+<FONT color="green">255</FONT>      /**<a name="line.255"></a>
+<FONT color="green">256</FONT>        * Returns an XConnection from either a user created<a name="line.256"></a>
+<FONT color="green">257</FONT>        * &lt;code&gt;org.apache.xalan.lib.sql.ConnectionPool&lt;/code&gt; or a JNDI datasource.<a name="line.257"></a>
+<FONT color="green">258</FONT>    <a name="line.258"></a>
+<FONT color="green">259</FONT>        * <a name="line.259"></a>
+<FONT color="green">260</FONT>        * This method first tries to resolve the passed name against<a name="line.260"></a>
+<FONT color="green">261</FONT>        * &lt;code&gt;ConnectionPool&lt;/code&gt;s registered with<a name="line.261"></a>
+<FONT color="green">262</FONT>        * &lt;code&gt;ConnectionPoolManager&lt;/code&gt;.<a name="line.262"></a>
+<FONT color="green">263</FONT>        * If that fails, it attempts to find the name as a JNDI DataSource path.<a name="line.263"></a>
+<FONT color="green">264</FONT>        *<a name="line.264"></a>
+<FONT color="green">265</FONT>        * @param exprContext Context automatically passed from the XSLT sheet.<a name="line.265"></a>
+<FONT color="green">266</FONT>        * @param name The name of the ConnectionPool or the JNDI DataSource path.<a name="line.266"></a>
+<FONT color="green">267</FONT>        *<a name="line.267"></a>
+<FONT color="green">268</FONT>        */<a name="line.268"></a>
+<FONT color="green">269</FONT>       public XBooleanStatic connect( ExpressionContext exprContext, String name )<a name="line.269"></a>
+<FONT color="green">270</FONT>       {<a name="line.270"></a>
+<FONT color="green">271</FONT>         try<a name="line.271"></a>
+<FONT color="green">272</FONT>         {<a name="line.272"></a>
+<FONT color="green">273</FONT>           m_ConnectionPool = m_PoolMgr.getPool(name);<a name="line.273"></a>
+<FONT color="green">274</FONT>    <a name="line.274"></a>
+<FONT color="green">275</FONT>           if (m_ConnectionPool == null)<a name="line.275"></a>
+<FONT color="green">276</FONT>           {<a name="line.276"></a>
+<FONT color="green">277</FONT>             //Try to create a jndi source with the passed name<a name="line.277"></a>
+<FONT color="green">278</FONT>             ConnectionPool pool = new JNDIConnectionPool(name);<a name="line.278"></a>
+<FONT color="green">279</FONT>            <a name="line.279"></a>
+<FONT color="green">280</FONT>             if (pool.testConnection())<a name="line.280"></a>
+<FONT color="green">281</FONT>             {<a name="line.281"></a>
+<FONT color="green">282</FONT>              <a name="line.282"></a>
+<FONT color="green">283</FONT>               //JNDIConnectionPool seems good, so register it with the pool manager.<a name="line.283"></a>
+<FONT color="green">284</FONT>               //Once registered, it will show up like other named ConnectionPool's,<a name="line.284"></a>
+<FONT color="green">285</FONT>               //so the m_PoolMgr.getPool(name) method (above) will find it.<a name="line.285"></a>
+<FONT color="green">286</FONT>               m_PoolMgr.registerPool(name, pool);<a name="line.286"></a>
+<FONT color="green">287</FONT>               m_ConnectionPool = pool;<a name="line.287"></a>
+<FONT color="green">288</FONT>              <a name="line.288"></a>
+<FONT color="green">289</FONT>               m_IsDefaultPool = false;<a name="line.289"></a>
+<FONT color="green">290</FONT>               return new XBooleanStatic(true);<a name="line.290"></a>
+<FONT color="green">291</FONT>             }<a name="line.291"></a>
+<FONT color="green">292</FONT>             else<a name="line.292"></a>
+<FONT color="green">293</FONT>             {<a name="line.293"></a>
+<FONT color="green">294</FONT>               throw new IllegalArgumentException(<a name="line.294"></a>
+<FONT color="green">295</FONT>                   "Invalid ConnectionPool name or JNDI Datasource path: " + name);<a name="line.295"></a>
+<FONT color="green">296</FONT>             }<a name="line.296"></a>
+<FONT color="green">297</FONT>           }<a name="line.297"></a>
+<FONT color="green">298</FONT>           else<a name="line.298"></a>
+<FONT color="green">299</FONT>           {<a name="line.299"></a>
+<FONT color="green">300</FONT>             m_IsDefaultPool = false;<a name="line.300"></a>
+<FONT color="green">301</FONT>             return new XBooleanStatic(true);<a name="line.301"></a>
+<FONT color="green">302</FONT>           }<a name="line.302"></a>
+<FONT color="green">303</FONT>         }<a name="line.303"></a>
+<FONT color="green">304</FONT>         catch (Exception e)<a name="line.304"></a>
+<FONT color="green">305</FONT>         {<a name="line.305"></a>
+<FONT color="green">306</FONT>           setError(e, exprContext);<a name="line.306"></a>
+<FONT color="green">307</FONT>           return new XBooleanStatic(false);<a name="line.307"></a>
+<FONT color="green">308</FONT>         }<a name="line.308"></a>
+<FONT color="green">309</FONT>    <a name="line.309"></a>
+<FONT color="green">310</FONT>       }<a name="line.310"></a>
+<FONT color="green">311</FONT>    <a name="line.311"></a>
+<FONT color="green">312</FONT>    <a name="line.312"></a>
+<FONT color="green">313</FONT>      /**<a name="line.313"></a>
+<FONT color="green">314</FONT>       * Create an XConnection object with just a driver and database URL.<a name="line.314"></a>
+<FONT color="green">315</FONT>       * @param exprContext<a name="line.315"></a>
+<FONT color="green">316</FONT>       * @param driver JDBC driver of the form foo.bar.Driver.<a name="line.316"></a>
+<FONT color="green">317</FONT>       * @param dbURL database URL of the form jdbc:subprotocol:subname.<a name="line.317"></a>
+<FONT color="green">318</FONT>       *<a name="line.318"></a>
+<FONT color="green">319</FONT>       */<a name="line.319"></a>
+<FONT color="green">320</FONT>      public XBooleanStatic connect( ExpressionContext exprContext, String driver, String dbURL )<a name="line.320"></a>
+<FONT color="green">321</FONT>      {<a name="line.321"></a>
+<FONT color="green">322</FONT>        try<a name="line.322"></a>
+<FONT color="green">323</FONT>        {<a name="line.323"></a>
+<FONT color="green">324</FONT>          init(driver, dbURL, new Properties());<a name="line.324"></a>
+<FONT color="green">325</FONT>          return new XBooleanStatic(true);<a name="line.325"></a>
+<FONT color="green">326</FONT>        }<a name="line.326"></a>
+<FONT color="green">327</FONT>        catch(SQLException e)<a name="line.327"></a>
+<FONT color="green">328</FONT>        {<a name="line.328"></a>
+<FONT color="green">329</FONT>          setError(e,exprContext);<a name="line.329"></a>
+<FONT color="green">330</FONT>          return new XBooleanStatic(false);<a name="line.330"></a>
+<FONT color="green">331</FONT>        }<a name="line.331"></a>
+<FONT color="green">332</FONT>        catch (Exception e)<a name="line.332"></a>
+<FONT color="green">333</FONT>        {<a name="line.333"></a>
+<FONT color="green">334</FONT>          setError(e,exprContext);<a name="line.334"></a>
+<FONT color="green">335</FONT>          return new XBooleanStatic(false);<a name="line.335"></a>
+<FONT color="green">336</FONT>        }<a name="line.336"></a>
+<FONT color="green">337</FONT>      }<a name="line.337"></a>
+<FONT color="green">338</FONT>    <a name="line.338"></a>
+<FONT color="green">339</FONT>      /**<a name="line.339"></a>
+<FONT color="green">340</FONT>       * @param exprContext<a name="line.340"></a>
+<FONT color="green">341</FONT>       * @param protocolElem<a name="line.341"></a>
+<FONT color="green">342</FONT>       *<a name="line.342"></a>
+<FONT color="green">343</FONT>       */<a name="line.343"></a>
+<FONT color="green">344</FONT>      public XBooleanStatic connect( ExpressionContext exprContext, Element protocolElem )<a name="line.344"></a>
+<FONT color="green">345</FONT>      {<a name="line.345"></a>
+<FONT color="green">346</FONT>        try<a name="line.346"></a>
+<FONT color="green">347</FONT>        {<a name="line.347"></a>
+<FONT color="green">348</FONT>          initFromElement(protocolElem);<a name="line.348"></a>
+<FONT color="green">349</FONT>          return new XBooleanStatic(true);<a name="line.349"></a>
+<FONT color="green">350</FONT>        }<a name="line.350"></a>
+<FONT color="green">351</FONT>        catch(SQLException e)<a name="line.351"></a>
+<FONT color="green">352</FONT>        {<a name="line.352"></a>
+<FONT color="green">353</FONT>          setError(e,exprContext);<a name="line.353"></a>
+<FONT color="green">354</FONT>          return new XBooleanStatic(false);<a name="line.354"></a>
+<FONT color="green">355</FONT>        }<a name="line.355"></a>
+<FONT color="green">356</FONT>        catch (Exception e)<a name="line.356"></a>
+<FONT color="green">357</FONT>        {<a name="line.357"></a>
+<FONT color="green">358</FONT>          setError(e,exprContext);<a name="line.358"></a>
+<FONT color="green">359</FONT>          return new XBooleanStatic(false);<a name="line.359"></a>
+<FONT color="green">360</FONT>        }<a name="line.360"></a>
+<FONT color="green">361</FONT>      }<a name="line.361"></a>
+<FONT color="green">362</FONT>    <a name="line.362"></a>
+<FONT color="green">363</FONT>      /**<a name="line.363"></a>
+<FONT color="green">364</FONT>       * @param exprContext<a name="line.364"></a>
+<FONT color="green">365</FONT>       * @param list<a name="line.365"></a>
+<FONT color="green">366</FONT>       *<a name="line.366"></a>
+<FONT color="green">367</FONT>       */<a name="line.367"></a>
+<FONT color="green">368</FONT>      public XBooleanStatic connect( ExpressionContext exprContext, NodeList list )<a name="line.368"></a>
+<FONT color="green">369</FONT>      {<a name="line.369"></a>
+<FONT color="green">370</FONT>        try<a name="line.370"></a>
+<FONT color="green">371</FONT>        {<a name="line.371"></a>
+<FONT color="green">372</FONT>          initFromElement( (Element) list.item(0) );<a name="line.372"></a>
+<FONT color="green">373</FONT>          return new XBooleanStatic(true);<a name="line.373"></a>
+<FONT color="green">374</FONT>        }<a name="line.374"></a>
+<FONT color="green">375</FONT>        catch(SQLException e)<a name="line.375"></a>
+<FONT color="green">376</FONT>        {<a name="line.376"></a>
+<FONT color="green">377</FONT>          setError(e, exprContext);<a name="line.377"></a>
+<FONT color="green">378</FONT>          return new XBooleanStatic(false);<a name="line.378"></a>
+<FONT color="green">379</FONT>        }<a name="line.379"></a>
+<FONT color="green">380</FONT>        catch (Exception e)<a name="line.380"></a>
+<FONT color="green">381</FONT>        {<a name="line.381"></a>
+<FONT color="green">382</FONT>          setError(e,exprContext);<a name="line.382"></a>
+<FONT color="green">383</FONT>          return new XBooleanStatic(false);<a name="line.383"></a>
+<FONT color="green">384</FONT>        }<a name="line.384"></a>
+<FONT color="green">385</FONT>      }<a name="line.385"></a>
+<FONT color="green">386</FONT>    <a name="line.386"></a>
+<FONT color="green">387</FONT>      /**<a name="line.387"></a>
+<FONT color="green">388</FONT>       * Create an XConnection object with user ID and password.<a name="line.388"></a>
+<FONT color="green">389</FONT>       * @param exprContext<a name="line.389"></a>
+<FONT color="green">390</FONT>       * @param driver JDBC driver of the form foo.bar.Driver.<a name="line.390"></a>
+<FONT color="green">391</FONT>       * @param dbURL database URL of the form jdbc:subprotocol:subname.<a name="line.391"></a>
+<FONT color="green">392</FONT>       * @param user user ID.<a name="line.392"></a>
+<FONT color="green">393</FONT>       * @param password connection password.<a name="line.393"></a>
+<FONT color="green">394</FONT>       *<a name="line.394"></a>
+<FONT color="green">395</FONT>       */<a name="line.395"></a>
+<FONT color="green">396</FONT>      public XBooleanStatic connect( ExpressionContext exprContext, String driver, String dbURL, String user, String password )<a name="line.396"></a>
+<FONT color="green">397</FONT>      {<a name="line.397"></a>
+<FONT color="green">398</FONT>        try<a name="line.398"></a>
+<FONT color="green">399</FONT>        {<a name="line.399"></a>
+<FONT color="green">400</FONT>          Properties prop = new Properties();<a name="line.400"></a>
+<FONT color="green">401</FONT>          prop.put("user", user);<a name="line.401"></a>
+<FONT color="green">402</FONT>          prop.put("password", password);<a name="line.402"></a>
+<FONT color="green">403</FONT>    <a name="line.403"></a>
+<FONT color="green">404</FONT>          init(driver, dbURL, prop);<a name="line.404"></a>
+<FONT color="green">405</FONT>    <a name="line.405"></a>
+<FONT color="green">406</FONT>          return new XBooleanStatic(true);<a name="line.406"></a>
+<FONT color="green">407</FONT>        }<a name="line.407"></a>
+<FONT color="green">408</FONT>        catch(SQLException e)<a name="line.408"></a>
+<FONT color="green">409</FONT>        {<a name="line.409"></a>
+<FONT color="green">410</FONT>          setError(e,exprContext);<a name="line.410"></a>
+<FONT color="green">411</FONT>          return new XBooleanStatic(false);<a name="line.411"></a>
+<FONT color="green">412</FONT>        }<a name="line.412"></a>
+<FONT color="green">413</FONT>        catch (Exception e)<a name="line.413"></a>
+<FONT color="green">414</FONT>        {<a name="line.414"></a>
+<FONT color="green">415</FONT>          setError(e,exprContext);<a name="line.415"></a>
+<FONT color="green">416</FONT>          return new XBooleanStatic(false);<a name="line.416"></a>
+<FONT color="green">417</FONT>        }<a name="line.417"></a>
+<FONT color="green">418</FONT>      }<a name="line.418"></a>
+<FONT color="green">419</FONT>    <a name="line.419"></a>
+<FONT color="green">420</FONT>    <a name="line.420"></a>
+<FONT color="green">421</FONT>      /**<a name="line.421"></a>
+<FONT color="green">422</FONT>       * Create an XConnection object with a connection protocol<a name="line.422"></a>
+<FONT color="green">423</FONT>       * @param exprContext<a name="line.423"></a>
+<FONT color="green">424</FONT>       * @param driver JDBC driver of the form foo.bar.Driver.<a name="line.424"></a>
+<FONT color="green">425</FONT>       * @param dbURL database URL of the form jdbc:subprotocol:subname.<a name="line.425"></a>
+<FONT color="green">426</FONT>       * @param protocolElem list of string tag/value connection arguments,<a name="line.426"></a>
+<FONT color="green">427</FONT>       * normally including at least "user" and "password".<a name="line.427"></a>
+<FONT color="green">428</FONT>       *<a name="line.428"></a>
+<FONT color="green">429</FONT>       */<a name="line.429"></a>
+<FONT color="green">430</FONT>      public XBooleanStatic connect( ExpressionContext exprContext, String driver, String dbURL, Element protocolElem )<a name="line.430"></a>
+<FONT color="green">431</FONT>      {<a name="line.431"></a>
+<FONT color="green">432</FONT>        try<a name="line.432"></a>
+<FONT color="green">433</FONT>        {<a name="line.433"></a>
+<FONT color="green">434</FONT>          Properties prop = new Properties();<a name="line.434"></a>
+<FONT color="green">435</FONT>    <a name="line.435"></a>
+<FONT color="green">436</FONT>          NamedNodeMap atts = protocolElem.getAttributes();<a name="line.436"></a>
+<FONT color="green">437</FONT>    <a name="line.437"></a>
+<FONT color="green">438</FONT>          for (int i = 0; i &lt; atts.getLength(); i++)<a name="line.438"></a>
+<FONT color="green">439</FONT>          {<a name="line.439"></a>
+<FONT color="green">440</FONT>            prop.put(atts.item(i).getNodeName(), atts.item(i).getNodeValue());<a name="line.440"></a>
+<FONT color="green">441</FONT>          }<a name="line.441"></a>
+<FONT color="green">442</FONT>    <a name="line.442"></a>
+<FONT color="green">443</FONT>          init(driver, dbURL, prop);<a name="line.443"></a>
+<FONT color="green">444</FONT>    <a name="line.444"></a>
+<FONT color="green">445</FONT>          return new XBooleanStatic(true);<a name="line.445"></a>
+<FONT color="green">446</FONT>        }<a name="line.446"></a>
+<FONT color="green">447</FONT>        catch(SQLException e)<a name="line.447"></a>
+<FONT color="green">448</FONT>        {<a name="line.448"></a>
+<FONT color="green">449</FONT>          setError(e,exprContext);<a name="line.449"></a>
+<FONT color="green">450</FONT>          return new XBooleanStatic(false);<a name="line.450"></a>
+<FONT color="green">451</FONT>        }<a name="line.451"></a>
+<FONT color="green">452</FONT>        catch (Exception e)<a name="line.452"></a>
+<FONT color="green">453</FONT>        {<a name="line.453"></a>
+<FONT color="green">454</FONT>          setError(e, exprContext);<a name="line.454"></a>
+<FONT color="green">455</FONT>          return new XBooleanStatic(false);<a name="line.455"></a>
+<FONT color="green">456</FONT>        }<a name="line.456"></a>
+<FONT color="green">457</FONT>      }<a name="line.457"></a>
+<FONT color="green">458</FONT>    <a name="line.458"></a>
+<FONT color="green">459</FONT>    <a name="line.459"></a>
+<FONT color="green">460</FONT>      /**<a name="line.460"></a>
+<FONT color="green">461</FONT>       * Allow the database connection information to be sepcified in<a name="line.461"></a>
+<FONT color="green">462</FONT>       * the XML tree. The connection information could also be<a name="line.462"></a>
+<FONT color="green">463</FONT>       * externally originated and passed in as an XSL Parameter.<a name="line.463"></a>
+<FONT color="green">464</FONT>       * The required XML Format is as follows.<a name="line.464"></a>
+<FONT color="green">465</FONT>       * A document fragment is needed to specify the connection information<a name="line.465"></a>
+<FONT color="green">466</FONT>       * the top tag name is not specific for this code, we are only interested<a name="line.466"></a>
+<FONT color="green">467</FONT>       * in the tags inside.<a name="line.467"></a>
+<FONT color="green">468</FONT>       * &lt;DBINFO-TAG&gt;<a name="line.468"></a>
+<FONT color="green">469</FONT>       * Specify the driver name for this connection pool<a name="line.469"></a>
+<FONT color="green">470</FONT>       * &lt;dbdriver&gt;drivername&lt;/dbdriver&gt;<a name="line.470"></a>
+<FONT color="green">471</FONT>       * Specify the URL for the driver in this connection pool<a name="line.471"></a>
+<FONT color="green">472</FONT>       * &lt;dburl&gt;url&lt;/dburl&gt;<a name="line.472"></a>
+<FONT color="green">473</FONT>       * Specify the password for this connection pool<a name="line.473"></a>
+<FONT color="green">474</FONT>       * &lt;password&gt;password&lt;/password&gt;<a name="line.474"></a>
+<FONT color="green">475</FONT>       * Specify the username for this connection pool<a name="line.475"></a>
+<FONT color="green">476</FONT>       * &lt;user&gt;username&lt;/user&gt;<a name="line.476"></a>
+<FONT color="green">477</FONT>       * You can add extra protocol items including the User Name &amp; Password<a name="line.477"></a>
+<FONT color="green">478</FONT>       * with the protocol tag. For each extra protocol item, add a new element<a name="line.478"></a>
+<FONT color="green">479</FONT>       * where the name of the item is specified as the name attribute and<a name="line.479"></a>
+<FONT color="green">480</FONT>       * and its value as the elements value.<a name="line.480"></a>
+<FONT color="green">481</FONT>       * &lt;protocol name="name of value"&gt;value&lt;/protocol&gt;<a name="line.481"></a>
+<FONT color="green">482</FONT>       * &lt;/DBINFO-TAG&gt;<a name="line.482"></a>
+<FONT color="green">483</FONT>       * @param e<a name="line.483"></a>
+<FONT color="green">484</FONT>       *<a name="line.484"></a>
+<FONT color="green">485</FONT>       * @throws SQLException<a name="line.485"></a>
+<FONT color="green">486</FONT>       */<a name="line.486"></a>
+<FONT color="green">487</FONT>      private void initFromElement( Element e )throws SQLException<a name="line.487"></a>
+<FONT color="green">488</FONT>      {<a name="line.488"></a>
+<FONT color="green">489</FONT>    <a name="line.489"></a>
+<FONT color="green">490</FONT>        Properties prop = new Properties();<a name="line.490"></a>
+<FONT color="green">491</FONT>        String driver = "";<a name="line.491"></a>
+<FONT color="green">492</FONT>        String dbURL = "";<a name="line.492"></a>
+<FONT color="green">493</FONT>        Node n = e.getFirstChild();<a name="line.493"></a>
+<FONT color="green">494</FONT>    <a name="line.494"></a>
+<FONT color="green">495</FONT>        if (null == n) return; // really need to throw an error<a name="line.495"></a>
+<FONT color="green">496</FONT>    <a name="line.496"></a>
+<FONT color="green">497</FONT>        do<a name="line.497"></a>
+<FONT color="green">498</FONT>        {<a name="line.498"></a>
+<FONT color="green">499</FONT>          String nName = n.getNodeName();<a name="line.499"></a>
+<FONT color="green">500</FONT>    <a name="line.500"></a>
+<FONT color="green">501</FONT>          if (nName.equalsIgnoreCase("dbdriver"))<a name="line.501"></a>
+<FONT color="green">502</FONT>          {<a name="line.502"></a>
+<FONT color="green">503</FONT>            driver = "";<a name="line.503"></a>
+<FONT color="green">504</FONT>            Node n1 = n.getFirstChild();<a name="line.504"></a>
+<FONT color="green">505</FONT>            if (null != n1)<a name="line.505"></a>
+<FONT color="green">506</FONT>            {<a name="line.506"></a>
+<FONT color="green">507</FONT>              driver = n1.getNodeValue();<a name="line.507"></a>
+<FONT color="green">508</FONT>            }<a name="line.508"></a>
+<FONT color="green">509</FONT>          }<a name="line.509"></a>
+<FONT color="green">510</FONT>    <a name="line.510"></a>
+<FONT color="green">511</FONT>          if (nName.equalsIgnoreCase("dburl"))<a name="line.511"></a>
+<FONT color="green">512</FONT>          {<a name="line.512"></a>
+<FONT color="green">513</FONT>            dbURL = "";<a name="line.513"></a>
+<FONT color="green">514</FONT>            Node n1 = n.getFirstChild();<a name="line.514"></a>
+<FONT color="green">515</FONT>            if (null != n1)<a name="line.515"></a>
+<FONT color="green">516</FONT>            {<a name="line.516"></a>
+<FONT color="green">517</FONT>              dbURL = n1.getNodeValue();<a name="line.517"></a>
+<FONT color="green">518</FONT>            }<a name="line.518"></a>
+<FONT color="green">519</FONT>          }<a name="line.519"></a>
+<FONT color="green">520</FONT>    <a name="line.520"></a>
+<FONT color="green">521</FONT>          if (nName.equalsIgnoreCase("password"))<a name="line.521"></a>
+<FONT color="green">522</FONT>          {<a name="line.522"></a>
+<FONT color="green">523</FONT>            String s = "";<a name="line.523"></a>
+<FONT color="green">524</FONT>            Node n1 = n.getFirstChild();<a name="line.524"></a>
+<FONT color="green">525</FONT>            if (null != n1)<a name="line.525"></a>
+<FONT color="green">526</FONT>            {<a name="line.526"></a>
+<FONT color="green">527</FONT>              s = n1.getNodeValue();<a name="line.527"></a>
+<FONT color="green">528</FONT>            }<a name="line.528"></a>
+<FONT color="green">529</FONT>            prop.put("password", s);<a name="line.529"></a>
+<FONT color="green">530</FONT>          }<a name="line.530"></a>
+<FONT color="green">531</FONT>    <a name="line.531"></a>
+<FONT color="green">532</FONT>          if (nName.equalsIgnoreCase("user"))<a name="line.532"></a>
+<FONT color="green">533</FONT>          {<a name="line.533"></a>
+<FONT color="green">534</FONT>            String s = "";<a name="line.534"></a>
+<FONT color="green">535</FONT>            Node n1 = n.getFirstChild();<a name="line.535"></a>
+<FONT color="green">536</FONT>            if (null != n1)<a name="line.536"></a>
+<FONT color="green">537</FONT>            {<a name="line.537"></a>
+<FONT color="green">538</FONT>              s = n1.getNodeValue();<a name="line.538"></a>
+<FONT color="green">539</FONT>            }<a name="line.539"></a>
+<FONT color="green">540</FONT>            prop.put("user", s);<a name="line.540"></a>
+<FONT color="green">541</FONT>          }<a name="line.541"></a>
+<FONT color="green">542</FONT>    <a name="line.542"></a>
+<FONT color="green">543</FONT>          if (nName.equalsIgnoreCase("protocol"))<a name="line.543"></a>
+<FONT color="green">544</FONT>          {<a name="line.544"></a>
+<FONT color="green">545</FONT>            String Name = "";<a name="line.545"></a>
+<FONT color="green">546</FONT>    <a name="line.546"></a>
+<FONT color="green">547</FONT>            NamedNodeMap attrs = n.getAttributes();<a name="line.547"></a>
+<FONT color="green">548</FONT>            Node n1 = attrs.getNamedItem("name");<a name="line.548"></a>
+<FONT color="green">549</FONT>            if (null != n1)<a name="line.549"></a>
+<FONT color="green">550</FONT>            {<a name="line.550"></a>
+<FONT color="green">551</FONT>              String s = "";<a name="line.551"></a>
+<FONT color="green">552</FONT>              Name = n1.getNodeValue();<a name="line.552"></a>
+<FONT color="green">553</FONT>    <a name="line.553"></a>
+<FONT color="green">554</FONT>              Node n2 = n.getFirstChild();<a name="line.554"></a>
+<FONT color="green">555</FONT>              if (null != n2) s = n2.getNodeValue();<a name="line.555"></a>
+<FONT color="green">556</FONT>    <a name="line.556"></a>
+<FONT color="green">557</FONT>              prop.put(Name, s);<a name="line.557"></a>
+<FONT color="green">558</FONT>            }<a name="line.558"></a>
+<FONT color="green">559</FONT>          }<a name="line.559"></a>
+<FONT color="green">560</FONT>    <a name="line.560"></a>
+<FONT color="green">561</FONT>        } while ( (n = n.getNextSibling()) != null);<a name="line.561"></a>
+<FONT color="green">562</FONT>    <a name="line.562"></a>
+<FONT color="green">563</FONT>        init(driver, dbURL, prop);<a name="line.563"></a>
+<FONT color="green">564</FONT>      }<a name="line.564"></a>
+<FONT color="green">565</FONT>    <a name="line.565"></a>
+<FONT color="green">566</FONT>    <a name="line.566"></a>
+<FONT color="green">567</FONT>    <a name="line.567"></a>
+<FONT color="green">568</FONT>      /**<a name="line.568"></a>
+<FONT color="green">569</FONT>       * Initilize is being called because we did not have an<a name="line.569"></a>
+<FONT color="green">570</FONT>       * existing Connection Pool, so let's see if we created one<a name="line.570"></a>
+<FONT color="green">571</FONT>       * already or lets create one ourselves.<a name="line.571"></a>
+<FONT color="green">572</FONT>       * @param driver<a name="line.572"></a>
+<FONT color="green">573</FONT>       * @param dbURL<a name="line.573"></a>
+<FONT color="green">574</FONT>       * @param prop<a name="line.574"></a>
+<FONT color="green">575</FONT>       *<a name="line.575"></a>
+<FONT color="green">576</FONT>       * @throws SQLException<a name="line.576"></a>
+<FONT color="green">577</FONT>       */<a name="line.577"></a>
+<FONT color="green">578</FONT>      private void init( String driver, String dbURL, Properties prop )throws SQLException<a name="line.578"></a>
+<FONT color="green">579</FONT>      {<a name="line.579"></a>
+<FONT color="green">580</FONT>        Connection con = null;<a name="line.580"></a>
+<FONT color="green">581</FONT>    <a name="line.581"></a>
+<FONT color="green">582</FONT>        if (DEBUG)<a name="line.582"></a>
+<FONT color="green">583</FONT>          System.out.println("XConnection, Connection Init");<a name="line.583"></a>
+<FONT color="green">584</FONT>    <a name="line.584"></a>
+<FONT color="green">585</FONT>        String user = prop.getProperty("user");<a name="line.585"></a>
+<FONT color="green">586</FONT>        if (user == null) user = "";<a name="line.586"></a>
+<FONT color="green">587</FONT>    <a name="line.587"></a>
+<FONT color="green">588</FONT>        String passwd = prop.getProperty("password");<a name="line.588"></a>
+<FONT color="green">589</FONT>        if (passwd == null) passwd = "";<a name="line.589"></a>
+<FONT color="green">590</FONT>    <a name="line.590"></a>
+<FONT color="green">591</FONT>    <a name="line.591"></a>
+<FONT color="green">592</FONT>        String poolName = driver + dbURL + user + passwd;<a name="line.592"></a>
+<FONT color="green">593</FONT>        ConnectionPool cpool = m_PoolMgr.getPool(poolName);<a name="line.593"></a>
+<FONT color="green">594</FONT>    <a name="line.594"></a>
+<FONT color="green">595</FONT>        if (cpool == null)<a name="line.595"></a>
+<FONT color="green">596</FONT>        {<a name="line.596"></a>
+<FONT color="green">597</FONT>    <a name="line.597"></a>
+<FONT color="green">598</FONT>          if (DEBUG)<a name="line.598"></a>
+<FONT color="green">599</FONT>          {<a name="line.599"></a>
+<FONT color="green">600</FONT>            System.out.println("XConnection, Creating Connection");<a name="line.600"></a>
+<FONT color="green">601</FONT>            System.out.println(" Driver  :" + driver);<a name="line.601"></a>
+<FONT color="green">602</FONT>            System.out.println(" URL     :" + dbURL);<a name="line.602"></a>
+<FONT color="green">603</FONT>            System.out.println(" user    :" + user);<a name="line.603"></a>
+<FONT color="green">604</FONT>            System.out.println(" passwd  :" + passwd);<a name="line.604"></a>
+<FONT color="green">605</FONT>          }<a name="line.605"></a>
+<FONT color="green">606</FONT>    <a name="line.606"></a>
+<FONT color="green">607</FONT>    <a name="line.607"></a>
+<FONT color="green">608</FONT>          DefaultConnectionPool defpool = new DefaultConnectionPool();<a name="line.608"></a>
+<FONT color="green">609</FONT>    <a name="line.609"></a>
+<FONT color="green">610</FONT>          if ((DEBUG) &amp;&amp; (defpool == null))<a name="line.610"></a>
+<FONT color="green">611</FONT>            System.out.println("Failed to Create a Default Connection Pool");<a name="line.611"></a>
+<FONT color="green">612</FONT>    <a name="line.612"></a>
+<FONT color="green">613</FONT>          defpool.setDriver(driver);<a name="line.613"></a>
+<FONT color="green">614</FONT>          defpool.setURL(dbURL);<a name="line.614"></a>
+<FONT color="green">615</FONT>          defpool.setProtocol(prop);<a name="line.615"></a>
+<FONT color="green">616</FONT>    <a name="line.616"></a>
+<FONT color="green">617</FONT>          // Only enable pooling in the default pool if we are explicatly<a name="line.617"></a>
+<FONT color="green">618</FONT>          // told too.<a name="line.618"></a>
+<FONT color="green">619</FONT>          if (m_DefaultPoolingEnabled) defpool.setPoolEnabled(true);<a name="line.619"></a>
+<FONT color="green">620</FONT>    <a name="line.620"></a>
+<FONT color="green">621</FONT>          m_PoolMgr.registerPool(poolName, defpool);<a name="line.621"></a>
+<FONT color="green">622</FONT>          m_ConnectionPool = defpool;<a name="line.622"></a>
+<FONT color="green">623</FONT>        }<a name="line.623"></a>
+<FONT color="green">624</FONT>        else<a name="line.624"></a>
+<FONT color="green">625</FONT>        {<a name="line.625"></a>
+<FONT color="green">626</FONT>          m_ConnectionPool = cpool;<a name="line.626"></a>
+<FONT color="green">627</FONT>        }<a name="line.627"></a>
+<FONT color="green">628</FONT>    <a name="line.628"></a>
+<FONT color="green">629</FONT>        m_IsDefaultPool = true;<a name="line.629"></a>
+<FONT color="green">630</FONT>    <a name="line.630"></a>
+<FONT color="green">631</FONT>        //<a name="line.631"></a>
+<FONT color="green">632</FONT>        // Let's test to see if we really can connect<a name="line.632"></a>
+<FONT color="green">633</FONT>        // Just remember to give it back after the test.<a name="line.633"></a>
+<FONT color="green">634</FONT>        //<a name="line.634"></a>
+<FONT color="green">635</FONT>        try<a name="line.635"></a>
+<FONT color="green">636</FONT>        {<a name="line.636"></a>
+<FONT color="green">637</FONT>          con = m_ConnectionPool.getConnection();<a name="line.637"></a>
+<FONT color="green">638</FONT>        }<a name="line.638"></a>
+<FONT color="green">639</FONT>        catch(SQLException e)<a name="line.639"></a>
+<FONT color="green">640</FONT>        {<a name="line.640"></a>
+<FONT color="green">641</FONT>          if (con != null)<a name="line.641"></a>
+<FONT color="green">642</FONT>          {<a name="line.642"></a>
+<FONT color="green">643</FONT>            m_ConnectionPool.releaseConnectionOnError(con);<a name="line.643"></a>
+<FONT color="green">644</FONT>            con = null;<a name="line.644"></a>
+<FONT color="green">645</FONT>          }<a name="line.645"></a>
+<FONT color="green">646</FONT>          throw e;<a name="line.646"></a>
+<FONT color="green">647</FONT>        }<a name="line.647"></a>
+<FONT color="green">648</FONT>        finally<a name="line.648"></a>
+<FONT color="green">649</FONT>        {<a name="line.649"></a>
+<FONT color="green">650</FONT>          if ( con != null ) m_ConnectionPool.releaseConnection(con);<a name="line.650"></a>
+<FONT color="green">651</FONT>        }<a name="line.651"></a>
+<FONT color="green">652</FONT>      }<a name="line.652"></a>
+<FONT color="green">653</FONT>    <a name="line.653"></a>
+<FONT color="green">654</FONT>      /**<a name="line.654"></a>
+<FONT color="green">655</FONT>       * Allow the SQL Document to retrive a connection to be used<a name="line.655"></a>
+<FONT color="green">656</FONT>       * to build the SQL Statement.<a name="line.656"></a>
+<FONT color="green">657</FONT>       */<a name="line.657"></a>
+<FONT color="green">658</FONT>      public ConnectionPool getConnectionPool()<a name="line.658"></a>
+<FONT color="green">659</FONT>      {<a name="line.659"></a>
+<FONT color="green">660</FONT>        return m_ConnectionPool;<a name="line.660"></a>
+<FONT color="green">661</FONT>      }<a name="line.661"></a>
+<FONT color="green">662</FONT>    <a name="line.662"></a>
+<FONT color="green">663</FONT>    <a name="line.663"></a>
+<FONT color="green">664</FONT>      /**<a name="line.664"></a>
+<FONT color="green">665</FONT>       * Execute a query statement by instantiating an<a name="line.665"></a>
+<FONT color="green">666</FONT>       * @param exprContext<a name="line.666"></a>
+<FONT color="green">667</FONT>       * @param queryString the SQL query.<a name="line.667"></a>
+<FONT color="green">668</FONT>       * @return XStatement implements NodeIterator.<a name="line.668"></a>
+<FONT color="green">669</FONT>       * @throws SQLException<a name="line.669"></a>
+<FONT color="green">670</FONT>       * @link org.apache.xalan.lib.sql.XStatement XStatement}<a name="line.670"></a>
+<FONT color="green">671</FONT>       * object. The XStatement executes the query, and uses the result set<a name="line.671"></a>
+<FONT color="green">672</FONT>       * to create a<a name="line.672"></a>
+<FONT color="green">673</FONT>       * @link org.apache.xalan.lib.sql.RowSet RowSet},<a name="line.673"></a>
+<FONT color="green">674</FONT>       * a row-set element.<a name="line.674"></a>
+<FONT color="green">675</FONT>       */<a name="line.675"></a>
+<FONT color="green">676</FONT>      public DTM query( ExpressionContext exprContext, String queryString )<a name="line.676"></a>
+<FONT color="green">677</FONT>      {<a name="line.677"></a>
+<FONT color="green">678</FONT>        SQLDocument doc = null;<a name="line.678"></a>
+<FONT color="green">679</FONT>    <a name="line.679"></a>
+<FONT color="green">680</FONT>        try<a name="line.680"></a>
+<FONT color="green">681</FONT>        {<a name="line.681"></a>
+<FONT color="green">682</FONT>          if (DEBUG) System.out.println("pquery()");<a name="line.682"></a>
+<FONT color="green">683</FONT>    <a name="line.683"></a>
+<FONT color="green">684</FONT>          // Build an Error Document, NOT Connected.<a name="line.684"></a>
+<FONT color="green">685</FONT>          if ( null == m_ConnectionPool ) return null;<a name="line.685"></a>
+<FONT color="green">686</FONT>    <a name="line.686"></a>
+<FONT color="green">687</FONT>          SQLQueryParser query =<a name="line.687"></a>
+<FONT color="green">688</FONT>              m_QueryParser.parse<a name="line.688"></a>
+<FONT color="green">689</FONT>                (this, queryString, SQLQueryParser.NO_INLINE_PARSER);<a name="line.689"></a>
+<FONT color="green">690</FONT>    <a name="line.690"></a>
+<FONT color="green">691</FONT>          doc = SQLDocument.getNewDocument(exprContext);<a name="line.691"></a>
+<FONT color="green">692</FONT>          doc.execute(this, query);<a name="line.692"></a>
+<FONT color="green">693</FONT>    <a name="line.693"></a>
+<FONT color="green">694</FONT>          // also keep a local reference<a name="line.694"></a>
+<FONT color="green">695</FONT>          m_OpenSQLDocuments.addElement(doc);<a name="line.695"></a>
+<FONT color="green">696</FONT>        }<a name="line.696"></a>
+<FONT color="green">697</FONT>        catch (Exception e)<a name="line.697"></a>
+<FONT color="green">698</FONT>        {<a name="line.698"></a>
+<FONT color="green">699</FONT>          // OK We had an error building the document, let try and grab the<a name="line.699"></a>
+<FONT color="green">700</FONT>          // error information and clean up our connections.<a name="line.700"></a>
+<FONT color="green">701</FONT>    <a name="line.701"></a>
+<FONT color="green">702</FONT>          if (DEBUG) System.out.println("exception in query()");<a name="line.702"></a>
+<FONT color="green">703</FONT>    <a name="line.703"></a>
+<FONT color="green">704</FONT>          if (doc != null)<a name="line.704"></a>
+<FONT color="green">705</FONT>          {<a name="line.705"></a>
+<FONT color="green">706</FONT>            if (doc.hasErrors())<a name="line.706"></a>
+<FONT color="green">707</FONT>            {<a name="line.707"></a>
+<FONT color="green">708</FONT>              setError(e, doc, doc.checkWarnings());<a name="line.708"></a>
+<FONT color="green">709</FONT>            }<a name="line.709"></a>
+<FONT color="green">710</FONT>    <a name="line.710"></a>
+<FONT color="green">711</FONT>            doc.close(m_IsDefaultPool);<a name="line.711"></a>
+<FONT color="green">712</FONT>            doc = null;<a name="line.712"></a>
+<FONT color="green">713</FONT>          }<a name="line.713"></a>
+<FONT color="green">714</FONT>        }<a name="line.714"></a>
+<FONT color="green">715</FONT>        finally<a name="line.715"></a>
+<FONT color="green">716</FONT>        {<a name="line.716"></a>
+<FONT color="green">717</FONT>          if (DEBUG) System.out.println("leaving query()");<a name="line.717"></a>
+<FONT color="green">718</FONT>        }<a name="line.718"></a>
+<FONT color="green">719</FONT>    <a name="line.719"></a>
+<FONT color="green">720</FONT>        // Doc will be null if there was an error<a name="line.720"></a>
+<FONT color="green">721</FONT>        return doc;<a name="line.721"></a>
+<FONT color="green">722</FONT>      }<a name="line.722"></a>
+<FONT color="green">723</FONT>    <a name="line.723"></a>
+<FONT color="green">724</FONT>      /**<a name="line.724"></a>
+<FONT color="green">725</FONT>       * Execute a parameterized query statement by instantiating an<a name="line.725"></a>
+<FONT color="green">726</FONT>       * @param exprContext<a name="line.726"></a>
+<FONT color="green">727</FONT>       * @param queryString the SQL query.<a name="line.727"></a>
+<FONT color="green">728</FONT>       * @return XStatement implements NodeIterator.<a name="line.728"></a>
+<FONT color="green">729</FONT>       * @throws SQLException<a name="line.729"></a>
+<FONT color="green">730</FONT>       * @link org.apache.xalan.lib.sql.XStatement XStatement}<a name="line.730"></a>
+<FONT color="green">731</FONT>       * object. The XStatement executes the query, and uses the result set<a name="line.731"></a>
+<FONT color="green">732</FONT>       * to create a<a name="line.732"></a>
+<FONT color="green">733</FONT>       * @link org.apache.xalan.lib.sql.RowSet RowSet},<a name="line.733"></a>
+<FONT color="green">734</FONT>       * a row-set element.<a name="line.734"></a>
+<FONT color="green">735</FONT>       */<a name="line.735"></a>
+<FONT color="green">736</FONT>      public DTM pquery( ExpressionContext exprContext, String queryString )<a name="line.736"></a>
+<FONT color="green">737</FONT>      {<a name="line.737"></a>
+<FONT color="green">738</FONT>        return(pquery(exprContext, queryString, null));<a name="line.738"></a>
+<FONT color="green">739</FONT>      }<a name="line.739"></a>
+<FONT color="green">740</FONT>    <a name="line.740"></a>
+<FONT color="green">741</FONT>      /**<a name="line.741"></a>
+<FONT color="green">742</FONT>       * Execute a parameterized query statement by instantiating an<a name="line.742"></a>
+<FONT color="green">743</FONT>       * @param exprContext<a name="line.743"></a>
+<FONT color="green">744</FONT>       * @param queryString the SQL query.<a name="line.744"></a>
+<FONT color="green">745</FONT>       * @param typeInfo<a name="line.745"></a>
+<FONT color="green">746</FONT>       * @return XStatement implements NodeIterator.<a name="line.746"></a>
+<FONT color="green">747</FONT>       * @throws SQLException<a name="line.747"></a>
+<FONT color="green">748</FONT>       * @link org.apache.xalan.lib.sql.XStatement XStatement}<a name="line.748"></a>
+<FONT color="green">749</FONT>       * object. The XStatement executes the query, and uses the result set<a name="line.749"></a>
+<FONT color="green">750</FONT>       * to create a<a name="line.750"></a>
+<FONT color="green">751</FONT>       * @link org.apache.xalan.lib.sql.RowSet RowSet},<a name="line.751"></a>
+<FONT color="green">752</FONT>       * a row-set element.<a name="line.752"></a>
+<FONT color="green">753</FONT>       * This method allows for the user to pass in a comma seperated<a name="line.753"></a>
+<FONT color="green">754</FONT>       * String that represents a list of parameter types. If supplied<a name="line.754"></a>
+<FONT color="green">755</FONT>       * the parameter types will be used to overload the current types<a name="line.755"></a>
+<FONT color="green">756</FONT>       * in the current parameter list.<a name="line.756"></a>
+<FONT color="green">757</FONT>       */<a name="line.757"></a>
+<FONT color="green">758</FONT>      public DTM pquery( ExpressionContext exprContext, String queryString, String typeInfo)<a name="line.758"></a>
+<FONT color="green">759</FONT>      {<a name="line.759"></a>
+<FONT color="green">760</FONT>        SQLDocument doc = null;<a name="line.760"></a>
+<FONT color="green">761</FONT>    <a name="line.761"></a>
+<FONT color="green">762</FONT>        try<a name="line.762"></a>
+<FONT color="green">763</FONT>        {<a name="line.763"></a>
+<FONT color="green">764</FONT>          if (DEBUG) System.out.println("pquery()");<a name="line.764"></a>
+<FONT color="green">765</FONT>    <a name="line.765"></a>
+<FONT color="green">766</FONT>          // Build an Error Document, NOT Connected.<a name="line.766"></a>
+<FONT color="green">767</FONT>          if ( null == m_ConnectionPool ) return null;<a name="line.767"></a>
+<FONT color="green">768</FONT>    <a name="line.768"></a>
+<FONT color="green">769</FONT>          SQLQueryParser query =<a name="line.769"></a>
+<FONT color="green">770</FONT>              m_QueryParser.parse<a name="line.770"></a>
+<FONT color="green">771</FONT>                (this, queryString, SQLQueryParser.NO_OVERRIDE);<a name="line.771"></a>
+<FONT color="green">772</FONT>    <a name="line.772"></a>
+<FONT color="green">773</FONT>          // If we are not using the inline parser, then let add the data<a name="line.773"></a>
+<FONT color="green">774</FONT>          // to the parser so it can populate the SQL Statement.<a name="line.774"></a>
+<FONT color="green">775</FONT>          if ( !m_InlineVariables )<a name="line.775"></a>
+<FONT color="green">776</FONT>          {<a name="line.776"></a>
+<FONT color="green">777</FONT>            addTypeToData(typeInfo);<a name="line.777"></a>
+<FONT color="green">778</FONT>            query.setParameters(m_ParameterList);<a name="line.778"></a>
+<FONT color="green">779</FONT>          }<a name="line.779"></a>
+<FONT color="green">780</FONT>    <a name="line.780"></a>
+<FONT color="green">781</FONT>          doc = SQLDocument.getNewDocument(exprContext);<a name="line.781"></a>
+<FONT color="green">782</FONT>          doc.execute(this, query);<a name="line.782"></a>
+<FONT color="green">783</FONT>    <a name="line.783"></a>
+<FONT color="green">784</FONT>          // also keep a local reference<a name="line.784"></a>
+<FONT color="green">785</FONT>          m_OpenSQLDocuments.addElement(doc);<a name="line.785"></a>
+<FONT color="green">786</FONT>        }<a name="line.786"></a>
+<FONT color="green">787</FONT>        catch (Exception e)<a name="line.787"></a>
+<FONT color="green">788</FONT>        {<a name="line.788"></a>
+<FONT color="green">789</FONT>          // OK We had an error building the document, let try and grab the<a name="line.789"></a>
+<FONT color="green">790</FONT>          // error information and clean up our connections.<a name="line.790"></a>
+<FONT color="green">791</FONT>    <a name="line.791"></a>
+<FONT color="green">792</FONT>          if (DEBUG) System.out.println("exception in query()");<a name="line.792"></a>
+<FONT color="green">793</FONT>    <a name="line.793"></a>
+<FONT color="green">794</FONT>          if (doc != null)<a name="line.794"></a>
+<FONT color="green">795</FONT>          {<a name="line.795"></a>
+<FONT color="green">796</FONT>            if (doc.hasErrors())<a name="line.796"></a>
+<FONT color="green">797</FONT>            {<a name="line.797"></a>
+<FONT color="green">798</FONT>              setError(e, doc, doc.checkWarnings());<a name="line.798"></a>
+<FONT color="green">799</FONT>            }<a name="line.799"></a>
+<FONT color="green">800</FONT>    <a name="line.800"></a>
+<FONT color="green">801</FONT>            // If we are using the Default Connection Pool, then<a name="line.801"></a>
+<FONT color="green">802</FONT>            // force the connection pool to flush unused connections.<a name="line.802"></a>
+<FONT color="green">803</FONT>            doc.close(m_IsDefaultPool);<a name="line.803"></a>
+<FONT color="green">804</FONT>            doc = null;<a name="line.804"></a>
+<FONT color="green">805</FONT>          }<a name="line.805"></a>
+<FONT color="green">806</FONT>        }<a name="line.806"></a>
+<FONT color="green">807</FONT>        finally<a name="line.807"></a>
+<FONT color="green">808</FONT>        {<a name="line.808"></a>
+<FONT color="green">809</FONT>          if (DEBUG) System.out.println("leaving query()");<a name="line.809"></a>
+<FONT color="green">810</FONT>        }<a name="line.810"></a>
+<FONT color="green">811</FONT>    <a name="line.811"></a>
+<FONT color="green">812</FONT>        // Doc will be null if there was an error<a name="line.812"></a>
+<FONT color="green">813</FONT>        return doc;<a name="line.813"></a>
+<FONT color="green">814</FONT>      }<a name="line.814"></a>
+<FONT color="green">815</FONT>    <a name="line.815"></a>
+<FONT color="green">816</FONT>      /**<a name="line.816"></a>
+<FONT color="green">817</FONT>       * The purpose of this routine is to force the DB cursor to skip forward<a name="line.817"></a>
+<FONT color="green">818</FONT>       * N records. You should call this function after [p]query to help with<a name="line.818"></a>
+<FONT color="green">819</FONT>       * pagination. i.e. Perfrom your select, then skip forward past the records<a name="line.819"></a>
+<FONT color="green">820</FONT>       * you read previously.<a name="line.820"></a>
+<FONT color="green">821</FONT>       * <a name="line.821"></a>
+<FONT color="green">822</FONT>       * @param exprContext<a name="line.822"></a>
+<FONT color="green">823</FONT>       * @param o<a name="line.823"></a>
+<FONT color="green">824</FONT>       * @param value<a name="line.824"></a>
+<FONT color="green">825</FONT>       */<a name="line.825"></a>
+<FONT color="green">826</FONT>      public void skipRec( ExpressionContext exprContext, Object o, int value )<a name="line.826"></a>
+<FONT color="green">827</FONT>      {<a name="line.827"></a>
+<FONT color="green">828</FONT>        SQLDocument sqldoc = null;<a name="line.828"></a>
+<FONT color="green">829</FONT>        DTMNodeIterator nodei = null;<a name="line.829"></a>
+<FONT color="green">830</FONT>          <a name="line.830"></a>
+<FONT color="green">831</FONT>        sqldoc = locateSQLDocument( exprContext, o);<a name="line.831"></a>
+<FONT color="green">832</FONT>        if (sqldoc != null) sqldoc.skip(value);<a name="line.832"></a>
+<FONT color="green">833</FONT>      }<a name="line.833"></a>
+<FONT color="green">834</FONT>    <a name="line.834"></a>
+<FONT color="green">835</FONT>      <a name="line.835"></a>
+<FONT color="green">836</FONT>    <a name="line.836"></a>
+<FONT color="green">837</FONT>      private void addTypeToData(String typeInfo)<a name="line.837"></a>
+<FONT color="green">838</FONT>      {<a name="line.838"></a>
+<FONT color="green">839</FONT>          int indx;<a name="line.839"></a>
+<FONT color="green">840</FONT>    <a name="line.840"></a>
+<FONT color="green">841</FONT>          if ( typeInfo != null &amp;&amp; m_ParameterList != null )<a name="line.841"></a>
+<FONT color="green">842</FONT>          {<a name="line.842"></a>
+<FONT color="green">843</FONT>              // Parse up the parameter types that were defined<a name="line.843"></a>
+<FONT color="green">844</FONT>              // with the query<a name="line.844"></a>
+<FONT color="green">845</FONT>              StringTokenizer plist = new StringTokenizer(typeInfo);<a name="line.845"></a>
+<FONT color="green">846</FONT>    <a name="line.846"></a>
+<FONT color="green">847</FONT>              // Override the existing type that is stored in the<a name="line.847"></a>
+<FONT color="green">848</FONT>              // parameter list. If there are more types than parameters<a name="line.848"></a>
+<FONT color="green">849</FONT>              // ignore for now, a more meaningfull error should occur<a name="line.849"></a>
+<FONT color="green">850</FONT>              // when the actual query is executed.<a name="line.850"></a>
+<FONT color="green">851</FONT>              indx = 0;<a name="line.851"></a>
+<FONT color="green">852</FONT>              while (plist.hasMoreTokens())<a name="line.852"></a>
+<FONT color="green">853</FONT>              {<a name="line.853"></a>
+<FONT color="green">854</FONT>                String value = plist.nextToken();<a name="line.854"></a>
+<FONT color="green">855</FONT>                QueryParameter qp = (QueryParameter) m_ParameterList.elementAt(indx);<a name="line.855"></a>
+<FONT color="green">856</FONT>                if ( null != qp )<a name="line.856"></a>
+<FONT color="green">857</FONT>                {<a name="line.857"></a>
+<FONT color="green">858</FONT>                  qp.setTypeName(value);<a name="line.858"></a>
+<FONT color="green">859</FONT>                }<a name="line.859"></a>
+<FONT color="green">860</FONT>    <a name="line.860"></a>
+<FONT color="green">861</FONT>                indx++;<a name="line.861"></a>
+<FONT color="green">862</FONT>              }<a name="line.862"></a>
+<FONT color="green">863</FONT>          }<a name="line.863"></a>
+<FONT color="green">864</FONT>      }<a name="line.864"></a>
+<FONT color="green">865</FONT>    <a name="line.865"></a>
+<FONT color="green">866</FONT>      /**<a name="line.866"></a>
+<FONT color="green">867</FONT>       * Add an untyped value to the parameter list.<a name="line.867"></a>
+<FONT color="green">868</FONT>       * @param value<a name="line.868"></a>
+<FONT color="green">869</FONT>       *<a name="line.869"></a>
+<FONT color="green">870</FONT>       */<a name="line.870"></a>
+<FONT color="green">871</FONT>      public void addParameter( String value )<a name="line.871"></a>
+<FONT color="green">872</FONT>      {<a name="line.872"></a>
+<FONT color="green">873</FONT>        addParameterWithType(value, null);<a name="line.873"></a>
+<FONT color="green">874</FONT>      }<a name="line.874"></a>
+<FONT color="green">875</FONT>    <a name="line.875"></a>
+<FONT color="green">876</FONT>      /**<a name="line.876"></a>
+<FONT color="green">877</FONT>       * Add a typed parameter to the parameter list.<a name="line.877"></a>
+<FONT color="green">878</FONT>       * @param value<a name="line.878"></a>
+<FONT color="green">879</FONT>       * @param Type<a name="line.879"></a>
+<FONT color="green">880</FONT>       *<a name="line.880"></a>
+<FONT color="green">881</FONT>       */<a name="line.881"></a>
+<FONT color="green">882</FONT>      public void addParameterWithType( String value, String Type )<a name="line.882"></a>
+<FONT color="green">883</FONT>      {<a name="line.883"></a>
+<FONT color="green">884</FONT>        m_ParameterList.addElement( new QueryParameter(value, Type) );<a name="line.884"></a>
+<FONT color="green">885</FONT>      }<a name="line.885"></a>
+<FONT color="green">886</FONT>    <a name="line.886"></a>
+<FONT color="green">887</FONT>    <a name="line.887"></a>
+<FONT color="green">888</FONT>      /**<a name="line.888"></a>
+<FONT color="green">889</FONT>       * Add a single parameter to the parameter list<a name="line.889"></a>
+<FONT color="green">890</FONT>       * formatted as an Element<a name="line.890"></a>
+<FONT color="green">891</FONT>       * @param e<a name="line.891"></a>
+<FONT color="green">892</FONT>       *<a name="line.892"></a>
+<FONT color="green">893</FONT>       */<a name="line.893"></a>
+<FONT color="green">894</FONT>      public void addParameterFromElement( Element e )<a name="line.894"></a>
+<FONT color="green">895</FONT>      {<a name="line.895"></a>
+<FONT color="green">896</FONT>        NamedNodeMap attrs = e.getAttributes();<a name="line.896"></a>
+<FONT color="green">897</FONT>        Node Type = attrs.getNamedItem("type");<a name="line.897"></a>
+<FONT color="green">898</FONT>        Node n1  = e.getFirstChild();<a name="line.898"></a>
+<FONT color="green">899</FONT>        if (null != n1)<a name="line.899"></a>
+<FONT color="green">900</FONT>        {<a name="line.900"></a>
+<FONT color="green">901</FONT>          String value = n1.getNodeValue();<a name="line.901"></a>
+<FONT color="green">902</FONT>          if (value == null) value = "";<a name="line.902"></a>
+<FONT color="green">903</FONT>          m_ParameterList.addElement( new QueryParameter(value, Type.getNodeValue()) );<a name="line.903"></a>
+<FONT color="green">904</FONT>        }<a name="line.904"></a>
+<FONT color="green">905</FONT>      }<a name="line.905"></a>
+<FONT color="green">906</FONT>    <a name="line.906"></a>
+<FONT color="green">907</FONT>    <a name="line.907"></a>
+<FONT color="green">908</FONT>      /**<a name="line.908"></a>
+<FONT color="green">909</FONT>       * Add a section of parameters to the Parameter List<a name="line.909"></a>
+<FONT color="green">910</FONT>       * Do each element from the list<a name="line.910"></a>
+<FONT color="green">911</FONT>       * @param nl<a name="line.911"></a>
+<FONT color="green">912</FONT>       *<a name="line.912"></a>
+<FONT color="green">913</FONT>       */<a name="line.913"></a>
+<FONT color="green">914</FONT>      public void addParameterFromElement( NodeList nl )<a name="line.914"></a>
+<FONT color="green">915</FONT>      {<a name="line.915"></a>
+<FONT color="green">916</FONT>        //<a name="line.916"></a>
+<FONT color="green">917</FONT>        // Each child of the NodeList represents a node<a name="line.917"></a>
+<FONT color="green">918</FONT>        // match from the select= statment. Process each<a name="line.918"></a>
+<FONT color="green">919</FONT>        // of them as a seperate list.<a name="line.919"></a>
+<FONT color="green">920</FONT>        // The XML Format is as follows<a name="line.920"></a>
+<FONT color="green">921</FONT>        //<a name="line.921"></a>
+<FONT color="green">922</FONT>        // &lt;START-TAG&gt;<a name="line.922"></a>
+<FONT color="green">923</FONT>        //   &lt;TAG1 type="int"&gt;value&lt;/TAG1&gt;<a name="line.923"></a>
+<FONT color="green">924</FONT>        //   &lt;TAGA type="int"&gt;value&lt;/TAGA&gt;<a name="line.924"></a>
+<FONT color="green">925</FONT>        //   &lt;TAG2 type="string"&gt;value&lt;/TAG2&gt;<a name="line.925"></a>
+<FONT color="green">926</FONT>        // &lt;/START-TAG&gt;<a name="line.926"></a>
+<FONT color="green">927</FONT>        //<a name="line.927"></a>
+<FONT color="green">928</FONT>        // The XSL to process this is formatted as follows<a name="line.928"></a>
+<FONT color="green">929</FONT>        // &lt;xsl:param name="plist" select="//START-TAG" /&gt;<a name="line.929"></a>
+<FONT color="green">930</FONT>        // &lt;sql:addParameter( $plist );<a name="line.930"></a>
+<FONT color="green">931</FONT>        //<a name="line.931"></a>
+<FONT color="green">932</FONT>        int count = nl.getLength();<a name="line.932"></a>
+<FONT color="green">933</FONT>        for (int x=0; x&lt;count; x++)<a name="line.933"></a>
+<FONT color="green">934</FONT>        {<a name="line.934"></a>
+<FONT color="green">935</FONT>          addParameters( (Element) nl.item(x));<a name="line.935"></a>
+<FONT color="green">936</FONT>        }<a name="line.936"></a>
+<FONT color="green">937</FONT>      }<a name="line.937"></a>
+<FONT color="green">938</FONT>    <a name="line.938"></a>
+<FONT color="green">939</FONT>      /**<a name="line.939"></a>
+<FONT color="green">940</FONT>       * @param elem<a name="line.940"></a>
+<FONT color="green">941</FONT>       *<a name="line.941"></a>
+<FONT color="green">942</FONT>       */<a name="line.942"></a>
+<FONT color="green">943</FONT>      private void addParameters( Element elem )<a name="line.943"></a>
+<FONT color="green">944</FONT>      {<a name="line.944"></a>
+<FONT color="green">945</FONT>        //<a name="line.945"></a>
+<FONT color="green">946</FONT>        // Process all of the Child Elements<a name="line.946"></a>
+<FONT color="green">947</FONT>        // The format is as follows<a name="line.947"></a>
+<FONT color="green">948</FONT>        //<a name="line.948"></a>
+<FONT color="green">949</FONT>        //&lt;TAG type ="typeid"&gt;value&lt;/TAG&gt;<a name="line.949"></a>
+<FONT color="green">950</FONT>        //&lt;TAG1 type ="typeid"&gt;value&lt;/TAG1&gt;<a name="line.950"></a>
+<FONT color="green">951</FONT>        //&lt;TAGA type ="typeid"&gt;value&lt;/TAGA&gt;<a name="line.951"></a>
+<FONT color="green">952</FONT>        //<a name="line.952"></a>
+<FONT color="green">953</FONT>        // The name of the Node is not important just is value<a name="line.953"></a>
+<FONT color="green">954</FONT>        // and if it contains a type attribute<a name="line.954"></a>
+<FONT color="green">955</FONT>    <a name="line.955"></a>
+<FONT color="green">956</FONT>        Node n = elem.getFirstChild();<a name="line.956"></a>
+<FONT color="green">957</FONT>    <a name="line.957"></a>
+<FONT color="green">958</FONT>        if (null == n) return;<a name="line.958"></a>
+<FONT color="green">959</FONT>    <a name="line.959"></a>
+<FONT color="green">960</FONT>        do<a name="line.960"></a>
+<FONT color="green">961</FONT>        {<a name="line.961"></a>
+<FONT color="green">962</FONT>          if (n.getNodeType() == Node.ELEMENT_NODE)<a name="line.962"></a>
+<FONT color="green">963</FONT>          {<a name="line.963"></a>
+<FONT color="green">964</FONT>            NamedNodeMap attrs = n.getAttributes();<a name="line.964"></a>
+<FONT color="green">965</FONT>            Node Type = attrs.getNamedItem("type");<a name="line.965"></a>
+<FONT color="green">966</FONT>            String TypeStr;<a name="line.966"></a>
+<FONT color="green">967</FONT>    <a name="line.967"></a>
+<FONT color="green">968</FONT>            if (Type == null) TypeStr = "string";<a name="line.968"></a>
+<FONT color="green">969</FONT>            else TypeStr = Type.getNodeValue();<a name="line.969"></a>
+<FONT color="green">970</FONT>    <a name="line.970"></a>
+<FONT color="green">971</FONT>            Node n1  = n.getFirstChild();<a name="line.971"></a>
+<FONT color="green">972</FONT>            if (null != n1)<a name="line.972"></a>
+<FONT color="green">973</FONT>            {<a name="line.973"></a>
+<FONT color="green">974</FONT>              String value = n1.getNodeValue();<a name="line.974"></a>
+<FONT color="green">975</FONT>              if (value == null) value = "";<a name="line.975"></a>
+<FONT color="green">976</FONT>    <a name="line.976"></a>
+<FONT color="green">977</FONT>    <a name="line.977"></a>
+<FONT color="green">978</FONT>              m_ParameterList.addElement(<a name="line.978"></a>
+<FONT color="green">979</FONT>                new QueryParameter(value, TypeStr) );<a name="line.979"></a>
+<FONT color="green">980</FONT>            }<a name="line.980"></a>
+<FONT color="green">981</FONT>          }<a name="line.981"></a>
+<FONT color="green">982</FONT>        } while ( (n = n.getNextSibling()) != null);<a name="line.982"></a>
+<FONT color="green">983</FONT>      }<a name="line.983"></a>
+<FONT color="green">984</FONT>    <a name="line.984"></a>
+<FONT color="green">985</FONT>      /**<a name="line.985"></a>
+<FONT color="green">986</FONT>       *<a name="line.986"></a>
+<FONT color="green">987</FONT>       */<a name="line.987"></a>
+<FONT color="green">988</FONT>      public void clearParameters( )<a name="line.988"></a>
+<FONT color="green">989</FONT>      {<a name="line.989"></a>
+<FONT color="green">990</FONT>        m_ParameterList.removeAllElements();<a name="line.990"></a>
+<FONT color="green">991</FONT>      }<a name="line.991"></a>
+<FONT color="green">992</FONT>    <a name="line.992"></a>
+<FONT color="green">993</FONT>      /**<a name="line.993"></a>
+<FONT color="green">994</FONT>       * There is a problem with some JDBC drivers when a Connection<a name="line.994"></a>
+<FONT color="green">995</FONT>       * is open and the JVM shutsdown. If there is a problem, there<a name="line.995"></a>
+<FONT color="green">996</FONT>       * is no way to control the currently open connections in the<a name="line.996"></a>
+<FONT color="green">997</FONT>       * pool. So for the default connection pool, the actuall pooling<a name="line.997"></a>
+<FONT color="green">998</FONT>       * mechinsm is disabled by default. The Stylesheet designer can<a name="line.998"></a>
+<FONT color="green">999</FONT>       * re-enabled pooling to take advantage of connection pools.<a name="line.999"></a>
+<FONT color="green">1000</FONT>       * The connection pool can even be disabled which will close all<a name="line.1000"></a>
+<FONT color="green">1001</FONT>       * outstanding connections.<a name="line.1001"></a>
+<FONT color="green">1002</FONT>       *<a name="line.1002"></a>
+<FONT color="green">1003</FONT>       * @deprecated Use setFeature("default-pool-enabled", "true");<a name="line.1003"></a>
+<FONT color="green">1004</FONT>       */<a name="line.1004"></a>
+<FONT color="green">1005</FONT>      public void enableDefaultConnectionPool( )<a name="line.1005"></a>
+<FONT color="green">1006</FONT>      {<a name="line.1006"></a>
+<FONT color="green">1007</FONT>    <a name="line.1007"></a>
+<FONT color="green">1008</FONT>        if (DEBUG)<a name="line.1008"></a>
+<FONT color="green">1009</FONT>          System.out.println("Enabling Default Connection Pool");<a name="line.1009"></a>
+<FONT color="green">1010</FONT>    <a name="line.1010"></a>
+<FONT color="green">1011</FONT>        m_DefaultPoolingEnabled = true;<a name="line.1011"></a>
+<FONT color="green">1012</FONT>    <a name="line.1012"></a>
+<FONT color="green">1013</FONT>        if (m_ConnectionPool == null) return;<a name="line.1013"></a>
+<FONT color="green">1014</FONT>        if (m_IsDefaultPool) return;<a name="line.1014"></a>
+<FONT color="green">1015</FONT>    <a name="line.1015"></a>
+<FONT color="green">1016</FONT>        m_ConnectionPool.setPoolEnabled(true);<a name="line.1016"></a>
+<FONT color="green">1017</FONT>    <a name="line.1017"></a>
+<FONT color="green">1018</FONT>      }<a name="line.1018"></a>
+<FONT color="green">1019</FONT>    <a name="line.1019"></a>
+<FONT color="green">1020</FONT>      /**<a name="line.1020"></a>
+<FONT color="green">1021</FONT>       * See enableDefaultConnectionPool<a name="line.1021"></a>
+<FONT color="green">1022</FONT>       *<a name="line.1022"></a>
+<FONT color="green">1023</FONT>       * @deprecated Use setFeature("default-pool-enabled", "false");<a name="line.1023"></a>
+<FONT color="green">1024</FONT>       */<a name="line.1024"></a>
+<FONT color="green">1025</FONT>      public void disableDefaultConnectionPool( )<a name="line.1025"></a>
+<FONT color="green">1026</FONT>      {<a name="line.1026"></a>
+<FONT color="green">1027</FONT>        if (DEBUG)<a name="line.1027"></a>
+<FONT color="green">1028</FONT>          System.out.println("Disabling Default Connection Pool");<a name="line.1028"></a>
+<FONT color="green">1029</FONT>    <a name="line.1029"></a>
+<FONT color="green">1030</FONT>        m_DefaultPoolingEnabled = false;<a name="line.1030"></a>
+<FONT color="green">1031</FONT>    <a name="line.1031"></a>
+<FONT color="green">1032</FONT>        if (m_ConnectionPool == null) return;<a name="line.1032"></a>
+<FONT color="green">1033</FONT>        if (!m_IsDefaultPool) return;<a name="line.1033"></a>
+<FONT color="green">1034</FONT>    <a name="line.1034"></a>
+<FONT color="green">1035</FONT>        m_ConnectionPool.setPoolEnabled(false);<a name="line.1035"></a>
+<FONT color="green">1036</FONT>      }<a name="line.1036"></a>
+<FONT color="green">1037</FONT>    <a name="line.1037"></a>
+<FONT color="green">1038</FONT>    <a name="line.1038"></a>
+<FONT color="green">1039</FONT>      /**<a name="line.1039"></a>
+<FONT color="green">1040</FONT>       * Control how the SQL Document uses memory. In Streaming Mode,<a name="line.1040"></a>
+<FONT color="green">1041</FONT>       * memory consumption is greatly reduces so you can have queries<a name="line.1041"></a>
+<FONT color="green">1042</FONT>       * of unlimited size but it will not let you traverse the data<a name="line.1042"></a>
+<FONT color="green">1043</FONT>       * more than once.<a name="line.1043"></a>
+<FONT color="green">1044</FONT>       *<a name="line.1044"></a>
+<FONT color="green">1045</FONT>       * @deprecated Use setFeature("streaming", "true");<a name="line.1045"></a>
+<FONT color="green">1046</FONT>       */<a name="line.1046"></a>
+<FONT color="green">1047</FONT>      public void enableStreamingMode( )<a name="line.1047"></a>
+<FONT color="green">1048</FONT>      {<a name="line.1048"></a>
+<FONT color="green">1049</FONT>    <a name="line.1049"></a>
+<FONT color="green">1050</FONT>        if (DEBUG)<a name="line.1050"></a>
+<FONT color="green">1051</FONT>          System.out.println("Enabling Streaming Mode");<a name="line.1051"></a>
+<FONT color="green">1052</FONT>    <a name="line.1052"></a>
+<FONT color="green">1053</FONT>        m_IsStreamingEnabled = true;<a name="line.1053"></a>
+<FONT color="green">1054</FONT>      }<a name="line.1054"></a>
+<FONT color="green">1055</FONT>    <a name="line.1055"></a>
+<FONT color="green">1056</FONT>      /**<a name="line.1056"></a>
+<FONT color="green">1057</FONT>       * Control how the SQL Document uses memory. In Streaming Mode,<a name="line.1057"></a>
+<FONT color="green">1058</FONT>       * memory consumption is greatly reduces so you can have queries<a name="line.1058"></a>
+<FONT color="green">1059</FONT>       * of unlimited size but it will not let you traverse the data<a name="line.1059"></a>
+<FONT color="green">1060</FONT>       * more than once.<a name="line.1060"></a>
+<FONT color="green">1061</FONT>       *<a name="line.1061"></a>
+<FONT color="green">1062</FONT>       * @deprecated Use setFeature("streaming", "false");<a name="line.1062"></a>
+<FONT color="green">1063</FONT>       */<a name="line.1063"></a>
+<FONT color="green">1064</FONT>      public void disableStreamingMode( )<a name="line.1064"></a>
+<FONT color="green">1065</FONT>      {<a name="line.1065"></a>
+<FONT color="green">1066</FONT>    <a name="line.1066"></a>
+<FONT color="green">1067</FONT>        if (DEBUG)<a name="line.1067"></a>
+<FONT color="green">1068</FONT>          System.out.println("Disable Streaming Mode");<a name="line.1068"></a>
+<FONT color="green">1069</FONT>    <a name="line.1069"></a>
+<FONT color="green">1070</FONT>        m_IsStreamingEnabled = false;<a name="line.1070"></a>
+<FONT color="green">1071</FONT>      }<a name="line.1071"></a>
+<FONT color="green">1072</FONT>    <a name="line.1072"></a>
+<FONT color="green">1073</FONT>      /**<a name="line.1073"></a>
+<FONT color="green">1074</FONT>       * Provide access to the last error that occued. This error<a name="line.1074"></a>
+<FONT color="green">1075</FONT>       * may be over written when the next operation occurs.<a name="line.1075"></a>
+<FONT color="green">1076</FONT>       *<a name="line.1076"></a>
+<FONT color="green">1077</FONT>       */<a name="line.1077"></a>
+<FONT color="green">1078</FONT>      public DTM getError( )<a name="line.1078"></a>
+<FONT color="green">1079</FONT>      {<a name="line.1079"></a>
+<FONT color="green">1080</FONT>        if ( m_FullErrors )<a name="line.1080"></a>
+<FONT color="green">1081</FONT>        {<a name="line.1081"></a>
+<FONT color="green">1082</FONT>          for ( int idx = 0 ; idx &lt; m_OpenSQLDocuments.size() ; idx++ )<a name="line.1082"></a>
+<FONT color="green">1083</FONT>          {<a name="line.1083"></a>
+<FONT color="green">1084</FONT>            SQLDocument doc = (SQLDocument)m_OpenSQLDocuments.elementAt(idx);<a name="line.1084"></a>
+<FONT color="green">1085</FONT>            SQLWarning warn = doc.checkWarnings();<a name="line.1085"></a>
+<FONT color="green">1086</FONT>            if ( warn != null ) setError(null, doc, warn);<a name="line.1086"></a>
+<FONT color="green">1087</FONT>          }<a name="line.1087"></a>
+<FONT color="green">1088</FONT>        }<a name="line.1088"></a>
+<FONT color="green">1089</FONT>    <a name="line.1089"></a>
+<FONT color="green">1090</FONT>        return(buildErrorDocument());<a name="line.1090"></a>
+<FONT color="green">1091</FONT>      }<a name="line.1091"></a>
+<FONT color="green">1092</FONT>    <a name="line.1092"></a>
+<FONT color="green">1093</FONT>      /**<a name="line.1093"></a>
+<FONT color="green">1094</FONT>       * Close the connection to the data source.<a name="line.1094"></a>
+<FONT color="green">1095</FONT>       *<a name="line.1095"></a>
+<FONT color="green">1096</FONT>       * @throws SQLException<a name="line.1096"></a>
+<FONT color="green">1097</FONT>       */<a name="line.1097"></a>
+<FONT color="green">1098</FONT>      public void close( )throws SQLException<a name="line.1098"></a>
+<FONT color="green">1099</FONT>      {<a name="line.1099"></a>
+<FONT color="green">1100</FONT>        if (DEBUG)<a name="line.1100"></a>
+<FONT color="green">1101</FONT>          System.out.println("Entering XConnection.close()");<a name="line.1101"></a>
+<FONT color="green">1102</FONT>    <a name="line.1102"></a>
+<FONT color="green">1103</FONT>        //<a name="line.1103"></a>
+<FONT color="green">1104</FONT>        // This function is included just for Legacy support<a name="line.1104"></a>
+<FONT color="green">1105</FONT>        // If it is really called then we must me using a single<a name="line.1105"></a>
+<FONT color="green">1106</FONT>        // document interface, so close all open documents.<a name="line.1106"></a>
+<FONT color="green">1107</FONT>    <a name="line.1107"></a>
+<FONT color="green">1108</FONT>        while(m_OpenSQLDocuments.size() != 0)<a name="line.1108"></a>
+<FONT color="green">1109</FONT>        {<a name="line.1109"></a>
+<FONT color="green">1110</FONT>          SQLDocument d = (SQLDocument) m_OpenSQLDocuments.elementAt(0);<a name="line.1110"></a>
+<FONT color="green">1111</FONT>          try<a name="line.1111"></a>
+<FONT color="green">1112</FONT>          {<a name="line.1112"></a>
+<FONT color="green">1113</FONT>            // If we are using the Default Connection Pool, then<a name="line.1113"></a>
+<FONT color="green">1114</FONT>            // force the connection pool to flush unused connections.<a name="line.1114"></a>
+<FONT color="green">1115</FONT>            d.close(m_IsDefaultPool);<a name="line.1115"></a>
+<FONT color="green">1116</FONT>          }<a name="line.1116"></a>
+<FONT color="green">1117</FONT>          catch (Exception se ) {}<a name="line.1117"></a>
+<FONT color="green">1118</FONT>    <a name="line.1118"></a>
+<FONT color="green">1119</FONT>          m_OpenSQLDocuments.removeElementAt(0);<a name="line.1119"></a>
+<FONT color="green">1120</FONT>        }<a name="line.1120"></a>
+<FONT color="green">1121</FONT>    <a name="line.1121"></a>
+<FONT color="green">1122</FONT>        if ( null != m_Connection )<a name="line.1122"></a>
+<FONT color="green">1123</FONT>        {<a name="line.1123"></a>
+<FONT color="green">1124</FONT>          m_ConnectionPool.releaseConnection(m_Connection);<a name="line.1124"></a>
+<FONT color="green">1125</FONT>          m_Connection = null;<a name="line.1125"></a>
+<FONT color="green">1126</FONT>        }<a name="line.1126"></a>
+<FONT color="green">1127</FONT>    <a name="line.1127"></a>
+<FONT color="green">1128</FONT>        if (DEBUG)<a name="line.1128"></a>
+<FONT color="green">1129</FONT>          System.out.println("Exiting XConnection.close");<a name="line.1129"></a>
+<FONT color="green">1130</FONT>      }<a name="line.1130"></a>
+<FONT color="green">1131</FONT>    <a name="line.1131"></a>
+<FONT color="green">1132</FONT>      /**<a name="line.1132"></a>
+<FONT color="green">1133</FONT>       * Close the connection to the data source. Only close the connections<a name="line.1133"></a>
+<FONT color="green">1134</FONT>       * for a single document.<a name="line.1134"></a>
+<FONT color="green">1135</FONT>       *<a name="line.1135"></a>
+<FONT color="green">1136</FONT>       * @throws SQLException<a name="line.1136"></a>
+<FONT color="green">1137</FONT>       */<a name="line.1137"></a>
+<FONT color="green">1138</FONT>    <a name="line.1138"></a>
+<FONT color="green">1139</FONT>      public void close(ExpressionContext exprContext, Object doc) throws SQLException <a name="line.1139"></a>
+<FONT color="green">1140</FONT>      {<a name="line.1140"></a>
+<FONT color="green">1141</FONT>        if (DEBUG)<a name="line.1141"></a>
+<FONT color="green">1142</FONT>            System.out.println("Entering XConnection.close(" + doc + ")");<a name="line.1142"></a>
+<FONT color="green">1143</FONT>    <a name="line.1143"></a>
+<FONT color="green">1144</FONT>        SQLDocument sqlDoc = locateSQLDocument(exprContext, doc);<a name="line.1144"></a>
+<FONT color="green">1145</FONT>        if (sqlDoc != null)<a name="line.1145"></a>
+<FONT color="green">1146</FONT>        {<a name="line.1146"></a>
+<FONT color="green">1147</FONT>          // If we are using the Default Connection Pool, then<a name="line.1147"></a>
+<FONT color="green">1148</FONT>          // force the connection pool to flush unused connections.<a name="line.1148"></a>
+<FONT color="green">1149</FONT>          sqlDoc.close(m_IsDefaultPool);<a name="line.1149"></a>
+<FONT color="green">1150</FONT>          m_OpenSQLDocuments.remove(sqlDoc);<a name="line.1150"></a>
+<FONT color="green">1151</FONT>        } <a name="line.1151"></a>
+<FONT color="green">1152</FONT>      }<a name="line.1152"></a>
+<FONT color="green">1153</FONT>    <a name="line.1153"></a>
+<FONT color="green">1154</FONT>    <a name="line.1154"></a>
+<FONT color="green">1155</FONT>      /**<a name="line.1155"></a>
+<FONT color="green">1156</FONT>       * When an SQL Document is returned as a DTM object, the XSL variable is actually <a name="line.1156"></a>
+<FONT color="green">1157</FONT>       * assigned as a DTMIterator. This is a helper function that will allow you to get<a name="line.1157"></a>
+<FONT color="green">1158</FONT>       * a reference to the original SQLDocument from the iterator.<a name="line.1158"></a>
+<FONT color="green">1159</FONT>       * <a name="line.1159"></a>
+<FONT color="green">1160</FONT>       * Original code submitted by <a name="line.1160"></a>
+<FONT color="green">1161</FONT>       *  Moraine Didier mailto://didier.moraine@winterthur.be<a name="line.1161"></a>
+<FONT color="green">1162</FONT>       * @param doc<a name="line.1162"></a>
+<FONT color="green">1163</FONT>       * @return<a name="line.1163"></a>
+<FONT color="green">1164</FONT>       */<a name="line.1164"></a>
+<FONT color="green">1165</FONT>      private SQLDocument locateSQLDocument(ExpressionContext exprContext, Object doc)<a name="line.1165"></a>
+<FONT color="green">1166</FONT>      {<a name="line.1166"></a>
+<FONT color="green">1167</FONT>        try<a name="line.1167"></a>
+<FONT color="green">1168</FONT>        {<a name="line.1168"></a>
+<FONT color="green">1169</FONT>          if (doc instanceof DTMNodeIterator)<a name="line.1169"></a>
+<FONT color="green">1170</FONT>          {<a name="line.1170"></a>
+<FONT color="green">1171</FONT>            DTMNodeIterator dtmIter = (DTMNodeIterator)doc;<a name="line.1171"></a>
+<FONT color="green">1172</FONT>            try<a name="line.1172"></a>
+<FONT color="green">1173</FONT>            {<a name="line.1173"></a>
+<FONT color="green">1174</FONT>              DTMNodeProxy root = (DTMNodeProxy)dtmIter.getRoot();<a name="line.1174"></a>
+<FONT color="green">1175</FONT>              return (SQLDocument) root.getDTM();<a name="line.1175"></a>
+<FONT color="green">1176</FONT>            }<a name="line.1176"></a>
+<FONT color="green">1177</FONT>            catch (Exception e)<a name="line.1177"></a>
+<FONT color="green">1178</FONT>            {<a name="line.1178"></a>
+<FONT color="green">1179</FONT>              XNodeSet xNS = (XNodeSet)dtmIter.getDTMIterator();<a name="line.1179"></a>
+<FONT color="green">1180</FONT>              DTMIterator iter = (DTMIterator)xNS.getContainedIter();<a name="line.1180"></a>
+<FONT color="green">1181</FONT>              DTM dtm = iter.getDTM(xNS.nextNode());<a name="line.1181"></a>
+<FONT color="green">1182</FONT>              return (SQLDocument)dtm;<a name="line.1182"></a>
+<FONT color="green">1183</FONT>            }<a name="line.1183"></a>
+<FONT color="green">1184</FONT>          }<a name="line.1184"></a>
+<FONT color="green">1185</FONT>    <a name="line.1185"></a>
+<FONT color="green">1186</FONT>    /*<a name="line.1186"></a>
+<FONT color="green">1187</FONT>          XNodeSet xNS = (XNodeSet)dtmIter.getDTMIterator();<a name="line.1187"></a>
+<FONT color="green">1188</FONT>          OneStepIterator iter = (OneStepIterator)xNS.getContainedIter();<a name="line.1188"></a>
+<FONT color="green">1189</FONT>          DTMManager aDTMManager = (DTMManager)iter.getDTMManager();<a name="line.1189"></a>
+<FONT color="green">1190</FONT>          return (SQLDocument)aDTMManager.getDTM(xNS.nextNode());<a name="line.1190"></a>
+<FONT color="green">1191</FONT>    */<a name="line.1191"></a>
+<FONT color="green">1192</FONT>          setError(new Exception("SQL Extension:close - Can Not Identify SQLDocument"), exprContext);    <a name="line.1192"></a>
+<FONT color="green">1193</FONT>          return null;  <a name="line.1193"></a>
+<FONT color="green">1194</FONT>        }<a name="line.1194"></a>
+<FONT color="green">1195</FONT>        catch(Exception e)<a name="line.1195"></a>
+<FONT color="green">1196</FONT>        {<a name="line.1196"></a>
+<FONT color="green">1197</FONT>          setError(e, exprContext);<a name="line.1197"></a>
+<FONT color="green">1198</FONT>          return null;<a name="line.1198"></a>
+<FONT color="green">1199</FONT>        }<a name="line.1199"></a>
+<FONT color="green">1200</FONT>      }<a name="line.1200"></a>
+<FONT color="green">1201</FONT>      <a name="line.1201"></a>
+<FONT color="green">1202</FONT>      /**<a name="line.1202"></a>
+<FONT color="green">1203</FONT>       * @param exprContext<a name="line.1203"></a>
+<FONT color="green">1204</FONT>       * @param excp<a name="line.1204"></a>
+<FONT color="green">1205</FONT>       *<a name="line.1205"></a>
+<FONT color="green">1206</FONT>       */<a name="line.1206"></a>
+<FONT color="green">1207</FONT>      private SQLErrorDocument buildErrorDocument()<a name="line.1207"></a>
+<FONT color="green">1208</FONT>      {<a name="line.1208"></a>
+<FONT color="green">1209</FONT>        SQLErrorDocument eDoc = null;<a name="line.1209"></a>
+<FONT color="green">1210</FONT>    <a name="line.1210"></a>
+<FONT color="green">1211</FONT>        if ( m_LastSQLDocumentWithError != null)<a name="line.1211"></a>
+<FONT color="green">1212</FONT>        {<a name="line.1212"></a>
+<FONT color="green">1213</FONT>          // @todo<a name="line.1213"></a>
+<FONT color="green">1214</FONT>          // Do we need to do something with this ??<a name="line.1214"></a>
+<FONT color="green">1215</FONT>          //    m_Error != null || (m_FullErrors &amp;&amp; m_Warning != null) )<a name="line.1215"></a>
+<FONT color="green">1216</FONT>    <a name="line.1216"></a>
+<FONT color="green">1217</FONT>          ExpressionContext ctx = m_LastSQLDocumentWithError.getExpressionContext();<a name="line.1217"></a>
+<FONT color="green">1218</FONT>          SQLWarning        warn = m_LastSQLDocumentWithError.checkWarnings();<a name="line.1218"></a>
+<FONT color="green">1219</FONT>    <a name="line.1219"></a>
+<FONT color="green">1220</FONT>    <a name="line.1220"></a>
+<FONT color="green">1221</FONT>          try<a name="line.1221"></a>
+<FONT color="green">1222</FONT>          {<a name="line.1222"></a>
+<FONT color="green">1223</FONT>            DTMManager mgr =<a name="line.1223"></a>
+<FONT color="green">1224</FONT>              ((XPathContext.XPathExpressionContext)ctx).getDTMManager();<a name="line.1224"></a>
+<FONT color="green">1225</FONT>            DTMManagerDefault mgrDefault = (DTMManagerDefault) mgr;<a name="line.1225"></a>
+<FONT color="green">1226</FONT>            int dtmIdent = mgrDefault.getFirstFreeDTMID();<a name="line.1226"></a>
+<FONT color="green">1227</FONT>    <a name="line.1227"></a>
+<FONT color="green">1228</FONT>            eDoc = new SQLErrorDocument(<a name="line.1228"></a>
+<FONT color="green">1229</FONT>                mgr, dtmIdent&lt;&lt;DTMManager.IDENT_DTM_NODE_BITS,<a name="line.1229"></a>
+<FONT color="green">1230</FONT>                m_Error, warn, m_FullErrors);<a name="line.1230"></a>
+<FONT color="green">1231</FONT>    <a name="line.1231"></a>
+<FONT color="green">1232</FONT>            // Register our document<a name="line.1232"></a>
+<FONT color="green">1233</FONT>            mgrDefault.addDTM(eDoc, dtmIdent);<a name="line.1233"></a>
+<FONT color="green">1234</FONT>    <a name="line.1234"></a>
+<FONT color="green">1235</FONT>            // Clear the error and warning.<a name="line.1235"></a>
+<FONT color="green">1236</FONT>            m_Error = null;<a name="line.1236"></a>
+<FONT color="green">1237</FONT>            m_LastSQLDocumentWithError = null;<a name="line.1237"></a>
+<FONT color="green">1238</FONT>          }<a name="line.1238"></a>
+<FONT color="green">1239</FONT>          catch(Exception e)<a name="line.1239"></a>
+<FONT color="green">1240</FONT>          {<a name="line.1240"></a>
+<FONT color="green">1241</FONT>            eDoc = null;<a name="line.1241"></a>
+<FONT color="green">1242</FONT>          }<a name="line.1242"></a>
+<FONT color="green">1243</FONT>        }<a name="line.1243"></a>
+<FONT color="green">1244</FONT>    <a name="line.1244"></a>
+<FONT color="green">1245</FONT>        return(eDoc);<a name="line.1245"></a>
+<FONT color="green">1246</FONT>      }<a name="line.1246"></a>
+<FONT color="green">1247</FONT>    <a name="line.1247"></a>
+<FONT color="green">1248</FONT>    <a name="line.1248"></a>
+<FONT color="green">1249</FONT>      /**<a name="line.1249"></a>
+<FONT color="green">1250</FONT>       * This is an internal version of Set Error that is called withen<a name="line.1250"></a>
+<FONT color="green">1251</FONT>       * XConnection where there is no SQLDocument created yet. As in the<a name="line.1251"></a>
+<FONT color="green">1252</FONT>       * Connect statement or creation of the ConnectionPool.<a name="line.1252"></a>
+<FONT color="green">1253</FONT>       */<a name="line.1253"></a>
+<FONT color="green">1254</FONT>      public void setError(Exception excp,ExpressionContext expr)<a name="line.1254"></a>
+<FONT color="green">1255</FONT>      {<a name="line.1255"></a>
+<FONT color="green">1256</FONT>        try<a name="line.1256"></a>
+<FONT color="green">1257</FONT>        {<a name="line.1257"></a>
+<FONT color="green">1258</FONT>          ErrorListener listen = expr.getErrorListener();<a name="line.1258"></a>
+<FONT color="green">1259</FONT>          if ( listen != null &amp;&amp; excp != null )<a name="line.1259"></a>
+<FONT color="green">1260</FONT>          {<a name="line.1260"></a>
+<FONT color="green">1261</FONT>            <a name="line.1261"></a>
+<FONT color="green">1262</FONT>            listen.warning(<a name="line.1262"></a>
+<FONT color="green">1263</FONT>              new TransformerException(excp.toString(),<a name="line.1263"></a>
+<FONT color="green">1264</FONT>              expr.getXPathContext().getSAXLocator(), excp));<a name="line.1264"></a>
+<FONT color="green">1265</FONT>          }<a name="line.1265"></a>
+<FONT color="green">1266</FONT>        }<a name="line.1266"></a>
+<FONT color="green">1267</FONT>        catch(Exception e) {}<a name="line.1267"></a>
+<FONT color="green">1268</FONT>      }<a name="line.1268"></a>
+<FONT color="green">1269</FONT>    <a name="line.1269"></a>
+<FONT color="green">1270</FONT>      /**<a name="line.1270"></a>
+<FONT color="green">1271</FONT>       * Set an error and/or warning on this connection.<a name="line.1271"></a>
+<FONT color="green">1272</FONT>       *<a name="line.1272"></a>
+<FONT color="green">1273</FONT>       */<a name="line.1273"></a>
+<FONT color="green">1274</FONT>      public void setError(Exception excp, SQLDocument doc, SQLWarning warn)<a name="line.1274"></a>
+<FONT color="green">1275</FONT>      {<a name="line.1275"></a>
+<FONT color="green">1276</FONT>    <a name="line.1276"></a>
+<FONT color="green">1277</FONT>        ExpressionContext cont = doc.getExpressionContext();<a name="line.1277"></a>
+<FONT color="green">1278</FONT>        m_LastSQLDocumentWithError = doc;<a name="line.1278"></a>
+<FONT color="green">1279</FONT>    <a name="line.1279"></a>
+<FONT color="green">1280</FONT>        try<a name="line.1280"></a>
+<FONT color="green">1281</FONT>        {<a name="line.1281"></a>
+<FONT color="green">1282</FONT>          ErrorListener listen = cont.getErrorListener();<a name="line.1282"></a>
+<FONT color="green">1283</FONT>          if ( listen != null &amp;&amp; excp != null )<a name="line.1283"></a>
+<FONT color="green">1284</FONT>          listen.warning(<a name="line.1284"></a>
+<FONT color="green">1285</FONT>            new TransformerException(excp.toString(),<a name="line.1285"></a>
+<FONT color="green">1286</FONT>            cont.getXPathContext().getSAXLocator(), excp));<a name="line.1286"></a>
+<FONT color="green">1287</FONT>    <a name="line.1287"></a>
+<FONT color="green">1288</FONT>          if ( listen != null &amp;&amp; warn != null )<a name="line.1288"></a>
+<FONT color="green">1289</FONT>          {<a name="line.1289"></a>
+<FONT color="green">1290</FONT>            listen.warning(new TransformerException(<a name="line.1290"></a>
+<FONT color="green">1291</FONT>              warn.toString(), cont.getXPathContext().getSAXLocator(), warn));<a name="line.1291"></a>
+<FONT color="green">1292</FONT>          }<a name="line.1292"></a>
+<FONT color="green">1293</FONT>    <a name="line.1293"></a>
+<FONT color="green">1294</FONT>          // Assume there will be just one error, but perhaps multiple warnings.<a name="line.1294"></a>
+<FONT color="green">1295</FONT>          if ( excp != null )  m_Error = excp;<a name="line.1295"></a>
+<FONT color="green">1296</FONT>    <a name="line.1296"></a>
+<FONT color="green">1297</FONT>          if ( warn != null )<a name="line.1297"></a>
+<FONT color="green">1298</FONT>          {<a name="line.1298"></a>
+<FONT color="green">1299</FONT>            // Because the log may not have processed the previous warning yet<a name="line.1299"></a>
+<FONT color="green">1300</FONT>            // we need to make a new one.<a name="line.1300"></a>
+<FONT color="green">1301</FONT>            SQLWarning tw =<a name="line.1301"></a>
+<FONT color="green">1302</FONT>              new SQLWarning(warn.getMessage(), warn.getSQLState(),<a name="line.1302"></a>
+<FONT color="green">1303</FONT>                warn.getErrorCode());<a name="line.1303"></a>
+<FONT color="green">1304</FONT>            SQLWarning nw = warn.getNextWarning();<a name="line.1304"></a>
+<FONT color="green">1305</FONT>            while ( nw != null )<a name="line.1305"></a>
+<FONT color="green">1306</FONT>            {<a name="line.1306"></a>
+<FONT color="green">1307</FONT>              tw.setNextWarning(new SQLWarning(nw.getMessage(),<a name="line.1307"></a>
+<FONT color="green">1308</FONT>                nw.getSQLState(), nw.getErrorCode()));<a name="line.1308"></a>
+<FONT color="green">1309</FONT>    <a name="line.1309"></a>
+<FONT color="green">1310</FONT>              nw = nw.getNextWarning();<a name="line.1310"></a>
+<FONT color="green">1311</FONT>            }<a name="line.1311"></a>
+<FONT color="green">1312</FONT>    <a name="line.1312"></a>
+<FONT color="green">1313</FONT>            tw.setNextWarning(<a name="line.1313"></a>
+<FONT color="green">1314</FONT>              new SQLWarning(warn.getMessage(), warn.getSQLState(),<a name="line.1314"></a>
+<FONT color="green">1315</FONT>                warn.getErrorCode()));<a name="line.1315"></a>
+<FONT color="green">1316</FONT>    <a name="line.1316"></a>
+<FONT color="green">1317</FONT>    //        m_Warning = tw;<a name="line.1317"></a>
+<FONT color="green">1318</FONT>    <a name="line.1318"></a>
+<FONT color="green">1319</FONT>          }<a name="line.1319"></a>
+<FONT color="green">1320</FONT>        }<a name="line.1320"></a>
+<FONT color="green">1321</FONT>        catch(Exception e)<a name="line.1321"></a>
+<FONT color="green">1322</FONT>        {<a name="line.1322"></a>
+<FONT color="green">1323</FONT>          //m_Error = null;<a name="line.1323"></a>
+<FONT color="green">1324</FONT>        }<a name="line.1324"></a>
+<FONT color="green">1325</FONT>      }<a name="line.1325"></a>
+<FONT color="green">1326</FONT>    <a name="line.1326"></a>
+<FONT color="green">1327</FONT>      /**<a name="line.1327"></a>
+<FONT color="green">1328</FONT>       * Set feature options for this XConnection.<a name="line.1328"></a>
+<FONT color="green">1329</FONT>       * @param feature The name of the feature being set, currently supports (streaming, inline-variables, multiple-results, cache-statements, default-pool-enabled).<a name="line.1329"></a>
+<FONT color="green">1330</FONT>       * @param setting The new setting for the specified feature, currently "true" is true and anything else is false.<a name="line.1330"></a>
+<FONT color="green">1331</FONT>       *<a name="line.1331"></a>
+<FONT color="green">1332</FONT>       */<a name="line.1332"></a>
+<FONT color="green">1333</FONT>      public void setFeature(String feature, String setting)<a name="line.1333"></a>
+<FONT color="green">1334</FONT>      {<a name="line.1334"></a>
+<FONT color="green">1335</FONT>        boolean value = false;<a name="line.1335"></a>
+<FONT color="green">1336</FONT>    <a name="line.1336"></a>
+<FONT color="green">1337</FONT>        if ( "true".equalsIgnoreCase(setting) ) value = true;<a name="line.1337"></a>
+<FONT color="green">1338</FONT>    <a name="line.1338"></a>
+<FONT color="green">1339</FONT>        if ( "streaming".equalsIgnoreCase(feature) )<a name="line.1339"></a>
+<FONT color="green">1340</FONT>        {<a name="line.1340"></a>
+<FONT color="green">1341</FONT>          m_IsStreamingEnabled = value;<a name="line.1341"></a>
+<FONT color="green">1342</FONT>        }<a name="line.1342"></a>
+<FONT color="green">1343</FONT>        else if ( "inline-variables".equalsIgnoreCase(feature) )<a name="line.1343"></a>
+<FONT color="green">1344</FONT>        {<a name="line.1344"></a>
+<FONT color="green">1345</FONT>          m_InlineVariables = value;<a name="line.1345"></a>
+<FONT color="green">1346</FONT>        }<a name="line.1346"></a>
+<FONT color="green">1347</FONT>        else if ( "multiple-results".equalsIgnoreCase(feature) )<a name="line.1347"></a>
+<FONT color="green">1348</FONT>        {<a name="line.1348"></a>
+<FONT color="green">1349</FONT>          m_IsMultipleResultsEnabled = value;<a name="line.1349"></a>
+<FONT color="green">1350</FONT>        }<a name="line.1350"></a>
+<FONT color="green">1351</FONT>        else if ( "cache-statements".equalsIgnoreCase(feature) )<a name="line.1351"></a>
+<FONT color="green">1352</FONT>        {<a name="line.1352"></a>
+<FONT color="green">1353</FONT>          m_IsStatementCachingEnabled = value;<a name="line.1353"></a>
+<FONT color="green">1354</FONT>        }<a name="line.1354"></a>
+<FONT color="green">1355</FONT>        else if ( "default-pool-enabled".equalsIgnoreCase(feature) )<a name="line.1355"></a>
+<FONT color="green">1356</FONT>        {<a name="line.1356"></a>
+<FONT color="green">1357</FONT>          m_DefaultPoolingEnabled = value;<a name="line.1357"></a>
+<FONT color="green">1358</FONT>    <a name="line.1358"></a>
+<FONT color="green">1359</FONT>          if (m_ConnectionPool == null) return;<a name="line.1359"></a>
+<FONT color="green">1360</FONT>          if (m_IsDefaultPool) return;<a name="line.1360"></a>
+<FONT color="green">1361</FONT>    <a name="line.1361"></a>
+<FONT color="green">1362</FONT>          m_ConnectionPool.setPoolEnabled(value);<a name="line.1362"></a>
+<FONT color="green">1363</FONT>        }<a name="line.1363"></a>
+<FONT color="green">1364</FONT>        else if ( "full-errors".equalsIgnoreCase(feature) )<a name="line.1364"></a>
+<FONT color="green">1365</FONT>        {<a name="line.1365"></a>
+<FONT color="green">1366</FONT>          m_FullErrors = value;<a name="line.1366"></a>
+<FONT color="green">1367</FONT>        }<a name="line.1367"></a>
+<FONT color="green">1368</FONT>      }<a name="line.1368"></a>
+<FONT color="green">1369</FONT>    <a name="line.1369"></a>
+<FONT color="green">1370</FONT>      /**<a name="line.1370"></a>
+<FONT color="green">1371</FONT>       * Get feature options for this XConnection.<a name="line.1371"></a>
+<FONT color="green">1372</FONT>       * @param feature The name of the feature to get the setting for.<a name="line.1372"></a>
+<FONT color="green">1373</FONT>       * @return The setting of the specified feature. Will be "true" or "false" (null if the feature is not known)<a name="line.1373"></a>
+<FONT color="green">1374</FONT>       */<a name="line.1374"></a>
+<FONT color="green">1375</FONT>      public String getFeature(String feature)<a name="line.1375"></a>
+<FONT color="green">1376</FONT>      {<a name="line.1376"></a>
+<FONT color="green">1377</FONT>        String value = null;<a name="line.1377"></a>
+<FONT color="green">1378</FONT>    <a name="line.1378"></a>
+<FONT color="green">1379</FONT>        if ( "streaming".equalsIgnoreCase(feature) )<a name="line.1379"></a>
+<FONT color="green">1380</FONT>          value = m_IsStreamingEnabled ? "true" : "false";<a name="line.1380"></a>
+<FONT color="green">1381</FONT>        else if ( "inline-variables".equalsIgnoreCase(feature) )<a name="line.1381"></a>
+<FONT color="green">1382</FONT>          value = m_InlineVariables ? "true" : "false";<a name="line.1382"></a>
+<FONT color="green">1383</FONT>        else if ( "multiple-results".equalsIgnoreCase(feature) )<a name="line.1383"></a>
+<FONT color="green">1384</FONT>          value = m_IsMultipleResultsEnabled ? "true" : "false";<a name="line.1384"></a>
+<FONT color="green">1385</FONT>        else if ( "cache-statements".equalsIgnoreCase(feature) )<a name="line.1385"></a>
+<FONT color="green">1386</FONT>          value = m_IsStatementCachingEnabled ? "true" : "false";<a name="line.1386"></a>
+<FONT color="green">1387</FONT>        else if ( "default-pool-enabled".equalsIgnoreCase(feature) )<a name="line.1387"></a>
+<FONT color="green">1388</FONT>          value = m_DefaultPoolingEnabled ? "true" : "false";<a name="line.1388"></a>
+<FONT color="green">1389</FONT>        else if ( "full-errors".equalsIgnoreCase(feature) )<a name="line.1389"></a>
+<FONT color="green">1390</FONT>          value = m_FullErrors ? "true" : "false";<a name="line.1390"></a>
+<FONT color="green">1391</FONT>    <a name="line.1391"></a>
+<FONT color="green">1392</FONT>        return(value);<a name="line.1392"></a>
+<FONT color="green">1393</FONT>      }<a name="line.1393"></a>
+<FONT color="green">1394</FONT>    <a name="line.1394"></a>
+<FONT color="green">1395</FONT>    <a name="line.1395"></a>
+<FONT color="green">1396</FONT>    <a name="line.1396"></a>
+<FONT color="green">1397</FONT>      /**<a name="line.1397"></a>
+<FONT color="green">1398</FONT>       *<a name="line.1398"></a>
+<FONT color="green">1399</FONT>       */<a name="line.1399"></a>
+<FONT color="green">1400</FONT>      protected void finalize( )<a name="line.1400"></a>
+<FONT color="green">1401</FONT>      {<a name="line.1401"></a>
+<FONT color="green">1402</FONT>        if (DEBUG) System.out.println("In XConnection, finalize");<a name="line.1402"></a>
+<FONT color="green">1403</FONT>        try<a name="line.1403"></a>
+<FONT color="green">1404</FONT>        {<a name="line.1404"></a>
+<FONT color="green">1405</FONT>          close();<a name="line.1405"></a>
+<FONT color="green">1406</FONT>        }<a name="line.1406"></a>
+<FONT color="green">1407</FONT>        catch(Exception e)<a name="line.1407"></a>
+<FONT color="green">1408</FONT>        {<a name="line.1408"></a>
+<FONT color="green">1409</FONT>          // Empty We are final Anyway<a name="line.1409"></a>
+<FONT color="green">1410</FONT>        }<a name="line.1410"></a>
+<FONT color="green">1411</FONT>      }<a name="line.1411"></a>
+<FONT color="green">1412</FONT>    <a name="line.1412"></a>
+<FONT color="green">1413</FONT>    }<a name="line.1413"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

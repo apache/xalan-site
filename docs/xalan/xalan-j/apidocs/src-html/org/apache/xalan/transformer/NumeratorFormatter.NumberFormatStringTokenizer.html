@@ -1,0 +1,407 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: NumeratorFormatter.java 1225439 2011-12-29 05:22:32Z mrglavas $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    package org.apache.xalan.transformer;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    import java.util.Locale;<a name="line.23"></a>
+<FONT color="green">024</FONT>    import java.util.NoSuchElementException;<a name="line.24"></a>
+<FONT color="green">025</FONT>    <a name="line.25"></a>
+<FONT color="green">026</FONT>    import org.w3c.dom.Element;<a name="line.26"></a>
+<FONT color="green">027</FONT>    <a name="line.27"></a>
+<FONT color="green">028</FONT>    /**<a name="line.28"></a>
+<FONT color="green">029</FONT>     * Converts enumerated numbers into strings, using the XSL conversion attributes.<a name="line.29"></a>
+<FONT color="green">030</FONT>     * Having this in a class helps avoid being forced to extract the attributes repeatedly.<a name="line.30"></a>
+<FONT color="green">031</FONT>     * @xsl.usage internal<a name="line.31"></a>
+<FONT color="green">032</FONT>     */<a name="line.32"></a>
+<FONT color="green">033</FONT>    class NumeratorFormatter<a name="line.33"></a>
+<FONT color="green">034</FONT>    {<a name="line.34"></a>
+<FONT color="green">035</FONT>    <a name="line.35"></a>
+<FONT color="green">036</FONT>      /** The owning xsl:number element.          */<a name="line.36"></a>
+<FONT color="green">037</FONT>      protected Element m_xslNumberElement;<a name="line.37"></a>
+<FONT color="green">038</FONT>    <a name="line.38"></a>
+<FONT color="green">039</FONT>      /** An instance of a Tokenizer          */<a name="line.39"></a>
+<FONT color="green">040</FONT>      NumberFormatStringTokenizer m_formatTokenizer;<a name="line.40"></a>
+<FONT color="green">041</FONT>    <a name="line.41"></a>
+<FONT color="green">042</FONT>      /** Locale we need to format in          */<a name="line.42"></a>
+<FONT color="green">043</FONT>      Locale m_locale;<a name="line.43"></a>
+<FONT color="green">044</FONT>    <a name="line.44"></a>
+<FONT color="green">045</FONT>      /** An instance of a NumberFormat         */<a name="line.45"></a>
+<FONT color="green">046</FONT>      java.text.NumberFormat m_formatter;<a name="line.46"></a>
+<FONT color="green">047</FONT>    <a name="line.47"></a>
+<FONT color="green">048</FONT>      /** An instance of a transformer          */<a name="line.48"></a>
+<FONT color="green">049</FONT>      TransformerImpl m_processor;<a name="line.49"></a>
+<FONT color="green">050</FONT>    <a name="line.50"></a>
+<FONT color="green">051</FONT>      /**<a name="line.51"></a>
+<FONT color="green">052</FONT>       * Table to help in converting decimals to roman numerals.<a name="line.52"></a>
+<FONT color="green">053</FONT>       * @see org.apache.xalan.transformer.DecimalToRoman<a name="line.53"></a>
+<FONT color="green">054</FONT>       */<a name="line.54"></a>
+<FONT color="green">055</FONT>      private final static DecimalToRoman m_romanConvertTable[] = {<a name="line.55"></a>
+<FONT color="green">056</FONT>        new DecimalToRoman(1000, "M", 900, "CM"),<a name="line.56"></a>
+<FONT color="green">057</FONT>        new DecimalToRoman(500, "D", 400, "CD"),<a name="line.57"></a>
+<FONT color="green">058</FONT>        new DecimalToRoman(100L, "C", 90L, "XC"),<a name="line.58"></a>
+<FONT color="green">059</FONT>        new DecimalToRoman(50L, "L", 40L, "XL"),<a name="line.59"></a>
+<FONT color="green">060</FONT>        new DecimalToRoman(10L, "X", 9L, "IX"),<a name="line.60"></a>
+<FONT color="green">061</FONT>        new DecimalToRoman(5L, "V", 4L, "IV"),<a name="line.61"></a>
+<FONT color="green">062</FONT>        new DecimalToRoman(1L, "I", 1L, "I") };<a name="line.62"></a>
+<FONT color="green">063</FONT>    <a name="line.63"></a>
+<FONT color="green">064</FONT>      /**<a name="line.64"></a>
+<FONT color="green">065</FONT>       * Chars for converting integers into alpha counts.<a name="line.65"></a>
+<FONT color="green">066</FONT>       * @see TransformerImpl#int2alphaCount<a name="line.66"></a>
+<FONT color="green">067</FONT>       */<a name="line.67"></a>
+<FONT color="green">068</FONT>      private final static char[] m_alphaCountTable = { 'Z',  // z for zero<a name="line.68"></a>
+<FONT color="green">069</FONT>                                                        'A', 'B', 'C', 'D', 'E',<a name="line.69"></a>
+<FONT color="green">070</FONT>                                                        'F', 'G', 'H', 'I', 'J',<a name="line.70"></a>
+<FONT color="green">071</FONT>                                                        'K', 'L', 'M', 'N', 'O',<a name="line.71"></a>
+<FONT color="green">072</FONT>                                                        'P', 'Q', 'R', 'S', 'T',<a name="line.72"></a>
+<FONT color="green">073</FONT>                                                        'U', 'V', 'W', 'X', 'Y' };<a name="line.73"></a>
+<FONT color="green">074</FONT>    <a name="line.74"></a>
+<FONT color="green">075</FONT>      /**<a name="line.75"></a>
+<FONT color="green">076</FONT>       * Construct a NumeratorFormatter using an element<a name="line.76"></a>
+<FONT color="green">077</FONT>       * that contains XSL number conversion attributes -<a name="line.77"></a>
+<FONT color="green">078</FONT>       * format, letter-value, xml:lang, digit-group-sep,<a name="line.78"></a>
+<FONT color="green">079</FONT>       * n-digits-per-group, and sequence-src.<a name="line.79"></a>
+<FONT color="green">080</FONT>       *<a name="line.80"></a>
+<FONT color="green">081</FONT>       * @param xslNumberElement The given xsl:number element<a name="line.81"></a>
+<FONT color="green">082</FONT>       * @param processor a non-null transformer instance<a name="line.82"></a>
+<FONT color="green">083</FONT>       */<a name="line.83"></a>
+<FONT color="green">084</FONT>      NumeratorFormatter(Element xslNumberElement, TransformerImpl processor)<a name="line.84"></a>
+<FONT color="green">085</FONT>      {<a name="line.85"></a>
+<FONT color="green">086</FONT>        m_xslNumberElement = xslNumberElement;<a name="line.86"></a>
+<FONT color="green">087</FONT>        m_processor = processor;<a name="line.87"></a>
+<FONT color="green">088</FONT>      }  // end NumeratorFormatter(Element) constructor<a name="line.88"></a>
+<FONT color="green">089</FONT>    <a name="line.89"></a>
+<FONT color="green">090</FONT>      /**<a name="line.90"></a>
+<FONT color="green">091</FONT>       * Convert a long integer into alphabetic counting, in other words<a name="line.91"></a>
+<FONT color="green">092</FONT>       * count using the sequence A B C ... Z AA AB AC.... etc.<a name="line.92"></a>
+<FONT color="green">093</FONT>       * <a name="line.93"></a>
+<FONT color="green">094</FONT>       * @param val Value to convert -- must be greater than zero.<a name="line.94"></a>
+<FONT color="green">095</FONT>       * @param table a table containing one character for each digit in the radix<a name="line.95"></a>
+<FONT color="green">096</FONT>       * @return String representing alpha count of number.<a name="line.96"></a>
+<FONT color="green">097</FONT>       * @see org.apache.xalan.transformer.DecimalToRoman<a name="line.97"></a>
+<FONT color="green">098</FONT>       *<a name="line.98"></a>
+<FONT color="green">099</FONT>       * Note that the radix of the conversion is inferred from the size<a name="line.99"></a>
+<FONT color="green">100</FONT>       * of the table.<a name="line.100"></a>
+<FONT color="green">101</FONT>       */<a name="line.101"></a>
+<FONT color="green">102</FONT>      protected String int2alphaCount(int val, char[] table)<a name="line.102"></a>
+<FONT color="green">103</FONT>      {<a name="line.103"></a>
+<FONT color="green">104</FONT>    <a name="line.104"></a>
+<FONT color="green">105</FONT>        int radix = table.length;<a name="line.105"></a>
+<FONT color="green">106</FONT>    <a name="line.106"></a>
+<FONT color="green">107</FONT>        // Create a buffer to hold the result<a name="line.107"></a>
+<FONT color="green">108</FONT>        // TODO:  size of the table can be detereined by computing<a name="line.108"></a>
+<FONT color="green">109</FONT>        // logs of the radix.  For now, we fake it.<a name="line.109"></a>
+<FONT color="green">110</FONT>        char buf[] = new char[100];<a name="line.110"></a>
+<FONT color="green">111</FONT>    <a name="line.111"></a>
+<FONT color="green">112</FONT>        // next character to set in the buffer<a name="line.112"></a>
+<FONT color="green">113</FONT>        int charPos = buf.length - 1;  // work backward through buf[]<a name="line.113"></a>
+<FONT color="green">114</FONT>    <a name="line.114"></a>
+<FONT color="green">115</FONT>        // index in table of the last character that we stored<a name="line.115"></a>
+<FONT color="green">116</FONT>        int lookupIndex = 1;  // start off with anything other than zero to make correction work<a name="line.116"></a>
+<FONT color="green">117</FONT>    <a name="line.117"></a>
+<FONT color="green">118</FONT>        //                                          Correction number<a name="line.118"></a>
+<FONT color="green">119</FONT>        //<a name="line.119"></a>
+<FONT color="green">120</FONT>        //  Correction can take on exactly two values:<a name="line.120"></a>
+<FONT color="green">121</FONT>        //<a name="line.121"></a>
+<FONT color="green">122</FONT>        //          0       if the next character is to be emitted is usual<a name="line.122"></a>
+<FONT color="green">123</FONT>        //<a name="line.123"></a>
+<FONT color="green">124</FONT>        //      radix - 1<a name="line.124"></a>
+<FONT color="green">125</FONT>        //                  if the next char to be emitted should be one less than<a name="line.125"></a>
+<FONT color="green">126</FONT>        //                  you would expect<a name="line.126"></a>
+<FONT color="green">127</FONT>        //<a name="line.127"></a>
+<FONT color="green">128</FONT>        // For example, consider radix 10, where 1="A" and 10="J"<a name="line.128"></a>
+<FONT color="green">129</FONT>        //<a name="line.129"></a>
+<FONT color="green">130</FONT>        // In this scheme, we count: A, B, C ...   H, I, J (not A0 and certainly<a name="line.130"></a>
+<FONT color="green">131</FONT>        // not AJ), A1<a name="line.131"></a>
+<FONT color="green">132</FONT>        //<a name="line.132"></a>
+<FONT color="green">133</FONT>        // So, how do we keep from emitting AJ for 10?  After correctly emitting the<a name="line.133"></a>
+<FONT color="green">134</FONT>        // J, lookupIndex is zero.  We now compute a correction number of 9 (radix-1).<a name="line.134"></a>
+<FONT color="green">135</FONT>        // In the following line, we'll compute (val+correction) % radix, which is,<a name="line.135"></a>
+<FONT color="green">136</FONT>        // (val+9)/10.  By this time, val is 1, so we compute (1+9) % 10, which<a name="line.136"></a>
+<FONT color="green">137</FONT>        // is 10 % 10 or zero.  So, we'll prepare to emit "JJ", but then we'll<a name="line.137"></a>
+<FONT color="green">138</FONT>        // later suppress the leading J as representing zero (in the mod system,<a name="line.138"></a>
+<FONT color="green">139</FONT>        // it can represent either 10 or zero).  In summary, the correction value of<a name="line.139"></a>
+<FONT color="green">140</FONT>        // "radix-1" acts like "-1" when run through the mod operator, but with the<a name="line.140"></a>
+<FONT color="green">141</FONT>        // desireable characteristic that it never produces a negative number.<a name="line.141"></a>
+<FONT color="green">142</FONT>        int correction = 0;<a name="line.142"></a>
+<FONT color="green">143</FONT>    <a name="line.143"></a>
+<FONT color="green">144</FONT>        // TODO:  throw error on out of range input<a name="line.144"></a>
+<FONT color="green">145</FONT>        do<a name="line.145"></a>
+<FONT color="green">146</FONT>        {<a name="line.146"></a>
+<FONT color="green">147</FONT>    <a name="line.147"></a>
+<FONT color="green">148</FONT>          // most of the correction calculation is explained above,  the reason for the<a name="line.148"></a>
+<FONT color="green">149</FONT>          // term after the "|| " is that it correctly propagates carries across<a name="line.149"></a>
+<FONT color="green">150</FONT>          // multiple columns.<a name="line.150"></a>
+<FONT color="green">151</FONT>          correction =<a name="line.151"></a>
+<FONT color="green">152</FONT>            ((lookupIndex == 0) || (correction != 0 &amp;&amp; lookupIndex == radix - 1))<a name="line.152"></a>
+<FONT color="green">153</FONT>            ? (radix - 1) : 0;<a name="line.153"></a>
+<FONT color="green">154</FONT>    <a name="line.154"></a>
+<FONT color="green">155</FONT>          // index in "table" of the next char to emit<a name="line.155"></a>
+<FONT color="green">156</FONT>          lookupIndex = (val + correction) % radix;<a name="line.156"></a>
+<FONT color="green">157</FONT>    <a name="line.157"></a>
+<FONT color="green">158</FONT>          // shift input by one "column"<a name="line.158"></a>
+<FONT color="green">159</FONT>          val = (val / radix);<a name="line.159"></a>
+<FONT color="green">160</FONT>    <a name="line.160"></a>
+<FONT color="green">161</FONT>          // if the next value we'd put out would be a leading zero, we're done.<a name="line.161"></a>
+<FONT color="green">162</FONT>          if (lookupIndex == 0 &amp;&amp; val == 0)<a name="line.162"></a>
+<FONT color="green">163</FONT>            break;<a name="line.163"></a>
+<FONT color="green">164</FONT>    <a name="line.164"></a>
+<FONT color="green">165</FONT>          // put out the next character of output<a name="line.165"></a>
+<FONT color="green">166</FONT>          buf[charPos--] = table[lookupIndex];<a name="line.166"></a>
+<FONT color="green">167</FONT>        }<a name="line.167"></a>
+<FONT color="green">168</FONT>        while (val &gt; 0);<a name="line.168"></a>
+<FONT color="green">169</FONT>    <a name="line.169"></a>
+<FONT color="green">170</FONT>        return new String(buf, charPos + 1, (buf.length - charPos - 1));<a name="line.170"></a>
+<FONT color="green">171</FONT>      }<a name="line.171"></a>
+<FONT color="green">172</FONT>    <a name="line.172"></a>
+<FONT color="green">173</FONT>      /**<a name="line.173"></a>
+<FONT color="green">174</FONT>       * Convert a long integer into roman numerals.<a name="line.174"></a>
+<FONT color="green">175</FONT>       * @param val Value to convert.<a name="line.175"></a>
+<FONT color="green">176</FONT>       * @param prefixesAreOK true_ to enable prefix notation (e.g. 4 = "IV"),<a name="line.176"></a>
+<FONT color="green">177</FONT>       * false_ to disable prefix notation (e.g. 4 = "IIII").<a name="line.177"></a>
+<FONT color="green">178</FONT>       * @return Roman numeral string.<a name="line.178"></a>
+<FONT color="green">179</FONT>       * @see DecimalToRoman<a name="line.179"></a>
+<FONT color="green">180</FONT>       * @see m_romanConvertTable<a name="line.180"></a>
+<FONT color="green">181</FONT>       */<a name="line.181"></a>
+<FONT color="green">182</FONT>      String long2roman(long val, boolean prefixesAreOK)<a name="line.182"></a>
+<FONT color="green">183</FONT>      {<a name="line.183"></a>
+<FONT color="green">184</FONT>    <a name="line.184"></a>
+<FONT color="green">185</FONT>        if (val &lt;= 0)<a name="line.185"></a>
+<FONT color="green">186</FONT>        {<a name="line.186"></a>
+<FONT color="green">187</FONT>          return "#E(" + val + ")";<a name="line.187"></a>
+<FONT color="green">188</FONT>        }<a name="line.188"></a>
+<FONT color="green">189</FONT>    <a name="line.189"></a>
+<FONT color="green">190</FONT>        final String roman;<a name="line.190"></a>
+<FONT color="green">191</FONT>        int place = 0;<a name="line.191"></a>
+<FONT color="green">192</FONT>    <a name="line.192"></a>
+<FONT color="green">193</FONT>        if (val &lt;= 3999L)<a name="line.193"></a>
+<FONT color="green">194</FONT>        {<a name="line.194"></a>
+<FONT color="green">195</FONT>          StringBuffer romanBuffer = new StringBuffer();<a name="line.195"></a>
+<FONT color="green">196</FONT>          do<a name="line.196"></a>
+<FONT color="green">197</FONT>          {<a name="line.197"></a>
+<FONT color="green">198</FONT>            while (val &gt;= m_romanConvertTable[place].m_postValue)<a name="line.198"></a>
+<FONT color="green">199</FONT>            {<a name="line.199"></a>
+<FONT color="green">200</FONT>              romanBuffer.append(m_romanConvertTable[place].m_postLetter);<a name="line.200"></a>
+<FONT color="green">201</FONT>              val -= m_romanConvertTable[place].m_postValue;<a name="line.201"></a>
+<FONT color="green">202</FONT>            }<a name="line.202"></a>
+<FONT color="green">203</FONT>    <a name="line.203"></a>
+<FONT color="green">204</FONT>            if (prefixesAreOK)<a name="line.204"></a>
+<FONT color="green">205</FONT>            {<a name="line.205"></a>
+<FONT color="green">206</FONT>              if (val &gt;= m_romanConvertTable[place].m_preValue)<a name="line.206"></a>
+<FONT color="green">207</FONT>              {<a name="line.207"></a>
+<FONT color="green">208</FONT>                romanBuffer.append(m_romanConvertTable[place].m_preLetter);<a name="line.208"></a>
+<FONT color="green">209</FONT>                val -= m_romanConvertTable[place].m_preValue;<a name="line.209"></a>
+<FONT color="green">210</FONT>              }<a name="line.210"></a>
+<FONT color="green">211</FONT>            }<a name="line.211"></a>
+<FONT color="green">212</FONT>    <a name="line.212"></a>
+<FONT color="green">213</FONT>            place++;<a name="line.213"></a>
+<FONT color="green">214</FONT>          }<a name="line.214"></a>
+<FONT color="green">215</FONT>          while (val &gt; 0);<a name="line.215"></a>
+<FONT color="green">216</FONT>          roman = romanBuffer.toString();<a name="line.216"></a>
+<FONT color="green">217</FONT>        }<a name="line.217"></a>
+<FONT color="green">218</FONT>        else<a name="line.218"></a>
+<FONT color="green">219</FONT>        {<a name="line.219"></a>
+<FONT color="green">220</FONT>          roman = "#error";<a name="line.220"></a>
+<FONT color="green">221</FONT>        }<a name="line.221"></a>
+<FONT color="green">222</FONT>    <a name="line.222"></a>
+<FONT color="green">223</FONT>        return roman;<a name="line.223"></a>
+<FONT color="green">224</FONT>      }  // end long2roman<a name="line.224"></a>
+<FONT color="green">225</FONT>    <a name="line.225"></a>
+<FONT color="green">226</FONT>      /**<a name="line.226"></a>
+<FONT color="green">227</FONT>       * This class returns tokens using non-alphanumberic<a name="line.227"></a>
+<FONT color="green">228</FONT>       * characters as delimiters.<a name="line.228"></a>
+<FONT color="green">229</FONT>       */<a name="line.229"></a>
+<FONT color="green">230</FONT>      static class NumberFormatStringTokenizer<a name="line.230"></a>
+<FONT color="green">231</FONT>      {<a name="line.231"></a>
+<FONT color="green">232</FONT>    <a name="line.232"></a>
+<FONT color="green">233</FONT>        /** Field holding the current position in the string      */<a name="line.233"></a>
+<FONT color="green">234</FONT>        private int currentPosition;<a name="line.234"></a>
+<FONT color="green">235</FONT>    <a name="line.235"></a>
+<FONT color="green">236</FONT>        /** The total length of the string          */<a name="line.236"></a>
+<FONT color="green">237</FONT>        private int maxPosition;<a name="line.237"></a>
+<FONT color="green">238</FONT>    <a name="line.238"></a>
+<FONT color="green">239</FONT>        /** The string to tokenize          */<a name="line.239"></a>
+<FONT color="green">240</FONT>        private String str;<a name="line.240"></a>
+<FONT color="green">241</FONT>    <a name="line.241"></a>
+<FONT color="green">242</FONT>        /**<a name="line.242"></a>
+<FONT color="green">243</FONT>         * Construct a NumberFormatStringTokenizer.<a name="line.243"></a>
+<FONT color="green">244</FONT>         *<a name="line.244"></a>
+<FONT color="green">245</FONT>         * @param str The string to tokenize<a name="line.245"></a>
+<FONT color="green">246</FONT>         */<a name="line.246"></a>
+<FONT color="green">247</FONT>        NumberFormatStringTokenizer(String str)<a name="line.247"></a>
+<FONT color="green">248</FONT>        {<a name="line.248"></a>
+<FONT color="green">249</FONT>          this.str = str;<a name="line.249"></a>
+<FONT color="green">250</FONT>          maxPosition = str.length();<a name="line.250"></a>
+<FONT color="green">251</FONT>        }<a name="line.251"></a>
+<FONT color="green">252</FONT>        <a name="line.252"></a>
+<FONT color="green">253</FONT>        /**<a name="line.253"></a>
+<FONT color="green">254</FONT>         * Reset tokenizer so that nextToken() starts from the beginning. <a name="line.254"></a>
+<FONT color="green">255</FONT>         *<a name="line.255"></a>
+<FONT color="green">256</FONT>         */<a name="line.256"></a>
+<FONT color="green">257</FONT>        void reset()<a name="line.257"></a>
+<FONT color="green">258</FONT>        {<a name="line.258"></a>
+<FONT color="green">259</FONT>          currentPosition = 0;<a name="line.259"></a>
+<FONT color="green">260</FONT>        }<a name="line.260"></a>
+<FONT color="green">261</FONT>    <a name="line.261"></a>
+<FONT color="green">262</FONT>        /**<a name="line.262"></a>
+<FONT color="green">263</FONT>         * Returns the next token from this string tokenizer.<a name="line.263"></a>
+<FONT color="green">264</FONT>         *<a name="line.264"></a>
+<FONT color="green">265</FONT>         * @return     the next token from this string tokenizer.<a name="line.265"></a>
+<FONT color="green">266</FONT>         * @throws  NoSuchElementException  if there are no more tokens in this<a name="line.266"></a>
+<FONT color="green">267</FONT>         *               tokenizer's string.<a name="line.267"></a>
+<FONT color="green">268</FONT>         */<a name="line.268"></a>
+<FONT color="green">269</FONT>        String nextToken()<a name="line.269"></a>
+<FONT color="green">270</FONT>        {<a name="line.270"></a>
+<FONT color="green">271</FONT>    <a name="line.271"></a>
+<FONT color="green">272</FONT>          if (currentPosition &gt;= maxPosition)<a name="line.272"></a>
+<FONT color="green">273</FONT>          {<a name="line.273"></a>
+<FONT color="green">274</FONT>            throw new NoSuchElementException();<a name="line.274"></a>
+<FONT color="green">275</FONT>          }<a name="line.275"></a>
+<FONT color="green">276</FONT>    <a name="line.276"></a>
+<FONT color="green">277</FONT>          int start = currentPosition;<a name="line.277"></a>
+<FONT color="green">278</FONT>    <a name="line.278"></a>
+<FONT color="green">279</FONT>          while ((currentPosition &lt; maxPosition)<a name="line.279"></a>
+<FONT color="green">280</FONT>                 &amp;&amp; Character.isLetterOrDigit(str.charAt(currentPosition)))<a name="line.280"></a>
+<FONT color="green">281</FONT>          {<a name="line.281"></a>
+<FONT color="green">282</FONT>            currentPosition++;<a name="line.282"></a>
+<FONT color="green">283</FONT>          }<a name="line.283"></a>
+<FONT color="green">284</FONT>    <a name="line.284"></a>
+<FONT color="green">285</FONT>          if ((start == currentPosition)<a name="line.285"></a>
+<FONT color="green">286</FONT>                  &amp;&amp; (!Character.isLetterOrDigit(str.charAt(currentPosition))))<a name="line.286"></a>
+<FONT color="green">287</FONT>          {<a name="line.287"></a>
+<FONT color="green">288</FONT>            currentPosition++;<a name="line.288"></a>
+<FONT color="green">289</FONT>          }<a name="line.289"></a>
+<FONT color="green">290</FONT>    <a name="line.290"></a>
+<FONT color="green">291</FONT>          return str.substring(start, currentPosition);<a name="line.291"></a>
+<FONT color="green">292</FONT>        }<a name="line.292"></a>
+<FONT color="green">293</FONT>    <a name="line.293"></a>
+<FONT color="green">294</FONT>        /**<a name="line.294"></a>
+<FONT color="green">295</FONT>         * Tells if &lt;code&gt;nextToken&lt;/code&gt; will throw an exception      * if it is called.<a name="line.295"></a>
+<FONT color="green">296</FONT>         *<a name="line.296"></a>
+<FONT color="green">297</FONT>         * @return true if &lt;code&gt;nextToken&lt;/code&gt; can be called      * without throwing an exception.<a name="line.297"></a>
+<FONT color="green">298</FONT>         */<a name="line.298"></a>
+<FONT color="green">299</FONT>        boolean hasMoreTokens()<a name="line.299"></a>
+<FONT color="green">300</FONT>        {<a name="line.300"></a>
+<FONT color="green">301</FONT>          return (currentPosition &gt;= maxPosition) ? false : true;<a name="line.301"></a>
+<FONT color="green">302</FONT>        }<a name="line.302"></a>
+<FONT color="green">303</FONT>    <a name="line.303"></a>
+<FONT color="green">304</FONT>        /**<a name="line.304"></a>
+<FONT color="green">305</FONT>         * Calculates the number of times that this tokenizer's<a name="line.305"></a>
+<FONT color="green">306</FONT>         * &lt;code&gt;nextToken&lt;/code&gt; method can be called before it generates an<a name="line.306"></a>
+<FONT color="green">307</FONT>         * exception.<a name="line.307"></a>
+<FONT color="green">308</FONT>         *<a name="line.308"></a>
+<FONT color="green">309</FONT>         * @return  the number of tokens remaining in the string using the current<a name="line.309"></a>
+<FONT color="green">310</FONT>         *          delimiter set.<a name="line.310"></a>
+<FONT color="green">311</FONT>         * @see     java.util.StringTokenizer#nextToken()<a name="line.311"></a>
+<FONT color="green">312</FONT>         */<a name="line.312"></a>
+<FONT color="green">313</FONT>        int countTokens()<a name="line.313"></a>
+<FONT color="green">314</FONT>        {<a name="line.314"></a>
+<FONT color="green">315</FONT>    <a name="line.315"></a>
+<FONT color="green">316</FONT>          int count = 0;<a name="line.316"></a>
+<FONT color="green">317</FONT>          int currpos = currentPosition;<a name="line.317"></a>
+<FONT color="green">318</FONT>    <a name="line.318"></a>
+<FONT color="green">319</FONT>          while (currpos &lt; maxPosition)<a name="line.319"></a>
+<FONT color="green">320</FONT>          {<a name="line.320"></a>
+<FONT color="green">321</FONT>            int start = currpos;<a name="line.321"></a>
+<FONT color="green">322</FONT>    <a name="line.322"></a>
+<FONT color="green">323</FONT>            while ((currpos &lt; maxPosition)<a name="line.323"></a>
+<FONT color="green">324</FONT>                   &amp;&amp; Character.isLetterOrDigit(str.charAt(currpos)))<a name="line.324"></a>
+<FONT color="green">325</FONT>            {<a name="line.325"></a>
+<FONT color="green">326</FONT>              currpos++;<a name="line.326"></a>
+<FONT color="green">327</FONT>            }<a name="line.327"></a>
+<FONT color="green">328</FONT>    <a name="line.328"></a>
+<FONT color="green">329</FONT>            if ((start == currpos)<a name="line.329"></a>
+<FONT color="green">330</FONT>                    &amp;&amp; (Character.isLetterOrDigit(str.charAt(currpos)) == false))<a name="line.330"></a>
+<FONT color="green">331</FONT>            {<a name="line.331"></a>
+<FONT color="green">332</FONT>              currpos++;<a name="line.332"></a>
+<FONT color="green">333</FONT>            }<a name="line.333"></a>
+<FONT color="green">334</FONT>    <a name="line.334"></a>
+<FONT color="green">335</FONT>            count++;<a name="line.335"></a>
+<FONT color="green">336</FONT>          }<a name="line.336"></a>
+<FONT color="green">337</FONT>    <a name="line.337"></a>
+<FONT color="green">338</FONT>          return count;<a name="line.338"></a>
+<FONT color="green">339</FONT>        }<a name="line.339"></a>
+<FONT color="green">340</FONT>      }  // end NumberFormatStringTokenizer<a name="line.340"></a>
+<FONT color="green">341</FONT>    }<a name="line.341"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

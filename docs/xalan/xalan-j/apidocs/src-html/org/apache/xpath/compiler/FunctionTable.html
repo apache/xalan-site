@@ -1,0 +1,473 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: FunctionTable.java 468655 2006-10-28 07:12:06Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    package org.apache.xpath.compiler;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    import org.apache.xpath.Expression;<a name="line.23"></a>
+<FONT color="green">024</FONT>    import org.apache.xpath.functions.Function;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import java.util.HashMap;<a name="line.25"></a>
+<FONT color="green">026</FONT>    import javax.xml.transform.TransformerException;<a name="line.26"></a>
+<FONT color="green">027</FONT>    <a name="line.27"></a>
+<FONT color="green">028</FONT>    /**<a name="line.28"></a>
+<FONT color="green">029</FONT>     * The function table for XPath.<a name="line.29"></a>
+<FONT color="green">030</FONT>     */<a name="line.30"></a>
+<FONT color="green">031</FONT>    public class FunctionTable<a name="line.31"></a>
+<FONT color="green">032</FONT>    {<a name="line.32"></a>
+<FONT color="green">033</FONT>    <a name="line.33"></a>
+<FONT color="green">034</FONT>      /** The 'current()' id. */<a name="line.34"></a>
+<FONT color="green">035</FONT>      public static final int FUNC_CURRENT = 0;<a name="line.35"></a>
+<FONT color="green">036</FONT>    <a name="line.36"></a>
+<FONT color="green">037</FONT>      /** The 'last()' id. */<a name="line.37"></a>
+<FONT color="green">038</FONT>      public static final int FUNC_LAST = 1;<a name="line.38"></a>
+<FONT color="green">039</FONT>    <a name="line.39"></a>
+<FONT color="green">040</FONT>      /** The 'position()' id. */<a name="line.40"></a>
+<FONT color="green">041</FONT>      public static final int FUNC_POSITION = 2;<a name="line.41"></a>
+<FONT color="green">042</FONT>    <a name="line.42"></a>
+<FONT color="green">043</FONT>      /** The 'count()' id. */<a name="line.43"></a>
+<FONT color="green">044</FONT>      public static final int FUNC_COUNT = 3;<a name="line.44"></a>
+<FONT color="green">045</FONT>    <a name="line.45"></a>
+<FONT color="green">046</FONT>      /** The 'id()' id. */<a name="line.46"></a>
+<FONT color="green">047</FONT>      public static final int FUNC_ID = 4;<a name="line.47"></a>
+<FONT color="green">048</FONT>    <a name="line.48"></a>
+<FONT color="green">049</FONT>      /** The 'key()' id (XSLT). */<a name="line.49"></a>
+<FONT color="green">050</FONT>      public static final int FUNC_KEY = 5;<a name="line.50"></a>
+<FONT color="green">051</FONT>    <a name="line.51"></a>
+<FONT color="green">052</FONT>      /** The 'local-name()' id. */<a name="line.52"></a>
+<FONT color="green">053</FONT>      public static final int FUNC_LOCAL_PART = 7;<a name="line.53"></a>
+<FONT color="green">054</FONT>    <a name="line.54"></a>
+<FONT color="green">055</FONT>      /** The 'namespace-uri()' id. */<a name="line.55"></a>
+<FONT color="green">056</FONT>      public static final int FUNC_NAMESPACE = 8;<a name="line.56"></a>
+<FONT color="green">057</FONT>    <a name="line.57"></a>
+<FONT color="green">058</FONT>      /** The 'name()' id. */<a name="line.58"></a>
+<FONT color="green">059</FONT>      public static final int FUNC_QNAME = 9;<a name="line.59"></a>
+<FONT color="green">060</FONT>    <a name="line.60"></a>
+<FONT color="green">061</FONT>      /** The 'generate-id()' id. */<a name="line.61"></a>
+<FONT color="green">062</FONT>      public static final int FUNC_GENERATE_ID = 10;<a name="line.62"></a>
+<FONT color="green">063</FONT>    <a name="line.63"></a>
+<FONT color="green">064</FONT>      /** The 'not()' id. */<a name="line.64"></a>
+<FONT color="green">065</FONT>      public static final int FUNC_NOT = 11;<a name="line.65"></a>
+<FONT color="green">066</FONT>    <a name="line.66"></a>
+<FONT color="green">067</FONT>      /** The 'true()' id. */<a name="line.67"></a>
+<FONT color="green">068</FONT>      public static final int FUNC_TRUE = 12;<a name="line.68"></a>
+<FONT color="green">069</FONT>    <a name="line.69"></a>
+<FONT color="green">070</FONT>      /** The 'false()' id. */<a name="line.70"></a>
+<FONT color="green">071</FONT>      public static final int FUNC_FALSE = 13;<a name="line.71"></a>
+<FONT color="green">072</FONT>    <a name="line.72"></a>
+<FONT color="green">073</FONT>      /** The 'boolean()' id. */<a name="line.73"></a>
+<FONT color="green">074</FONT>      public static final int FUNC_BOOLEAN = 14;<a name="line.74"></a>
+<FONT color="green">075</FONT>    <a name="line.75"></a>
+<FONT color="green">076</FONT>      /** The 'number()' id. */<a name="line.76"></a>
+<FONT color="green">077</FONT>      public static final int FUNC_NUMBER = 15;<a name="line.77"></a>
+<FONT color="green">078</FONT>    <a name="line.78"></a>
+<FONT color="green">079</FONT>      /** The 'floor()' id. */<a name="line.79"></a>
+<FONT color="green">080</FONT>      public static final int FUNC_FLOOR = 16;<a name="line.80"></a>
+<FONT color="green">081</FONT>    <a name="line.81"></a>
+<FONT color="green">082</FONT>      /** The 'ceiling()' id. */<a name="line.82"></a>
+<FONT color="green">083</FONT>      public static final int FUNC_CEILING = 17;<a name="line.83"></a>
+<FONT color="green">084</FONT>    <a name="line.84"></a>
+<FONT color="green">085</FONT>      /** The 'round()' id. */<a name="line.85"></a>
+<FONT color="green">086</FONT>      public static final int FUNC_ROUND = 18;<a name="line.86"></a>
+<FONT color="green">087</FONT>    <a name="line.87"></a>
+<FONT color="green">088</FONT>      /** The 'sum()' id. */<a name="line.88"></a>
+<FONT color="green">089</FONT>      public static final int FUNC_SUM = 19;<a name="line.89"></a>
+<FONT color="green">090</FONT>    <a name="line.90"></a>
+<FONT color="green">091</FONT>      /** The 'string()' id. */<a name="line.91"></a>
+<FONT color="green">092</FONT>      public static final int FUNC_STRING = 20;<a name="line.92"></a>
+<FONT color="green">093</FONT>    <a name="line.93"></a>
+<FONT color="green">094</FONT>      /** The 'starts-with()' id. */<a name="line.94"></a>
+<FONT color="green">095</FONT>      public static final int FUNC_STARTS_WITH = 21;<a name="line.95"></a>
+<FONT color="green">096</FONT>    <a name="line.96"></a>
+<FONT color="green">097</FONT>      /** The 'contains()' id. */<a name="line.97"></a>
+<FONT color="green">098</FONT>      public static final int FUNC_CONTAINS = 22;<a name="line.98"></a>
+<FONT color="green">099</FONT>    <a name="line.99"></a>
+<FONT color="green">100</FONT>      /** The 'substring-before()' id. */<a name="line.100"></a>
+<FONT color="green">101</FONT>      public static final int FUNC_SUBSTRING_BEFORE = 23;<a name="line.101"></a>
+<FONT color="green">102</FONT>    <a name="line.102"></a>
+<FONT color="green">103</FONT>      /** The 'substring-after()' id. */<a name="line.103"></a>
+<FONT color="green">104</FONT>      public static final int FUNC_SUBSTRING_AFTER = 24;<a name="line.104"></a>
+<FONT color="green">105</FONT>    <a name="line.105"></a>
+<FONT color="green">106</FONT>      /** The 'normalize-space()' id. */<a name="line.106"></a>
+<FONT color="green">107</FONT>      public static final int FUNC_NORMALIZE_SPACE = 25;<a name="line.107"></a>
+<FONT color="green">108</FONT>    <a name="line.108"></a>
+<FONT color="green">109</FONT>      /** The 'translate()' id. */<a name="line.109"></a>
+<FONT color="green">110</FONT>      public static final int FUNC_TRANSLATE = 26;<a name="line.110"></a>
+<FONT color="green">111</FONT>    <a name="line.111"></a>
+<FONT color="green">112</FONT>      /** The 'concat()' id. */<a name="line.112"></a>
+<FONT color="green">113</FONT>      public static final int FUNC_CONCAT = 27;<a name="line.113"></a>
+<FONT color="green">114</FONT>    <a name="line.114"></a>
+<FONT color="green">115</FONT>      /** The 'substring()' id. */<a name="line.115"></a>
+<FONT color="green">116</FONT>      public static final int FUNC_SUBSTRING = 29;<a name="line.116"></a>
+<FONT color="green">117</FONT>    <a name="line.117"></a>
+<FONT color="green">118</FONT>      /** The 'string-length()' id. */<a name="line.118"></a>
+<FONT color="green">119</FONT>      public static final int FUNC_STRING_LENGTH = 30;<a name="line.119"></a>
+<FONT color="green">120</FONT>    <a name="line.120"></a>
+<FONT color="green">121</FONT>      /** The 'system-property()' id. */<a name="line.121"></a>
+<FONT color="green">122</FONT>      public static final int FUNC_SYSTEM_PROPERTY = 31;<a name="line.122"></a>
+<FONT color="green">123</FONT>    <a name="line.123"></a>
+<FONT color="green">124</FONT>      /** The 'lang()' id. */<a name="line.124"></a>
+<FONT color="green">125</FONT>      public static final int FUNC_LANG = 32;<a name="line.125"></a>
+<FONT color="green">126</FONT>    <a name="line.126"></a>
+<FONT color="green">127</FONT>      /** The 'function-available()' id (XSLT). */<a name="line.127"></a>
+<FONT color="green">128</FONT>      public static final int FUNC_EXT_FUNCTION_AVAILABLE = 33;<a name="line.128"></a>
+<FONT color="green">129</FONT>    <a name="line.129"></a>
+<FONT color="green">130</FONT>      /** The 'element-available()' id (XSLT). */<a name="line.130"></a>
+<FONT color="green">131</FONT>      public static final int FUNC_EXT_ELEM_AVAILABLE = 34;<a name="line.131"></a>
+<FONT color="green">132</FONT>    <a name="line.132"></a>
+<FONT color="green">133</FONT>      /** The 'unparsed-entity-uri()' id (XSLT). */<a name="line.133"></a>
+<FONT color="green">134</FONT>      public static final int FUNC_UNPARSED_ENTITY_URI = 36;<a name="line.134"></a>
+<FONT color="green">135</FONT>    <a name="line.135"></a>
+<FONT color="green">136</FONT>      // Proprietary<a name="line.136"></a>
+<FONT color="green">137</FONT>    <a name="line.137"></a>
+<FONT color="green">138</FONT>      /** The 'document-location()' id (Proprietary). */<a name="line.138"></a>
+<FONT color="green">139</FONT>      public static final int FUNC_DOCLOCATION = 35;<a name="line.139"></a>
+<FONT color="green">140</FONT>    <a name="line.140"></a>
+<FONT color="green">141</FONT>      /**<a name="line.141"></a>
+<FONT color="green">142</FONT>       * The function table.<a name="line.142"></a>
+<FONT color="green">143</FONT>       */<a name="line.143"></a>
+<FONT color="green">144</FONT>      private static Class m_functions[];<a name="line.144"></a>
+<FONT color="green">145</FONT>    <a name="line.145"></a>
+<FONT color="green">146</FONT>      /** Table of function name to function ID associations. */<a name="line.146"></a>
+<FONT color="green">147</FONT>      private static HashMap m_functionID = new HashMap();<a name="line.147"></a>
+<FONT color="green">148</FONT>        <a name="line.148"></a>
+<FONT color="green">149</FONT>      /**<a name="line.149"></a>
+<FONT color="green">150</FONT>       * The function table contains customized functions<a name="line.150"></a>
+<FONT color="green">151</FONT>       */<a name="line.151"></a>
+<FONT color="green">152</FONT>      private Class m_functions_customer[] = new Class[NUM_ALLOWABLE_ADDINS];<a name="line.152"></a>
+<FONT color="green">153</FONT>    <a name="line.153"></a>
+<FONT color="green">154</FONT>      /**<a name="line.154"></a>
+<FONT color="green">155</FONT>       * Table of function name to function ID associations for customized functions<a name="line.155"></a>
+<FONT color="green">156</FONT>       */<a name="line.156"></a>
+<FONT color="green">157</FONT>      private HashMap m_functionID_customer = new HashMap();<a name="line.157"></a>
+<FONT color="green">158</FONT>      <a name="line.158"></a>
+<FONT color="green">159</FONT>      /**<a name="line.159"></a>
+<FONT color="green">160</FONT>       * Number of built in functions.  Be sure to update this as<a name="line.160"></a>
+<FONT color="green">161</FONT>       * built-in functions are added.<a name="line.161"></a>
+<FONT color="green">162</FONT>       */<a name="line.162"></a>
+<FONT color="green">163</FONT>      private static final int NUM_BUILT_IN_FUNCS = 37;<a name="line.163"></a>
+<FONT color="green">164</FONT>    <a name="line.164"></a>
+<FONT color="green">165</FONT>      /**<a name="line.165"></a>
+<FONT color="green">166</FONT>       * Number of built-in functions that may be added.<a name="line.166"></a>
+<FONT color="green">167</FONT>       */<a name="line.167"></a>
+<FONT color="green">168</FONT>      private static final int NUM_ALLOWABLE_ADDINS = 30;<a name="line.168"></a>
+<FONT color="green">169</FONT>    <a name="line.169"></a>
+<FONT color="green">170</FONT>      /**<a name="line.170"></a>
+<FONT color="green">171</FONT>       * The index to the next free function index.<a name="line.171"></a>
+<FONT color="green">172</FONT>       */<a name="line.172"></a>
+<FONT color="green">173</FONT>      private int m_funcNextFreeIndex = NUM_BUILT_IN_FUNCS;<a name="line.173"></a>
+<FONT color="green">174</FONT>      <a name="line.174"></a>
+<FONT color="green">175</FONT>      static<a name="line.175"></a>
+<FONT color="green">176</FONT>      {<a name="line.176"></a>
+<FONT color="green">177</FONT>        m_functions = new Class[NUM_BUILT_IN_FUNCS];<a name="line.177"></a>
+<FONT color="green">178</FONT>        m_functions[FUNC_CURRENT] = org.apache.xpath.functions.FuncCurrent.class;<a name="line.178"></a>
+<FONT color="green">179</FONT>        m_functions[FUNC_LAST] = org.apache.xpath.functions.FuncLast.class;<a name="line.179"></a>
+<FONT color="green">180</FONT>        m_functions[FUNC_POSITION] = org.apache.xpath.functions.FuncPosition.class;<a name="line.180"></a>
+<FONT color="green">181</FONT>        m_functions[FUNC_COUNT] = org.apache.xpath.functions.FuncCount.class;<a name="line.181"></a>
+<FONT color="green">182</FONT>        m_functions[FUNC_ID] = org.apache.xpath.functions.FuncId.class;<a name="line.182"></a>
+<FONT color="green">183</FONT>        m_functions[FUNC_KEY] =<a name="line.183"></a>
+<FONT color="green">184</FONT>          org.apache.xalan.templates.FuncKey.class;<a name="line.184"></a>
+<FONT color="green">185</FONT>        m_functions[FUNC_LOCAL_PART] = <a name="line.185"></a>
+<FONT color="green">186</FONT>          org.apache.xpath.functions.FuncLocalPart.class;<a name="line.186"></a>
+<FONT color="green">187</FONT>        m_functions[FUNC_NAMESPACE] = <a name="line.187"></a>
+<FONT color="green">188</FONT>          org.apache.xpath.functions.FuncNamespace.class;<a name="line.188"></a>
+<FONT color="green">189</FONT>        m_functions[FUNC_QNAME] = org.apache.xpath.functions.FuncQname.class;<a name="line.189"></a>
+<FONT color="green">190</FONT>        m_functions[FUNC_GENERATE_ID] = <a name="line.190"></a>
+<FONT color="green">191</FONT>          org.apache.xpath.functions.FuncGenerateId.class;<a name="line.191"></a>
+<FONT color="green">192</FONT>        m_functions[FUNC_NOT] = org.apache.xpath.functions.FuncNot.class;<a name="line.192"></a>
+<FONT color="green">193</FONT>        m_functions[FUNC_TRUE] = org.apache.xpath.functions.FuncTrue.class;<a name="line.193"></a>
+<FONT color="green">194</FONT>        m_functions[FUNC_FALSE] = org.apache.xpath.functions.FuncFalse.class;<a name="line.194"></a>
+<FONT color="green">195</FONT>        m_functions[FUNC_BOOLEAN] = org.apache.xpath.functions.FuncBoolean.class;<a name="line.195"></a>
+<FONT color="green">196</FONT>        m_functions[FUNC_LANG] = org.apache.xpath.functions.FuncLang.class;<a name="line.196"></a>
+<FONT color="green">197</FONT>        m_functions[FUNC_NUMBER] = org.apache.xpath.functions.FuncNumber.class;<a name="line.197"></a>
+<FONT color="green">198</FONT>        m_functions[FUNC_FLOOR] = org.apache.xpath.functions.FuncFloor.class;<a name="line.198"></a>
+<FONT color="green">199</FONT>        m_functions[FUNC_CEILING] = org.apache.xpath.functions.FuncCeiling.class;<a name="line.199"></a>
+<FONT color="green">200</FONT>        m_functions[FUNC_ROUND] = org.apache.xpath.functions.FuncRound.class;<a name="line.200"></a>
+<FONT color="green">201</FONT>        m_functions[FUNC_SUM] = org.apache.xpath.functions.FuncSum.class;<a name="line.201"></a>
+<FONT color="green">202</FONT>        m_functions[FUNC_STRING] = org.apache.xpath.functions.FuncString.class;<a name="line.202"></a>
+<FONT color="green">203</FONT>        m_functions[FUNC_STARTS_WITH] = <a name="line.203"></a>
+<FONT color="green">204</FONT>          org.apache.xpath.functions.FuncStartsWith.class;<a name="line.204"></a>
+<FONT color="green">205</FONT>        m_functions[FUNC_CONTAINS] = org.apache.xpath.functions.FuncContains.class;<a name="line.205"></a>
+<FONT color="green">206</FONT>        m_functions[FUNC_SUBSTRING_BEFORE] = <a name="line.206"></a>
+<FONT color="green">207</FONT>          org.apache.xpath.functions.FuncSubstringBefore.class;<a name="line.207"></a>
+<FONT color="green">208</FONT>        m_functions[FUNC_SUBSTRING_AFTER] = <a name="line.208"></a>
+<FONT color="green">209</FONT>          org.apache.xpath.functions.FuncSubstringAfter.class;<a name="line.209"></a>
+<FONT color="green">210</FONT>        m_functions[FUNC_NORMALIZE_SPACE] = <a name="line.210"></a>
+<FONT color="green">211</FONT>          org.apache.xpath.functions.FuncNormalizeSpace.class;<a name="line.211"></a>
+<FONT color="green">212</FONT>        m_functions[FUNC_TRANSLATE] = <a name="line.212"></a>
+<FONT color="green">213</FONT>          org.apache.xpath.functions.FuncTranslate.class;<a name="line.213"></a>
+<FONT color="green">214</FONT>        m_functions[FUNC_CONCAT] = org.apache.xpath.functions.FuncConcat.class;<a name="line.214"></a>
+<FONT color="green">215</FONT>        m_functions[FUNC_SYSTEM_PROPERTY] = <a name="line.215"></a>
+<FONT color="green">216</FONT>          org.apache.xpath.functions.FuncSystemProperty.class;<a name="line.216"></a>
+<FONT color="green">217</FONT>        m_functions[FUNC_EXT_FUNCTION_AVAILABLE] =<a name="line.217"></a>
+<FONT color="green">218</FONT>          org.apache.xpath.functions.FuncExtFunctionAvailable.class;<a name="line.218"></a>
+<FONT color="green">219</FONT>        m_functions[FUNC_EXT_ELEM_AVAILABLE] =<a name="line.219"></a>
+<FONT color="green">220</FONT>          org.apache.xpath.functions.FuncExtElementAvailable.class;<a name="line.220"></a>
+<FONT color="green">221</FONT>        m_functions[FUNC_SUBSTRING] = <a name="line.221"></a>
+<FONT color="green">222</FONT>          org.apache.xpath.functions.FuncSubstring.class;<a name="line.222"></a>
+<FONT color="green">223</FONT>        m_functions[FUNC_STRING_LENGTH] = <a name="line.223"></a>
+<FONT color="green">224</FONT>          org.apache.xpath.functions.FuncStringLength.class;<a name="line.224"></a>
+<FONT color="green">225</FONT>        m_functions[FUNC_DOCLOCATION] = <a name="line.225"></a>
+<FONT color="green">226</FONT>          org.apache.xpath.functions.FuncDoclocation.class;<a name="line.226"></a>
+<FONT color="green">227</FONT>        m_functions[FUNC_UNPARSED_ENTITY_URI] =<a name="line.227"></a>
+<FONT color="green">228</FONT>          org.apache.xpath.functions.FuncUnparsedEntityURI.class;<a name="line.228"></a>
+<FONT color="green">229</FONT>      }<a name="line.229"></a>
+<FONT color="green">230</FONT>    <a name="line.230"></a>
+<FONT color="green">231</FONT>      static{<a name="line.231"></a>
+<FONT color="green">232</FONT>              m_functionID.put(Keywords.FUNC_CURRENT_STRING,<a name="line.232"></a>
+<FONT color="green">233</FONT>                              new Integer(FunctionTable.FUNC_CURRENT));<a name="line.233"></a>
+<FONT color="green">234</FONT>              m_functionID.put(Keywords.FUNC_LAST_STRING,<a name="line.234"></a>
+<FONT color="green">235</FONT>                              new Integer(FunctionTable.FUNC_LAST));<a name="line.235"></a>
+<FONT color="green">236</FONT>              m_functionID.put(Keywords.FUNC_POSITION_STRING,<a name="line.236"></a>
+<FONT color="green">237</FONT>                              new Integer(FunctionTable.FUNC_POSITION));<a name="line.237"></a>
+<FONT color="green">238</FONT>              m_functionID.put(Keywords.FUNC_COUNT_STRING,<a name="line.238"></a>
+<FONT color="green">239</FONT>                              new Integer(FunctionTable.FUNC_COUNT));<a name="line.239"></a>
+<FONT color="green">240</FONT>              m_functionID.put(Keywords.FUNC_ID_STRING,<a name="line.240"></a>
+<FONT color="green">241</FONT>                              new Integer(FunctionTable.FUNC_ID));<a name="line.241"></a>
+<FONT color="green">242</FONT>              m_functionID.put(Keywords.FUNC_KEY_STRING,<a name="line.242"></a>
+<FONT color="green">243</FONT>                              new Integer(FunctionTable.FUNC_KEY));<a name="line.243"></a>
+<FONT color="green">244</FONT>              m_functionID.put(Keywords.FUNC_LOCAL_PART_STRING,<a name="line.244"></a>
+<FONT color="green">245</FONT>                              new Integer(FunctionTable.FUNC_LOCAL_PART));<a name="line.245"></a>
+<FONT color="green">246</FONT>              m_functionID.put(Keywords.FUNC_NAMESPACE_STRING,<a name="line.246"></a>
+<FONT color="green">247</FONT>                              new Integer(FunctionTable.FUNC_NAMESPACE));<a name="line.247"></a>
+<FONT color="green">248</FONT>              m_functionID.put(Keywords.FUNC_NAME_STRING,<a name="line.248"></a>
+<FONT color="green">249</FONT>                              new Integer(FunctionTable.FUNC_QNAME));<a name="line.249"></a>
+<FONT color="green">250</FONT>              m_functionID.put(Keywords.FUNC_GENERATE_ID_STRING,<a name="line.250"></a>
+<FONT color="green">251</FONT>                              new Integer(FunctionTable.FUNC_GENERATE_ID));<a name="line.251"></a>
+<FONT color="green">252</FONT>              m_functionID.put(Keywords.FUNC_NOT_STRING,<a name="line.252"></a>
+<FONT color="green">253</FONT>                              new Integer(FunctionTable.FUNC_NOT));<a name="line.253"></a>
+<FONT color="green">254</FONT>              m_functionID.put(Keywords.FUNC_TRUE_STRING,<a name="line.254"></a>
+<FONT color="green">255</FONT>                              new Integer(FunctionTable.FUNC_TRUE));<a name="line.255"></a>
+<FONT color="green">256</FONT>              m_functionID.put(Keywords.FUNC_FALSE_STRING,<a name="line.256"></a>
+<FONT color="green">257</FONT>                              new Integer(FunctionTable.FUNC_FALSE));<a name="line.257"></a>
+<FONT color="green">258</FONT>              m_functionID.put(Keywords.FUNC_BOOLEAN_STRING,<a name="line.258"></a>
+<FONT color="green">259</FONT>                              new Integer(FunctionTable.FUNC_BOOLEAN));<a name="line.259"></a>
+<FONT color="green">260</FONT>              m_functionID.put(Keywords.FUNC_LANG_STRING,<a name="line.260"></a>
+<FONT color="green">261</FONT>                              new Integer(FunctionTable.FUNC_LANG));<a name="line.261"></a>
+<FONT color="green">262</FONT>              m_functionID.put(Keywords.FUNC_NUMBER_STRING,<a name="line.262"></a>
+<FONT color="green">263</FONT>                              new Integer(FunctionTable.FUNC_NUMBER));<a name="line.263"></a>
+<FONT color="green">264</FONT>              m_functionID.put(Keywords.FUNC_FLOOR_STRING,<a name="line.264"></a>
+<FONT color="green">265</FONT>                              new Integer(FunctionTable.FUNC_FLOOR));<a name="line.265"></a>
+<FONT color="green">266</FONT>              m_functionID.put(Keywords.FUNC_CEILING_STRING,<a name="line.266"></a>
+<FONT color="green">267</FONT>                              new Integer(FunctionTable.FUNC_CEILING));<a name="line.267"></a>
+<FONT color="green">268</FONT>              m_functionID.put(Keywords.FUNC_ROUND_STRING,<a name="line.268"></a>
+<FONT color="green">269</FONT>                              new Integer(FunctionTable.FUNC_ROUND));<a name="line.269"></a>
+<FONT color="green">270</FONT>              m_functionID.put(Keywords.FUNC_SUM_STRING,<a name="line.270"></a>
+<FONT color="green">271</FONT>                              new Integer(FunctionTable.FUNC_SUM));<a name="line.271"></a>
+<FONT color="green">272</FONT>              m_functionID.put(Keywords.FUNC_STRING_STRING,<a name="line.272"></a>
+<FONT color="green">273</FONT>                              new Integer(FunctionTable.FUNC_STRING));<a name="line.273"></a>
+<FONT color="green">274</FONT>              m_functionID.put(Keywords.FUNC_STARTS_WITH_STRING,<a name="line.274"></a>
+<FONT color="green">275</FONT>                              new Integer(FunctionTable.FUNC_STARTS_WITH));<a name="line.275"></a>
+<FONT color="green">276</FONT>              m_functionID.put(Keywords.FUNC_CONTAINS_STRING,<a name="line.276"></a>
+<FONT color="green">277</FONT>                              new Integer(FunctionTable.FUNC_CONTAINS));<a name="line.277"></a>
+<FONT color="green">278</FONT>              m_functionID.put(Keywords.FUNC_SUBSTRING_BEFORE_STRING,<a name="line.278"></a>
+<FONT color="green">279</FONT>                              new Integer(FunctionTable.FUNC_SUBSTRING_BEFORE));<a name="line.279"></a>
+<FONT color="green">280</FONT>              m_functionID.put(Keywords.FUNC_SUBSTRING_AFTER_STRING,<a name="line.280"></a>
+<FONT color="green">281</FONT>                              new Integer(FunctionTable.FUNC_SUBSTRING_AFTER));<a name="line.281"></a>
+<FONT color="green">282</FONT>              m_functionID.put(Keywords.FUNC_NORMALIZE_SPACE_STRING,<a name="line.282"></a>
+<FONT color="green">283</FONT>                              new Integer(FunctionTable.FUNC_NORMALIZE_SPACE));<a name="line.283"></a>
+<FONT color="green">284</FONT>              m_functionID.put(Keywords.FUNC_TRANSLATE_STRING,<a name="line.284"></a>
+<FONT color="green">285</FONT>                              new Integer(FunctionTable.FUNC_TRANSLATE));<a name="line.285"></a>
+<FONT color="green">286</FONT>              m_functionID.put(Keywords.FUNC_CONCAT_STRING,<a name="line.286"></a>
+<FONT color="green">287</FONT>                              new Integer(FunctionTable.FUNC_CONCAT));<a name="line.287"></a>
+<FONT color="green">288</FONT>              m_functionID.put(Keywords.FUNC_SYSTEM_PROPERTY_STRING,<a name="line.288"></a>
+<FONT color="green">289</FONT>                              new Integer(FunctionTable.FUNC_SYSTEM_PROPERTY));<a name="line.289"></a>
+<FONT color="green">290</FONT>              m_functionID.put(Keywords.FUNC_EXT_FUNCTION_AVAILABLE_STRING,<a name="line.290"></a>
+<FONT color="green">291</FONT>                            new Integer(FunctionTable.FUNC_EXT_FUNCTION_AVAILABLE));<a name="line.291"></a>
+<FONT color="green">292</FONT>              m_functionID.put(Keywords.FUNC_EXT_ELEM_AVAILABLE_STRING,<a name="line.292"></a>
+<FONT color="green">293</FONT>                              new Integer(FunctionTable.FUNC_EXT_ELEM_AVAILABLE));<a name="line.293"></a>
+<FONT color="green">294</FONT>              m_functionID.put(Keywords.FUNC_SUBSTRING_STRING,<a name="line.294"></a>
+<FONT color="green">295</FONT>                              new Integer(FunctionTable.FUNC_SUBSTRING));<a name="line.295"></a>
+<FONT color="green">296</FONT>              m_functionID.put(Keywords.FUNC_STRING_LENGTH_STRING,<a name="line.296"></a>
+<FONT color="green">297</FONT>                              new Integer(FunctionTable.FUNC_STRING_LENGTH));<a name="line.297"></a>
+<FONT color="green">298</FONT>              m_functionID.put(Keywords.FUNC_UNPARSED_ENTITY_URI_STRING,<a name="line.298"></a>
+<FONT color="green">299</FONT>                              new Integer(FunctionTable.FUNC_UNPARSED_ENTITY_URI));<a name="line.299"></a>
+<FONT color="green">300</FONT>              m_functionID.put(Keywords.FUNC_DOCLOCATION_STRING,<a name="line.300"></a>
+<FONT color="green">301</FONT>                              new Integer(FunctionTable.FUNC_DOCLOCATION));          <a name="line.301"></a>
+<FONT color="green">302</FONT>      }<a name="line.302"></a>
+<FONT color="green">303</FONT>      <a name="line.303"></a>
+<FONT color="green">304</FONT>      public FunctionTable(){<a name="line.304"></a>
+<FONT color="green">305</FONT>      }<a name="line.305"></a>
+<FONT color="green">306</FONT>      <a name="line.306"></a>
+<FONT color="green">307</FONT>      /**<a name="line.307"></a>
+<FONT color="green">308</FONT>       * Return the name of the a function in the static table. Needed to avoid<a name="line.308"></a>
+<FONT color="green">309</FONT>       * making the table publicly available.<a name="line.309"></a>
+<FONT color="green">310</FONT>       */<a name="line.310"></a>
+<FONT color="green">311</FONT>      String getFunctionName(int funcID) {<a name="line.311"></a>
+<FONT color="green">312</FONT>          if (funcID &lt; NUM_BUILT_IN_FUNCS) return m_functions[funcID].getName();<a name="line.312"></a>
+<FONT color="green">313</FONT>          else return m_functions_customer[funcID - NUM_BUILT_IN_FUNCS].getName();<a name="line.313"></a>
+<FONT color="green">314</FONT>      }<a name="line.314"></a>
+<FONT color="green">315</FONT>    <a name="line.315"></a>
+<FONT color="green">316</FONT>      /**<a name="line.316"></a>
+<FONT color="green">317</FONT>       * Obtain a new Function object from a function ID.<a name="line.317"></a>
+<FONT color="green">318</FONT>       *<a name="line.318"></a>
+<FONT color="green">319</FONT>       * @param which  The function ID, which may correspond to one of the FUNC_XXX <a name="line.319"></a>
+<FONT color="green">320</FONT>       *    values found in {@link org.apache.xpath.compiler.FunctionTable}, but may <a name="line.320"></a>
+<FONT color="green">321</FONT>       *    be a value installed by an external module. <a name="line.321"></a>
+<FONT color="green">322</FONT>       *<a name="line.322"></a>
+<FONT color="green">323</FONT>       * @return a a new Function instance.<a name="line.323"></a>
+<FONT color="green">324</FONT>       *<a name="line.324"></a>
+<FONT color="green">325</FONT>       * @throws javax.xml.transform.TransformerException if ClassNotFoundException, <a name="line.325"></a>
+<FONT color="green">326</FONT>       *    IllegalAccessException, or InstantiationException is thrown.<a name="line.326"></a>
+<FONT color="green">327</FONT>       */<a name="line.327"></a>
+<FONT color="green">328</FONT>      Function getFunction(int which)<a name="line.328"></a>
+<FONT color="green">329</FONT>              throws javax.xml.transform.TransformerException<a name="line.329"></a>
+<FONT color="green">330</FONT>      {<a name="line.330"></a>
+<FONT color="green">331</FONT>              try{<a name="line.331"></a>
+<FONT color="green">332</FONT>                  if (which &lt; NUM_BUILT_IN_FUNCS) <a name="line.332"></a>
+<FONT color="green">333</FONT>                      return (Function) m_functions[which].newInstance();<a name="line.333"></a>
+<FONT color="green">334</FONT>                  else <a name="line.334"></a>
+<FONT color="green">335</FONT>                      return (Function) m_functions_customer[<a name="line.335"></a>
+<FONT color="green">336</FONT>                          which-NUM_BUILT_IN_FUNCS].newInstance();                  <a name="line.336"></a>
+<FONT color="green">337</FONT>              }catch (IllegalAccessException ex){<a name="line.337"></a>
+<FONT color="green">338</FONT>                      throw new TransformerException(ex.getMessage());<a name="line.338"></a>
+<FONT color="green">339</FONT>              }catch (InstantiationException ex){<a name="line.339"></a>
+<FONT color="green">340</FONT>                      throw new TransformerException(ex.getMessage());<a name="line.340"></a>
+<FONT color="green">341</FONT>              }<a name="line.341"></a>
+<FONT color="green">342</FONT>      }<a name="line.342"></a>
+<FONT color="green">343</FONT>      <a name="line.343"></a>
+<FONT color="green">344</FONT>      /**<a name="line.344"></a>
+<FONT color="green">345</FONT>       * Obtain a function ID from a given function name<a name="line.345"></a>
+<FONT color="green">346</FONT>       * @param key the function name in a java.lang.String format.<a name="line.346"></a>
+<FONT color="green">347</FONT>       * @return a function ID, which may correspond to one of the FUNC_XXX values<a name="line.347"></a>
+<FONT color="green">348</FONT>       * found in {@link org.apache.xpath.compiler.FunctionTable}, but may be a <a name="line.348"></a>
+<FONT color="green">349</FONT>       * value installed by an external module.<a name="line.349"></a>
+<FONT color="green">350</FONT>       */<a name="line.350"></a>
+<FONT color="green">351</FONT>      Object getFunctionID(String key){<a name="line.351"></a>
+<FONT color="green">352</FONT>              Object id = m_functionID_customer.get(key);<a name="line.352"></a>
+<FONT color="green">353</FONT>              if (null == id) id = m_functionID.get(key);<a name="line.353"></a>
+<FONT color="green">354</FONT>              return id;<a name="line.354"></a>
+<FONT color="green">355</FONT>      }<a name="line.355"></a>
+<FONT color="green">356</FONT>      <a name="line.356"></a>
+<FONT color="green">357</FONT>      /**<a name="line.357"></a>
+<FONT color="green">358</FONT>       * Install a built-in function.<a name="line.358"></a>
+<FONT color="green">359</FONT>       * @param name The unqualified name of the function, must not be null<a name="line.359"></a>
+<FONT color="green">360</FONT>       * @param func A Implementation of an XPath Function object.<a name="line.360"></a>
+<FONT color="green">361</FONT>       * @return the position of the function in the internal index.<a name="line.361"></a>
+<FONT color="green">362</FONT>       */<a name="line.362"></a>
+<FONT color="green">363</FONT>      public int installFunction(String name, Class func)<a name="line.363"></a>
+<FONT color="green">364</FONT>      {<a name="line.364"></a>
+<FONT color="green">365</FONT>    <a name="line.365"></a>
+<FONT color="green">366</FONT>        int funcIndex;<a name="line.366"></a>
+<FONT color="green">367</FONT>        Object funcIndexObj = getFunctionID(name);<a name="line.367"></a>
+<FONT color="green">368</FONT>    <a name="line.368"></a>
+<FONT color="green">369</FONT>        if (null != funcIndexObj)<a name="line.369"></a>
+<FONT color="green">370</FONT>        {<a name="line.370"></a>
+<FONT color="green">371</FONT>          funcIndex = ((Integer) funcIndexObj).intValue();<a name="line.371"></a>
+<FONT color="green">372</FONT>          <a name="line.372"></a>
+<FONT color="green">373</FONT>          if (funcIndex &lt; NUM_BUILT_IN_FUNCS){<a name="line.373"></a>
+<FONT color="green">374</FONT>                  funcIndex = m_funcNextFreeIndex++;<a name="line.374"></a>
+<FONT color="green">375</FONT>                  m_functionID_customer.put(name, new Integer(funcIndex)); <a name="line.375"></a>
+<FONT color="green">376</FONT>          }<a name="line.376"></a>
+<FONT color="green">377</FONT>          m_functions_customer[funcIndex - NUM_BUILT_IN_FUNCS] = func;          <a name="line.377"></a>
+<FONT color="green">378</FONT>        }<a name="line.378"></a>
+<FONT color="green">379</FONT>        else<a name="line.379"></a>
+<FONT color="green">380</FONT>        {<a name="line.380"></a>
+<FONT color="green">381</FONT>                funcIndex = m_funcNextFreeIndex++;<a name="line.381"></a>
+<FONT color="green">382</FONT>                              <a name="line.382"></a>
+<FONT color="green">383</FONT>                m_functions_customer[funcIndex-NUM_BUILT_IN_FUNCS] = func;<a name="line.383"></a>
+<FONT color="green">384</FONT>                        <a name="line.384"></a>
+<FONT color="green">385</FONT>                m_functionID_customer.put(name, <a name="line.385"></a>
+<FONT color="green">386</FONT>                    new Integer(funcIndex));   <a name="line.386"></a>
+<FONT color="green">387</FONT>        }<a name="line.387"></a>
+<FONT color="green">388</FONT>        return funcIndex;<a name="line.388"></a>
+<FONT color="green">389</FONT>      }<a name="line.389"></a>
+<FONT color="green">390</FONT>    <a name="line.390"></a>
+<FONT color="green">391</FONT>      /**<a name="line.391"></a>
+<FONT color="green">392</FONT>       * Tell if a built-in, non-namespaced function is available.<a name="line.392"></a>
+<FONT color="green">393</FONT>       *<a name="line.393"></a>
+<FONT color="green">394</FONT>       * @param methName The local name of the function.<a name="line.394"></a>
+<FONT color="green">395</FONT>       *<a name="line.395"></a>
+<FONT color="green">396</FONT>       * @return True if the function can be executed.<a name="line.396"></a>
+<FONT color="green">397</FONT>       */<a name="line.397"></a>
+<FONT color="green">398</FONT>      public boolean functionAvailable(String methName)<a name="line.398"></a>
+<FONT color="green">399</FONT>      {<a name="line.399"></a>
+<FONT color="green">400</FONT>          Object tblEntry = m_functionID.get(methName);<a name="line.400"></a>
+<FONT color="green">401</FONT>          if (null != tblEntry) return true;<a name="line.401"></a>
+<FONT color="green">402</FONT>          else{<a name="line.402"></a>
+<FONT color="green">403</FONT>                  tblEntry = m_functionID_customer.get(methName);<a name="line.403"></a>
+<FONT color="green">404</FONT>                  return (null != tblEntry)? true : false;<a name="line.404"></a>
+<FONT color="green">405</FONT>          }<a name="line.405"></a>
+<FONT color="green">406</FONT>      }<a name="line.406"></a>
+<FONT color="green">407</FONT>    }<a name="line.407"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

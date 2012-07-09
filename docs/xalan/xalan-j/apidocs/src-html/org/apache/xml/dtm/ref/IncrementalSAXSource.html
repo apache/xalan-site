@@ -1,0 +1,155 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: IncrementalSAXSource.java 468653 2006-10-28 07:07:05Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    <a name="line.21"></a>
+<FONT color="green">022</FONT>    package org.apache.xml.dtm.ref;<a name="line.22"></a>
+<FONT color="green">023</FONT>    <a name="line.23"></a>
+<FONT color="green">024</FONT>    import org.xml.sax.ContentHandler;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import org.xml.sax.InputSource;<a name="line.25"></a>
+<FONT color="green">026</FONT>    import org.xml.sax.SAXException;<a name="line.26"></a>
+<FONT color="green">027</FONT>    <a name="line.27"></a>
+<FONT color="green">028</FONT>    /** &lt;p&gt;IncrementalSAXSource is an API that delivers a small number of<a name="line.28"></a>
+<FONT color="green">029</FONT>     * SAX events each time a request is made from a "controller"<a name="line.29"></a>
+<FONT color="green">030</FONT>     * coroutine.  See IncrementalSAXFilter and IncrementalSAXFilter_Xerces<a name="line.30"></a>
+<FONT color="green">031</FONT>     * for examples.<a name="line.31"></a>
+<FONT color="green">032</FONT>     * <a name="line.32"></a>
+<FONT color="green">033</FONT>     * Note that interaction is via the deliverMoreNodes<a name="line.33"></a>
+<FONT color="green">034</FONT>     * method, and therefore coroutine support is not exposed<a name="line.34"></a>
+<FONT color="green">035</FONT>     * here.&lt;/p&gt;<a name="line.35"></a>
+<FONT color="green">036</FONT>     * */<a name="line.36"></a>
+<FONT color="green">037</FONT>    public interface IncrementalSAXSource<a name="line.37"></a>
+<FONT color="green">038</FONT>    {<a name="line.38"></a>
+<FONT color="green">039</FONT>      // ------------------------------------------------------------------<a name="line.39"></a>
+<FONT color="green">040</FONT>      // SAX Output API<a name="line.40"></a>
+<FONT color="green">041</FONT>      // ------------------------------------------------------------------<a name="line.41"></a>
+<FONT color="green">042</FONT>    <a name="line.42"></a>
+<FONT color="green">043</FONT>      /** Register a SAX-style content handler for us to output to<a name="line.43"></a>
+<FONT color="green">044</FONT>       */<a name="line.44"></a>
+<FONT color="green">045</FONT>      public void setContentHandler(ContentHandler handler);<a name="line.45"></a>
+<FONT color="green">046</FONT>    <a name="line.46"></a>
+<FONT color="green">047</FONT>      /**  Register a SAX-style lexical handler for us to output to<a name="line.47"></a>
+<FONT color="green">048</FONT>       */<a name="line.48"></a>
+<FONT color="green">049</FONT>      public void setLexicalHandler(org.xml.sax.ext.LexicalHandler handler);<a name="line.49"></a>
+<FONT color="green">050</FONT>    <a name="line.50"></a>
+<FONT color="green">051</FONT>      /**  Register a SAX-style DTD handler for us to output to<a name="line.51"></a>
+<FONT color="green">052</FONT>       */<a name="line.52"></a>
+<FONT color="green">053</FONT>      public void setDTDHandler(org.xml.sax.DTDHandler handler);<a name="line.53"></a>
+<FONT color="green">054</FONT>    <a name="line.54"></a>
+<FONT color="green">055</FONT>      // ------------------------------------------------------------------<a name="line.55"></a>
+<FONT color="green">056</FONT>      // Command Input API<a name="line.56"></a>
+<FONT color="green">057</FONT>      // ------------------------------------------------------------------<a name="line.57"></a>
+<FONT color="green">058</FONT>    <a name="line.58"></a>
+<FONT color="green">059</FONT>      /** deliverMoreNodes() is a simple API which tells the thread in which the<a name="line.59"></a>
+<FONT color="green">060</FONT>       * IncrementalSAXSource is running to deliver more events (true),<a name="line.60"></a>
+<FONT color="green">061</FONT>       * or stop delivering events and close out its input (false).<a name="line.61"></a>
+<FONT color="green">062</FONT>       *<a name="line.62"></a>
+<FONT color="green">063</FONT>       * This is intended to be called from one of our partner coroutines,<a name="line.63"></a>
+<FONT color="green">064</FONT>       * and serves to encapsulate the coroutine communication protocol.<a name="line.64"></a>
+<FONT color="green">065</FONT>       *<a name="line.65"></a>
+<FONT color="green">066</FONT>       * @param parsemore If true, tells the incremental SAX stream to deliver<a name="line.66"></a>
+<FONT color="green">067</FONT>       * another chunk of events. If false, finishes out the stream.<a name="line.67"></a>
+<FONT color="green">068</FONT>       *<a name="line.68"></a>
+<FONT color="green">069</FONT>       * @return Boolean.TRUE if the IncrementalSAXSource believes more data<a name="line.69"></a>
+<FONT color="green">070</FONT>       * may be available for further parsing. Boolean.FALSE if parsing<a name="line.70"></a>
+<FONT color="green">071</FONT>       * ran to completion, or was ended by deliverMoreNodes(false).<a name="line.71"></a>
+<FONT color="green">072</FONT>       * */<a name="line.72"></a>
+<FONT color="green">073</FONT>      public Object deliverMoreNodes (boolean parsemore);<a name="line.73"></a>
+<FONT color="green">074</FONT>    <a name="line.74"></a>
+<FONT color="green">075</FONT>      // ------------------------------------------------------------------<a name="line.75"></a>
+<FONT color="green">076</FONT>      // Parse Thread Convenience API<a name="line.76"></a>
+<FONT color="green">077</FONT>      // ------------------------------------------------------------------<a name="line.77"></a>
+<FONT color="green">078</FONT>    <a name="line.78"></a>
+<FONT color="green">079</FONT>      /** Launch an XMLReader's parsing operation, feeding events to this<a name="line.79"></a>
+<FONT color="green">080</FONT>       * IncrementalSAXSource. In some implementations, this may launch a<a name="line.80"></a>
+<FONT color="green">081</FONT>       * thread which runs the previously supplied XMLReader's parse() operation.<a name="line.81"></a>
+<FONT color="green">082</FONT>       * In others, it may do other forms of initialization.<a name="line.82"></a>
+<FONT color="green">083</FONT>       *<a name="line.83"></a>
+<FONT color="green">084</FONT>       * @throws SAXException is parse thread is already in progress<a name="line.84"></a>
+<FONT color="green">085</FONT>       * or parsing can not be started.<a name="line.85"></a>
+<FONT color="green">086</FONT>       * */<a name="line.86"></a>
+<FONT color="green">087</FONT>      public void startParse(InputSource source) throws SAXException;<a name="line.87"></a>
+<FONT color="green">088</FONT>        <a name="line.88"></a>
+<FONT color="green">089</FONT>    } // class IncrementalSAXSource<a name="line.89"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

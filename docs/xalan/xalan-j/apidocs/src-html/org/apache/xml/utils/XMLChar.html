@@ -1,0 +1,734 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: XMLChar.java 1225426 2011-12-29 04:13:08Z mrglavas $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    <a name="line.21"></a>
+<FONT color="green">022</FONT>    package org.apache.xml.utils;<a name="line.22"></a>
+<FONT color="green">023</FONT>    <a name="line.23"></a>
+<FONT color="green">024</FONT>    /**<a name="line.24"></a>
+<FONT color="green">025</FONT>     * This class defines the basic XML character properties. The data<a name="line.25"></a>
+<FONT color="green">026</FONT>     * in this class can be used to verify that a character is a valid<a name="line.26"></a>
+<FONT color="green">027</FONT>     * XML character or if the character is a space, name start, or name<a name="line.27"></a>
+<FONT color="green">028</FONT>     * character.<a name="line.28"></a>
+<FONT color="green">029</FONT>     * &lt;p&gt;<a name="line.29"></a>
+<FONT color="green">030</FONT>     * A series of convenience methods are supplied to ease the burden<a name="line.30"></a>
+<FONT color="green">031</FONT>     * of the developer. Because inlining the checks can improve per<a name="line.31"></a>
+<FONT color="green">032</FONT>     * character performance, the tables of character properties are<a name="line.32"></a>
+<FONT color="green">033</FONT>     * public. Using the character as an index into the &lt;code&gt;CHARS&lt;/code&gt;<a name="line.33"></a>
+<FONT color="green">034</FONT>     * array and applying the appropriate mask flag (e.g.<a name="line.34"></a>
+<FONT color="green">035</FONT>     * &lt;code&gt;MASK_VALID&lt;/code&gt;), yields the same results as calling the<a name="line.35"></a>
+<FONT color="green">036</FONT>     * convenience methods. There is one exception: check the comments<a name="line.36"></a>
+<FONT color="green">037</FONT>     * for the &lt;code&gt;isValid&lt;/code&gt; method for details.<a name="line.37"></a>
+<FONT color="green">038</FONT>     *<a name="line.38"></a>
+<FONT color="green">039</FONT>     * @author Glenn Marcy, IBM<a name="line.39"></a>
+<FONT color="green">040</FONT>     * @author Andy Clark, IBM<a name="line.40"></a>
+<FONT color="green">041</FONT>     * @author Eric Ye, IBM<a name="line.41"></a>
+<FONT color="green">042</FONT>     * @author Arnaud  Le Hors, IBM<a name="line.42"></a>
+<FONT color="green">043</FONT>     * @author Rahul Srivastava, Sun Microsystems Inc.<a name="line.43"></a>
+<FONT color="green">044</FONT>     *<a name="line.44"></a>
+<FONT color="green">045</FONT>     * @version $Id: XMLChar.java 1225426 2011-12-29 04:13:08Z mrglavas $<a name="line.45"></a>
+<FONT color="green">046</FONT>     */<a name="line.46"></a>
+<FONT color="green">047</FONT>    public class XMLChar {<a name="line.47"></a>
+<FONT color="green">048</FONT>    <a name="line.48"></a>
+<FONT color="green">049</FONT>        //<a name="line.49"></a>
+<FONT color="green">050</FONT>        // Constants<a name="line.50"></a>
+<FONT color="green">051</FONT>        //<a name="line.51"></a>
+<FONT color="green">052</FONT>    <a name="line.52"></a>
+<FONT color="green">053</FONT>        /** Character flags. */<a name="line.53"></a>
+<FONT color="green">054</FONT>        private static final byte[] CHARS = new byte[1 &lt;&lt; 16];<a name="line.54"></a>
+<FONT color="green">055</FONT>    <a name="line.55"></a>
+<FONT color="green">056</FONT>        /** Valid character mask. */<a name="line.56"></a>
+<FONT color="green">057</FONT>        public static final int MASK_VALID = 0x01;<a name="line.57"></a>
+<FONT color="green">058</FONT>    <a name="line.58"></a>
+<FONT color="green">059</FONT>        /** Space character mask. */<a name="line.59"></a>
+<FONT color="green">060</FONT>        public static final int MASK_SPACE = 0x02;<a name="line.60"></a>
+<FONT color="green">061</FONT>    <a name="line.61"></a>
+<FONT color="green">062</FONT>        /** Name start character mask. */<a name="line.62"></a>
+<FONT color="green">063</FONT>        public static final int MASK_NAME_START = 0x04;<a name="line.63"></a>
+<FONT color="green">064</FONT>    <a name="line.64"></a>
+<FONT color="green">065</FONT>        /** Name character mask. */<a name="line.65"></a>
+<FONT color="green">066</FONT>        public static final int MASK_NAME = 0x08;<a name="line.66"></a>
+<FONT color="green">067</FONT>    <a name="line.67"></a>
+<FONT color="green">068</FONT>        /** Pubid character mask. */<a name="line.68"></a>
+<FONT color="green">069</FONT>        public static final int MASK_PUBID = 0x10;<a name="line.69"></a>
+<FONT color="green">070</FONT>        <a name="line.70"></a>
+<FONT color="green">071</FONT>        /** <a name="line.71"></a>
+<FONT color="green">072</FONT>         * Content character mask. Special characters are those that can<a name="line.72"></a>
+<FONT color="green">073</FONT>         * be considered the start of markup, such as '&amp;lt;' and '&amp;amp;'. <a name="line.73"></a>
+<FONT color="green">074</FONT>         * The various newline characters are considered special as well.<a name="line.74"></a>
+<FONT color="green">075</FONT>         * All other valid XML characters can be considered content.<a name="line.75"></a>
+<FONT color="green">076</FONT>         * &lt;p&gt;<a name="line.76"></a>
+<FONT color="green">077</FONT>         * This is an optimization for the inner loop of character scanning.<a name="line.77"></a>
+<FONT color="green">078</FONT>         */<a name="line.78"></a>
+<FONT color="green">079</FONT>        public static final int MASK_CONTENT = 0x20;<a name="line.79"></a>
+<FONT color="green">080</FONT>    <a name="line.80"></a>
+<FONT color="green">081</FONT>        /** NCName start character mask. */<a name="line.81"></a>
+<FONT color="green">082</FONT>        public static final int MASK_NCNAME_START = 0x40;<a name="line.82"></a>
+<FONT color="green">083</FONT>    <a name="line.83"></a>
+<FONT color="green">084</FONT>        /** NCName character mask. */<a name="line.84"></a>
+<FONT color="green">085</FONT>        public static final int MASK_NCNAME = 0x80;<a name="line.85"></a>
+<FONT color="green">086</FONT>    <a name="line.86"></a>
+<FONT color="green">087</FONT>        //<a name="line.87"></a>
+<FONT color="green">088</FONT>        // Static initialization<a name="line.88"></a>
+<FONT color="green">089</FONT>        //<a name="line.89"></a>
+<FONT color="green">090</FONT>    <a name="line.90"></a>
+<FONT color="green">091</FONT>        static {<a name="line.91"></a>
+<FONT color="green">092</FONT>            <a name="line.92"></a>
+<FONT color="green">093</FONT>            //<a name="line.93"></a>
+<FONT color="green">094</FONT>            // [2] Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] |<a name="line.94"></a>
+<FONT color="green">095</FONT>            //              [#xE000-#xFFFD] | [#x10000-#x10FFFF]<a name="line.95"></a>
+<FONT color="green">096</FONT>            //<a name="line.96"></a>
+<FONT color="green">097</FONT>    <a name="line.97"></a>
+<FONT color="green">098</FONT>            int charRange[] = { <a name="line.98"></a>
+<FONT color="green">099</FONT>                0x0009, 0x000A, 0x000D, 0x000D, 0x0020, 0xD7FF, 0xE000, 0xFFFD,<a name="line.99"></a>
+<FONT color="green">100</FONT>            };<a name="line.100"></a>
+<FONT color="green">101</FONT>    <a name="line.101"></a>
+<FONT color="green">102</FONT>            //<a name="line.102"></a>
+<FONT color="green">103</FONT>            // [3] S ::= (#x20 | #x9 | #xD | #xA)+<a name="line.103"></a>
+<FONT color="green">104</FONT>            //<a name="line.104"></a>
+<FONT color="green">105</FONT>    <a name="line.105"></a>
+<FONT color="green">106</FONT>            int spaceChar[] = { <a name="line.106"></a>
+<FONT color="green">107</FONT>                0x0020, 0x0009, 0x000D, 0x000A,<a name="line.107"></a>
+<FONT color="green">108</FONT>            };<a name="line.108"></a>
+<FONT color="green">109</FONT>    <a name="line.109"></a>
+<FONT color="green">110</FONT>            //<a name="line.110"></a>
+<FONT color="green">111</FONT>            // [4] NameChar ::= Letter | Digit | '.' | '-' | '_' | ':' |<a name="line.111"></a>
+<FONT color="green">112</FONT>            //                  CombiningChar | Extender<a name="line.112"></a>
+<FONT color="green">113</FONT>            //<a name="line.113"></a>
+<FONT color="green">114</FONT>    <a name="line.114"></a>
+<FONT color="green">115</FONT>            int nameChar[] = { <a name="line.115"></a>
+<FONT color="green">116</FONT>                0x002D, 0x002E, // '-' and '.'<a name="line.116"></a>
+<FONT color="green">117</FONT>            };<a name="line.117"></a>
+<FONT color="green">118</FONT>    <a name="line.118"></a>
+<FONT color="green">119</FONT>            //<a name="line.119"></a>
+<FONT color="green">120</FONT>            // [5] Name ::= (Letter | '_' | ':') (NameChar)*<a name="line.120"></a>
+<FONT color="green">121</FONT>            //<a name="line.121"></a>
+<FONT color="green">122</FONT>    <a name="line.122"></a>
+<FONT color="green">123</FONT>            int nameStartChar[] = { <a name="line.123"></a>
+<FONT color="green">124</FONT>                0x003A, 0x005F, // ':' and '_'<a name="line.124"></a>
+<FONT color="green">125</FONT>            };<a name="line.125"></a>
+<FONT color="green">126</FONT>    <a name="line.126"></a>
+<FONT color="green">127</FONT>            //<a name="line.127"></a>
+<FONT color="green">128</FONT>            // [13] PubidChar ::= #x20 | 0xD | 0xA | [a-zA-Z0-9] | [-'()+,./:=?;!*#@$_%]<a name="line.128"></a>
+<FONT color="green">129</FONT>            //<a name="line.129"></a>
+<FONT color="green">130</FONT>    <a name="line.130"></a>
+<FONT color="green">131</FONT>            int pubidChar[] = {<a name="line.131"></a>
+<FONT color="green">132</FONT>                0x000A, 0x000D, 0x0020, 0x0021, 0x0023, 0x0024, 0x0025, 0x003D,<a name="line.132"></a>
+<FONT color="green">133</FONT>                0x005F<a name="line.133"></a>
+<FONT color="green">134</FONT>            };<a name="line.134"></a>
+<FONT color="green">135</FONT>    <a name="line.135"></a>
+<FONT color="green">136</FONT>            int pubidRange[] = {<a name="line.136"></a>
+<FONT color="green">137</FONT>                0x0027, 0x003B, 0x003F, 0x005A, 0x0061, 0x007A<a name="line.137"></a>
+<FONT color="green">138</FONT>            };<a name="line.138"></a>
+<FONT color="green">139</FONT>    <a name="line.139"></a>
+<FONT color="green">140</FONT>            //<a name="line.140"></a>
+<FONT color="green">141</FONT>            // [84] Letter ::= BaseChar | Ideographic<a name="line.141"></a>
+<FONT color="green">142</FONT>            //<a name="line.142"></a>
+<FONT color="green">143</FONT>    <a name="line.143"></a>
+<FONT color="green">144</FONT>            int letterRange[] = {<a name="line.144"></a>
+<FONT color="green">145</FONT>                // BaseChar<a name="line.145"></a>
+<FONT color="green">146</FONT>                0x0041, 0x005A, 0x0061, 0x007A, 0x00C0, 0x00D6, 0x00D8, 0x00F6,<a name="line.146"></a>
+<FONT color="green">147</FONT>                0x00F8, 0x0131, 0x0134, 0x013E, 0x0141, 0x0148, 0x014A, 0x017E,<a name="line.147"></a>
+<FONT color="green">148</FONT>                0x0180, 0x01C3, 0x01CD, 0x01F0, 0x01F4, 0x01F5, 0x01FA, 0x0217,<a name="line.148"></a>
+<FONT color="green">149</FONT>                0x0250, 0x02A8, 0x02BB, 0x02C1, 0x0388, 0x038A, 0x038E, 0x03A1,<a name="line.149"></a>
+<FONT color="green">150</FONT>                0x03A3, 0x03CE, 0x03D0, 0x03D6, 0x03E2, 0x03F3, 0x0401, 0x040C,<a name="line.150"></a>
+<FONT color="green">151</FONT>                0x040E, 0x044F, 0x0451, 0x045C, 0x045E, 0x0481, 0x0490, 0x04C4,<a name="line.151"></a>
+<FONT color="green">152</FONT>                0x04C7, 0x04C8, 0x04CB, 0x04CC, 0x04D0, 0x04EB, 0x04EE, 0x04F5,<a name="line.152"></a>
+<FONT color="green">153</FONT>                0x04F8, 0x04F9, 0x0531, 0x0556, 0x0561, 0x0586, 0x05D0, 0x05EA,<a name="line.153"></a>
+<FONT color="green">154</FONT>                0x05F0, 0x05F2, 0x0621, 0x063A, 0x0641, 0x064A, 0x0671, 0x06B7,<a name="line.154"></a>
+<FONT color="green">155</FONT>                0x06BA, 0x06BE, 0x06C0, 0x06CE, 0x06D0, 0x06D3, 0x06E5, 0x06E6,<a name="line.155"></a>
+<FONT color="green">156</FONT>                0x0905, 0x0939, 0x0958, 0x0961, 0x0985, 0x098C, 0x098F, 0x0990,<a name="line.156"></a>
+<FONT color="green">157</FONT>                0x0993, 0x09A8, 0x09AA, 0x09B0, 0x09B6, 0x09B9, 0x09DC, 0x09DD,<a name="line.157"></a>
+<FONT color="green">158</FONT>                0x09DF, 0x09E1, 0x09F0, 0x09F1, 0x0A05, 0x0A0A, 0x0A0F, 0x0A10,<a name="line.158"></a>
+<FONT color="green">159</FONT>                0x0A13, 0x0A28, 0x0A2A, 0x0A30, 0x0A32, 0x0A33, 0x0A35, 0x0A36,<a name="line.159"></a>
+<FONT color="green">160</FONT>                0x0A38, 0x0A39, 0x0A59, 0x0A5C, 0x0A72, 0x0A74, 0x0A85, 0x0A8B,<a name="line.160"></a>
+<FONT color="green">161</FONT>                0x0A8F, 0x0A91, 0x0A93, 0x0AA8, 0x0AAA, 0x0AB0, 0x0AB2, 0x0AB3,<a name="line.161"></a>
+<FONT color="green">162</FONT>                0x0AB5, 0x0AB9, 0x0B05, 0x0B0C, 0x0B0F, 0x0B10, 0x0B13, 0x0B28,<a name="line.162"></a>
+<FONT color="green">163</FONT>                0x0B2A, 0x0B30, 0x0B32, 0x0B33, 0x0B36, 0x0B39, 0x0B5C, 0x0B5D,<a name="line.163"></a>
+<FONT color="green">164</FONT>                0x0B5F, 0x0B61, 0x0B85, 0x0B8A, 0x0B8E, 0x0B90, 0x0B92, 0x0B95,<a name="line.164"></a>
+<FONT color="green">165</FONT>                0x0B99, 0x0B9A, 0x0B9E, 0x0B9F, 0x0BA3, 0x0BA4, 0x0BA8, 0x0BAA,<a name="line.165"></a>
+<FONT color="green">166</FONT>                0x0BAE, 0x0BB5, 0x0BB7, 0x0BB9, 0x0C05, 0x0C0C, 0x0C0E, 0x0C10,<a name="line.166"></a>
+<FONT color="green">167</FONT>                0x0C12, 0x0C28, 0x0C2A, 0x0C33, 0x0C35, 0x0C39, 0x0C60, 0x0C61,<a name="line.167"></a>
+<FONT color="green">168</FONT>                0x0C85, 0x0C8C, 0x0C8E, 0x0C90, 0x0C92, 0x0CA8, 0x0CAA, 0x0CB3,<a name="line.168"></a>
+<FONT color="green">169</FONT>                0x0CB5, 0x0CB9, 0x0CE0, 0x0CE1, 0x0D05, 0x0D0C, 0x0D0E, 0x0D10,<a name="line.169"></a>
+<FONT color="green">170</FONT>                0x0D12, 0x0D28, 0x0D2A, 0x0D39, 0x0D60, 0x0D61, 0x0E01, 0x0E2E,<a name="line.170"></a>
+<FONT color="green">171</FONT>                0x0E32, 0x0E33, 0x0E40, 0x0E45, 0x0E81, 0x0E82, 0x0E87, 0x0E88,<a name="line.171"></a>
+<FONT color="green">172</FONT>                0x0E94, 0x0E97, 0x0E99, 0x0E9F, 0x0EA1, 0x0EA3, 0x0EAA, 0x0EAB,<a name="line.172"></a>
+<FONT color="green">173</FONT>                0x0EAD, 0x0EAE, 0x0EB2, 0x0EB3, 0x0EC0, 0x0EC4, 0x0F40, 0x0F47,<a name="line.173"></a>
+<FONT color="green">174</FONT>                0x0F49, 0x0F69, 0x10A0, 0x10C5, 0x10D0, 0x10F6, 0x1102, 0x1103,<a name="line.174"></a>
+<FONT color="green">175</FONT>                0x1105, 0x1107, 0x110B, 0x110C, 0x110E, 0x1112, 0x1154, 0x1155,<a name="line.175"></a>
+<FONT color="green">176</FONT>                0x115F, 0x1161, 0x116D, 0x116E, 0x1172, 0x1173, 0x11AE, 0x11AF,<a name="line.176"></a>
+<FONT color="green">177</FONT>                0x11B7, 0x11B8, 0x11BC, 0x11C2, 0x1E00, 0x1E9B, 0x1EA0, 0x1EF9,<a name="line.177"></a>
+<FONT color="green">178</FONT>                0x1F00, 0x1F15, 0x1F18, 0x1F1D, 0x1F20, 0x1F45, 0x1F48, 0x1F4D,<a name="line.178"></a>
+<FONT color="green">179</FONT>                0x1F50, 0x1F57, 0x1F5F, 0x1F7D, 0x1F80, 0x1FB4, 0x1FB6, 0x1FBC,<a name="line.179"></a>
+<FONT color="green">180</FONT>                0x1FC2, 0x1FC4, 0x1FC6, 0x1FCC, 0x1FD0, 0x1FD3, 0x1FD6, 0x1FDB,<a name="line.180"></a>
+<FONT color="green">181</FONT>                0x1FE0, 0x1FEC, 0x1FF2, 0x1FF4, 0x1FF6, 0x1FFC, 0x212A, 0x212B,<a name="line.181"></a>
+<FONT color="green">182</FONT>                0x2180, 0x2182, 0x3041, 0x3094, 0x30A1, 0x30FA, 0x3105, 0x312C,<a name="line.182"></a>
+<FONT color="green">183</FONT>                0xAC00, 0xD7A3,<a name="line.183"></a>
+<FONT color="green">184</FONT>                // Ideographic<a name="line.184"></a>
+<FONT color="green">185</FONT>                0x3021, 0x3029, 0x4E00, 0x9FA5,<a name="line.185"></a>
+<FONT color="green">186</FONT>            };<a name="line.186"></a>
+<FONT color="green">187</FONT>            int letterChar[] = {<a name="line.187"></a>
+<FONT color="green">188</FONT>                // BaseChar<a name="line.188"></a>
+<FONT color="green">189</FONT>                0x0386, 0x038C, 0x03DA, 0x03DC, 0x03DE, 0x03E0, 0x0559, 0x06D5,<a name="line.189"></a>
+<FONT color="green">190</FONT>                0x093D, 0x09B2, 0x0A5E, 0x0A8D, 0x0ABD, 0x0AE0, 0x0B3D, 0x0B9C,<a name="line.190"></a>
+<FONT color="green">191</FONT>                0x0CDE, 0x0E30, 0x0E84, 0x0E8A, 0x0E8D, 0x0EA5, 0x0EA7, 0x0EB0,<a name="line.191"></a>
+<FONT color="green">192</FONT>                0x0EBD, 0x1100, 0x1109, 0x113C, 0x113E, 0x1140, 0x114C, 0x114E,<a name="line.192"></a>
+<FONT color="green">193</FONT>                0x1150, 0x1159, 0x1163, 0x1165, 0x1167, 0x1169, 0x1175, 0x119E,<a name="line.193"></a>
+<FONT color="green">194</FONT>                0x11A8, 0x11AB, 0x11BA, 0x11EB, 0x11F0, 0x11F9, 0x1F59, 0x1F5B,<a name="line.194"></a>
+<FONT color="green">195</FONT>                0x1F5D, 0x1FBE, 0x2126, 0x212E,<a name="line.195"></a>
+<FONT color="green">196</FONT>                // Ideographic<a name="line.196"></a>
+<FONT color="green">197</FONT>                0x3007,<a name="line.197"></a>
+<FONT color="green">198</FONT>            };<a name="line.198"></a>
+<FONT color="green">199</FONT>    <a name="line.199"></a>
+<FONT color="green">200</FONT>            //<a name="line.200"></a>
+<FONT color="green">201</FONT>            // [87] CombiningChar ::= ...<a name="line.201"></a>
+<FONT color="green">202</FONT>            //<a name="line.202"></a>
+<FONT color="green">203</FONT>    <a name="line.203"></a>
+<FONT color="green">204</FONT>            int combiningCharRange[] = {<a name="line.204"></a>
+<FONT color="green">205</FONT>                0x0300, 0x0345, 0x0360, 0x0361, 0x0483, 0x0486, 0x0591, 0x05A1,<a name="line.205"></a>
+<FONT color="green">206</FONT>                0x05A3, 0x05B9, 0x05BB, 0x05BD, 0x05C1, 0x05C2, 0x064B, 0x0652,<a name="line.206"></a>
+<FONT color="green">207</FONT>                0x06D6, 0x06DC, 0x06DD, 0x06DF, 0x06E0, 0x06E4, 0x06E7, 0x06E8,<a name="line.207"></a>
+<FONT color="green">208</FONT>                0x06EA, 0x06ED, 0x0901, 0x0903, 0x093E, 0x094C, 0x0951, 0x0954,<a name="line.208"></a>
+<FONT color="green">209</FONT>                0x0962, 0x0963, 0x0981, 0x0983, 0x09C0, 0x09C4, 0x09C7, 0x09C8,<a name="line.209"></a>
+<FONT color="green">210</FONT>                0x09CB, 0x09CD, 0x09E2, 0x09E3, 0x0A40, 0x0A42, 0x0A47, 0x0A48,<a name="line.210"></a>
+<FONT color="green">211</FONT>                0x0A4B, 0x0A4D, 0x0A70, 0x0A71, 0x0A81, 0x0A83, 0x0ABE, 0x0AC5,<a name="line.211"></a>
+<FONT color="green">212</FONT>                0x0AC7, 0x0AC9, 0x0ACB, 0x0ACD, 0x0B01, 0x0B03, 0x0B3E, 0x0B43,<a name="line.212"></a>
+<FONT color="green">213</FONT>                0x0B47, 0x0B48, 0x0B4B, 0x0B4D, 0x0B56, 0x0B57, 0x0B82, 0x0B83,<a name="line.213"></a>
+<FONT color="green">214</FONT>                0x0BBE, 0x0BC2, 0x0BC6, 0x0BC8, 0x0BCA, 0x0BCD, 0x0C01, 0x0C03,<a name="line.214"></a>
+<FONT color="green">215</FONT>                0x0C3E, 0x0C44, 0x0C46, 0x0C48, 0x0C4A, 0x0C4D, 0x0C55, 0x0C56,<a name="line.215"></a>
+<FONT color="green">216</FONT>                0x0C82, 0x0C83, 0x0CBE, 0x0CC4, 0x0CC6, 0x0CC8, 0x0CCA, 0x0CCD,<a name="line.216"></a>
+<FONT color="green">217</FONT>                0x0CD5, 0x0CD6, 0x0D02, 0x0D03, 0x0D3E, 0x0D43, 0x0D46, 0x0D48,<a name="line.217"></a>
+<FONT color="green">218</FONT>                0x0D4A, 0x0D4D, 0x0E34, 0x0E3A, 0x0E47, 0x0E4E, 0x0EB4, 0x0EB9,<a name="line.218"></a>
+<FONT color="green">219</FONT>                0x0EBB, 0x0EBC, 0x0EC8, 0x0ECD, 0x0F18, 0x0F19, 0x0F71, 0x0F84,<a name="line.219"></a>
+<FONT color="green">220</FONT>                0x0F86, 0x0F8B, 0x0F90, 0x0F95, 0x0F99, 0x0FAD, 0x0FB1, 0x0FB7,<a name="line.220"></a>
+<FONT color="green">221</FONT>                0x20D0, 0x20DC, 0x302A, 0x302F,<a name="line.221"></a>
+<FONT color="green">222</FONT>            };<a name="line.222"></a>
+<FONT color="green">223</FONT>    <a name="line.223"></a>
+<FONT color="green">224</FONT>            int combiningCharChar[] = {<a name="line.224"></a>
+<FONT color="green">225</FONT>                0x05BF, 0x05C4, 0x0670, 0x093C, 0x094D, 0x09BC, 0x09BE, 0x09BF,<a name="line.225"></a>
+<FONT color="green">226</FONT>                0x09D7, 0x0A02, 0x0A3C, 0x0A3E, 0x0A3F, 0x0ABC, 0x0B3C, 0x0BD7,<a name="line.226"></a>
+<FONT color="green">227</FONT>                0x0D57, 0x0E31, 0x0EB1, 0x0F35, 0x0F37, 0x0F39, 0x0F3E, 0x0F3F,<a name="line.227"></a>
+<FONT color="green">228</FONT>                0x0F97, 0x0FB9, 0x20E1, 0x3099, 0x309A,<a name="line.228"></a>
+<FONT color="green">229</FONT>            };<a name="line.229"></a>
+<FONT color="green">230</FONT>    <a name="line.230"></a>
+<FONT color="green">231</FONT>            //<a name="line.231"></a>
+<FONT color="green">232</FONT>            // [88] Digit ::= ...<a name="line.232"></a>
+<FONT color="green">233</FONT>            //<a name="line.233"></a>
+<FONT color="green">234</FONT>    <a name="line.234"></a>
+<FONT color="green">235</FONT>            int digitRange[] = {<a name="line.235"></a>
+<FONT color="green">236</FONT>                0x0030, 0x0039, 0x0660, 0x0669, 0x06F0, 0x06F9, 0x0966, 0x096F,<a name="line.236"></a>
+<FONT color="green">237</FONT>                0x09E6, 0x09EF, 0x0A66, 0x0A6F, 0x0AE6, 0x0AEF, 0x0B66, 0x0B6F,<a name="line.237"></a>
+<FONT color="green">238</FONT>                0x0BE7, 0x0BEF, 0x0C66, 0x0C6F, 0x0CE6, 0x0CEF, 0x0D66, 0x0D6F,<a name="line.238"></a>
+<FONT color="green">239</FONT>                0x0E50, 0x0E59, 0x0ED0, 0x0ED9, 0x0F20, 0x0F29,<a name="line.239"></a>
+<FONT color="green">240</FONT>            };<a name="line.240"></a>
+<FONT color="green">241</FONT>    <a name="line.241"></a>
+<FONT color="green">242</FONT>            //<a name="line.242"></a>
+<FONT color="green">243</FONT>            // [89] Extender ::= ...<a name="line.243"></a>
+<FONT color="green">244</FONT>            //<a name="line.244"></a>
+<FONT color="green">245</FONT>    <a name="line.245"></a>
+<FONT color="green">246</FONT>            int extenderRange[] = {<a name="line.246"></a>
+<FONT color="green">247</FONT>                0x3031, 0x3035, 0x309D, 0x309E, 0x30FC, 0x30FE,<a name="line.247"></a>
+<FONT color="green">248</FONT>            };<a name="line.248"></a>
+<FONT color="green">249</FONT>    <a name="line.249"></a>
+<FONT color="green">250</FONT>            int extenderChar[] = {<a name="line.250"></a>
+<FONT color="green">251</FONT>                0x00B7, 0x02D0, 0x02D1, 0x0387, 0x0640, 0x0E46, 0x0EC6, 0x3005,<a name="line.251"></a>
+<FONT color="green">252</FONT>            };<a name="line.252"></a>
+<FONT color="green">253</FONT>    <a name="line.253"></a>
+<FONT color="green">254</FONT>            //<a name="line.254"></a>
+<FONT color="green">255</FONT>            // SpecialChar ::= '&lt;', '&amp;', '\n', '\r', ']'<a name="line.255"></a>
+<FONT color="green">256</FONT>            //<a name="line.256"></a>
+<FONT color="green">257</FONT>    <a name="line.257"></a>
+<FONT color="green">258</FONT>            int specialChar[] = {<a name="line.258"></a>
+<FONT color="green">259</FONT>                '&lt;', '&amp;', '\n', '\r', ']',<a name="line.259"></a>
+<FONT color="green">260</FONT>            };<a name="line.260"></a>
+<FONT color="green">261</FONT>    <a name="line.261"></a>
+<FONT color="green">262</FONT>            //<a name="line.262"></a>
+<FONT color="green">263</FONT>            // Initialize<a name="line.263"></a>
+<FONT color="green">264</FONT>            //<a name="line.264"></a>
+<FONT color="green">265</FONT>    <a name="line.265"></a>
+<FONT color="green">266</FONT>            // set valid characters<a name="line.266"></a>
+<FONT color="green">267</FONT>            for (int i = 0; i &lt; charRange.length; i += 2) {<a name="line.267"></a>
+<FONT color="green">268</FONT>                for (int j = charRange[i]; j &lt;= charRange[i + 1]; j++) {<a name="line.268"></a>
+<FONT color="green">269</FONT>                    CHARS[j] |= MASK_VALID | MASK_CONTENT;<a name="line.269"></a>
+<FONT color="green">270</FONT>                }<a name="line.270"></a>
+<FONT color="green">271</FONT>            }<a name="line.271"></a>
+<FONT color="green">272</FONT>    <a name="line.272"></a>
+<FONT color="green">273</FONT>            // remove special characters<a name="line.273"></a>
+<FONT color="green">274</FONT>            for (int i = 0; i &lt; specialChar.length; i++) {<a name="line.274"></a>
+<FONT color="green">275</FONT>                CHARS[specialChar[i]] = (byte)(CHARS[specialChar[i]] &amp; ~MASK_CONTENT);<a name="line.275"></a>
+<FONT color="green">276</FONT>            }<a name="line.276"></a>
+<FONT color="green">277</FONT>    <a name="line.277"></a>
+<FONT color="green">278</FONT>            // set space characters<a name="line.278"></a>
+<FONT color="green">279</FONT>            for (int i = 0; i &lt; spaceChar.length; i++) {<a name="line.279"></a>
+<FONT color="green">280</FONT>                CHARS[spaceChar[i]] |= MASK_SPACE;<a name="line.280"></a>
+<FONT color="green">281</FONT>            }<a name="line.281"></a>
+<FONT color="green">282</FONT>    <a name="line.282"></a>
+<FONT color="green">283</FONT>            // set name start characters<a name="line.283"></a>
+<FONT color="green">284</FONT>            for (int i = 0; i &lt; nameStartChar.length; i++) {<a name="line.284"></a>
+<FONT color="green">285</FONT>                CHARS[nameStartChar[i]] |= MASK_NAME_START | MASK_NAME | <a name="line.285"></a>
+<FONT color="green">286</FONT>                                           MASK_NCNAME_START | MASK_NCNAME;<a name="line.286"></a>
+<FONT color="green">287</FONT>            }<a name="line.287"></a>
+<FONT color="green">288</FONT>            for (int i = 0; i &lt; letterRange.length; i += 2) {<a name="line.288"></a>
+<FONT color="green">289</FONT>                for (int j = letterRange[i]; j &lt;= letterRange[i + 1]; j++) {<a name="line.289"></a>
+<FONT color="green">290</FONT>                    CHARS[j] |= MASK_NAME_START | MASK_NAME |<a name="line.290"></a>
+<FONT color="green">291</FONT>                                MASK_NCNAME_START | MASK_NCNAME;<a name="line.291"></a>
+<FONT color="green">292</FONT>                }<a name="line.292"></a>
+<FONT color="green">293</FONT>            }<a name="line.293"></a>
+<FONT color="green">294</FONT>            for (int i = 0; i &lt; letterChar.length; i++) {<a name="line.294"></a>
+<FONT color="green">295</FONT>                CHARS[letterChar[i]] |= MASK_NAME_START | MASK_NAME |<a name="line.295"></a>
+<FONT color="green">296</FONT>                                        MASK_NCNAME_START | MASK_NCNAME;<a name="line.296"></a>
+<FONT color="green">297</FONT>            }<a name="line.297"></a>
+<FONT color="green">298</FONT>    <a name="line.298"></a>
+<FONT color="green">299</FONT>            // set name characters<a name="line.299"></a>
+<FONT color="green">300</FONT>            for (int i = 0; i &lt; nameChar.length; i++) {<a name="line.300"></a>
+<FONT color="green">301</FONT>                CHARS[nameChar[i]] |= MASK_NAME | MASK_NCNAME;<a name="line.301"></a>
+<FONT color="green">302</FONT>            }<a name="line.302"></a>
+<FONT color="green">303</FONT>            for (int i = 0; i &lt; digitRange.length; i += 2) {<a name="line.303"></a>
+<FONT color="green">304</FONT>                for (int j = digitRange[i]; j &lt;= digitRange[i + 1]; j++) {<a name="line.304"></a>
+<FONT color="green">305</FONT>                    CHARS[j] |= MASK_NAME | MASK_NCNAME;<a name="line.305"></a>
+<FONT color="green">306</FONT>                }<a name="line.306"></a>
+<FONT color="green">307</FONT>            }<a name="line.307"></a>
+<FONT color="green">308</FONT>            for (int i = 0; i &lt; combiningCharRange.length; i += 2) {<a name="line.308"></a>
+<FONT color="green">309</FONT>                for (int j = combiningCharRange[i]; j &lt;= combiningCharRange[i + 1]; j++) {<a name="line.309"></a>
+<FONT color="green">310</FONT>                    CHARS[j] |= MASK_NAME | MASK_NCNAME;<a name="line.310"></a>
+<FONT color="green">311</FONT>                }<a name="line.311"></a>
+<FONT color="green">312</FONT>            }<a name="line.312"></a>
+<FONT color="green">313</FONT>            for (int i = 0; i &lt; combiningCharChar.length; i++) {<a name="line.313"></a>
+<FONT color="green">314</FONT>                CHARS[combiningCharChar[i]] |= MASK_NAME | MASK_NCNAME;<a name="line.314"></a>
+<FONT color="green">315</FONT>            }<a name="line.315"></a>
+<FONT color="green">316</FONT>            for (int i = 0; i &lt; extenderRange.length; i += 2) {<a name="line.316"></a>
+<FONT color="green">317</FONT>                for (int j = extenderRange[i]; j &lt;= extenderRange[i + 1]; j++) {<a name="line.317"></a>
+<FONT color="green">318</FONT>                    CHARS[j] |= MASK_NAME | MASK_NCNAME;<a name="line.318"></a>
+<FONT color="green">319</FONT>                }<a name="line.319"></a>
+<FONT color="green">320</FONT>            }<a name="line.320"></a>
+<FONT color="green">321</FONT>            for (int i = 0; i &lt; extenderChar.length; i++) {<a name="line.321"></a>
+<FONT color="green">322</FONT>                CHARS[extenderChar[i]] |= MASK_NAME | MASK_NCNAME;<a name="line.322"></a>
+<FONT color="green">323</FONT>            }<a name="line.323"></a>
+<FONT color="green">324</FONT>    <a name="line.324"></a>
+<FONT color="green">325</FONT>            // remove ':' from allowable MASK_NCNAME_START and MASK_NCNAME chars<a name="line.325"></a>
+<FONT color="green">326</FONT>            CHARS[':'] &amp;= ~(MASK_NCNAME_START | MASK_NCNAME);<a name="line.326"></a>
+<FONT color="green">327</FONT>    <a name="line.327"></a>
+<FONT color="green">328</FONT>            // set Pubid characters<a name="line.328"></a>
+<FONT color="green">329</FONT>            for (int i = 0; i &lt; pubidChar.length; i++) {<a name="line.329"></a>
+<FONT color="green">330</FONT>                CHARS[pubidChar[i]] |= MASK_PUBID;<a name="line.330"></a>
+<FONT color="green">331</FONT>            }<a name="line.331"></a>
+<FONT color="green">332</FONT>            for (int i = 0; i &lt; pubidRange.length; i += 2) {<a name="line.332"></a>
+<FONT color="green">333</FONT>                for (int j = pubidRange[i]; j &lt;= pubidRange[i + 1]; j++) {<a name="line.333"></a>
+<FONT color="green">334</FONT>                    CHARS[j] |= MASK_PUBID;<a name="line.334"></a>
+<FONT color="green">335</FONT>                }<a name="line.335"></a>
+<FONT color="green">336</FONT>            }<a name="line.336"></a>
+<FONT color="green">337</FONT>    <a name="line.337"></a>
+<FONT color="green">338</FONT>        } // &lt;clinit&gt;()<a name="line.338"></a>
+<FONT color="green">339</FONT>    <a name="line.339"></a>
+<FONT color="green">340</FONT>        //<a name="line.340"></a>
+<FONT color="green">341</FONT>        // Public static methods<a name="line.341"></a>
+<FONT color="green">342</FONT>        //<a name="line.342"></a>
+<FONT color="green">343</FONT>    <a name="line.343"></a>
+<FONT color="green">344</FONT>        /**<a name="line.344"></a>
+<FONT color="green">345</FONT>         * Returns true if the specified character is a supplemental character.<a name="line.345"></a>
+<FONT color="green">346</FONT>         *<a name="line.346"></a>
+<FONT color="green">347</FONT>         * @param c The character to check.<a name="line.347"></a>
+<FONT color="green">348</FONT>         */<a name="line.348"></a>
+<FONT color="green">349</FONT>        public static boolean isSupplemental(int c) {<a name="line.349"></a>
+<FONT color="green">350</FONT>            return (c &gt;= 0x10000 &amp;&amp; c &lt;= 0x10FFFF);<a name="line.350"></a>
+<FONT color="green">351</FONT>        }<a name="line.351"></a>
+<FONT color="green">352</FONT>    <a name="line.352"></a>
+<FONT color="green">353</FONT>        /**<a name="line.353"></a>
+<FONT color="green">354</FONT>         * Returns true the supplemental character corresponding to the given<a name="line.354"></a>
+<FONT color="green">355</FONT>         * surrogates.<a name="line.355"></a>
+<FONT color="green">356</FONT>         *<a name="line.356"></a>
+<FONT color="green">357</FONT>         * @param h The high surrogate.<a name="line.357"></a>
+<FONT color="green">358</FONT>         * @param l The low surrogate.<a name="line.358"></a>
+<FONT color="green">359</FONT>         */<a name="line.359"></a>
+<FONT color="green">360</FONT>        public static int supplemental(char h, char l) {<a name="line.360"></a>
+<FONT color="green">361</FONT>            return (h - 0xD800) * 0x400 + (l - 0xDC00) + 0x10000;<a name="line.361"></a>
+<FONT color="green">362</FONT>        }<a name="line.362"></a>
+<FONT color="green">363</FONT>    <a name="line.363"></a>
+<FONT color="green">364</FONT>        /**<a name="line.364"></a>
+<FONT color="green">365</FONT>         * Returns the high surrogate of a supplemental character<a name="line.365"></a>
+<FONT color="green">366</FONT>         *<a name="line.366"></a>
+<FONT color="green">367</FONT>         * @param c The supplemental character to "split".<a name="line.367"></a>
+<FONT color="green">368</FONT>         */<a name="line.368"></a>
+<FONT color="green">369</FONT>        public static char highSurrogate(int c) {<a name="line.369"></a>
+<FONT color="green">370</FONT>            return (char) (((c - 0x00010000) &gt;&gt; 10) + 0xD800);<a name="line.370"></a>
+<FONT color="green">371</FONT>        }<a name="line.371"></a>
+<FONT color="green">372</FONT>    <a name="line.372"></a>
+<FONT color="green">373</FONT>        /**<a name="line.373"></a>
+<FONT color="green">374</FONT>         * Returns the low surrogate of a supplemental character<a name="line.374"></a>
+<FONT color="green">375</FONT>         *<a name="line.375"></a>
+<FONT color="green">376</FONT>         * @param c The supplemental character to "split".<a name="line.376"></a>
+<FONT color="green">377</FONT>         */<a name="line.377"></a>
+<FONT color="green">378</FONT>        public static char lowSurrogate(int c) {<a name="line.378"></a>
+<FONT color="green">379</FONT>            return (char) (((c - 0x00010000) &amp; 0x3FF) + 0xDC00);<a name="line.379"></a>
+<FONT color="green">380</FONT>        }<a name="line.380"></a>
+<FONT color="green">381</FONT>    <a name="line.381"></a>
+<FONT color="green">382</FONT>        /**<a name="line.382"></a>
+<FONT color="green">383</FONT>         * Returns whether the given character is a high surrogate<a name="line.383"></a>
+<FONT color="green">384</FONT>         *<a name="line.384"></a>
+<FONT color="green">385</FONT>         * @param c The character to check.<a name="line.385"></a>
+<FONT color="green">386</FONT>         */<a name="line.386"></a>
+<FONT color="green">387</FONT>        public static boolean isHighSurrogate(int c) {<a name="line.387"></a>
+<FONT color="green">388</FONT>            return (0xD800 &lt;= c &amp;&amp; c &lt;= 0xDBFF);<a name="line.388"></a>
+<FONT color="green">389</FONT>        }<a name="line.389"></a>
+<FONT color="green">390</FONT>    <a name="line.390"></a>
+<FONT color="green">391</FONT>        /**<a name="line.391"></a>
+<FONT color="green">392</FONT>         * Returns whether the given character is a low surrogate<a name="line.392"></a>
+<FONT color="green">393</FONT>         *<a name="line.393"></a>
+<FONT color="green">394</FONT>         * @param c The character to check.<a name="line.394"></a>
+<FONT color="green">395</FONT>         */<a name="line.395"></a>
+<FONT color="green">396</FONT>        public static boolean isLowSurrogate(int c) {<a name="line.396"></a>
+<FONT color="green">397</FONT>            return (0xDC00 &lt;= c &amp;&amp; c &lt;= 0xDFFF);<a name="line.397"></a>
+<FONT color="green">398</FONT>        }<a name="line.398"></a>
+<FONT color="green">399</FONT>    <a name="line.399"></a>
+<FONT color="green">400</FONT>    <a name="line.400"></a>
+<FONT color="green">401</FONT>        /**<a name="line.401"></a>
+<FONT color="green">402</FONT>         * Returns true if the specified character is valid. This method<a name="line.402"></a>
+<FONT color="green">403</FONT>         * also checks the surrogate character range from 0x10000 to 0x10FFFF.<a name="line.403"></a>
+<FONT color="green">404</FONT>         * &lt;p&gt;<a name="line.404"></a>
+<FONT color="green">405</FONT>         * If the program chooses to apply the mask directly to the<a name="line.405"></a>
+<FONT color="green">406</FONT>         * &lt;code&gt;CHARS&lt;/code&gt; array, then they are responsible for checking<a name="line.406"></a>
+<FONT color="green">407</FONT>         * the surrogate character range.<a name="line.407"></a>
+<FONT color="green">408</FONT>         *<a name="line.408"></a>
+<FONT color="green">409</FONT>         * @param c The character to check.<a name="line.409"></a>
+<FONT color="green">410</FONT>         */<a name="line.410"></a>
+<FONT color="green">411</FONT>        public static boolean isValid(int c) {<a name="line.411"></a>
+<FONT color="green">412</FONT>            return (c &lt; 0x10000 &amp;&amp; (CHARS[c] &amp; MASK_VALID) != 0) ||<a name="line.412"></a>
+<FONT color="green">413</FONT>                   (0x10000 &lt;= c &amp;&amp; c &lt;= 0x10FFFF);<a name="line.413"></a>
+<FONT color="green">414</FONT>        } // isValid(int):boolean<a name="line.414"></a>
+<FONT color="green">415</FONT>    <a name="line.415"></a>
+<FONT color="green">416</FONT>        /**<a name="line.416"></a>
+<FONT color="green">417</FONT>         * Returns true if the specified character is invalid.<a name="line.417"></a>
+<FONT color="green">418</FONT>         *<a name="line.418"></a>
+<FONT color="green">419</FONT>         * @param c The character to check.<a name="line.419"></a>
+<FONT color="green">420</FONT>         */<a name="line.420"></a>
+<FONT color="green">421</FONT>        public static boolean isInvalid(int c) {<a name="line.421"></a>
+<FONT color="green">422</FONT>            return !isValid(c);<a name="line.422"></a>
+<FONT color="green">423</FONT>        } // isInvalid(int):boolean<a name="line.423"></a>
+<FONT color="green">424</FONT>    <a name="line.424"></a>
+<FONT color="green">425</FONT>        /**<a name="line.425"></a>
+<FONT color="green">426</FONT>         * Returns true if the specified character can be considered content.<a name="line.426"></a>
+<FONT color="green">427</FONT>         *<a name="line.427"></a>
+<FONT color="green">428</FONT>         * @param c The character to check.<a name="line.428"></a>
+<FONT color="green">429</FONT>         */<a name="line.429"></a>
+<FONT color="green">430</FONT>        public static boolean isContent(int c) {<a name="line.430"></a>
+<FONT color="green">431</FONT>            return (c &lt; 0x10000 &amp;&amp; (CHARS[c] &amp; MASK_CONTENT) != 0) ||<a name="line.431"></a>
+<FONT color="green">432</FONT>                   (0x10000 &lt;= c &amp;&amp; c &lt;= 0x10FFFF);<a name="line.432"></a>
+<FONT color="green">433</FONT>        } // isContent(int):boolean<a name="line.433"></a>
+<FONT color="green">434</FONT>    <a name="line.434"></a>
+<FONT color="green">435</FONT>        /**<a name="line.435"></a>
+<FONT color="green">436</FONT>         * Returns true if the specified character can be considered markup.<a name="line.436"></a>
+<FONT color="green">437</FONT>         * Markup characters include '&amp;lt;', '&amp;amp;', and '%'.<a name="line.437"></a>
+<FONT color="green">438</FONT>         *<a name="line.438"></a>
+<FONT color="green">439</FONT>         * @param c The character to check.<a name="line.439"></a>
+<FONT color="green">440</FONT>         */<a name="line.440"></a>
+<FONT color="green">441</FONT>        public static boolean isMarkup(int c) {<a name="line.441"></a>
+<FONT color="green">442</FONT>            return c == '&lt;' || c == '&amp;' || c == '%';<a name="line.442"></a>
+<FONT color="green">443</FONT>        } // isMarkup(int):boolean<a name="line.443"></a>
+<FONT color="green">444</FONT>    <a name="line.444"></a>
+<FONT color="green">445</FONT>        /**<a name="line.445"></a>
+<FONT color="green">446</FONT>         * Returns true if the specified character is a space character<a name="line.446"></a>
+<FONT color="green">447</FONT>         * as defined by production [3] in the XML 1.0 specification.<a name="line.447"></a>
+<FONT color="green">448</FONT>         *<a name="line.448"></a>
+<FONT color="green">449</FONT>         * @param c The character to check.<a name="line.449"></a>
+<FONT color="green">450</FONT>         */<a name="line.450"></a>
+<FONT color="green">451</FONT>        public static boolean isSpace(int c) {<a name="line.451"></a>
+<FONT color="green">452</FONT>            return c &lt; 0x10000 &amp;&amp; (CHARS[c] &amp; MASK_SPACE) != 0;<a name="line.452"></a>
+<FONT color="green">453</FONT>        } // isSpace(int):boolean<a name="line.453"></a>
+<FONT color="green">454</FONT>    <a name="line.454"></a>
+<FONT color="green">455</FONT>        /**<a name="line.455"></a>
+<FONT color="green">456</FONT>         * Returns true if the specified character is a valid name start<a name="line.456"></a>
+<FONT color="green">457</FONT>         * character as defined by production [5] in the XML 1.0<a name="line.457"></a>
+<FONT color="green">458</FONT>         * specification.<a name="line.458"></a>
+<FONT color="green">459</FONT>         *<a name="line.459"></a>
+<FONT color="green">460</FONT>         * @param c The character to check.<a name="line.460"></a>
+<FONT color="green">461</FONT>         */<a name="line.461"></a>
+<FONT color="green">462</FONT>        public static boolean isNameStart(int c) {<a name="line.462"></a>
+<FONT color="green">463</FONT>            return c &lt; 0x10000 &amp;&amp; (CHARS[c] &amp; MASK_NAME_START) != 0;<a name="line.463"></a>
+<FONT color="green">464</FONT>        } // isNameStart(int):boolean<a name="line.464"></a>
+<FONT color="green">465</FONT>    <a name="line.465"></a>
+<FONT color="green">466</FONT>        /**<a name="line.466"></a>
+<FONT color="green">467</FONT>         * Returns true if the specified character is a valid name<a name="line.467"></a>
+<FONT color="green">468</FONT>         * character as defined by production [4] in the XML 1.0<a name="line.468"></a>
+<FONT color="green">469</FONT>         * specification.<a name="line.469"></a>
+<FONT color="green">470</FONT>         *<a name="line.470"></a>
+<FONT color="green">471</FONT>         * @param c The character to check.<a name="line.471"></a>
+<FONT color="green">472</FONT>         */<a name="line.472"></a>
+<FONT color="green">473</FONT>        public static boolean isName(int c) {<a name="line.473"></a>
+<FONT color="green">474</FONT>            return c &lt; 0x10000 &amp;&amp; (CHARS[c] &amp; MASK_NAME) != 0;<a name="line.474"></a>
+<FONT color="green">475</FONT>        } // isName(int):boolean<a name="line.475"></a>
+<FONT color="green">476</FONT>    <a name="line.476"></a>
+<FONT color="green">477</FONT>        /**<a name="line.477"></a>
+<FONT color="green">478</FONT>         * Returns true if the specified character is a valid NCName start<a name="line.478"></a>
+<FONT color="green">479</FONT>         * character as defined by production [4] in Namespaces in XML<a name="line.479"></a>
+<FONT color="green">480</FONT>         * recommendation.<a name="line.480"></a>
+<FONT color="green">481</FONT>         *<a name="line.481"></a>
+<FONT color="green">482</FONT>         * @param c The character to check.<a name="line.482"></a>
+<FONT color="green">483</FONT>         */<a name="line.483"></a>
+<FONT color="green">484</FONT>        public static boolean isNCNameStart(int c) {<a name="line.484"></a>
+<FONT color="green">485</FONT>            return c &lt; 0x10000 &amp;&amp; (CHARS[c] &amp; MASK_NCNAME_START) != 0;<a name="line.485"></a>
+<FONT color="green">486</FONT>        } // isNCNameStart(int):boolean<a name="line.486"></a>
+<FONT color="green">487</FONT>    <a name="line.487"></a>
+<FONT color="green">488</FONT>        /**<a name="line.488"></a>
+<FONT color="green">489</FONT>         * Returns true if the specified character is a valid NCName<a name="line.489"></a>
+<FONT color="green">490</FONT>         * character as defined by production [5] in Namespaces in XML<a name="line.490"></a>
+<FONT color="green">491</FONT>         * recommendation.<a name="line.491"></a>
+<FONT color="green">492</FONT>         *<a name="line.492"></a>
+<FONT color="green">493</FONT>         * @param c The character to check.<a name="line.493"></a>
+<FONT color="green">494</FONT>         */<a name="line.494"></a>
+<FONT color="green">495</FONT>        public static boolean isNCName(int c) {<a name="line.495"></a>
+<FONT color="green">496</FONT>            return c &lt; 0x10000 &amp;&amp; (CHARS[c] &amp; MASK_NCNAME) != 0;<a name="line.496"></a>
+<FONT color="green">497</FONT>        } // isNCName(int):boolean<a name="line.497"></a>
+<FONT color="green">498</FONT>    <a name="line.498"></a>
+<FONT color="green">499</FONT>        /**<a name="line.499"></a>
+<FONT color="green">500</FONT>         * Returns true if the specified character is a valid Pubid<a name="line.500"></a>
+<FONT color="green">501</FONT>         * character as defined by production [13] in the XML 1.0<a name="line.501"></a>
+<FONT color="green">502</FONT>         * specification.<a name="line.502"></a>
+<FONT color="green">503</FONT>         *<a name="line.503"></a>
+<FONT color="green">504</FONT>         * @param c The character to check.<a name="line.504"></a>
+<FONT color="green">505</FONT>         */<a name="line.505"></a>
+<FONT color="green">506</FONT>        public static boolean isPubid(int c) {<a name="line.506"></a>
+<FONT color="green">507</FONT>            return c &lt; 0x10000 &amp;&amp; (CHARS[c] &amp; MASK_PUBID) != 0;<a name="line.507"></a>
+<FONT color="green">508</FONT>        } // isPubid(int):boolean<a name="line.508"></a>
+<FONT color="green">509</FONT>    <a name="line.509"></a>
+<FONT color="green">510</FONT>        /*<a name="line.510"></a>
+<FONT color="green">511</FONT>         * [5] Name ::= (Letter | '_' | ':') (NameChar)*<a name="line.511"></a>
+<FONT color="green">512</FONT>         */<a name="line.512"></a>
+<FONT color="green">513</FONT>        /**<a name="line.513"></a>
+<FONT color="green">514</FONT>         * Check to see if a string is a valid Name according to [5]<a name="line.514"></a>
+<FONT color="green">515</FONT>         * in the XML 1.0 Recommendation<a name="line.515"></a>
+<FONT color="green">516</FONT>         *<a name="line.516"></a>
+<FONT color="green">517</FONT>         * @param name string to check<a name="line.517"></a>
+<FONT color="green">518</FONT>         * @return true if name is a valid Name<a name="line.518"></a>
+<FONT color="green">519</FONT>         */<a name="line.519"></a>
+<FONT color="green">520</FONT>        public static boolean isValidName(String name) {<a name="line.520"></a>
+<FONT color="green">521</FONT>            if (name.length() == 0)<a name="line.521"></a>
+<FONT color="green">522</FONT>                return false;<a name="line.522"></a>
+<FONT color="green">523</FONT>            char ch = name.charAt(0);<a name="line.523"></a>
+<FONT color="green">524</FONT>            if( isNameStart(ch) == false)<a name="line.524"></a>
+<FONT color="green">525</FONT>               return false;<a name="line.525"></a>
+<FONT color="green">526</FONT>            for (int i = 1; i &lt; name.length(); i++ ) {<a name="line.526"></a>
+<FONT color="green">527</FONT>               ch = name.charAt(i);<a name="line.527"></a>
+<FONT color="green">528</FONT>               if( isName( ch ) == false ){<a name="line.528"></a>
+<FONT color="green">529</FONT>                  return false;<a name="line.529"></a>
+<FONT color="green">530</FONT>               }<a name="line.530"></a>
+<FONT color="green">531</FONT>            }<a name="line.531"></a>
+<FONT color="green">532</FONT>            return true;<a name="line.532"></a>
+<FONT color="green">533</FONT>        } // isValidName(String):boolean<a name="line.533"></a>
+<FONT color="green">534</FONT>        <a name="line.534"></a>
+<FONT color="green">535</FONT>    <a name="line.535"></a>
+<FONT color="green">536</FONT>        /*<a name="line.536"></a>
+<FONT color="green">537</FONT>         * from the namespace rec<a name="line.537"></a>
+<FONT color="green">538</FONT>         * [4] NCName ::= (Letter | '_') (NCNameChar)*<a name="line.538"></a>
+<FONT color="green">539</FONT>         */<a name="line.539"></a>
+<FONT color="green">540</FONT>        /**<a name="line.540"></a>
+<FONT color="green">541</FONT>         * Check to see if a string is a valid NCName according to [4]<a name="line.541"></a>
+<FONT color="green">542</FONT>         * from the XML Namespaces 1.0 Recommendation<a name="line.542"></a>
+<FONT color="green">543</FONT>         *<a name="line.543"></a>
+<FONT color="green">544</FONT>         * @param ncName string to check<a name="line.544"></a>
+<FONT color="green">545</FONT>         * @return true if name is a valid NCName<a name="line.545"></a>
+<FONT color="green">546</FONT>         */<a name="line.546"></a>
+<FONT color="green">547</FONT>        public static boolean isValidNCName(String ncName) {<a name="line.547"></a>
+<FONT color="green">548</FONT>            if (ncName.length() == 0)<a name="line.548"></a>
+<FONT color="green">549</FONT>                return false;<a name="line.549"></a>
+<FONT color="green">550</FONT>            char ch = ncName.charAt(0);<a name="line.550"></a>
+<FONT color="green">551</FONT>            if( isNCNameStart(ch) == false)<a name="line.551"></a>
+<FONT color="green">552</FONT>               return false;<a name="line.552"></a>
+<FONT color="green">553</FONT>            for (int i = 1; i &lt; ncName.length(); i++ ) {<a name="line.553"></a>
+<FONT color="green">554</FONT>               ch = ncName.charAt(i);<a name="line.554"></a>
+<FONT color="green">555</FONT>               if( isNCName( ch ) == false ){<a name="line.555"></a>
+<FONT color="green">556</FONT>                  return false;<a name="line.556"></a>
+<FONT color="green">557</FONT>               }<a name="line.557"></a>
+<FONT color="green">558</FONT>            }<a name="line.558"></a>
+<FONT color="green">559</FONT>            return true;<a name="line.559"></a>
+<FONT color="green">560</FONT>        } // isValidNCName(String):boolean<a name="line.560"></a>
+<FONT color="green">561</FONT>    <a name="line.561"></a>
+<FONT color="green">562</FONT>        /*<a name="line.562"></a>
+<FONT color="green">563</FONT>         * [7] Nmtoken ::= (NameChar)+<a name="line.563"></a>
+<FONT color="green">564</FONT>         */<a name="line.564"></a>
+<FONT color="green">565</FONT>        /**<a name="line.565"></a>
+<FONT color="green">566</FONT>         * Check to see if a string is a valid Nmtoken according to [7]<a name="line.566"></a>
+<FONT color="green">567</FONT>         * in the XML 1.0 Recommendation<a name="line.567"></a>
+<FONT color="green">568</FONT>         *<a name="line.568"></a>
+<FONT color="green">569</FONT>         * @param nmtoken string to check<a name="line.569"></a>
+<FONT color="green">570</FONT>         * @return true if nmtoken is a valid Nmtoken <a name="line.570"></a>
+<FONT color="green">571</FONT>         */<a name="line.571"></a>
+<FONT color="green">572</FONT>        public static boolean isValidNmtoken(String nmtoken) {<a name="line.572"></a>
+<FONT color="green">573</FONT>            if (nmtoken.length() == 0)<a name="line.573"></a>
+<FONT color="green">574</FONT>                return false;<a name="line.574"></a>
+<FONT color="green">575</FONT>            for (int i = 0; i &lt; nmtoken.length(); i++ ) {<a name="line.575"></a>
+<FONT color="green">576</FONT>               char ch = nmtoken.charAt(i);<a name="line.576"></a>
+<FONT color="green">577</FONT>               if(  ! isName( ch ) ){<a name="line.577"></a>
+<FONT color="green">578</FONT>                  return false;<a name="line.578"></a>
+<FONT color="green">579</FONT>               }<a name="line.579"></a>
+<FONT color="green">580</FONT>            }<a name="line.580"></a>
+<FONT color="green">581</FONT>            return true;<a name="line.581"></a>
+<FONT color="green">582</FONT>        } // isValidName(String):boolean<a name="line.582"></a>
+<FONT color="green">583</FONT>    <a name="line.583"></a>
+<FONT color="green">584</FONT>    <a name="line.584"></a>
+<FONT color="green">585</FONT>    <a name="line.585"></a>
+<FONT color="green">586</FONT>    <a name="line.586"></a>
+<FONT color="green">587</FONT>    <a name="line.587"></a>
+<FONT color="green">588</FONT>        // encodings<a name="line.588"></a>
+<FONT color="green">589</FONT>    <a name="line.589"></a>
+<FONT color="green">590</FONT>        /**<a name="line.590"></a>
+<FONT color="green">591</FONT>         * Returns true if the encoding name is a valid IANA encoding.<a name="line.591"></a>
+<FONT color="green">592</FONT>         * This method does not verify that there is a decoder available<a name="line.592"></a>
+<FONT color="green">593</FONT>         * for this encoding, only that the characters are valid for an<a name="line.593"></a>
+<FONT color="green">594</FONT>         * IANA encoding name.<a name="line.594"></a>
+<FONT color="green">595</FONT>         *<a name="line.595"></a>
+<FONT color="green">596</FONT>         * @param ianaEncoding The IANA encoding name.<a name="line.596"></a>
+<FONT color="green">597</FONT>         */<a name="line.597"></a>
+<FONT color="green">598</FONT>        public static boolean isValidIANAEncoding(String ianaEncoding) {<a name="line.598"></a>
+<FONT color="green">599</FONT>            if (ianaEncoding != null) {<a name="line.599"></a>
+<FONT color="green">600</FONT>                int length = ianaEncoding.length();<a name="line.600"></a>
+<FONT color="green">601</FONT>                if (length &gt; 0) {<a name="line.601"></a>
+<FONT color="green">602</FONT>                    char c = ianaEncoding.charAt(0);<a name="line.602"></a>
+<FONT color="green">603</FONT>                    if ((c &gt;= 'A' &amp;&amp; c &lt;= 'Z') || (c &gt;= 'a' &amp;&amp; c &lt;= 'z')) {<a name="line.603"></a>
+<FONT color="green">604</FONT>                        for (int i = 1; i &lt; length; i++) {<a name="line.604"></a>
+<FONT color="green">605</FONT>                            c = ianaEncoding.charAt(i);<a name="line.605"></a>
+<FONT color="green">606</FONT>                            if ((c &lt; 'A' || c &gt; 'Z') &amp;&amp; (c &lt; 'a' || c &gt; 'z') &amp;&amp;<a name="line.606"></a>
+<FONT color="green">607</FONT>                                (c &lt; '0' || c &gt; '9') &amp;&amp; c != '.' &amp;&amp; c != '_' &amp;&amp;<a name="line.607"></a>
+<FONT color="green">608</FONT>                                c != '-') {<a name="line.608"></a>
+<FONT color="green">609</FONT>                                return false;<a name="line.609"></a>
+<FONT color="green">610</FONT>                            }<a name="line.610"></a>
+<FONT color="green">611</FONT>                        }<a name="line.611"></a>
+<FONT color="green">612</FONT>                        return true;<a name="line.612"></a>
+<FONT color="green">613</FONT>                    }<a name="line.613"></a>
+<FONT color="green">614</FONT>                }<a name="line.614"></a>
+<FONT color="green">615</FONT>            }<a name="line.615"></a>
+<FONT color="green">616</FONT>            return false;<a name="line.616"></a>
+<FONT color="green">617</FONT>        } // isValidIANAEncoding(String):boolean<a name="line.617"></a>
+<FONT color="green">618</FONT>    <a name="line.618"></a>
+<FONT color="green">619</FONT>        /**<a name="line.619"></a>
+<FONT color="green">620</FONT>         * Returns true if the encoding name is a valid Java encoding.<a name="line.620"></a>
+<FONT color="green">621</FONT>         * This method does not verify that there is a decoder available<a name="line.621"></a>
+<FONT color="green">622</FONT>         * for this encoding, only that the characters are valid for an<a name="line.622"></a>
+<FONT color="green">623</FONT>         * Java encoding name.<a name="line.623"></a>
+<FONT color="green">624</FONT>         *<a name="line.624"></a>
+<FONT color="green">625</FONT>         * @param javaEncoding The Java encoding name.<a name="line.625"></a>
+<FONT color="green">626</FONT>         */<a name="line.626"></a>
+<FONT color="green">627</FONT>        public static boolean isValidJavaEncoding(String javaEncoding) {<a name="line.627"></a>
+<FONT color="green">628</FONT>            if (javaEncoding != null) {<a name="line.628"></a>
+<FONT color="green">629</FONT>                int length = javaEncoding.length();<a name="line.629"></a>
+<FONT color="green">630</FONT>                if (length &gt; 0) {<a name="line.630"></a>
+<FONT color="green">631</FONT>                    for (int i = 1; i &lt; length; i++) {<a name="line.631"></a>
+<FONT color="green">632</FONT>                        char c = javaEncoding.charAt(i);<a name="line.632"></a>
+<FONT color="green">633</FONT>                        if ((c &lt; 'A' || c &gt; 'Z') &amp;&amp; (c &lt; 'a' || c &gt; 'z') &amp;&amp;<a name="line.633"></a>
+<FONT color="green">634</FONT>                            (c &lt; '0' || c &gt; '9') &amp;&amp; c != '.' &amp;&amp; c != '_' &amp;&amp;<a name="line.634"></a>
+<FONT color="green">635</FONT>                            c != '-') {<a name="line.635"></a>
+<FONT color="green">636</FONT>                            return false;<a name="line.636"></a>
+<FONT color="green">637</FONT>                        }<a name="line.637"></a>
+<FONT color="green">638</FONT>                    }<a name="line.638"></a>
+<FONT color="green">639</FONT>                    return true;<a name="line.639"></a>
+<FONT color="green">640</FONT>                }<a name="line.640"></a>
+<FONT color="green">641</FONT>            }<a name="line.641"></a>
+<FONT color="green">642</FONT>            return false;<a name="line.642"></a>
+<FONT color="green">643</FONT>        } // isValidIANAEncoding(String):boolean<a name="line.643"></a>
+<FONT color="green">644</FONT>        <a name="line.644"></a>
+<FONT color="green">645</FONT>       /**<a name="line.645"></a>
+<FONT color="green">646</FONT>         * Simple check to determine if qname is legal. If it returns false<a name="line.646"></a>
+<FONT color="green">647</FONT>         * then &lt;param&gt;str&lt;/param&gt; is illegal; if it returns true then <a name="line.647"></a>
+<FONT color="green">648</FONT>         * &lt;param&gt;str&lt;/param&gt; is legal.<a name="line.648"></a>
+<FONT color="green">649</FONT>         */<a name="line.649"></a>
+<FONT color="green">650</FONT>        public static boolean isValidQName(String str) {<a name="line.650"></a>
+<FONT color="green">651</FONT>           <a name="line.651"></a>
+<FONT color="green">652</FONT>           final int colon = str.indexOf(':');<a name="line.652"></a>
+<FONT color="green">653</FONT>           <a name="line.653"></a>
+<FONT color="green">654</FONT>           if (colon == 0 || colon == str.length() - 1) {<a name="line.654"></a>
+<FONT color="green">655</FONT>               return false;<a name="line.655"></a>
+<FONT color="green">656</FONT>           }       <a name="line.656"></a>
+<FONT color="green">657</FONT>           <a name="line.657"></a>
+<FONT color="green">658</FONT>           if (colon &gt; 0) {<a name="line.658"></a>
+<FONT color="green">659</FONT>               final String prefix = str.substring(0,colon);<a name="line.659"></a>
+<FONT color="green">660</FONT>               final String localPart = str.substring(colon+1);<a name="line.660"></a>
+<FONT color="green">661</FONT>               return isValidNCName(prefix) &amp;&amp; isValidNCName(localPart);<a name="line.661"></a>
+<FONT color="green">662</FONT>           }<a name="line.662"></a>
+<FONT color="green">663</FONT>           else {<a name="line.663"></a>
+<FONT color="green">664</FONT>               return isValidNCName(str);<a name="line.664"></a>
+<FONT color="green">665</FONT>           }       <a name="line.665"></a>
+<FONT color="green">666</FONT>        }      <a name="line.666"></a>
+<FONT color="green">667</FONT>    <a name="line.667"></a>
+<FONT color="green">668</FONT>    } // class XMLChar<a name="line.668"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

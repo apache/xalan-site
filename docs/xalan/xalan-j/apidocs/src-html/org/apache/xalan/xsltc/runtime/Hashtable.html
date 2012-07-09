@@ -1,0 +1,409 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: Hashtable.java 1225436 2011-12-29 05:09:31Z mrglavas $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    <a name="line.21"></a>
+<FONT color="green">022</FONT>    package org.apache.xalan.xsltc.runtime;<a name="line.22"></a>
+<FONT color="green">023</FONT>    <a name="line.23"></a>
+<FONT color="green">024</FONT>    import java.util.Enumeration;<a name="line.24"></a>
+<FONT color="green">025</FONT>    <a name="line.25"></a>
+<FONT color="green">026</FONT>    /**<a name="line.26"></a>
+<FONT color="green">027</FONT>     * IMPORTANT NOTE:<a name="line.27"></a>
+<FONT color="green">028</FONT>     * This code was taken from Sun's Java1.1 JDK java.util.HashTable.java<a name="line.28"></a>
+<FONT color="green">029</FONT>     * All "synchronized" keywords and some methods we do not need have been <a name="line.29"></a>
+<FONT color="green">030</FONT>     * all been removed.<a name="line.30"></a>
+<FONT color="green">031</FONT>     */<a name="line.31"></a>
+<FONT color="green">032</FONT>    <a name="line.32"></a>
+<FONT color="green">033</FONT>    /**<a name="line.33"></a>
+<FONT color="green">034</FONT>     * Object that wraps entries in the hash-table<a name="line.34"></a>
+<FONT color="green">035</FONT>     * @author Morten Jorgensen<a name="line.35"></a>
+<FONT color="green">036</FONT>     */<a name="line.36"></a>
+<FONT color="green">037</FONT>    class HashtableEntry {<a name="line.37"></a>
+<FONT color="green">038</FONT>        int hash;<a name="line.38"></a>
+<FONT color="green">039</FONT>        Object key;<a name="line.39"></a>
+<FONT color="green">040</FONT>        Object value;<a name="line.40"></a>
+<FONT color="green">041</FONT>        HashtableEntry next;<a name="line.41"></a>
+<FONT color="green">042</FONT>    <a name="line.42"></a>
+<FONT color="green">043</FONT>        protected Object clone() {<a name="line.43"></a>
+<FONT color="green">044</FONT>            HashtableEntry entry = new HashtableEntry();<a name="line.44"></a>
+<FONT color="green">045</FONT>            entry.hash = hash;<a name="line.45"></a>
+<FONT color="green">046</FONT>            entry.key = key;<a name="line.46"></a>
+<FONT color="green">047</FONT>            entry.value = value;<a name="line.47"></a>
+<FONT color="green">048</FONT>            entry.next = (next != null) ? (HashtableEntry)next.clone() : null;<a name="line.48"></a>
+<FONT color="green">049</FONT>            return entry;<a name="line.49"></a>
+<FONT color="green">050</FONT>        }<a name="line.50"></a>
+<FONT color="green">051</FONT>    }<a name="line.51"></a>
+<FONT color="green">052</FONT>    <a name="line.52"></a>
+<FONT color="green">053</FONT>    /**<a name="line.53"></a>
+<FONT color="green">054</FONT>     * The main hash-table implementation<a name="line.54"></a>
+<FONT color="green">055</FONT>     */<a name="line.55"></a>
+<FONT color="green">056</FONT>    public class Hashtable {<a name="line.56"></a>
+<FONT color="green">057</FONT>    <a name="line.57"></a>
+<FONT color="green">058</FONT>        private transient HashtableEntry table[]; // hash-table entries<a name="line.58"></a>
+<FONT color="green">059</FONT>        private transient int count;              // number of entries<a name="line.59"></a>
+<FONT color="green">060</FONT>        private int threshold;                    // current size of hash-tabke<a name="line.60"></a>
+<FONT color="green">061</FONT>        private float loadFactor;                 // load factor<a name="line.61"></a>
+<FONT color="green">062</FONT>    <a name="line.62"></a>
+<FONT color="green">063</FONT>        /**<a name="line.63"></a>
+<FONT color="green">064</FONT>         * Constructs a new, empty hashtable with the specified initial <a name="line.64"></a>
+<FONT color="green">065</FONT>         * capacity and the specified load factor. <a name="line.65"></a>
+<FONT color="green">066</FONT>         */<a name="line.66"></a>
+<FONT color="green">067</FONT>        public Hashtable(int initialCapacity, float loadFactor) {<a name="line.67"></a>
+<FONT color="green">068</FONT>            if (initialCapacity &lt;= 0) initialCapacity = 11;<a name="line.68"></a>
+<FONT color="green">069</FONT>            if (loadFactor &lt;= 0.0) loadFactor = 0.75f;<a name="line.69"></a>
+<FONT color="green">070</FONT>            this.loadFactor = loadFactor;<a name="line.70"></a>
+<FONT color="green">071</FONT>            table = new HashtableEntry[initialCapacity];<a name="line.71"></a>
+<FONT color="green">072</FONT>            threshold = (int)(initialCapacity * loadFactor);<a name="line.72"></a>
+<FONT color="green">073</FONT>        }<a name="line.73"></a>
+<FONT color="green">074</FONT>    <a name="line.74"></a>
+<FONT color="green">075</FONT>        /**<a name="line.75"></a>
+<FONT color="green">076</FONT>         * Constructs a new, empty hashtable with the specified initial capacity<a name="line.76"></a>
+<FONT color="green">077</FONT>         * and default load factor.<a name="line.77"></a>
+<FONT color="green">078</FONT>         */<a name="line.78"></a>
+<FONT color="green">079</FONT>        public Hashtable(int initialCapacity) {<a name="line.79"></a>
+<FONT color="green">080</FONT>            this(initialCapacity, 0.75f);<a name="line.80"></a>
+<FONT color="green">081</FONT>        }<a name="line.81"></a>
+<FONT color="green">082</FONT>    <a name="line.82"></a>
+<FONT color="green">083</FONT>        /**<a name="line.83"></a>
+<FONT color="green">084</FONT>         * Constructs a new, empty hashtable with a default capacity and load<a name="line.84"></a>
+<FONT color="green">085</FONT>         * factor. <a name="line.85"></a>
+<FONT color="green">086</FONT>         */<a name="line.86"></a>
+<FONT color="green">087</FONT>        public Hashtable() {<a name="line.87"></a>
+<FONT color="green">088</FONT>            this(101, 0.75f);<a name="line.88"></a>
+<FONT color="green">089</FONT>        }<a name="line.89"></a>
+<FONT color="green">090</FONT>    <a name="line.90"></a>
+<FONT color="green">091</FONT>        /**<a name="line.91"></a>
+<FONT color="green">092</FONT>         * Returns the number of keys in this hashtable.<a name="line.92"></a>
+<FONT color="green">093</FONT>         */<a name="line.93"></a>
+<FONT color="green">094</FONT>        public int size() {<a name="line.94"></a>
+<FONT color="green">095</FONT>            return count;<a name="line.95"></a>
+<FONT color="green">096</FONT>        }<a name="line.96"></a>
+<FONT color="green">097</FONT>    <a name="line.97"></a>
+<FONT color="green">098</FONT>        /**<a name="line.98"></a>
+<FONT color="green">099</FONT>         * Tests if this hashtable maps no keys to values.<a name="line.99"></a>
+<FONT color="green">100</FONT>         */<a name="line.100"></a>
+<FONT color="green">101</FONT>        public boolean isEmpty() {<a name="line.101"></a>
+<FONT color="green">102</FONT>            return count == 0;<a name="line.102"></a>
+<FONT color="green">103</FONT>        }<a name="line.103"></a>
+<FONT color="green">104</FONT>    <a name="line.104"></a>
+<FONT color="green">105</FONT>        /**<a name="line.105"></a>
+<FONT color="green">106</FONT>         * Returns an enumeration of the keys in this hashtable.<a name="line.106"></a>
+<FONT color="green">107</FONT>         */<a name="line.107"></a>
+<FONT color="green">108</FONT>        public Enumeration keys() {<a name="line.108"></a>
+<FONT color="green">109</FONT>            return new HashtableEnumerator(table, true);<a name="line.109"></a>
+<FONT color="green">110</FONT>        }<a name="line.110"></a>
+<FONT color="green">111</FONT>    <a name="line.111"></a>
+<FONT color="green">112</FONT>        /**<a name="line.112"></a>
+<FONT color="green">113</FONT>         * Returns an enumeration of the values in this hashtable.<a name="line.113"></a>
+<FONT color="green">114</FONT>         * Use the Enumeration methods on the returned object to fetch the elements<a name="line.114"></a>
+<FONT color="green">115</FONT>         * sequentially.<a name="line.115"></a>
+<FONT color="green">116</FONT>         */<a name="line.116"></a>
+<FONT color="green">117</FONT>        public Enumeration elements() {<a name="line.117"></a>
+<FONT color="green">118</FONT>            return new HashtableEnumerator(table, false);<a name="line.118"></a>
+<FONT color="green">119</FONT>        }<a name="line.119"></a>
+<FONT color="green">120</FONT>    <a name="line.120"></a>
+<FONT color="green">121</FONT>        /**<a name="line.121"></a>
+<FONT color="green">122</FONT>         * Tests if some key maps into the specified value in this hashtable.<a name="line.122"></a>
+<FONT color="green">123</FONT>         * This operation is more expensive than the &lt;code&gt;containsKey&lt;/code&gt;<a name="line.123"></a>
+<FONT color="green">124</FONT>         * method.<a name="line.124"></a>
+<FONT color="green">125</FONT>         */<a name="line.125"></a>
+<FONT color="green">126</FONT>        public boolean contains(Object value) {<a name="line.126"></a>
+<FONT color="green">127</FONT>    <a name="line.127"></a>
+<FONT color="green">128</FONT>            if (value == null) throw new NullPointerException();<a name="line.128"></a>
+<FONT color="green">129</FONT>    <a name="line.129"></a>
+<FONT color="green">130</FONT>            int i;<a name="line.130"></a>
+<FONT color="green">131</FONT>            HashtableEntry e;<a name="line.131"></a>
+<FONT color="green">132</FONT>            HashtableEntry tab[] = table;<a name="line.132"></a>
+<FONT color="green">133</FONT>    <a name="line.133"></a>
+<FONT color="green">134</FONT>            for (i = tab.length ; i-- &gt; 0 ;) {<a name="line.134"></a>
+<FONT color="green">135</FONT>                for (e = tab[i] ; e != null ; e = e.next) {<a name="line.135"></a>
+<FONT color="green">136</FONT>                    if (e.value.equals(value)) {<a name="line.136"></a>
+<FONT color="green">137</FONT>                        return true;<a name="line.137"></a>
+<FONT color="green">138</FONT>                    }<a name="line.138"></a>
+<FONT color="green">139</FONT>                }<a name="line.139"></a>
+<FONT color="green">140</FONT>            }<a name="line.140"></a>
+<FONT color="green">141</FONT>            return false;<a name="line.141"></a>
+<FONT color="green">142</FONT>        }<a name="line.142"></a>
+<FONT color="green">143</FONT>    <a name="line.143"></a>
+<FONT color="green">144</FONT>        /**<a name="line.144"></a>
+<FONT color="green">145</FONT>         * Tests if the specified object is a key in this hashtable.<a name="line.145"></a>
+<FONT color="green">146</FONT>         */<a name="line.146"></a>
+<FONT color="green">147</FONT>        public boolean containsKey(Object key) {<a name="line.147"></a>
+<FONT color="green">148</FONT>            HashtableEntry e;<a name="line.148"></a>
+<FONT color="green">149</FONT>            HashtableEntry tab[] = table;<a name="line.149"></a>
+<FONT color="green">150</FONT>            int hash = key.hashCode();<a name="line.150"></a>
+<FONT color="green">151</FONT>            int index = (hash &amp; 0x7FFFFFFF) % tab.length;<a name="line.151"></a>
+<FONT color="green">152</FONT>    <a name="line.152"></a>
+<FONT color="green">153</FONT>            for (e = tab[index] ; e != null ; e = e.next)<a name="line.153"></a>
+<FONT color="green">154</FONT>                if ((e.hash == hash) &amp;&amp; e.key.equals(key))<a name="line.154"></a>
+<FONT color="green">155</FONT>                    return true;<a name="line.155"></a>
+<FONT color="green">156</FONT>    <a name="line.156"></a>
+<FONT color="green">157</FONT>            return false;<a name="line.157"></a>
+<FONT color="green">158</FONT>        }<a name="line.158"></a>
+<FONT color="green">159</FONT>    <a name="line.159"></a>
+<FONT color="green">160</FONT>        /**<a name="line.160"></a>
+<FONT color="green">161</FONT>         * Returns the value to which the specified key is mapped in this hashtable.<a name="line.161"></a>
+<FONT color="green">162</FONT>         */<a name="line.162"></a>
+<FONT color="green">163</FONT>        public Object get(Object key) {<a name="line.163"></a>
+<FONT color="green">164</FONT>            HashtableEntry e;<a name="line.164"></a>
+<FONT color="green">165</FONT>            HashtableEntry tab[] = table;<a name="line.165"></a>
+<FONT color="green">166</FONT>            int hash = key.hashCode();<a name="line.166"></a>
+<FONT color="green">167</FONT>            int index = (hash &amp; 0x7FFFFFFF) % tab.length;<a name="line.167"></a>
+<FONT color="green">168</FONT>    <a name="line.168"></a>
+<FONT color="green">169</FONT>            for (e = tab[index] ; e != null ; e = e.next) <a name="line.169"></a>
+<FONT color="green">170</FONT>                if ((e.hash == hash) &amp;&amp; e.key.equals(key)) <a name="line.170"></a>
+<FONT color="green">171</FONT>                    return e.value;<a name="line.171"></a>
+<FONT color="green">172</FONT>    <a name="line.172"></a>
+<FONT color="green">173</FONT>            return null;<a name="line.173"></a>
+<FONT color="green">174</FONT>        }<a name="line.174"></a>
+<FONT color="green">175</FONT>    <a name="line.175"></a>
+<FONT color="green">176</FONT>        /**<a name="line.176"></a>
+<FONT color="green">177</FONT>         * Rehashes the contents of the hashtable into a hashtable with a <a name="line.177"></a>
+<FONT color="green">178</FONT>         * larger capacity. This method is called automatically when the <a name="line.178"></a>
+<FONT color="green">179</FONT>         * number of keys in the hashtable exceeds this hashtable's capacity <a name="line.179"></a>
+<FONT color="green">180</FONT>         * and load factor. <a name="line.180"></a>
+<FONT color="green">181</FONT>         */<a name="line.181"></a>
+<FONT color="green">182</FONT>        protected void rehash() {<a name="line.182"></a>
+<FONT color="green">183</FONT>            HashtableEntry e, old;<a name="line.183"></a>
+<FONT color="green">184</FONT>            int i, index;<a name="line.184"></a>
+<FONT color="green">185</FONT>            int oldCapacity = table.length;<a name="line.185"></a>
+<FONT color="green">186</FONT>            HashtableEntry oldTable[] = table;<a name="line.186"></a>
+<FONT color="green">187</FONT>    <a name="line.187"></a>
+<FONT color="green">188</FONT>            int newCapacity = oldCapacity * 2 + 1;<a name="line.188"></a>
+<FONT color="green">189</FONT>            HashtableEntry newTable[] = new HashtableEntry[newCapacity];<a name="line.189"></a>
+<FONT color="green">190</FONT>    <a name="line.190"></a>
+<FONT color="green">191</FONT>            threshold = (int)(newCapacity * loadFactor);<a name="line.191"></a>
+<FONT color="green">192</FONT>            table = newTable;<a name="line.192"></a>
+<FONT color="green">193</FONT>    <a name="line.193"></a>
+<FONT color="green">194</FONT>            for (i = oldCapacity ; i-- &gt; 0 ;) {<a name="line.194"></a>
+<FONT color="green">195</FONT>                for (old = oldTable[i] ; old != null ; ) {<a name="line.195"></a>
+<FONT color="green">196</FONT>                    e = old;<a name="line.196"></a>
+<FONT color="green">197</FONT>                    old = old.next;<a name="line.197"></a>
+<FONT color="green">198</FONT>                    index = (e.hash &amp; 0x7FFFFFFF) % newCapacity;<a name="line.198"></a>
+<FONT color="green">199</FONT>                    e.next = newTable[index];<a name="line.199"></a>
+<FONT color="green">200</FONT>                    newTable[index] = e;<a name="line.200"></a>
+<FONT color="green">201</FONT>                }<a name="line.201"></a>
+<FONT color="green">202</FONT>            }<a name="line.202"></a>
+<FONT color="green">203</FONT>        }<a name="line.203"></a>
+<FONT color="green">204</FONT>    <a name="line.204"></a>
+<FONT color="green">205</FONT>        /**<a name="line.205"></a>
+<FONT color="green">206</FONT>         * Maps the specified &lt;code&gt;key&lt;/code&gt; to the specified <a name="line.206"></a>
+<FONT color="green">207</FONT>         * &lt;code&gt;value&lt;/code&gt; in this hashtable. Neither the key nor the <a name="line.207"></a>
+<FONT color="green">208</FONT>         * value can be &lt;code&gt;null&lt;/code&gt;. <a name="line.208"></a>
+<FONT color="green">209</FONT>         * &lt;p&gt;<a name="line.209"></a>
+<FONT color="green">210</FONT>         * The value can be retrieved by calling the &lt;code&gt;get&lt;/code&gt; method <a name="line.210"></a>
+<FONT color="green">211</FONT>         * with a key that is equal to the original key. <a name="line.211"></a>
+<FONT color="green">212</FONT>         */<a name="line.212"></a>
+<FONT color="green">213</FONT>        public Object put(Object key, Object value) {<a name="line.213"></a>
+<FONT color="green">214</FONT>            // Make sure the value is not null<a name="line.214"></a>
+<FONT color="green">215</FONT>            if (value == null) throw new NullPointerException();<a name="line.215"></a>
+<FONT color="green">216</FONT>    <a name="line.216"></a>
+<FONT color="green">217</FONT>            // Makes sure the key is not already in the hashtable.<a name="line.217"></a>
+<FONT color="green">218</FONT>            HashtableEntry e;<a name="line.218"></a>
+<FONT color="green">219</FONT>            HashtableEntry tab[] = table;<a name="line.219"></a>
+<FONT color="green">220</FONT>            int hash = key.hashCode();<a name="line.220"></a>
+<FONT color="green">221</FONT>            int index = (hash &amp; 0x7FFFFFFF) % tab.length;<a name="line.221"></a>
+<FONT color="green">222</FONT>    <a name="line.222"></a>
+<FONT color="green">223</FONT>            for (e = tab[index] ; e != null ; e = e.next) {<a name="line.223"></a>
+<FONT color="green">224</FONT>                if ((e.hash == hash) &amp;&amp; e.key.equals(key)) {<a name="line.224"></a>
+<FONT color="green">225</FONT>                    Object old = e.value;<a name="line.225"></a>
+<FONT color="green">226</FONT>                    e.value = value;<a name="line.226"></a>
+<FONT color="green">227</FONT>                    return old;<a name="line.227"></a>
+<FONT color="green">228</FONT>                }<a name="line.228"></a>
+<FONT color="green">229</FONT>            }<a name="line.229"></a>
+<FONT color="green">230</FONT>    <a name="line.230"></a>
+<FONT color="green">231</FONT>            // Rehash the table if the threshold is exceeded<a name="line.231"></a>
+<FONT color="green">232</FONT>            if (count &gt;= threshold) {<a name="line.232"></a>
+<FONT color="green">233</FONT>                rehash();<a name="line.233"></a>
+<FONT color="green">234</FONT>                return put(key, value);<a name="line.234"></a>
+<FONT color="green">235</FONT>            } <a name="line.235"></a>
+<FONT color="green">236</FONT>    <a name="line.236"></a>
+<FONT color="green">237</FONT>            // Creates the new entry.<a name="line.237"></a>
+<FONT color="green">238</FONT>            e = new HashtableEntry();<a name="line.238"></a>
+<FONT color="green">239</FONT>            e.hash = hash;<a name="line.239"></a>
+<FONT color="green">240</FONT>            e.key = key;<a name="line.240"></a>
+<FONT color="green">241</FONT>            e.value = value;<a name="line.241"></a>
+<FONT color="green">242</FONT>            e.next = tab[index];<a name="line.242"></a>
+<FONT color="green">243</FONT>            tab[index] = e;<a name="line.243"></a>
+<FONT color="green">244</FONT>            count++;<a name="line.244"></a>
+<FONT color="green">245</FONT>            return null;<a name="line.245"></a>
+<FONT color="green">246</FONT>        }<a name="line.246"></a>
+<FONT color="green">247</FONT>    <a name="line.247"></a>
+<FONT color="green">248</FONT>        /**<a name="line.248"></a>
+<FONT color="green">249</FONT>         * Removes the key (and its corresponding value) from this <a name="line.249"></a>
+<FONT color="green">250</FONT>         * hashtable. This method does nothing if the key is not in the hashtable.<a name="line.250"></a>
+<FONT color="green">251</FONT>         */<a name="line.251"></a>
+<FONT color="green">252</FONT>        public Object remove(Object key) {<a name="line.252"></a>
+<FONT color="green">253</FONT>            HashtableEntry e, prev;<a name="line.253"></a>
+<FONT color="green">254</FONT>            HashtableEntry tab[] = table;<a name="line.254"></a>
+<FONT color="green">255</FONT>            int hash = key.hashCode();<a name="line.255"></a>
+<FONT color="green">256</FONT>            int index = (hash &amp; 0x7FFFFFFF) % tab.length;<a name="line.256"></a>
+<FONT color="green">257</FONT>            for (e = tab[index], prev = null ; e != null ; prev = e, e = e.next) {<a name="line.257"></a>
+<FONT color="green">258</FONT>                if ((e.hash == hash) &amp;&amp; e.key.equals(key)) {<a name="line.258"></a>
+<FONT color="green">259</FONT>                    if (prev != null)<a name="line.259"></a>
+<FONT color="green">260</FONT>                        prev.next = e.next;<a name="line.260"></a>
+<FONT color="green">261</FONT>                    else<a name="line.261"></a>
+<FONT color="green">262</FONT>                        tab[index] = e.next;<a name="line.262"></a>
+<FONT color="green">263</FONT>                    count--;<a name="line.263"></a>
+<FONT color="green">264</FONT>                    return e.value;<a name="line.264"></a>
+<FONT color="green">265</FONT>                }<a name="line.265"></a>
+<FONT color="green">266</FONT>            }<a name="line.266"></a>
+<FONT color="green">267</FONT>            return null;<a name="line.267"></a>
+<FONT color="green">268</FONT>        }<a name="line.268"></a>
+<FONT color="green">269</FONT>    <a name="line.269"></a>
+<FONT color="green">270</FONT>        /**<a name="line.270"></a>
+<FONT color="green">271</FONT>         * Clears this hashtable so that it contains no keys. <a name="line.271"></a>
+<FONT color="green">272</FONT>         */<a name="line.272"></a>
+<FONT color="green">273</FONT>        public void clear() {<a name="line.273"></a>
+<FONT color="green">274</FONT>            HashtableEntry tab[] = table;<a name="line.274"></a>
+<FONT color="green">275</FONT>            for (int index = tab.length; --index &gt;= 0; )<a name="line.275"></a>
+<FONT color="green">276</FONT>                tab[index] = null;<a name="line.276"></a>
+<FONT color="green">277</FONT>            count = 0;<a name="line.277"></a>
+<FONT color="green">278</FONT>        }<a name="line.278"></a>
+<FONT color="green">279</FONT>    <a name="line.279"></a>
+<FONT color="green">280</FONT>        /**<a name="line.280"></a>
+<FONT color="green">281</FONT>         * Returns a rather long string representation of this hashtable.<a name="line.281"></a>
+<FONT color="green">282</FONT>         * Handy for debugging - leave it here!!!<a name="line.282"></a>
+<FONT color="green">283</FONT>         */<a name="line.283"></a>
+<FONT color="green">284</FONT>        public String toString() {<a name="line.284"></a>
+<FONT color="green">285</FONT>            int i;<a name="line.285"></a>
+<FONT color="green">286</FONT>            int max = size() - 1;<a name="line.286"></a>
+<FONT color="green">287</FONT>            StringBuffer buf = new StringBuffer();<a name="line.287"></a>
+<FONT color="green">288</FONT>            Enumeration k = keys();<a name="line.288"></a>
+<FONT color="green">289</FONT>            Enumeration e = elements();<a name="line.289"></a>
+<FONT color="green">290</FONT>            buf.append("{");<a name="line.290"></a>
+<FONT color="green">291</FONT>    <a name="line.291"></a>
+<FONT color="green">292</FONT>            for (i = 0; i &lt;= max; i++) {<a name="line.292"></a>
+<FONT color="green">293</FONT>                String s1 = k.nextElement().toString();<a name="line.293"></a>
+<FONT color="green">294</FONT>                String s2 = e.nextElement().toString();<a name="line.294"></a>
+<FONT color="green">295</FONT>                buf.append(s1 + "=" + s2);<a name="line.295"></a>
+<FONT color="green">296</FONT>                if (i &lt; max) buf.append(", ");<a name="line.296"></a>
+<FONT color="green">297</FONT>            }<a name="line.297"></a>
+<FONT color="green">298</FONT>            buf.append("}");<a name="line.298"></a>
+<FONT color="green">299</FONT>            return buf.toString();<a name="line.299"></a>
+<FONT color="green">300</FONT>        }<a name="line.300"></a>
+<FONT color="green">301</FONT>    <a name="line.301"></a>
+<FONT color="green">302</FONT>        /**<a name="line.302"></a>
+<FONT color="green">303</FONT>         * A hashtable enumerator class.  This class should remain opaque <a name="line.303"></a>
+<FONT color="green">304</FONT>         * to the client. It will use the Enumeration interface.<a name="line.304"></a>
+<FONT color="green">305</FONT>         */<a name="line.305"></a>
+<FONT color="green">306</FONT>        static class HashtableEnumerator implements Enumeration {<a name="line.306"></a>
+<FONT color="green">307</FONT>            boolean keys;<a name="line.307"></a>
+<FONT color="green">308</FONT>            int index;<a name="line.308"></a>
+<FONT color="green">309</FONT>            HashtableEntry table[];<a name="line.309"></a>
+<FONT color="green">310</FONT>            HashtableEntry entry;<a name="line.310"></a>
+<FONT color="green">311</FONT>    <a name="line.311"></a>
+<FONT color="green">312</FONT>            HashtableEnumerator(HashtableEntry table[], boolean keys) {<a name="line.312"></a>
+<FONT color="green">313</FONT>                this.table = table;<a name="line.313"></a>
+<FONT color="green">314</FONT>                this.keys = keys;<a name="line.314"></a>
+<FONT color="green">315</FONT>                this.index = table.length;<a name="line.315"></a>
+<FONT color="green">316</FONT>            }<a name="line.316"></a>
+<FONT color="green">317</FONT>            <a name="line.317"></a>
+<FONT color="green">318</FONT>            public boolean hasMoreElements() {<a name="line.318"></a>
+<FONT color="green">319</FONT>                if (entry != null) {<a name="line.319"></a>
+<FONT color="green">320</FONT>                    return true;<a name="line.320"></a>
+<FONT color="green">321</FONT>                }<a name="line.321"></a>
+<FONT color="green">322</FONT>                while (index-- &gt; 0) {<a name="line.322"></a>
+<FONT color="green">323</FONT>                    if ((entry = table[index]) != null) {<a name="line.323"></a>
+<FONT color="green">324</FONT>                        return true;<a name="line.324"></a>
+<FONT color="green">325</FONT>                    }<a name="line.325"></a>
+<FONT color="green">326</FONT>                }<a name="line.326"></a>
+<FONT color="green">327</FONT>                return false;<a name="line.327"></a>
+<FONT color="green">328</FONT>            }<a name="line.328"></a>
+<FONT color="green">329</FONT>    <a name="line.329"></a>
+<FONT color="green">330</FONT>            public Object nextElement() {<a name="line.330"></a>
+<FONT color="green">331</FONT>                if (entry == null) {<a name="line.331"></a>
+<FONT color="green">332</FONT>                    while ((index-- &gt; 0) &amp;&amp; ((entry = table[index]) == null));<a name="line.332"></a>
+<FONT color="green">333</FONT>                }<a name="line.333"></a>
+<FONT color="green">334</FONT>                if (entry != null) {<a name="line.334"></a>
+<FONT color="green">335</FONT>                    HashtableEntry e = entry;<a name="line.335"></a>
+<FONT color="green">336</FONT>                    entry = e.next;<a name="line.336"></a>
+<FONT color="green">337</FONT>                    return keys ? e.key : e.value;<a name="line.337"></a>
+<FONT color="green">338</FONT>                }<a name="line.338"></a>
+<FONT color="green">339</FONT>                return null;<a name="line.339"></a>
+<FONT color="green">340</FONT>            }<a name="line.340"></a>
+<FONT color="green">341</FONT>        }<a name="line.341"></a>
+<FONT color="green">342</FONT>    <a name="line.342"></a>
+<FONT color="green">343</FONT>    }<a name="line.343"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

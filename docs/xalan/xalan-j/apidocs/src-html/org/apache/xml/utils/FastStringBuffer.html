@@ -1,0 +1,1359 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: FastStringBuffer.java 469279 2006-10-30 21:18:02Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    package org.apache.xml.utils;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    /**<a name="line.23"></a>
+<FONT color="green">024</FONT>     * Bare-bones, unsafe, fast string buffer. No thread-safety, no<a name="line.24"></a>
+<FONT color="green">025</FONT>     * parameter range checking, exposed fields. Note that in typical<a name="line.25"></a>
+<FONT color="green">026</FONT>     * applications, thread-safety of a StringBuffer is a somewhat<a name="line.26"></a>
+<FONT color="green">027</FONT>     * dubious concept in any case.<a name="line.27"></a>
+<FONT color="green">028</FONT>     * &lt;p&gt;<a name="line.28"></a>
+<FONT color="green">029</FONT>     * Note that Stree and DTM used a single FastStringBuffer as a string pool,<a name="line.29"></a>
+<FONT color="green">030</FONT>     * by recording start and length indices within this single buffer. This<a name="line.30"></a>
+<FONT color="green">031</FONT>     * minimizes heap overhead, but of course requires more work when retrieving<a name="line.31"></a>
+<FONT color="green">032</FONT>     * the data.<a name="line.32"></a>
+<FONT color="green">033</FONT>     * &lt;p&gt;<a name="line.33"></a>
+<FONT color="green">034</FONT>     * FastStringBuffer operates as a "chunked buffer". Doing so<a name="line.34"></a>
+<FONT color="green">035</FONT>     * reduces the need to recopy existing information when an append<a name="line.35"></a>
+<FONT color="green">036</FONT>     * exceeds the space available; we just allocate another chunk and<a name="line.36"></a>
+<FONT color="green">037</FONT>     * flow across to it. (The array of chunks may need to grow,<a name="line.37"></a>
+<FONT color="green">038</FONT>     * admittedly, but that's a much smaller object.) Some excess<a name="line.38"></a>
+<FONT color="green">039</FONT>     * recopying may arise when we extract Strings which cross chunk<a name="line.39"></a>
+<FONT color="green">040</FONT>     * boundaries; larger chunks make that less frequent.<a name="line.40"></a>
+<FONT color="green">041</FONT>     * &lt;p&gt;<a name="line.41"></a>
+<FONT color="green">042</FONT>     * The size values are parameterized, to allow tuning this code. In<a name="line.42"></a>
+<FONT color="green">043</FONT>     * theory, Result Tree Fragments might want to be tuned differently <a name="line.43"></a>
+<FONT color="green">044</FONT>     * from the main document's text. <a name="line.44"></a>
+<FONT color="green">045</FONT>     * &lt;p&gt;<a name="line.45"></a>
+<FONT color="green">046</FONT>     * %REVIEW% An experiment in self-tuning is<a name="line.46"></a>
+<FONT color="green">047</FONT>     * included in the code (using nested FastStringBuffers to achieve<a name="line.47"></a>
+<FONT color="green">048</FONT>     * variation in chunk sizes), but this implementation has proven to<a name="line.48"></a>
+<FONT color="green">049</FONT>     * be problematic when data may be being copied from the FSB into itself.<a name="line.49"></a>
+<FONT color="green">050</FONT>     * We should either re-architect that to make this safe (if possible)<a name="line.50"></a>
+<FONT color="green">051</FONT>     * or remove that code and clean up for performance/maintainability reasons.<a name="line.51"></a>
+<FONT color="green">052</FONT>     * &lt;p&gt;<a name="line.52"></a>
+<FONT color="green">053</FONT>     */<a name="line.53"></a>
+<FONT color="green">054</FONT>    public class FastStringBuffer<a name="line.54"></a>
+<FONT color="green">055</FONT>    {<a name="line.55"></a>
+<FONT color="green">056</FONT>      // If nonzero, forces the inial chunk size.<a name="line.56"></a>
+<FONT color="green">057</FONT>      /**/static final int DEBUG_FORCE_INIT_BITS=0;<a name="line.57"></a>
+<FONT color="green">058</FONT>      <a name="line.58"></a>
+<FONT color="green">059</FONT>            // %BUG% %REVIEW% *****PROBLEM SUSPECTED: If data from an FSB is being copied<a name="line.59"></a>
+<FONT color="green">060</FONT>            // back into the same FSB (variable set from previous variable, for example) <a name="line.60"></a>
+<FONT color="green">061</FONT>            // and blocksize changes in mid-copy... there's risk of severe malfunction in <a name="line.61"></a>
+<FONT color="green">062</FONT>            // the read process, due to how the resizing code re-jiggers storage. Arggh. <a name="line.62"></a>
+<FONT color="green">063</FONT>            // If we want to retain the variable-size-block feature, we need to reconsider <a name="line.63"></a>
+<FONT color="green">064</FONT>            // that issue. For now, I have forced us into fixed-size mode.<a name="line.64"></a>
+<FONT color="green">065</FONT>        static final boolean DEBUG_FORCE_FIXED_CHUNKSIZE=true;<a name="line.65"></a>
+<FONT color="green">066</FONT>    <a name="line.66"></a>
+<FONT color="green">067</FONT>            /** Manifest constant: Suppress leading whitespace.<a name="line.67"></a>
+<FONT color="green">068</FONT>             * This should be used when normalize-to-SAX is called for the first chunk of a<a name="line.68"></a>
+<FONT color="green">069</FONT>             * multi-chunk output, or one following unsuppressed whitespace in a previous<a name="line.69"></a>
+<FONT color="green">070</FONT>             * chunk.<a name="line.70"></a>
+<FONT color="green">071</FONT>             * @see #sendNormalizedSAXcharacters(org.xml.sax.ContentHandler,int,int)<a name="line.71"></a>
+<FONT color="green">072</FONT>             */<a name="line.72"></a>
+<FONT color="green">073</FONT>            public static final int SUPPRESS_LEADING_WS=0x01;<a name="line.73"></a>
+<FONT color="green">074</FONT>            <a name="line.74"></a>
+<FONT color="green">075</FONT>            /** Manifest constant: Suppress trailing whitespace.<a name="line.75"></a>
+<FONT color="green">076</FONT>             * This should be used when normalize-to-SAX is called for the last chunk of a<a name="line.76"></a>
+<FONT color="green">077</FONT>             * multi-chunk output; it may have to be or'ed with SUPPRESS_LEADING_WS.<a name="line.77"></a>
+<FONT color="green">078</FONT>             */<a name="line.78"></a>
+<FONT color="green">079</FONT>            public static final int SUPPRESS_TRAILING_WS=0x02;<a name="line.79"></a>
+<FONT color="green">080</FONT>            <a name="line.80"></a>
+<FONT color="green">081</FONT>            /** Manifest constant: Suppress both leading and trailing whitespace.<a name="line.81"></a>
+<FONT color="green">082</FONT>             * This should be used when normalize-to-SAX is called for a complete string.<a name="line.82"></a>
+<FONT color="green">083</FONT>             * (I'm not wild about the name of this one. Ideas welcome.)<a name="line.83"></a>
+<FONT color="green">084</FONT>             * @see #sendNormalizedSAXcharacters(org.xml.sax.ContentHandler,int,int)<a name="line.84"></a>
+<FONT color="green">085</FONT>             */<a name="line.85"></a>
+<FONT color="green">086</FONT>            public static final int SUPPRESS_BOTH<a name="line.86"></a>
+<FONT color="green">087</FONT>                    = SUPPRESS_LEADING_WS | SUPPRESS_TRAILING_WS;<a name="line.87"></a>
+<FONT color="green">088</FONT>    <a name="line.88"></a>
+<FONT color="green">089</FONT>            /** Manifest constant: Carry trailing whitespace of one chunk as leading <a name="line.89"></a>
+<FONT color="green">090</FONT>             * whitespace of the next chunk. Used internally; I don't see any reason<a name="line.90"></a>
+<FONT color="green">091</FONT>             * to make it public right now.<a name="line.91"></a>
+<FONT color="green">092</FONT>             */<a name="line.92"></a>
+<FONT color="green">093</FONT>            private static final int CARRY_WS=0x04;<a name="line.93"></a>
+<FONT color="green">094</FONT>    <a name="line.94"></a>
+<FONT color="green">095</FONT>            /**<a name="line.95"></a>
+<FONT color="green">096</FONT>       * Field m_chunkBits sets our chunking strategy, by saying how many<a name="line.96"></a>
+<FONT color="green">097</FONT>       * bits of index can be used within a single chunk before flowing over<a name="line.97"></a>
+<FONT color="green">098</FONT>       * to the next chunk. For example, if m_chunkbits is set to 15, each<a name="line.98"></a>
+<FONT color="green">099</FONT>       * chunk can contain up to 2^15 (32K) characters  <a name="line.99"></a>
+<FONT color="green">100</FONT>       */<a name="line.100"></a>
+<FONT color="green">101</FONT>      int m_chunkBits = 15;<a name="line.101"></a>
+<FONT color="green">102</FONT>    <a name="line.102"></a>
+<FONT color="green">103</FONT>      /**<a name="line.103"></a>
+<FONT color="green">104</FONT>       * Field m_maxChunkBits affects our chunk-growth strategy, by saying what<a name="line.104"></a>
+<FONT color="green">105</FONT>       * the largest permissible chunk size is in this particular FastStringBuffer<a name="line.105"></a>
+<FONT color="green">106</FONT>       * hierarchy. <a name="line.106"></a>
+<FONT color="green">107</FONT>       */<a name="line.107"></a>
+<FONT color="green">108</FONT>      int m_maxChunkBits = 15;<a name="line.108"></a>
+<FONT color="green">109</FONT>    <a name="line.109"></a>
+<FONT color="green">110</FONT>      /**<a name="line.110"></a>
+<FONT color="green">111</FONT>       * Field m_rechunkBits affects our chunk-growth strategy, by saying how<a name="line.111"></a>
+<FONT color="green">112</FONT>       * many chunks should be allocated at one size before we encapsulate them<a name="line.112"></a>
+<FONT color="green">113</FONT>       * into the first chunk of the next size up. For example, if m_rechunkBits<a name="line.113"></a>
+<FONT color="green">114</FONT>       * is set to 3, then after 8 chunks at a given size we will rebundle<a name="line.114"></a>
+<FONT color="green">115</FONT>       * them as the first element of a FastStringBuffer using a chunk size<a name="line.115"></a>
+<FONT color="green">116</FONT>       * 8 times larger (chunkBits shifted left three bits).<a name="line.116"></a>
+<FONT color="green">117</FONT>       */<a name="line.117"></a>
+<FONT color="green">118</FONT>      int m_rebundleBits = 2;<a name="line.118"></a>
+<FONT color="green">119</FONT>    <a name="line.119"></a>
+<FONT color="green">120</FONT>      /**<a name="line.120"></a>
+<FONT color="green">121</FONT>       * Field m_chunkSize establishes the maximum size of one chunk of the array<a name="line.121"></a>
+<FONT color="green">122</FONT>       * as 2**chunkbits characters.<a name="line.122"></a>
+<FONT color="green">123</FONT>       * (Which may also be the minimum size if we aren't tuning for storage) <a name="line.123"></a>
+<FONT color="green">124</FONT>       */<a name="line.124"></a>
+<FONT color="green">125</FONT>      int m_chunkSize;  // =1&lt;&lt;(m_chunkBits-1);<a name="line.125"></a>
+<FONT color="green">126</FONT>    <a name="line.126"></a>
+<FONT color="green">127</FONT>      /**<a name="line.127"></a>
+<FONT color="green">128</FONT>       * Field m_chunkMask is m_chunkSize-1 -- in other words, m_chunkBits<a name="line.128"></a>
+<FONT color="green">129</FONT>       * worth of low-order '1' bits, useful for shift-and-mask addressing<a name="line.129"></a>
+<FONT color="green">130</FONT>       * within the chunks. <a name="line.130"></a>
+<FONT color="green">131</FONT>       */<a name="line.131"></a>
+<FONT color="green">132</FONT>      int m_chunkMask;  // =m_chunkSize-1;<a name="line.132"></a>
+<FONT color="green">133</FONT>    <a name="line.133"></a>
+<FONT color="green">134</FONT>      /**<a name="line.134"></a>
+<FONT color="green">135</FONT>       * Field m_array holds the string buffer's text contents, using an<a name="line.135"></a>
+<FONT color="green">136</FONT>       * array-of-arrays. Note that this array, and the arrays it contains, may be<a name="line.136"></a>
+<FONT color="green">137</FONT>       * reallocated when necessary in order to allow the buffer to grow;<a name="line.137"></a>
+<FONT color="green">138</FONT>       * references to them should be considered to be invalidated after any<a name="line.138"></a>
+<FONT color="green">139</FONT>       * append. However, the only time these arrays are directly exposed<a name="line.139"></a>
+<FONT color="green">140</FONT>       * is in the sendSAXcharacters call.<a name="line.140"></a>
+<FONT color="green">141</FONT>       */<a name="line.141"></a>
+<FONT color="green">142</FONT>      char[][] m_array;<a name="line.142"></a>
+<FONT color="green">143</FONT>    <a name="line.143"></a>
+<FONT color="green">144</FONT>      /**<a name="line.144"></a>
+<FONT color="green">145</FONT>       * Field m_lastChunk is an index into m_array[], pointing to the last<a name="line.145"></a>
+<FONT color="green">146</FONT>       * chunk of the Chunked Array currently in use. Note that additional<a name="line.146"></a>
+<FONT color="green">147</FONT>       * chunks may actually be allocated, eg if the FastStringBuffer had<a name="line.147"></a>
+<FONT color="green">148</FONT>       * previously been truncated or if someone issued an ensureSpace request.<a name="line.148"></a>
+<FONT color="green">149</FONT>       * &lt;p&gt;<a name="line.149"></a>
+<FONT color="green">150</FONT>       * The insertion point for append operations is addressed by the combination<a name="line.150"></a>
+<FONT color="green">151</FONT>       * of m_lastChunk and m_firstFree.<a name="line.151"></a>
+<FONT color="green">152</FONT>       */<a name="line.152"></a>
+<FONT color="green">153</FONT>      int m_lastChunk = 0;<a name="line.153"></a>
+<FONT color="green">154</FONT>    <a name="line.154"></a>
+<FONT color="green">155</FONT>      /**<a name="line.155"></a>
+<FONT color="green">156</FONT>       * Field m_firstFree is an index into m_array[m_lastChunk][], pointing to<a name="line.156"></a>
+<FONT color="green">157</FONT>       * the first character in the Chunked Array which is not part of the<a name="line.157"></a>
+<FONT color="green">158</FONT>       * FastStringBuffer's current content. Since m_array[][] is zero-based,<a name="line.158"></a>
+<FONT color="green">159</FONT>       * the length of that content can be calculated as<a name="line.159"></a>
+<FONT color="green">160</FONT>       * (m_lastChunk&lt;&lt;m_chunkBits) + m_firstFree <a name="line.160"></a>
+<FONT color="green">161</FONT>       */<a name="line.161"></a>
+<FONT color="green">162</FONT>      int m_firstFree = 0;<a name="line.162"></a>
+<FONT color="green">163</FONT>    <a name="line.163"></a>
+<FONT color="green">164</FONT>      /**<a name="line.164"></a>
+<FONT color="green">165</FONT>       * Field m_innerFSB, when non-null, is a FastStringBuffer whose total<a name="line.165"></a>
+<FONT color="green">166</FONT>       * length equals m_chunkSize, and which replaces m_array[0]. This allows<a name="line.166"></a>
+<FONT color="green">167</FONT>       * building a hierarchy of FastStringBuffers, where early appends use<a name="line.167"></a>
+<FONT color="green">168</FONT>       * a smaller chunkSize (for less wasted memory overhead) but later<a name="line.168"></a>
+<FONT color="green">169</FONT>       * ones use a larger chunkSize (for less heap activity overhead).<a name="line.169"></a>
+<FONT color="green">170</FONT>       */<a name="line.170"></a>
+<FONT color="green">171</FONT>      FastStringBuffer m_innerFSB = null;<a name="line.171"></a>
+<FONT color="green">172</FONT>    <a name="line.172"></a>
+<FONT color="green">173</FONT>      /**<a name="line.173"></a>
+<FONT color="green">174</FONT>       * Construct a FastStringBuffer, with allocation policy as per parameters.<a name="line.174"></a>
+<FONT color="green">175</FONT>       * &lt;p&gt;<a name="line.175"></a>
+<FONT color="green">176</FONT>       * For coding convenience, I've expressed both allocation sizes in terms of<a name="line.176"></a>
+<FONT color="green">177</FONT>       * a number of bits. That's needed for the final size of a chunk,<a name="line.177"></a>
+<FONT color="green">178</FONT>       * to permit fast and efficient shift-and-mask addressing. It's less critical<a name="line.178"></a>
+<FONT color="green">179</FONT>       * for the inital size, and may be reconsidered.<a name="line.179"></a>
+<FONT color="green">180</FONT>       * &lt;p&gt;<a name="line.180"></a>
+<FONT color="green">181</FONT>       * An alternative would be to accept integer sizes and round to powers of two;<a name="line.181"></a>
+<FONT color="green">182</FONT>       * that really doesn't seem to buy us much, if anything.<a name="line.182"></a>
+<FONT color="green">183</FONT>       *<a name="line.183"></a>
+<FONT color="green">184</FONT>       * @param initChunkBits Length in characters of the initial allocation<a name="line.184"></a>
+<FONT color="green">185</FONT>       * of a chunk, expressed in log-base-2. (That is, 10 means allocate 1024<a name="line.185"></a>
+<FONT color="green">186</FONT>       * characters.) Later chunks will use larger allocation units, to trade off<a name="line.186"></a>
+<FONT color="green">187</FONT>       * allocation speed of large document against storage efficiency of small<a name="line.187"></a>
+<FONT color="green">188</FONT>       * ones.<a name="line.188"></a>
+<FONT color="green">189</FONT>       * @param maxChunkBits Number of character-offset bits that should be used for<a name="line.189"></a>
+<FONT color="green">190</FONT>       * addressing within a chunk. Maximum length of a chunk is 2^chunkBits<a name="line.190"></a>
+<FONT color="green">191</FONT>       * characters.<a name="line.191"></a>
+<FONT color="green">192</FONT>       * @param rebundleBits Number of character-offset bits that addressing should<a name="line.192"></a>
+<FONT color="green">193</FONT>       * advance before we attempt to take a step from initChunkBits to maxChunkBits<a name="line.193"></a>
+<FONT color="green">194</FONT>       */<a name="line.194"></a>
+<FONT color="green">195</FONT>      public FastStringBuffer(int initChunkBits, int maxChunkBits,<a name="line.195"></a>
+<FONT color="green">196</FONT>                              int rebundleBits)<a name="line.196"></a>
+<FONT color="green">197</FONT>      {<a name="line.197"></a>
+<FONT color="green">198</FONT>        if(DEBUG_FORCE_INIT_BITS!=0) initChunkBits=DEBUG_FORCE_INIT_BITS;<a name="line.198"></a>
+<FONT color="green">199</FONT>        <a name="line.199"></a>
+<FONT color="green">200</FONT>        // %REVIEW%<a name="line.200"></a>
+<FONT color="green">201</FONT>        // Should this force to larger value, or smaller? Smaller less efficient, but if<a name="line.201"></a>
+<FONT color="green">202</FONT>        // someone requested variable mode it's because they care about storage space.<a name="line.202"></a>
+<FONT color="green">203</FONT>        // On the other hand, given the other changes I'm making, odds are that we should<a name="line.203"></a>
+<FONT color="green">204</FONT>        // adopt the larger size. Dither, dither, dither... This is just stopgap workaround<a name="line.204"></a>
+<FONT color="green">205</FONT>        // anyway; we need a permanant solution.<a name="line.205"></a>
+<FONT color="green">206</FONT>        //<a name="line.206"></a>
+<FONT color="green">207</FONT>        if(DEBUG_FORCE_FIXED_CHUNKSIZE) maxChunkBits=initChunkBits;<a name="line.207"></a>
+<FONT color="green">208</FONT>        //if(DEBUG_FORCE_FIXED_CHUNKSIZE) initChunkBits=maxChunkBits;<a name="line.208"></a>
+<FONT color="green">209</FONT>    <a name="line.209"></a>
+<FONT color="green">210</FONT>        m_array = new char[16][];<a name="line.210"></a>
+<FONT color="green">211</FONT>    <a name="line.211"></a>
+<FONT color="green">212</FONT>        // Don't bite off more than we're prepared to swallow!<a name="line.212"></a>
+<FONT color="green">213</FONT>        if (initChunkBits &gt; maxChunkBits)<a name="line.213"></a>
+<FONT color="green">214</FONT>          initChunkBits = maxChunkBits;<a name="line.214"></a>
+<FONT color="green">215</FONT>    <a name="line.215"></a>
+<FONT color="green">216</FONT>        m_chunkBits = initChunkBits;<a name="line.216"></a>
+<FONT color="green">217</FONT>        m_maxChunkBits = maxChunkBits;<a name="line.217"></a>
+<FONT color="green">218</FONT>        m_rebundleBits = rebundleBits;<a name="line.218"></a>
+<FONT color="green">219</FONT>        m_chunkSize = 1 &lt;&lt; (initChunkBits);<a name="line.219"></a>
+<FONT color="green">220</FONT>        m_chunkMask = m_chunkSize - 1;<a name="line.220"></a>
+<FONT color="green">221</FONT>        m_array[0] = new char[m_chunkSize];<a name="line.221"></a>
+<FONT color="green">222</FONT>      }<a name="line.222"></a>
+<FONT color="green">223</FONT>    <a name="line.223"></a>
+<FONT color="green">224</FONT>      /**<a name="line.224"></a>
+<FONT color="green">225</FONT>       * Construct a FastStringBuffer, using a default rebundleBits value.<a name="line.225"></a>
+<FONT color="green">226</FONT>       *<a name="line.226"></a>
+<FONT color="green">227</FONT>       * NEEDSDOC @param initChunkBits<a name="line.227"></a>
+<FONT color="green">228</FONT>       * NEEDSDOC @param maxChunkBits<a name="line.228"></a>
+<FONT color="green">229</FONT>       */<a name="line.229"></a>
+<FONT color="green">230</FONT>      public FastStringBuffer(int initChunkBits, int maxChunkBits)<a name="line.230"></a>
+<FONT color="green">231</FONT>      {<a name="line.231"></a>
+<FONT color="green">232</FONT>        this(initChunkBits, maxChunkBits, 2);<a name="line.232"></a>
+<FONT color="green">233</FONT>      }<a name="line.233"></a>
+<FONT color="green">234</FONT>    <a name="line.234"></a>
+<FONT color="green">235</FONT>      /**<a name="line.235"></a>
+<FONT color="green">236</FONT>       * Construct a FastStringBuffer, using default maxChunkBits and<a name="line.236"></a>
+<FONT color="green">237</FONT>       * rebundleBits values.<a name="line.237"></a>
+<FONT color="green">238</FONT>       * &lt;p&gt;<a name="line.238"></a>
+<FONT color="green">239</FONT>       * ISSUE: Should this call assert initial size, or fixed size?<a name="line.239"></a>
+<FONT color="green">240</FONT>       * Now configured as initial, with a default for fixed.<a name="line.240"></a>
+<FONT color="green">241</FONT>       *<a name="line.241"></a>
+<FONT color="green">242</FONT>       * NEEDSDOC @param initChunkBits<a name="line.242"></a>
+<FONT color="green">243</FONT>       */<a name="line.243"></a>
+<FONT color="green">244</FONT>      public FastStringBuffer(int initChunkBits)<a name="line.244"></a>
+<FONT color="green">245</FONT>      {<a name="line.245"></a>
+<FONT color="green">246</FONT>        this(initChunkBits, 15, 2);<a name="line.246"></a>
+<FONT color="green">247</FONT>      }<a name="line.247"></a>
+<FONT color="green">248</FONT>    <a name="line.248"></a>
+<FONT color="green">249</FONT>      /**<a name="line.249"></a>
+<FONT color="green">250</FONT>       * Construct a FastStringBuffer, using a default allocation policy.<a name="line.250"></a>
+<FONT color="green">251</FONT>       */<a name="line.251"></a>
+<FONT color="green">252</FONT>      public FastStringBuffer()<a name="line.252"></a>
+<FONT color="green">253</FONT>      {<a name="line.253"></a>
+<FONT color="green">254</FONT>    <a name="line.254"></a>
+<FONT color="green">255</FONT>        // 10 bits is 1K. 15 bits is 32K. Remember that these are character<a name="line.255"></a>
+<FONT color="green">256</FONT>        // counts, so actual memory allocation unit is doubled for UTF-16 chars.<a name="line.256"></a>
+<FONT color="green">257</FONT>        //<a name="line.257"></a>
+<FONT color="green">258</FONT>        // For reference: In the original FastStringBuffer, we simply<a name="line.258"></a>
+<FONT color="green">259</FONT>        // overallocated by blocksize (default 1KB) on each buffer-growth.<a name="line.259"></a>
+<FONT color="green">260</FONT>        this(10, 15, 2);<a name="line.260"></a>
+<FONT color="green">261</FONT>      }<a name="line.261"></a>
+<FONT color="green">262</FONT>    <a name="line.262"></a>
+<FONT color="green">263</FONT>      /**<a name="line.263"></a>
+<FONT color="green">264</FONT>       * Get the length of the list. Synonym for length().<a name="line.264"></a>
+<FONT color="green">265</FONT>       *<a name="line.265"></a>
+<FONT color="green">266</FONT>       * @return the number of characters in the FastStringBuffer's content.<a name="line.266"></a>
+<FONT color="green">267</FONT>       */<a name="line.267"></a>
+<FONT color="green">268</FONT>      public final int size()<a name="line.268"></a>
+<FONT color="green">269</FONT>      {<a name="line.269"></a>
+<FONT color="green">270</FONT>        return (m_lastChunk &lt;&lt; m_chunkBits) + m_firstFree;<a name="line.270"></a>
+<FONT color="green">271</FONT>      }<a name="line.271"></a>
+<FONT color="green">272</FONT>    <a name="line.272"></a>
+<FONT color="green">273</FONT>      /**<a name="line.273"></a>
+<FONT color="green">274</FONT>       * Get the length of the list. Synonym for size().<a name="line.274"></a>
+<FONT color="green">275</FONT>       *<a name="line.275"></a>
+<FONT color="green">276</FONT>       * @return the number of characters in the FastStringBuffer's content.<a name="line.276"></a>
+<FONT color="green">277</FONT>       */<a name="line.277"></a>
+<FONT color="green">278</FONT>      public final int length()<a name="line.278"></a>
+<FONT color="green">279</FONT>      {<a name="line.279"></a>
+<FONT color="green">280</FONT>        return (m_lastChunk &lt;&lt; m_chunkBits) + m_firstFree;<a name="line.280"></a>
+<FONT color="green">281</FONT>      }<a name="line.281"></a>
+<FONT color="green">282</FONT>    <a name="line.282"></a>
+<FONT color="green">283</FONT>      /**<a name="line.283"></a>
+<FONT color="green">284</FONT>       * Discard the content of the FastStringBuffer, and most of the memory<a name="line.284"></a>
+<FONT color="green">285</FONT>       * that was allocated by it, restoring the initial state. Note that this<a name="line.285"></a>
+<FONT color="green">286</FONT>       * may eventually be different from setLength(0), which see.<a name="line.286"></a>
+<FONT color="green">287</FONT>       */<a name="line.287"></a>
+<FONT color="green">288</FONT>      public final void reset()<a name="line.288"></a>
+<FONT color="green">289</FONT>      {<a name="line.289"></a>
+<FONT color="green">290</FONT>    <a name="line.290"></a>
+<FONT color="green">291</FONT>        m_lastChunk = 0;<a name="line.291"></a>
+<FONT color="green">292</FONT>        m_firstFree = 0;<a name="line.292"></a>
+<FONT color="green">293</FONT>    <a name="line.293"></a>
+<FONT color="green">294</FONT>        // Recover the original chunk size<a name="line.294"></a>
+<FONT color="green">295</FONT>        FastStringBuffer innermost = this;<a name="line.295"></a>
+<FONT color="green">296</FONT>    <a name="line.296"></a>
+<FONT color="green">297</FONT>        while (innermost.m_innerFSB != null)<a name="line.297"></a>
+<FONT color="green">298</FONT>        {<a name="line.298"></a>
+<FONT color="green">299</FONT>          innermost = innermost.m_innerFSB;<a name="line.299"></a>
+<FONT color="green">300</FONT>        }<a name="line.300"></a>
+<FONT color="green">301</FONT>    <a name="line.301"></a>
+<FONT color="green">302</FONT>        m_chunkBits = innermost.m_chunkBits;<a name="line.302"></a>
+<FONT color="green">303</FONT>        m_chunkSize = innermost.m_chunkSize;<a name="line.303"></a>
+<FONT color="green">304</FONT>        m_chunkMask = innermost.m_chunkMask;<a name="line.304"></a>
+<FONT color="green">305</FONT>    <a name="line.305"></a>
+<FONT color="green">306</FONT>        // Discard the hierarchy<a name="line.306"></a>
+<FONT color="green">307</FONT>        m_innerFSB = null;<a name="line.307"></a>
+<FONT color="green">308</FONT>        m_array = new char[16][0];<a name="line.308"></a>
+<FONT color="green">309</FONT>        m_array[0] = new char[m_chunkSize];<a name="line.309"></a>
+<FONT color="green">310</FONT>      }<a name="line.310"></a>
+<FONT color="green">311</FONT>    <a name="line.311"></a>
+<FONT color="green">312</FONT>      /**<a name="line.312"></a>
+<FONT color="green">313</FONT>       * Directly set how much of the FastStringBuffer's storage is to be<a name="line.313"></a>
+<FONT color="green">314</FONT>       * considered part of its content. This is a fast but hazardous<a name="line.314"></a>
+<FONT color="green">315</FONT>       * operation. It is not protected against negative values, or values<a name="line.315"></a>
+<FONT color="green">316</FONT>       * greater than the amount of storage currently available... and even<a name="line.316"></a>
+<FONT color="green">317</FONT>       * if additional storage does exist, its contents are unpredictable.<a name="line.317"></a>
+<FONT color="green">318</FONT>       * The only safe use for our setLength() is to truncate the FastStringBuffer<a name="line.318"></a>
+<FONT color="green">319</FONT>       * to a shorter string.<a name="line.319"></a>
+<FONT color="green">320</FONT>       *<a name="line.320"></a>
+<FONT color="green">321</FONT>       * @param l New length. If l&lt;0 or l&gt;=getLength(), this operation will<a name="line.321"></a>
+<FONT color="green">322</FONT>       * not report an error but future operations will almost certainly fail.<a name="line.322"></a>
+<FONT color="green">323</FONT>       */<a name="line.323"></a>
+<FONT color="green">324</FONT>      public final void setLength(int l)<a name="line.324"></a>
+<FONT color="green">325</FONT>      {<a name="line.325"></a>
+<FONT color="green">326</FONT>        m_lastChunk = l &gt;&gt;&gt; m_chunkBits;<a name="line.326"></a>
+<FONT color="green">327</FONT>    <a name="line.327"></a>
+<FONT color="green">328</FONT>        if (m_lastChunk == 0 &amp;&amp; m_innerFSB != null)<a name="line.328"></a>
+<FONT color="green">329</FONT>        {<a name="line.329"></a>
+<FONT color="green">330</FONT>          // Replace this FSB with the appropriate inner FSB, truncated<a name="line.330"></a>
+<FONT color="green">331</FONT>          m_innerFSB.setLength(l, this);<a name="line.331"></a>
+<FONT color="green">332</FONT>        }<a name="line.332"></a>
+<FONT color="green">333</FONT>        else<a name="line.333"></a>
+<FONT color="green">334</FONT>        {<a name="line.334"></a>
+<FONT color="green">335</FONT>          m_firstFree = l &amp; m_chunkMask;<a name="line.335"></a>
+<FONT color="green">336</FONT>          <a name="line.336"></a>
+<FONT color="green">337</FONT>              // There's an edge case if l is an exact multiple of m_chunkBits, which risks leaving<a name="line.337"></a>
+<FONT color="green">338</FONT>              // us pointing at the start of a chunk which has not yet been allocated. Rather than <a name="line.338"></a>
+<FONT color="green">339</FONT>              // pay the cost of dealing with that in the append loops (more scattered and more<a name="line.339"></a>
+<FONT color="green">340</FONT>              // inner-loop), we correct it here by moving to the safe side of that<a name="line.340"></a>
+<FONT color="green">341</FONT>              // line -- as we would have left the indexes had we appended up to that point.<a name="line.341"></a>
+<FONT color="green">342</FONT>          if(m_firstFree==0 &amp;&amp; m_lastChunk&gt;0)<a name="line.342"></a>
+<FONT color="green">343</FONT>          {<a name="line.343"></a>
+<FONT color="green">344</FONT>            --m_lastChunk;<a name="line.344"></a>
+<FONT color="green">345</FONT>            m_firstFree=m_chunkSize;<a name="line.345"></a>
+<FONT color="green">346</FONT>          }<a name="line.346"></a>
+<FONT color="green">347</FONT>        }<a name="line.347"></a>
+<FONT color="green">348</FONT>      }<a name="line.348"></a>
+<FONT color="green">349</FONT>    <a name="line.349"></a>
+<FONT color="green">350</FONT>      /**<a name="line.350"></a>
+<FONT color="green">351</FONT>       * Subroutine for the public setLength() method. Deals with the fact<a name="line.351"></a>
+<FONT color="green">352</FONT>       * that truncation may require restoring one of the innerFSBs<a name="line.352"></a>
+<FONT color="green">353</FONT>       *<a name="line.353"></a>
+<FONT color="green">354</FONT>       * NEEDSDOC @param l<a name="line.354"></a>
+<FONT color="green">355</FONT>       * NEEDSDOC @param rootFSB<a name="line.355"></a>
+<FONT color="green">356</FONT>       */<a name="line.356"></a>
+<FONT color="green">357</FONT>      private final void setLength(int l, FastStringBuffer rootFSB)<a name="line.357"></a>
+<FONT color="green">358</FONT>      {<a name="line.358"></a>
+<FONT color="green">359</FONT>    <a name="line.359"></a>
+<FONT color="green">360</FONT>        m_lastChunk = l &gt;&gt;&gt; m_chunkBits;<a name="line.360"></a>
+<FONT color="green">361</FONT>    <a name="line.361"></a>
+<FONT color="green">362</FONT>        if (m_lastChunk == 0 &amp;&amp; m_innerFSB != null)<a name="line.362"></a>
+<FONT color="green">363</FONT>        {<a name="line.363"></a>
+<FONT color="green">364</FONT>          m_innerFSB.setLength(l, rootFSB);<a name="line.364"></a>
+<FONT color="green">365</FONT>        }<a name="line.365"></a>
+<FONT color="green">366</FONT>        else<a name="line.366"></a>
+<FONT color="green">367</FONT>        {<a name="line.367"></a>
+<FONT color="green">368</FONT>    <a name="line.368"></a>
+<FONT color="green">369</FONT>          // Undo encapsulation -- pop the innerFSB data back up to root.<a name="line.369"></a>
+<FONT color="green">370</FONT>          // Inefficient, but attempts to keep the code simple.<a name="line.370"></a>
+<FONT color="green">371</FONT>          rootFSB.m_chunkBits = m_chunkBits;<a name="line.371"></a>
+<FONT color="green">372</FONT>          rootFSB.m_maxChunkBits = m_maxChunkBits;<a name="line.372"></a>
+<FONT color="green">373</FONT>          rootFSB.m_rebundleBits = m_rebundleBits;<a name="line.373"></a>
+<FONT color="green">374</FONT>          rootFSB.m_chunkSize = m_chunkSize;<a name="line.374"></a>
+<FONT color="green">375</FONT>          rootFSB.m_chunkMask = m_chunkMask;<a name="line.375"></a>
+<FONT color="green">376</FONT>          rootFSB.m_array = m_array;<a name="line.376"></a>
+<FONT color="green">377</FONT>          rootFSB.m_innerFSB = m_innerFSB;<a name="line.377"></a>
+<FONT color="green">378</FONT>          rootFSB.m_lastChunk = m_lastChunk;<a name="line.378"></a>
+<FONT color="green">379</FONT>    <a name="line.379"></a>
+<FONT color="green">380</FONT>          // Finally, truncate this sucker.<a name="line.380"></a>
+<FONT color="green">381</FONT>          rootFSB.m_firstFree = l &amp; m_chunkMask;<a name="line.381"></a>
+<FONT color="green">382</FONT>        }<a name="line.382"></a>
+<FONT color="green">383</FONT>      }<a name="line.383"></a>
+<FONT color="green">384</FONT>    <a name="line.384"></a>
+<FONT color="green">385</FONT>      /**<a name="line.385"></a>
+<FONT color="green">386</FONT>       * Note that this operation has been somewhat deoptimized by the shift to a<a name="line.386"></a>
+<FONT color="green">387</FONT>       * chunked array, as there is no factory method to produce a String object<a name="line.387"></a>
+<FONT color="green">388</FONT>       * directly from an array of arrays and hence a double copy is needed.<a name="line.388"></a>
+<FONT color="green">389</FONT>       * By using ensureCapacity we hope to minimize the heap overhead of building<a name="line.389"></a>
+<FONT color="green">390</FONT>       * the intermediate StringBuffer.<a name="line.390"></a>
+<FONT color="green">391</FONT>       * &lt;p&gt;<a name="line.391"></a>
+<FONT color="green">392</FONT>       * (It really is a pity that Java didn't design String as a final subclass<a name="line.392"></a>
+<FONT color="green">393</FONT>       * of MutableString, rather than having StringBuffer be a separate hierarchy.<a name="line.393"></a>
+<FONT color="green">394</FONT>       * We'd avoid a &lt;strong&gt;lot&lt;/strong&gt; of double-buffering.)<a name="line.394"></a>
+<FONT color="green">395</FONT>       *<a name="line.395"></a>
+<FONT color="green">396</FONT>       * @return the contents of the FastStringBuffer as a standard Java string.<a name="line.396"></a>
+<FONT color="green">397</FONT>       */<a name="line.397"></a>
+<FONT color="green">398</FONT>      public final String toString()<a name="line.398"></a>
+<FONT color="green">399</FONT>      {<a name="line.399"></a>
+<FONT color="green">400</FONT>    <a name="line.400"></a>
+<FONT color="green">401</FONT>        int length = (m_lastChunk &lt;&lt; m_chunkBits) + m_firstFree;<a name="line.401"></a>
+<FONT color="green">402</FONT>    <a name="line.402"></a>
+<FONT color="green">403</FONT>        return getString(new StringBuffer(length), 0, 0, length).toString();<a name="line.403"></a>
+<FONT color="green">404</FONT>      }<a name="line.404"></a>
+<FONT color="green">405</FONT>    <a name="line.405"></a>
+<FONT color="green">406</FONT>      /**<a name="line.406"></a>
+<FONT color="green">407</FONT>       * Append a single character onto the FastStringBuffer, growing the<a name="line.407"></a>
+<FONT color="green">408</FONT>       * storage if necessary.<a name="line.408"></a>
+<FONT color="green">409</FONT>       * &lt;p&gt;<a name="line.409"></a>
+<FONT color="green">410</FONT>       * NOTE THAT after calling append(), previously obtained<a name="line.410"></a>
+<FONT color="green">411</FONT>       * references to m_array[][] may no longer be valid....<a name="line.411"></a>
+<FONT color="green">412</FONT>       * though in fact they should be in this instance.<a name="line.412"></a>
+<FONT color="green">413</FONT>       *<a name="line.413"></a>
+<FONT color="green">414</FONT>       * @param value character to be appended.<a name="line.414"></a>
+<FONT color="green">415</FONT>       */<a name="line.415"></a>
+<FONT color="green">416</FONT>      public final void append(char value)<a name="line.416"></a>
+<FONT color="green">417</FONT>      {<a name="line.417"></a>
+<FONT color="green">418</FONT>        <a name="line.418"></a>
+<FONT color="green">419</FONT>        char[] chunk;<a name="line.419"></a>
+<FONT color="green">420</FONT>    <a name="line.420"></a>
+<FONT color="green">421</FONT>        // We may have preallocated chunks. If so, all but last should<a name="line.421"></a>
+<FONT color="green">422</FONT>        // be at full size.<a name="line.422"></a>
+<FONT color="green">423</FONT>    <a name="line.423"></a>
+<FONT color="green">424</FONT>        if (m_firstFree &lt; m_chunkSize)  // Simplified test single-character-fits<a name="line.424"></a>
+<FONT color="green">425</FONT>          chunk = m_array[m_lastChunk];<a name="line.425"></a>
+<FONT color="green">426</FONT>        else<a name="line.426"></a>
+<FONT color="green">427</FONT>        {<a name="line.427"></a>
+<FONT color="green">428</FONT>    <a name="line.428"></a>
+<FONT color="green">429</FONT>          // Extend array?<a name="line.429"></a>
+<FONT color="green">430</FONT>          int i = m_array.length;<a name="line.430"></a>
+<FONT color="green">431</FONT>    <a name="line.431"></a>
+<FONT color="green">432</FONT>          if (m_lastChunk + 1 == i)<a name="line.432"></a>
+<FONT color="green">433</FONT>          {<a name="line.433"></a>
+<FONT color="green">434</FONT>            char[][] newarray = new char[i + 16][];<a name="line.434"></a>
+<FONT color="green">435</FONT>    <a name="line.435"></a>
+<FONT color="green">436</FONT>            System.arraycopy(m_array, 0, newarray, 0, i);<a name="line.436"></a>
+<FONT color="green">437</FONT>    <a name="line.437"></a>
+<FONT color="green">438</FONT>            m_array = newarray;<a name="line.438"></a>
+<FONT color="green">439</FONT>          }<a name="line.439"></a>
+<FONT color="green">440</FONT>    <a name="line.440"></a>
+<FONT color="green">441</FONT>          // Advance one chunk<a name="line.441"></a>
+<FONT color="green">442</FONT>          chunk = m_array[++m_lastChunk];<a name="line.442"></a>
+<FONT color="green">443</FONT>    <a name="line.443"></a>
+<FONT color="green">444</FONT>          if (chunk == null)<a name="line.444"></a>
+<FONT color="green">445</FONT>          {<a name="line.445"></a>
+<FONT color="green">446</FONT>    <a name="line.446"></a>
+<FONT color="green">447</FONT>            // Hierarchical encapsulation<a name="line.447"></a>
+<FONT color="green">448</FONT>            if (m_lastChunk == 1 &lt;&lt; m_rebundleBits<a name="line.448"></a>
+<FONT color="green">449</FONT>                    &amp;&amp; m_chunkBits &lt; m_maxChunkBits)<a name="line.449"></a>
+<FONT color="green">450</FONT>            {<a name="line.450"></a>
+<FONT color="green">451</FONT>    <a name="line.451"></a>
+<FONT color="green">452</FONT>              // Should do all the work of both encapsulating<a name="line.452"></a>
+<FONT color="green">453</FONT>              // existing data and establishing new sizes/offsets<a name="line.453"></a>
+<FONT color="green">454</FONT>              m_innerFSB = new FastStringBuffer(this);<a name="line.454"></a>
+<FONT color="green">455</FONT>            }<a name="line.455"></a>
+<FONT color="green">456</FONT>    <a name="line.456"></a>
+<FONT color="green">457</FONT>            // Add a chunk.<a name="line.457"></a>
+<FONT color="green">458</FONT>            chunk = m_array[m_lastChunk] = new char[m_chunkSize];<a name="line.458"></a>
+<FONT color="green">459</FONT>          }<a name="line.459"></a>
+<FONT color="green">460</FONT>    <a name="line.460"></a>
+<FONT color="green">461</FONT>          m_firstFree = 0;<a name="line.461"></a>
+<FONT color="green">462</FONT>        }<a name="line.462"></a>
+<FONT color="green">463</FONT>    <a name="line.463"></a>
+<FONT color="green">464</FONT>        // Space exists in the chunk. Append the character.<a name="line.464"></a>
+<FONT color="green">465</FONT>        chunk[m_firstFree++] = value;<a name="line.465"></a>
+<FONT color="green">466</FONT>      }<a name="line.466"></a>
+<FONT color="green">467</FONT>    <a name="line.467"></a>
+<FONT color="green">468</FONT>      /**<a name="line.468"></a>
+<FONT color="green">469</FONT>       * Append the contents of a String onto the FastStringBuffer,<a name="line.469"></a>
+<FONT color="green">470</FONT>       * growing the storage if necessary.<a name="line.470"></a>
+<FONT color="green">471</FONT>       * &lt;p&gt;<a name="line.471"></a>
+<FONT color="green">472</FONT>       * NOTE THAT after calling append(), previously obtained<a name="line.472"></a>
+<FONT color="green">473</FONT>       * references to m_array[] may no longer be valid.<a name="line.473"></a>
+<FONT color="green">474</FONT>       *<a name="line.474"></a>
+<FONT color="green">475</FONT>       * @param value String whose contents are to be appended.<a name="line.475"></a>
+<FONT color="green">476</FONT>       */<a name="line.476"></a>
+<FONT color="green">477</FONT>      public final void append(String value)<a name="line.477"></a>
+<FONT color="green">478</FONT>      {<a name="line.478"></a>
+<FONT color="green">479</FONT>    <a name="line.479"></a>
+<FONT color="green">480</FONT>        if (value == null) <a name="line.480"></a>
+<FONT color="green">481</FONT>          return;<a name="line.481"></a>
+<FONT color="green">482</FONT>        int strlen = value.length();<a name="line.482"></a>
+<FONT color="green">483</FONT>    <a name="line.483"></a>
+<FONT color="green">484</FONT>        if (0 == strlen)<a name="line.484"></a>
+<FONT color="green">485</FONT>          return;<a name="line.485"></a>
+<FONT color="green">486</FONT>    <a name="line.486"></a>
+<FONT color="green">487</FONT>        int copyfrom = 0;<a name="line.487"></a>
+<FONT color="green">488</FONT>        char[] chunk = m_array[m_lastChunk];<a name="line.488"></a>
+<FONT color="green">489</FONT>        int available = m_chunkSize - m_firstFree;<a name="line.489"></a>
+<FONT color="green">490</FONT>    <a name="line.490"></a>
+<FONT color="green">491</FONT>        // Repeat while data remains to be copied<a name="line.491"></a>
+<FONT color="green">492</FONT>        while (strlen &gt; 0)<a name="line.492"></a>
+<FONT color="green">493</FONT>        {<a name="line.493"></a>
+<FONT color="green">494</FONT>    <a name="line.494"></a>
+<FONT color="green">495</FONT>          // Copy what fits<a name="line.495"></a>
+<FONT color="green">496</FONT>          if (available &gt; strlen)<a name="line.496"></a>
+<FONT color="green">497</FONT>            available = strlen;<a name="line.497"></a>
+<FONT color="green">498</FONT>    <a name="line.498"></a>
+<FONT color="green">499</FONT>          value.getChars(copyfrom, copyfrom + available, m_array[m_lastChunk],<a name="line.499"></a>
+<FONT color="green">500</FONT>                         m_firstFree);<a name="line.500"></a>
+<FONT color="green">501</FONT>    <a name="line.501"></a>
+<FONT color="green">502</FONT>          strlen -= available;<a name="line.502"></a>
+<FONT color="green">503</FONT>          copyfrom += available;<a name="line.503"></a>
+<FONT color="green">504</FONT>    <a name="line.504"></a>
+<FONT color="green">505</FONT>          // If there's more left, allocate another chunk and continue<a name="line.505"></a>
+<FONT color="green">506</FONT>          if (strlen &gt; 0)<a name="line.506"></a>
+<FONT color="green">507</FONT>          {<a name="line.507"></a>
+<FONT color="green">508</FONT>    <a name="line.508"></a>
+<FONT color="green">509</FONT>            // Extend array?<a name="line.509"></a>
+<FONT color="green">510</FONT>            int i = m_array.length;<a name="line.510"></a>
+<FONT color="green">511</FONT>    <a name="line.511"></a>
+<FONT color="green">512</FONT>            if (m_lastChunk + 1 == i)<a name="line.512"></a>
+<FONT color="green">513</FONT>            {<a name="line.513"></a>
+<FONT color="green">514</FONT>              char[][] newarray = new char[i + 16][];<a name="line.514"></a>
+<FONT color="green">515</FONT>    <a name="line.515"></a>
+<FONT color="green">516</FONT>              System.arraycopy(m_array, 0, newarray, 0, i);<a name="line.516"></a>
+<FONT color="green">517</FONT>    <a name="line.517"></a>
+<FONT color="green">518</FONT>              m_array = newarray;<a name="line.518"></a>
+<FONT color="green">519</FONT>            }<a name="line.519"></a>
+<FONT color="green">520</FONT>    <a name="line.520"></a>
+<FONT color="green">521</FONT>            // Advance one chunk<a name="line.521"></a>
+<FONT color="green">522</FONT>            chunk = m_array[++m_lastChunk];<a name="line.522"></a>
+<FONT color="green">523</FONT>    <a name="line.523"></a>
+<FONT color="green">524</FONT>            if (chunk == null)<a name="line.524"></a>
+<FONT color="green">525</FONT>            {<a name="line.525"></a>
+<FONT color="green">526</FONT>    <a name="line.526"></a>
+<FONT color="green">527</FONT>              // Hierarchical encapsulation<a name="line.527"></a>
+<FONT color="green">528</FONT>              if (m_lastChunk == 1 &lt;&lt; m_rebundleBits<a name="line.528"></a>
+<FONT color="green">529</FONT>                      &amp;&amp; m_chunkBits &lt; m_maxChunkBits)<a name="line.529"></a>
+<FONT color="green">530</FONT>              {<a name="line.530"></a>
+<FONT color="green">531</FONT>    <a name="line.531"></a>
+<FONT color="green">532</FONT>                // Should do all the work of both encapsulating<a name="line.532"></a>
+<FONT color="green">533</FONT>                // existing data and establishing new sizes/offsets<a name="line.533"></a>
+<FONT color="green">534</FONT>                m_innerFSB = new FastStringBuffer(this);<a name="line.534"></a>
+<FONT color="green">535</FONT>              }<a name="line.535"></a>
+<FONT color="green">536</FONT>    <a name="line.536"></a>
+<FONT color="green">537</FONT>              // Add a chunk. <a name="line.537"></a>
+<FONT color="green">538</FONT>              chunk = m_array[m_lastChunk] = new char[m_chunkSize];<a name="line.538"></a>
+<FONT color="green">539</FONT>            }<a name="line.539"></a>
+<FONT color="green">540</FONT>    <a name="line.540"></a>
+<FONT color="green">541</FONT>            available = m_chunkSize;<a name="line.541"></a>
+<FONT color="green">542</FONT>            m_firstFree = 0;<a name="line.542"></a>
+<FONT color="green">543</FONT>          }<a name="line.543"></a>
+<FONT color="green">544</FONT>        }<a name="line.544"></a>
+<FONT color="green">545</FONT>    <a name="line.545"></a>
+<FONT color="green">546</FONT>        // Adjust the insert point in the last chunk, when we've reached it.<a name="line.546"></a>
+<FONT color="green">547</FONT>        m_firstFree += available;<a name="line.547"></a>
+<FONT color="green">548</FONT>      }<a name="line.548"></a>
+<FONT color="green">549</FONT>    <a name="line.549"></a>
+<FONT color="green">550</FONT>      /**<a name="line.550"></a>
+<FONT color="green">551</FONT>       * Append the contents of a StringBuffer onto the FastStringBuffer,<a name="line.551"></a>
+<FONT color="green">552</FONT>       * growing the storage if necessary.<a name="line.552"></a>
+<FONT color="green">553</FONT>       * &lt;p&gt;<a name="line.553"></a>
+<FONT color="green">554</FONT>       * NOTE THAT after calling append(), previously obtained<a name="line.554"></a>
+<FONT color="green">555</FONT>       * references to m_array[] may no longer be valid.<a name="line.555"></a>
+<FONT color="green">556</FONT>       *<a name="line.556"></a>
+<FONT color="green">557</FONT>       * @param value StringBuffer whose contents are to be appended.<a name="line.557"></a>
+<FONT color="green">558</FONT>       */<a name="line.558"></a>
+<FONT color="green">559</FONT>      public final void append(StringBuffer value)<a name="line.559"></a>
+<FONT color="green">560</FONT>      {<a name="line.560"></a>
+<FONT color="green">561</FONT>    <a name="line.561"></a>
+<FONT color="green">562</FONT>        if (value == null) <a name="line.562"></a>
+<FONT color="green">563</FONT>          return;<a name="line.563"></a>
+<FONT color="green">564</FONT>        int strlen = value.length();<a name="line.564"></a>
+<FONT color="green">565</FONT>    <a name="line.565"></a>
+<FONT color="green">566</FONT>        if (0 == strlen)<a name="line.566"></a>
+<FONT color="green">567</FONT>          return;<a name="line.567"></a>
+<FONT color="green">568</FONT>    <a name="line.568"></a>
+<FONT color="green">569</FONT>        int copyfrom = 0;<a name="line.569"></a>
+<FONT color="green">570</FONT>        char[] chunk = m_array[m_lastChunk];<a name="line.570"></a>
+<FONT color="green">571</FONT>        int available = m_chunkSize - m_firstFree;<a name="line.571"></a>
+<FONT color="green">572</FONT>    <a name="line.572"></a>
+<FONT color="green">573</FONT>        // Repeat while data remains to be copied<a name="line.573"></a>
+<FONT color="green">574</FONT>        while (strlen &gt; 0)<a name="line.574"></a>
+<FONT color="green">575</FONT>        {<a name="line.575"></a>
+<FONT color="green">576</FONT>    <a name="line.576"></a>
+<FONT color="green">577</FONT>          // Copy what fits<a name="line.577"></a>
+<FONT color="green">578</FONT>          if (available &gt; strlen)<a name="line.578"></a>
+<FONT color="green">579</FONT>            available = strlen;<a name="line.579"></a>
+<FONT color="green">580</FONT>    <a name="line.580"></a>
+<FONT color="green">581</FONT>          value.getChars(copyfrom, copyfrom + available, m_array[m_lastChunk],<a name="line.581"></a>
+<FONT color="green">582</FONT>                         m_firstFree);<a name="line.582"></a>
+<FONT color="green">583</FONT>    <a name="line.583"></a>
+<FONT color="green">584</FONT>          strlen -= available;<a name="line.584"></a>
+<FONT color="green">585</FONT>          copyfrom += available;<a name="line.585"></a>
+<FONT color="green">586</FONT>    <a name="line.586"></a>
+<FONT color="green">587</FONT>          // If there's more left, allocate another chunk and continue<a name="line.587"></a>
+<FONT color="green">588</FONT>          if (strlen &gt; 0)<a name="line.588"></a>
+<FONT color="green">589</FONT>          {<a name="line.589"></a>
+<FONT color="green">590</FONT>    <a name="line.590"></a>
+<FONT color="green">591</FONT>            // Extend array?<a name="line.591"></a>
+<FONT color="green">592</FONT>            int i = m_array.length;<a name="line.592"></a>
+<FONT color="green">593</FONT>    <a name="line.593"></a>
+<FONT color="green">594</FONT>            if (m_lastChunk + 1 == i)<a name="line.594"></a>
+<FONT color="green">595</FONT>            {<a name="line.595"></a>
+<FONT color="green">596</FONT>              char[][] newarray = new char[i + 16][];<a name="line.596"></a>
+<FONT color="green">597</FONT>    <a name="line.597"></a>
+<FONT color="green">598</FONT>              System.arraycopy(m_array, 0, newarray, 0, i);<a name="line.598"></a>
+<FONT color="green">599</FONT>    <a name="line.599"></a>
+<FONT color="green">600</FONT>              m_array = newarray;<a name="line.600"></a>
+<FONT color="green">601</FONT>            }<a name="line.601"></a>
+<FONT color="green">602</FONT>    <a name="line.602"></a>
+<FONT color="green">603</FONT>            // Advance one chunk<a name="line.603"></a>
+<FONT color="green">604</FONT>            chunk = m_array[++m_lastChunk];<a name="line.604"></a>
+<FONT color="green">605</FONT>    <a name="line.605"></a>
+<FONT color="green">606</FONT>            if (chunk == null)<a name="line.606"></a>
+<FONT color="green">607</FONT>            {<a name="line.607"></a>
+<FONT color="green">608</FONT>    <a name="line.608"></a>
+<FONT color="green">609</FONT>              // Hierarchical encapsulation<a name="line.609"></a>
+<FONT color="green">610</FONT>              if (m_lastChunk == 1 &lt;&lt; m_rebundleBits<a name="line.610"></a>
+<FONT color="green">611</FONT>                      &amp;&amp; m_chunkBits &lt; m_maxChunkBits)<a name="line.611"></a>
+<FONT color="green">612</FONT>              {<a name="line.612"></a>
+<FONT color="green">613</FONT>    <a name="line.613"></a>
+<FONT color="green">614</FONT>                // Should do all the work of both encapsulating<a name="line.614"></a>
+<FONT color="green">615</FONT>                // existing data and establishing new sizes/offsets<a name="line.615"></a>
+<FONT color="green">616</FONT>                m_innerFSB = new FastStringBuffer(this);<a name="line.616"></a>
+<FONT color="green">617</FONT>              }<a name="line.617"></a>
+<FONT color="green">618</FONT>    <a name="line.618"></a>
+<FONT color="green">619</FONT>              // Add a chunk.<a name="line.619"></a>
+<FONT color="green">620</FONT>              chunk = m_array[m_lastChunk] = new char[m_chunkSize];<a name="line.620"></a>
+<FONT color="green">621</FONT>            }<a name="line.621"></a>
+<FONT color="green">622</FONT>    <a name="line.622"></a>
+<FONT color="green">623</FONT>            available = m_chunkSize;<a name="line.623"></a>
+<FONT color="green">624</FONT>            m_firstFree = 0;<a name="line.624"></a>
+<FONT color="green">625</FONT>          }<a name="line.625"></a>
+<FONT color="green">626</FONT>        }<a name="line.626"></a>
+<FONT color="green">627</FONT>    <a name="line.627"></a>
+<FONT color="green">628</FONT>        // Adjust the insert point in the last chunk, when we've reached it.<a name="line.628"></a>
+<FONT color="green">629</FONT>        m_firstFree += available;<a name="line.629"></a>
+<FONT color="green">630</FONT>      }<a name="line.630"></a>
+<FONT color="green">631</FONT>    <a name="line.631"></a>
+<FONT color="green">632</FONT>      /**<a name="line.632"></a>
+<FONT color="green">633</FONT>       * Append part of the contents of a Character Array onto the<a name="line.633"></a>
+<FONT color="green">634</FONT>       * FastStringBuffer,  growing the storage if necessary.<a name="line.634"></a>
+<FONT color="green">635</FONT>       * &lt;p&gt;<a name="line.635"></a>
+<FONT color="green">636</FONT>       * NOTE THAT after calling append(), previously obtained<a name="line.636"></a>
+<FONT color="green">637</FONT>       * references to m_array[] may no longer be valid.<a name="line.637"></a>
+<FONT color="green">638</FONT>       *<a name="line.638"></a>
+<FONT color="green">639</FONT>       * @param chars character array from which data is to be copied<a name="line.639"></a>
+<FONT color="green">640</FONT>       * @param start offset in chars of first character to be copied,<a name="line.640"></a>
+<FONT color="green">641</FONT>       * zero-based.<a name="line.641"></a>
+<FONT color="green">642</FONT>       * @param length number of characters to be copied<a name="line.642"></a>
+<FONT color="green">643</FONT>       */<a name="line.643"></a>
+<FONT color="green">644</FONT>      public final void append(char[] chars, int start, int length)<a name="line.644"></a>
+<FONT color="green">645</FONT>      {<a name="line.645"></a>
+<FONT color="green">646</FONT>    <a name="line.646"></a>
+<FONT color="green">647</FONT>        int strlen = length;<a name="line.647"></a>
+<FONT color="green">648</FONT>    <a name="line.648"></a>
+<FONT color="green">649</FONT>        if (0 == strlen)<a name="line.649"></a>
+<FONT color="green">650</FONT>          return;<a name="line.650"></a>
+<FONT color="green">651</FONT>    <a name="line.651"></a>
+<FONT color="green">652</FONT>        int copyfrom = start;<a name="line.652"></a>
+<FONT color="green">653</FONT>        char[] chunk = m_array[m_lastChunk];<a name="line.653"></a>
+<FONT color="green">654</FONT>        int available = m_chunkSize - m_firstFree;<a name="line.654"></a>
+<FONT color="green">655</FONT>    <a name="line.655"></a>
+<FONT color="green">656</FONT>        // Repeat while data remains to be copied<a name="line.656"></a>
+<FONT color="green">657</FONT>        while (strlen &gt; 0)<a name="line.657"></a>
+<FONT color="green">658</FONT>        {<a name="line.658"></a>
+<FONT color="green">659</FONT>    <a name="line.659"></a>
+<FONT color="green">660</FONT>          // Copy what fits<a name="line.660"></a>
+<FONT color="green">661</FONT>          if (available &gt; strlen)<a name="line.661"></a>
+<FONT color="green">662</FONT>            available = strlen;<a name="line.662"></a>
+<FONT color="green">663</FONT>    <a name="line.663"></a>
+<FONT color="green">664</FONT>          System.arraycopy(chars, copyfrom, m_array[m_lastChunk], m_firstFree,<a name="line.664"></a>
+<FONT color="green">665</FONT>                           available);<a name="line.665"></a>
+<FONT color="green">666</FONT>    <a name="line.666"></a>
+<FONT color="green">667</FONT>          strlen -= available;<a name="line.667"></a>
+<FONT color="green">668</FONT>          copyfrom += available;<a name="line.668"></a>
+<FONT color="green">669</FONT>    <a name="line.669"></a>
+<FONT color="green">670</FONT>          // If there's more left, allocate another chunk and continue<a name="line.670"></a>
+<FONT color="green">671</FONT>          if (strlen &gt; 0)<a name="line.671"></a>
+<FONT color="green">672</FONT>          {<a name="line.672"></a>
+<FONT color="green">673</FONT>    <a name="line.673"></a>
+<FONT color="green">674</FONT>            // Extend array?<a name="line.674"></a>
+<FONT color="green">675</FONT>            int i = m_array.length;<a name="line.675"></a>
+<FONT color="green">676</FONT>    <a name="line.676"></a>
+<FONT color="green">677</FONT>            if (m_lastChunk + 1 == i)<a name="line.677"></a>
+<FONT color="green">678</FONT>            {<a name="line.678"></a>
+<FONT color="green">679</FONT>              char[][] newarray = new char[i + 16][];<a name="line.679"></a>
+<FONT color="green">680</FONT>    <a name="line.680"></a>
+<FONT color="green">681</FONT>              System.arraycopy(m_array, 0, newarray, 0, i);<a name="line.681"></a>
+<FONT color="green">682</FONT>    <a name="line.682"></a>
+<FONT color="green">683</FONT>              m_array = newarray;<a name="line.683"></a>
+<FONT color="green">684</FONT>            }<a name="line.684"></a>
+<FONT color="green">685</FONT>    <a name="line.685"></a>
+<FONT color="green">686</FONT>            // Advance one chunk<a name="line.686"></a>
+<FONT color="green">687</FONT>            chunk = m_array[++m_lastChunk];<a name="line.687"></a>
+<FONT color="green">688</FONT>    <a name="line.688"></a>
+<FONT color="green">689</FONT>            if (chunk == null)<a name="line.689"></a>
+<FONT color="green">690</FONT>            {<a name="line.690"></a>
+<FONT color="green">691</FONT>    <a name="line.691"></a>
+<FONT color="green">692</FONT>              // Hierarchical encapsulation<a name="line.692"></a>
+<FONT color="green">693</FONT>              if (m_lastChunk == 1 &lt;&lt; m_rebundleBits<a name="line.693"></a>
+<FONT color="green">694</FONT>                      &amp;&amp; m_chunkBits &lt; m_maxChunkBits)<a name="line.694"></a>
+<FONT color="green">695</FONT>              {<a name="line.695"></a>
+<FONT color="green">696</FONT>    <a name="line.696"></a>
+<FONT color="green">697</FONT>                // Should do all the work of both encapsulating<a name="line.697"></a>
+<FONT color="green">698</FONT>                // existing data and establishing new sizes/offsets<a name="line.698"></a>
+<FONT color="green">699</FONT>                m_innerFSB = new FastStringBuffer(this);<a name="line.699"></a>
+<FONT color="green">700</FONT>              }<a name="line.700"></a>
+<FONT color="green">701</FONT>    <a name="line.701"></a>
+<FONT color="green">702</FONT>              // Add a chunk.<a name="line.702"></a>
+<FONT color="green">703</FONT>              chunk = m_array[m_lastChunk] = new char[m_chunkSize];<a name="line.703"></a>
+<FONT color="green">704</FONT>            }<a name="line.704"></a>
+<FONT color="green">705</FONT>    <a name="line.705"></a>
+<FONT color="green">706</FONT>            available = m_chunkSize;<a name="line.706"></a>
+<FONT color="green">707</FONT>            m_firstFree = 0;<a name="line.707"></a>
+<FONT color="green">708</FONT>          }<a name="line.708"></a>
+<FONT color="green">709</FONT>        }<a name="line.709"></a>
+<FONT color="green">710</FONT>    <a name="line.710"></a>
+<FONT color="green">711</FONT>        // Adjust the insert point in the last chunk, when we've reached it.<a name="line.711"></a>
+<FONT color="green">712</FONT>        m_firstFree += available;<a name="line.712"></a>
+<FONT color="green">713</FONT>      }<a name="line.713"></a>
+<FONT color="green">714</FONT>    <a name="line.714"></a>
+<FONT color="green">715</FONT>      /**<a name="line.715"></a>
+<FONT color="green">716</FONT>       * Append the contents of another FastStringBuffer onto<a name="line.716"></a>
+<FONT color="green">717</FONT>       * this FastStringBuffer, growing the storage if necessary.<a name="line.717"></a>
+<FONT color="green">718</FONT>       * &lt;p&gt;<a name="line.718"></a>
+<FONT color="green">719</FONT>       * NOTE THAT after calling append(), previously obtained<a name="line.719"></a>
+<FONT color="green">720</FONT>       * references to m_array[] may no longer be valid.<a name="line.720"></a>
+<FONT color="green">721</FONT>       *<a name="line.721"></a>
+<FONT color="green">722</FONT>       * @param value FastStringBuffer whose contents are<a name="line.722"></a>
+<FONT color="green">723</FONT>       * to be appended.<a name="line.723"></a>
+<FONT color="green">724</FONT>       */<a name="line.724"></a>
+<FONT color="green">725</FONT>      public final void append(FastStringBuffer value)<a name="line.725"></a>
+<FONT color="green">726</FONT>      {<a name="line.726"></a>
+<FONT color="green">727</FONT>    <a name="line.727"></a>
+<FONT color="green">728</FONT>        // Complicating factor here is that the two buffers may use<a name="line.728"></a>
+<FONT color="green">729</FONT>        // different chunk sizes, and even if they're the same we're<a name="line.729"></a>
+<FONT color="green">730</FONT>        // probably on a different alignment due to previously appended<a name="line.730"></a>
+<FONT color="green">731</FONT>        // data. We have to work through the source in bite-sized chunks.<a name="line.731"></a>
+<FONT color="green">732</FONT>        if (value == null) <a name="line.732"></a>
+<FONT color="green">733</FONT>          return;<a name="line.733"></a>
+<FONT color="green">734</FONT>        int strlen = value.length();<a name="line.734"></a>
+<FONT color="green">735</FONT>    <a name="line.735"></a>
+<FONT color="green">736</FONT>        if (0 == strlen)<a name="line.736"></a>
+<FONT color="green">737</FONT>          return;<a name="line.737"></a>
+<FONT color="green">738</FONT>    <a name="line.738"></a>
+<FONT color="green">739</FONT>        int copyfrom = 0;<a name="line.739"></a>
+<FONT color="green">740</FONT>        char[] chunk = m_array[m_lastChunk];<a name="line.740"></a>
+<FONT color="green">741</FONT>        int available = m_chunkSize - m_firstFree;<a name="line.741"></a>
+<FONT color="green">742</FONT>    <a name="line.742"></a>
+<FONT color="green">743</FONT>        // Repeat while data remains to be copied<a name="line.743"></a>
+<FONT color="green">744</FONT>        while (strlen &gt; 0)<a name="line.744"></a>
+<FONT color="green">745</FONT>        {<a name="line.745"></a>
+<FONT color="green">746</FONT>    <a name="line.746"></a>
+<FONT color="green">747</FONT>          // Copy what fits<a name="line.747"></a>
+<FONT color="green">748</FONT>          if (available &gt; strlen)<a name="line.748"></a>
+<FONT color="green">749</FONT>            available = strlen;<a name="line.749"></a>
+<FONT color="green">750</FONT>    <a name="line.750"></a>
+<FONT color="green">751</FONT>          int sourcechunk = (copyfrom + value.m_chunkSize - 1)<a name="line.751"></a>
+<FONT color="green">752</FONT>                            &gt;&gt;&gt; value.m_chunkBits;<a name="line.752"></a>
+<FONT color="green">753</FONT>          int sourcecolumn = copyfrom &amp; value.m_chunkMask;<a name="line.753"></a>
+<FONT color="green">754</FONT>          int runlength = value.m_chunkSize - sourcecolumn;<a name="line.754"></a>
+<FONT color="green">755</FONT>    <a name="line.755"></a>
+<FONT color="green">756</FONT>          if (runlength &gt; available)<a name="line.756"></a>
+<FONT color="green">757</FONT>            runlength = available;<a name="line.757"></a>
+<FONT color="green">758</FONT>    <a name="line.758"></a>
+<FONT color="green">759</FONT>          System.arraycopy(value.m_array[sourcechunk], sourcecolumn,<a name="line.759"></a>
+<FONT color="green">760</FONT>                           m_array[m_lastChunk], m_firstFree, runlength);<a name="line.760"></a>
+<FONT color="green">761</FONT>    <a name="line.761"></a>
+<FONT color="green">762</FONT>          if (runlength != available)<a name="line.762"></a>
+<FONT color="green">763</FONT>            System.arraycopy(value.m_array[sourcechunk + 1], 0,<a name="line.763"></a>
+<FONT color="green">764</FONT>                             m_array[m_lastChunk], m_firstFree + runlength,<a name="line.764"></a>
+<FONT color="green">765</FONT>                             available - runlength);<a name="line.765"></a>
+<FONT color="green">766</FONT>    <a name="line.766"></a>
+<FONT color="green">767</FONT>          strlen -= available;<a name="line.767"></a>
+<FONT color="green">768</FONT>          copyfrom += available;<a name="line.768"></a>
+<FONT color="green">769</FONT>    <a name="line.769"></a>
+<FONT color="green">770</FONT>          // If there's more left, allocate another chunk and continue<a name="line.770"></a>
+<FONT color="green">771</FONT>          if (strlen &gt; 0)<a name="line.771"></a>
+<FONT color="green">772</FONT>          {<a name="line.772"></a>
+<FONT color="green">773</FONT>    <a name="line.773"></a>
+<FONT color="green">774</FONT>            // Extend array?<a name="line.774"></a>
+<FONT color="green">775</FONT>            int i = m_array.length;<a name="line.775"></a>
+<FONT color="green">776</FONT>    <a name="line.776"></a>
+<FONT color="green">777</FONT>            if (m_lastChunk + 1 == i)<a name="line.777"></a>
+<FONT color="green">778</FONT>            {<a name="line.778"></a>
+<FONT color="green">779</FONT>              char[][] newarray = new char[i + 16][];<a name="line.779"></a>
+<FONT color="green">780</FONT>    <a name="line.780"></a>
+<FONT color="green">781</FONT>              System.arraycopy(m_array, 0, newarray, 0, i);<a name="line.781"></a>
+<FONT color="green">782</FONT>    <a name="line.782"></a>
+<FONT color="green">783</FONT>              m_array = newarray;<a name="line.783"></a>
+<FONT color="green">784</FONT>            }<a name="line.784"></a>
+<FONT color="green">785</FONT>    <a name="line.785"></a>
+<FONT color="green">786</FONT>            // Advance one chunk<a name="line.786"></a>
+<FONT color="green">787</FONT>            chunk = m_array[++m_lastChunk];<a name="line.787"></a>
+<FONT color="green">788</FONT>    <a name="line.788"></a>
+<FONT color="green">789</FONT>            if (chunk == null)<a name="line.789"></a>
+<FONT color="green">790</FONT>            {<a name="line.790"></a>
+<FONT color="green">791</FONT>    <a name="line.791"></a>
+<FONT color="green">792</FONT>              // Hierarchical encapsulation<a name="line.792"></a>
+<FONT color="green">793</FONT>              if (m_lastChunk == 1 &lt;&lt; m_rebundleBits<a name="line.793"></a>
+<FONT color="green">794</FONT>                      &amp;&amp; m_chunkBits &lt; m_maxChunkBits)<a name="line.794"></a>
+<FONT color="green">795</FONT>              {<a name="line.795"></a>
+<FONT color="green">796</FONT>    <a name="line.796"></a>
+<FONT color="green">797</FONT>                // Should do all the work of both encapsulating<a name="line.797"></a>
+<FONT color="green">798</FONT>                // existing data and establishing new sizes/offsets<a name="line.798"></a>
+<FONT color="green">799</FONT>                m_innerFSB = new FastStringBuffer(this);<a name="line.799"></a>
+<FONT color="green">800</FONT>              }<a name="line.800"></a>
+<FONT color="green">801</FONT>    <a name="line.801"></a>
+<FONT color="green">802</FONT>              // Add a chunk. <a name="line.802"></a>
+<FONT color="green">803</FONT>              chunk = m_array[m_lastChunk] = new char[m_chunkSize];<a name="line.803"></a>
+<FONT color="green">804</FONT>            }<a name="line.804"></a>
+<FONT color="green">805</FONT>    <a name="line.805"></a>
+<FONT color="green">806</FONT>            available = m_chunkSize;<a name="line.806"></a>
+<FONT color="green">807</FONT>            m_firstFree = 0;<a name="line.807"></a>
+<FONT color="green">808</FONT>          }<a name="line.808"></a>
+<FONT color="green">809</FONT>        }<a name="line.809"></a>
+<FONT color="green">810</FONT>    <a name="line.810"></a>
+<FONT color="green">811</FONT>        // Adjust the insert point in the last chunk, when we've reached it.<a name="line.811"></a>
+<FONT color="green">812</FONT>        m_firstFree += available;<a name="line.812"></a>
+<FONT color="green">813</FONT>      }<a name="line.813"></a>
+<FONT color="green">814</FONT>    <a name="line.814"></a>
+<FONT color="green">815</FONT>      /**<a name="line.815"></a>
+<FONT color="green">816</FONT>       * @return true if the specified range of characters are all whitespace,<a name="line.816"></a>
+<FONT color="green">817</FONT>       * as defined by XMLCharacterRecognizer.<a name="line.817"></a>
+<FONT color="green">818</FONT>       * &lt;p&gt;<a name="line.818"></a>
+<FONT color="green">819</FONT>       * CURRENTLY DOES NOT CHECK FOR OUT-OF-RANGE.<a name="line.819"></a>
+<FONT color="green">820</FONT>       *<a name="line.820"></a>
+<FONT color="green">821</FONT>       * @param start Offset of first character in the range.<a name="line.821"></a>
+<FONT color="green">822</FONT>       * @param length Number of characters to send.<a name="line.822"></a>
+<FONT color="green">823</FONT>       */<a name="line.823"></a>
+<FONT color="green">824</FONT>      public boolean isWhitespace(int start, int length)<a name="line.824"></a>
+<FONT color="green">825</FONT>      {<a name="line.825"></a>
+<FONT color="green">826</FONT>    <a name="line.826"></a>
+<FONT color="green">827</FONT>        int sourcechunk = start &gt;&gt;&gt; m_chunkBits;<a name="line.827"></a>
+<FONT color="green">828</FONT>        int sourcecolumn = start &amp; m_chunkMask;<a name="line.828"></a>
+<FONT color="green">829</FONT>        int available = m_chunkSize - sourcecolumn;<a name="line.829"></a>
+<FONT color="green">830</FONT>        boolean chunkOK;<a name="line.830"></a>
+<FONT color="green">831</FONT>    <a name="line.831"></a>
+<FONT color="green">832</FONT>        while (length &gt; 0)<a name="line.832"></a>
+<FONT color="green">833</FONT>        {<a name="line.833"></a>
+<FONT color="green">834</FONT>          int runlength = (length &lt;= available) ? length : available;<a name="line.834"></a>
+<FONT color="green">835</FONT>    <a name="line.835"></a>
+<FONT color="green">836</FONT>          if (sourcechunk == 0 &amp;&amp; m_innerFSB != null)<a name="line.836"></a>
+<FONT color="green">837</FONT>            chunkOK = m_innerFSB.isWhitespace(sourcecolumn, runlength);<a name="line.837"></a>
+<FONT color="green">838</FONT>          else<a name="line.838"></a>
+<FONT color="green">839</FONT>            chunkOK = org.apache.xml.utils.XMLCharacterRecognizer.isWhiteSpace(<a name="line.839"></a>
+<FONT color="green">840</FONT>              m_array[sourcechunk], sourcecolumn, runlength);<a name="line.840"></a>
+<FONT color="green">841</FONT>    <a name="line.841"></a>
+<FONT color="green">842</FONT>          if (!chunkOK)<a name="line.842"></a>
+<FONT color="green">843</FONT>            return false;<a name="line.843"></a>
+<FONT color="green">844</FONT>    <a name="line.844"></a>
+<FONT color="green">845</FONT>          length -= runlength;<a name="line.845"></a>
+<FONT color="green">846</FONT>    <a name="line.846"></a>
+<FONT color="green">847</FONT>          ++sourcechunk;<a name="line.847"></a>
+<FONT color="green">848</FONT>    <a name="line.848"></a>
+<FONT color="green">849</FONT>          sourcecolumn = 0;<a name="line.849"></a>
+<FONT color="green">850</FONT>          available = m_chunkSize;<a name="line.850"></a>
+<FONT color="green">851</FONT>        }<a name="line.851"></a>
+<FONT color="green">852</FONT>    <a name="line.852"></a>
+<FONT color="green">853</FONT>        return true;<a name="line.853"></a>
+<FONT color="green">854</FONT>      }<a name="line.854"></a>
+<FONT color="green">855</FONT>    <a name="line.855"></a>
+<FONT color="green">856</FONT>      /**<a name="line.856"></a>
+<FONT color="green">857</FONT>       * @param start Offset of first character in the range.<a name="line.857"></a>
+<FONT color="green">858</FONT>       * @param length Number of characters to send.<a name="line.858"></a>
+<FONT color="green">859</FONT>       * @return a new String object initialized from the specified range of<a name="line.859"></a>
+<FONT color="green">860</FONT>       * characters.<a name="line.860"></a>
+<FONT color="green">861</FONT>       */<a name="line.861"></a>
+<FONT color="green">862</FONT>      public String getString(int start, int length)<a name="line.862"></a>
+<FONT color="green">863</FONT>      {<a name="line.863"></a>
+<FONT color="green">864</FONT>        int startColumn = start &amp; m_chunkMask;<a name="line.864"></a>
+<FONT color="green">865</FONT>        int startChunk = start &gt;&gt;&gt; m_chunkBits;<a name="line.865"></a>
+<FONT color="green">866</FONT>        if (startColumn + length &lt; m_chunkMask &amp;&amp; m_innerFSB == null) {<a name="line.866"></a>
+<FONT color="green">867</FONT>          return getOneChunkString(startChunk, startColumn, length);<a name="line.867"></a>
+<FONT color="green">868</FONT>        }<a name="line.868"></a>
+<FONT color="green">869</FONT>        return getString(new StringBuffer(length), startChunk, startColumn,<a name="line.869"></a>
+<FONT color="green">870</FONT>                         length).toString();<a name="line.870"></a>
+<FONT color="green">871</FONT>      }<a name="line.871"></a>
+<FONT color="green">872</FONT>    <a name="line.872"></a>
+<FONT color="green">873</FONT>      protected String getOneChunkString(int startChunk, int startColumn,<a name="line.873"></a>
+<FONT color="green">874</FONT>                                         int length) {<a name="line.874"></a>
+<FONT color="green">875</FONT>        return new String(m_array[startChunk], startColumn, length);<a name="line.875"></a>
+<FONT color="green">876</FONT>      }<a name="line.876"></a>
+<FONT color="green">877</FONT>    <a name="line.877"></a>
+<FONT color="green">878</FONT>      /**<a name="line.878"></a>
+<FONT color="green">879</FONT>       * @param sb StringBuffer to be appended to<a name="line.879"></a>
+<FONT color="green">880</FONT>       * @param start Offset of first character in the range.<a name="line.880"></a>
+<FONT color="green">881</FONT>       * @param length Number of characters to send.<a name="line.881"></a>
+<FONT color="green">882</FONT>       * @return sb with the requested text appended to it<a name="line.882"></a>
+<FONT color="green">883</FONT>       */<a name="line.883"></a>
+<FONT color="green">884</FONT>      StringBuffer getString(StringBuffer sb, int start, int length)<a name="line.884"></a>
+<FONT color="green">885</FONT>      {<a name="line.885"></a>
+<FONT color="green">886</FONT>        return getString(sb, start &gt;&gt;&gt; m_chunkBits, start &amp; m_chunkMask, length);<a name="line.886"></a>
+<FONT color="green">887</FONT>      }<a name="line.887"></a>
+<FONT color="green">888</FONT>    <a name="line.888"></a>
+<FONT color="green">889</FONT>      /**<a name="line.889"></a>
+<FONT color="green">890</FONT>       * Internal support for toString() and getString().<a name="line.890"></a>
+<FONT color="green">891</FONT>       * PLEASE NOTE SIGNATURE CHANGE from earlier versions; it now appends into<a name="line.891"></a>
+<FONT color="green">892</FONT>       * and returns a StringBuffer supplied by the caller. This simplifies<a name="line.892"></a>
+<FONT color="green">893</FONT>       * m_innerFSB support.<a name="line.893"></a>
+<FONT color="green">894</FONT>       * &lt;p&gt;<a name="line.894"></a>
+<FONT color="green">895</FONT>       * Note that this operation has been somewhat deoptimized by the shift to a<a name="line.895"></a>
+<FONT color="green">896</FONT>       * chunked array, as there is no factory method to produce a String object<a name="line.896"></a>
+<FONT color="green">897</FONT>       * directly from an array of arrays and hence a double copy is needed.<a name="line.897"></a>
+<FONT color="green">898</FONT>       * By presetting length we hope to minimize the heap overhead of building<a name="line.898"></a>
+<FONT color="green">899</FONT>       * the intermediate StringBuffer.<a name="line.899"></a>
+<FONT color="green">900</FONT>       * &lt;p&gt;<a name="line.900"></a>
+<FONT color="green">901</FONT>       * (It really is a pity that Java didn't design String as a final subclass<a name="line.901"></a>
+<FONT color="green">902</FONT>       * of MutableString, rather than having StringBuffer be a separate hierarchy.<a name="line.902"></a>
+<FONT color="green">903</FONT>       * We'd avoid a &lt;strong&gt;lot&lt;/strong&gt; of double-buffering.)<a name="line.903"></a>
+<FONT color="green">904</FONT>       *<a name="line.904"></a>
+<FONT color="green">905</FONT>       *<a name="line.905"></a>
+<FONT color="green">906</FONT>       * @param sb<a name="line.906"></a>
+<FONT color="green">907</FONT>       * @param startChunk<a name="line.907"></a>
+<FONT color="green">908</FONT>       * @param startColumn<a name="line.908"></a>
+<FONT color="green">909</FONT>       * @param length<a name="line.909"></a>
+<FONT color="green">910</FONT>       * <a name="line.910"></a>
+<FONT color="green">911</FONT>       * @return the contents of the FastStringBuffer as a standard Java string.<a name="line.911"></a>
+<FONT color="green">912</FONT>       */<a name="line.912"></a>
+<FONT color="green">913</FONT>      StringBuffer getString(StringBuffer sb, int startChunk, int startColumn,<a name="line.913"></a>
+<FONT color="green">914</FONT>                             int length)<a name="line.914"></a>
+<FONT color="green">915</FONT>      {<a name="line.915"></a>
+<FONT color="green">916</FONT>    <a name="line.916"></a>
+<FONT color="green">917</FONT>        int stop = (startChunk &lt;&lt; m_chunkBits) + startColumn + length;<a name="line.917"></a>
+<FONT color="green">918</FONT>        int stopChunk = stop &gt;&gt;&gt; m_chunkBits;<a name="line.918"></a>
+<FONT color="green">919</FONT>        int stopColumn = stop &amp; m_chunkMask;<a name="line.919"></a>
+<FONT color="green">920</FONT>    <a name="line.920"></a>
+<FONT color="green">921</FONT>        // Factored out<a name="line.921"></a>
+<FONT color="green">922</FONT>        //StringBuffer sb=new StringBuffer(length);<a name="line.922"></a>
+<FONT color="green">923</FONT>        for (int i = startChunk; i &lt; stopChunk; ++i)<a name="line.923"></a>
+<FONT color="green">924</FONT>        {<a name="line.924"></a>
+<FONT color="green">925</FONT>          if (i == 0 &amp;&amp; m_innerFSB != null)<a name="line.925"></a>
+<FONT color="green">926</FONT>            m_innerFSB.getString(sb, startColumn, m_chunkSize - startColumn);<a name="line.926"></a>
+<FONT color="green">927</FONT>          else<a name="line.927"></a>
+<FONT color="green">928</FONT>            sb.append(m_array[i], startColumn, m_chunkSize - startColumn);<a name="line.928"></a>
+<FONT color="green">929</FONT>    <a name="line.929"></a>
+<FONT color="green">930</FONT>          startColumn = 0;  // after first chunk<a name="line.930"></a>
+<FONT color="green">931</FONT>        }<a name="line.931"></a>
+<FONT color="green">932</FONT>    <a name="line.932"></a>
+<FONT color="green">933</FONT>        if (stopChunk == 0 &amp;&amp; m_innerFSB != null)<a name="line.933"></a>
+<FONT color="green">934</FONT>          m_innerFSB.getString(sb, startColumn, stopColumn - startColumn);<a name="line.934"></a>
+<FONT color="green">935</FONT>        else if (stopColumn &gt; startColumn)<a name="line.935"></a>
+<FONT color="green">936</FONT>          sb.append(m_array[stopChunk], startColumn, stopColumn - startColumn);<a name="line.936"></a>
+<FONT color="green">937</FONT>    <a name="line.937"></a>
+<FONT color="green">938</FONT>        return sb;<a name="line.938"></a>
+<FONT color="green">939</FONT>      }<a name="line.939"></a>
+<FONT color="green">940</FONT>    <a name="line.940"></a>
+<FONT color="green">941</FONT>      /**<a name="line.941"></a>
+<FONT color="green">942</FONT>       * Get a single character from the string buffer.<a name="line.942"></a>
+<FONT color="green">943</FONT>       *<a name="line.943"></a>
+<FONT color="green">944</FONT>       *<a name="line.944"></a>
+<FONT color="green">945</FONT>       * @param pos character position requested.<a name="line.945"></a>
+<FONT color="green">946</FONT>       * @return A character from the requested position.<a name="line.946"></a>
+<FONT color="green">947</FONT>       */<a name="line.947"></a>
+<FONT color="green">948</FONT>      public char charAt(int pos)<a name="line.948"></a>
+<FONT color="green">949</FONT>      {<a name="line.949"></a>
+<FONT color="green">950</FONT>        int startChunk = pos &gt;&gt;&gt; m_chunkBits;<a name="line.950"></a>
+<FONT color="green">951</FONT>    <a name="line.951"></a>
+<FONT color="green">952</FONT>        if (startChunk == 0 &amp;&amp; m_innerFSB != null)<a name="line.952"></a>
+<FONT color="green">953</FONT>          return m_innerFSB.charAt(pos &amp; m_chunkMask);<a name="line.953"></a>
+<FONT color="green">954</FONT>        else<a name="line.954"></a>
+<FONT color="green">955</FONT>          return m_array[startChunk][pos &amp; m_chunkMask];<a name="line.955"></a>
+<FONT color="green">956</FONT>      }<a name="line.956"></a>
+<FONT color="green">957</FONT>    <a name="line.957"></a>
+<FONT color="green">958</FONT>      /**<a name="line.958"></a>
+<FONT color="green">959</FONT>       * Sends the specified range of characters as one or more SAX characters()<a name="line.959"></a>
+<FONT color="green">960</FONT>       * events.<a name="line.960"></a>
+<FONT color="green">961</FONT>       * Note that the buffer reference passed to the ContentHandler may be<a name="line.961"></a>
+<FONT color="green">962</FONT>       * invalidated if the FastStringBuffer is edited; it's the user's<a name="line.962"></a>
+<FONT color="green">963</FONT>       * responsibility to manage access to the FastStringBuffer to prevent this<a name="line.963"></a>
+<FONT color="green">964</FONT>       * problem from arising.<a name="line.964"></a>
+<FONT color="green">965</FONT>       * &lt;p&gt;<a name="line.965"></a>
+<FONT color="green">966</FONT>       * Note too that there is no promise that the output will be sent as a<a name="line.966"></a>
+<FONT color="green">967</FONT>       * single call. As is always true in SAX, one logical string may be split<a name="line.967"></a>
+<FONT color="green">968</FONT>       * across multiple blocks of memory and hence delivered as several<a name="line.968"></a>
+<FONT color="green">969</FONT>       * successive events.<a name="line.969"></a>
+<FONT color="green">970</FONT>       *<a name="line.970"></a>
+<FONT color="green">971</FONT>       * @param ch SAX ContentHandler object to receive the event.<a name="line.971"></a>
+<FONT color="green">972</FONT>       * @param start Offset of first character in the range.<a name="line.972"></a>
+<FONT color="green">973</FONT>       * @param length Number of characters to send.<a name="line.973"></a>
+<FONT color="green">974</FONT>       * @exception org.xml.sax.SAXException may be thrown by handler's<a name="line.974"></a>
+<FONT color="green">975</FONT>       * characters() method.<a name="line.975"></a>
+<FONT color="green">976</FONT>       */<a name="line.976"></a>
+<FONT color="green">977</FONT>      public void sendSAXcharacters(<a name="line.977"></a>
+<FONT color="green">978</FONT>              org.xml.sax.ContentHandler ch, int start, int length)<a name="line.978"></a>
+<FONT color="green">979</FONT>                throws org.xml.sax.SAXException<a name="line.979"></a>
+<FONT color="green">980</FONT>      {<a name="line.980"></a>
+<FONT color="green">981</FONT>    <a name="line.981"></a>
+<FONT color="green">982</FONT>        int startChunk = start &gt;&gt;&gt; m_chunkBits;<a name="line.982"></a>
+<FONT color="green">983</FONT>        int startColumn = start &amp; m_chunkMask;<a name="line.983"></a>
+<FONT color="green">984</FONT>        if (startColumn + length &lt; m_chunkMask &amp;&amp; m_innerFSB == null) {<a name="line.984"></a>
+<FONT color="green">985</FONT>            ch.characters(m_array[startChunk], startColumn, length);<a name="line.985"></a>
+<FONT color="green">986</FONT>            return;<a name="line.986"></a>
+<FONT color="green">987</FONT>        }<a name="line.987"></a>
+<FONT color="green">988</FONT>        <a name="line.988"></a>
+<FONT color="green">989</FONT>        int stop = start + length;<a name="line.989"></a>
+<FONT color="green">990</FONT>        int stopChunk = stop &gt;&gt;&gt; m_chunkBits;<a name="line.990"></a>
+<FONT color="green">991</FONT>        int stopColumn = stop &amp; m_chunkMask;<a name="line.991"></a>
+<FONT color="green">992</FONT>    <a name="line.992"></a>
+<FONT color="green">993</FONT>        for (int i = startChunk; i &lt; stopChunk; ++i)<a name="line.993"></a>
+<FONT color="green">994</FONT>        {<a name="line.994"></a>
+<FONT color="green">995</FONT>          if (i == 0 &amp;&amp; m_innerFSB != null)<a name="line.995"></a>
+<FONT color="green">996</FONT>            m_innerFSB.sendSAXcharacters(ch, startColumn,<a name="line.996"></a>
+<FONT color="green">997</FONT>                                         m_chunkSize - startColumn);<a name="line.997"></a>
+<FONT color="green">998</FONT>          else<a name="line.998"></a>
+<FONT color="green">999</FONT>            ch.characters(m_array[i], startColumn, m_chunkSize - startColumn);<a name="line.999"></a>
+<FONT color="green">1000</FONT>    <a name="line.1000"></a>
+<FONT color="green">1001</FONT>          startColumn = 0;  // after first chunk<a name="line.1001"></a>
+<FONT color="green">1002</FONT>        }<a name="line.1002"></a>
+<FONT color="green">1003</FONT>    <a name="line.1003"></a>
+<FONT color="green">1004</FONT>        // Last, or only, chunk<a name="line.1004"></a>
+<FONT color="green">1005</FONT>        if (stopChunk == 0 &amp;&amp; m_innerFSB != null)<a name="line.1005"></a>
+<FONT color="green">1006</FONT>          m_innerFSB.sendSAXcharacters(ch, startColumn, stopColumn - startColumn);<a name="line.1006"></a>
+<FONT color="green">1007</FONT>        else if (stopColumn &gt; startColumn)<a name="line.1007"></a>
+<FONT color="green">1008</FONT>        {<a name="line.1008"></a>
+<FONT color="green">1009</FONT>          ch.characters(m_array[stopChunk], startColumn,<a name="line.1009"></a>
+<FONT color="green">1010</FONT>                        stopColumn - startColumn);<a name="line.1010"></a>
+<FONT color="green">1011</FONT>        }<a name="line.1011"></a>
+<FONT color="green">1012</FONT>      }<a name="line.1012"></a>
+<FONT color="green">1013</FONT>      <a name="line.1013"></a>
+<FONT color="green">1014</FONT>      /**<a name="line.1014"></a>
+<FONT color="green">1015</FONT>       * Sends the specified range of characters as one or more SAX characters()<a name="line.1015"></a>
+<FONT color="green">1016</FONT>       * events, normalizing the characters according to XSLT rules.<a name="line.1016"></a>
+<FONT color="green">1017</FONT>       *<a name="line.1017"></a>
+<FONT color="green">1018</FONT>       * @param ch SAX ContentHandler object to receive the event.<a name="line.1018"></a>
+<FONT color="green">1019</FONT>       * @param start Offset of first character in the range.<a name="line.1019"></a>
+<FONT color="green">1020</FONT>       * @param length Number of characters to send.<a name="line.1020"></a>
+<FONT color="green">1021</FONT>       * @return normalization status to apply to next chunk (because we may<a name="line.1021"></a>
+<FONT color="green">1022</FONT>       * have been called recursively to process an inner FSB):<a name="line.1022"></a>
+<FONT color="green">1023</FONT>       * &lt;dl&gt;<a name="line.1023"></a>
+<FONT color="green">1024</FONT>       * &lt;dt&gt;0&lt;/dt&gt;<a name="line.1024"></a>
+<FONT color="green">1025</FONT>       * &lt;dd&gt;if this output did not end in retained whitespace, and thus whitespace<a name="line.1025"></a>
+<FONT color="green">1026</FONT>       * at the start of the following chunk (if any) should be converted to a<a name="line.1026"></a>
+<FONT color="green">1027</FONT>       * single space.<a name="line.1027"></a>
+<FONT color="green">1028</FONT>       * &lt;dt&gt;SUPPRESS_LEADING_WS&lt;/dt&gt;<a name="line.1028"></a>
+<FONT color="green">1029</FONT>       * &lt;dd&gt;if this output ended in retained whitespace, and thus whitespace<a name="line.1029"></a>
+<FONT color="green">1030</FONT>       * at the start of the following chunk (if any) should be completely<a name="line.1030"></a>
+<FONT color="green">1031</FONT>       * suppressed.&lt;/dd&gt;<a name="line.1031"></a>
+<FONT color="green">1032</FONT>       * &lt;/dd&gt;<a name="line.1032"></a>
+<FONT color="green">1033</FONT>       * &lt;/dl&gt;<a name="line.1033"></a>
+<FONT color="green">1034</FONT>       * @exception org.xml.sax.SAXException may be thrown by handler's<a name="line.1034"></a>
+<FONT color="green">1035</FONT>       * characters() method.<a name="line.1035"></a>
+<FONT color="green">1036</FONT>       */<a name="line.1036"></a>
+<FONT color="green">1037</FONT>      public int sendNormalizedSAXcharacters(<a name="line.1037"></a>
+<FONT color="green">1038</FONT>              org.xml.sax.ContentHandler ch, int start, int length)<a name="line.1038"></a>
+<FONT color="green">1039</FONT>                throws org.xml.sax.SAXException<a name="line.1039"></a>
+<FONT color="green">1040</FONT>      {<a name="line.1040"></a>
+<FONT color="green">1041</FONT>            // This call always starts at the beginning of the <a name="line.1041"></a>
+<FONT color="green">1042</FONT>        // string being written out, either because it was called directly or<a name="line.1042"></a>
+<FONT color="green">1043</FONT>        // because it was an m_innerFSB recursion. This is important since<a name="line.1043"></a>
+<FONT color="green">1044</FONT>            // it gives us a well-known initial state for this flag:<a name="line.1044"></a>
+<FONT color="green">1045</FONT>            int stateForNextChunk=SUPPRESS_LEADING_WS;<a name="line.1045"></a>
+<FONT color="green">1046</FONT>    <a name="line.1046"></a>
+<FONT color="green">1047</FONT>        int stop = start + length;<a name="line.1047"></a>
+<FONT color="green">1048</FONT>        int startChunk = start &gt;&gt;&gt; m_chunkBits;<a name="line.1048"></a>
+<FONT color="green">1049</FONT>        int startColumn = start &amp; m_chunkMask;<a name="line.1049"></a>
+<FONT color="green">1050</FONT>        int stopChunk = stop &gt;&gt;&gt; m_chunkBits;<a name="line.1050"></a>
+<FONT color="green">1051</FONT>        int stopColumn = stop &amp; m_chunkMask;<a name="line.1051"></a>
+<FONT color="green">1052</FONT>    <a name="line.1052"></a>
+<FONT color="green">1053</FONT>        for (int i = startChunk; i &lt; stopChunk; ++i)<a name="line.1053"></a>
+<FONT color="green">1054</FONT>        {<a name="line.1054"></a>
+<FONT color="green">1055</FONT>          if (i == 0 &amp;&amp; m_innerFSB != null)<a name="line.1055"></a>
+<FONT color="green">1056</FONT>                                    stateForNextChunk=<a name="line.1056"></a>
+<FONT color="green">1057</FONT>            m_innerFSB.sendNormalizedSAXcharacters(ch, startColumn,<a name="line.1057"></a>
+<FONT color="green">1058</FONT>                                         m_chunkSize - startColumn);<a name="line.1058"></a>
+<FONT color="green">1059</FONT>          else<a name="line.1059"></a>
+<FONT color="green">1060</FONT>                                    stateForNextChunk=<a name="line.1060"></a>
+<FONT color="green">1061</FONT>            sendNormalizedSAXcharacters(m_array[i], startColumn, <a name="line.1061"></a>
+<FONT color="green">1062</FONT>                                        m_chunkSize - startColumn, <a name="line.1062"></a>
+<FONT color="green">1063</FONT>                                                                                                                                                    ch,stateForNextChunk);<a name="line.1063"></a>
+<FONT color="green">1064</FONT>    <a name="line.1064"></a>
+<FONT color="green">1065</FONT>          startColumn = 0;  // after first chunk<a name="line.1065"></a>
+<FONT color="green">1066</FONT>        }<a name="line.1066"></a>
+<FONT color="green">1067</FONT>    <a name="line.1067"></a>
+<FONT color="green">1068</FONT>        // Last, or only, chunk<a name="line.1068"></a>
+<FONT color="green">1069</FONT>        if (stopChunk == 0 &amp;&amp; m_innerFSB != null)<a name="line.1069"></a>
+<FONT color="green">1070</FONT>                            stateForNextChunk= // %REVIEW% Is this update really needed?<a name="line.1070"></a>
+<FONT color="green">1071</FONT>          m_innerFSB.sendNormalizedSAXcharacters(ch, startColumn, stopColumn - startColumn);<a name="line.1071"></a>
+<FONT color="green">1072</FONT>        else if (stopColumn &gt; startColumn)<a name="line.1072"></a>
+<FONT color="green">1073</FONT>        {<a name="line.1073"></a>
+<FONT color="green">1074</FONT>                            stateForNextChunk= // %REVIEW% Is this update really needed?<a name="line.1074"></a>
+<FONT color="green">1075</FONT>          sendNormalizedSAXcharacters(m_array[stopChunk], <a name="line.1075"></a>
+<FONT color="green">1076</FONT>                                                                                                                                            startColumn, stopColumn - startColumn,<a name="line.1076"></a>
+<FONT color="green">1077</FONT>                                                                                                                                            ch, stateForNextChunk | SUPPRESS_TRAILING_WS);<a name="line.1077"></a>
+<FONT color="green">1078</FONT>        }<a name="line.1078"></a>
+<FONT color="green">1079</FONT>                    return stateForNextChunk;<a name="line.1079"></a>
+<FONT color="green">1080</FONT>      }<a name="line.1080"></a>
+<FONT color="green">1081</FONT>      <a name="line.1081"></a>
+<FONT color="green">1082</FONT>      static final char[] SINGLE_SPACE = {' '};<a name="line.1082"></a>
+<FONT color="green">1083</FONT>              <a name="line.1083"></a>
+<FONT color="green">1084</FONT>      /**<a name="line.1084"></a>
+<FONT color="green">1085</FONT>       * Internal method to directly normalize and dispatch the character array.<a name="line.1085"></a>
+<FONT color="green">1086</FONT>       * This version is aware of the fact that it may be called several times<a name="line.1086"></a>
+<FONT color="green">1087</FONT>       * in succession if the data is made up of multiple "chunks", and thus<a name="line.1087"></a>
+<FONT color="green">1088</FONT>       * must actively manage the handling of leading and trailing whitespace.<a name="line.1088"></a>
+<FONT color="green">1089</FONT>       * <a name="line.1089"></a>
+<FONT color="green">1090</FONT>       * Note: The recursion is due to the possible recursion of inner FSBs.<a name="line.1090"></a>
+<FONT color="green">1091</FONT>       *<a name="line.1091"></a>
+<FONT color="green">1092</FONT>       * @param ch The characters from the XML document.<a name="line.1092"></a>
+<FONT color="green">1093</FONT>       * @param start The start position in the array.<a name="line.1093"></a>
+<FONT color="green">1094</FONT>       * @param length The number of characters to read from the array.<a name="line.1094"></a>
+<FONT color="green">1095</FONT>       * @param handler SAX ContentHandler object to receive the event.<a name="line.1095"></a>
+<FONT color="green">1096</FONT>       * @param edgeTreatmentFlags How leading/trailing spaces should be handled. <a name="line.1096"></a>
+<FONT color="green">1097</FONT>       * This is a bitfield contining two flags, bitwise-ORed together:<a name="line.1097"></a>
+<FONT color="green">1098</FONT>       * &lt;dl&gt;<a name="line.1098"></a>
+<FONT color="green">1099</FONT>       * &lt;dt&gt;SUPPRESS_LEADING_WS&lt;/dt&gt;<a name="line.1099"></a>
+<FONT color="green">1100</FONT>       * &lt;dd&gt;When false, causes leading whitespace to be converted to a single<a name="line.1100"></a>
+<FONT color="green">1101</FONT>       * space; when true, causes it to be discarded entirely.<a name="line.1101"></a>
+<FONT color="green">1102</FONT>       * Should be set TRUE for the first chunk, and (in multi-chunk output)<a name="line.1102"></a>
+<FONT color="green">1103</FONT>       * whenever the previous chunk ended in retained whitespace.&lt;/dd&gt;<a name="line.1103"></a>
+<FONT color="green">1104</FONT>       * &lt;dt&gt;SUPPRESS_TRAILING_WS&lt;/dt&gt;<a name="line.1104"></a>
+<FONT color="green">1105</FONT>       * &lt;dd&gt;When false, causes trailing whitespace to be converted to a single<a name="line.1105"></a>
+<FONT color="green">1106</FONT>       * space; when true, causes it to be discarded entirely.<a name="line.1106"></a>
+<FONT color="green">1107</FONT>       * Should be set TRUE for the last or only chunk.<a name="line.1107"></a>
+<FONT color="green">1108</FONT>       * &lt;/dd&gt;<a name="line.1108"></a>
+<FONT color="green">1109</FONT>       * &lt;/dl&gt;<a name="line.1109"></a>
+<FONT color="green">1110</FONT>       * @return normalization status, as in the edgeTreatmentFlags parameter:<a name="line.1110"></a>
+<FONT color="green">1111</FONT>       * &lt;dl&gt;<a name="line.1111"></a>
+<FONT color="green">1112</FONT>       * &lt;dt&gt;0&lt;/dt&gt;<a name="line.1112"></a>
+<FONT color="green">1113</FONT>       * &lt;dd&gt;if this output did not end in retained whitespace, and thus whitespace<a name="line.1113"></a>
+<FONT color="green">1114</FONT>       * at the start of the following chunk (if any) should be converted to a<a name="line.1114"></a>
+<FONT color="green">1115</FONT>       * single space.<a name="line.1115"></a>
+<FONT color="green">1116</FONT>       * &lt;dt&gt;SUPPRESS_LEADING_WS&lt;/dt&gt;<a name="line.1116"></a>
+<FONT color="green">1117</FONT>       * &lt;dd&gt;if this output ended in retained whitespace, and thus whitespace<a name="line.1117"></a>
+<FONT color="green">1118</FONT>       * at the start of the following chunk (if any) should be completely<a name="line.1118"></a>
+<FONT color="green">1119</FONT>       * suppressed.&lt;/dd&gt;<a name="line.1119"></a>
+<FONT color="green">1120</FONT>       * &lt;/dd&gt;<a name="line.1120"></a>
+<FONT color="green">1121</FONT>       * &lt;/dl&gt;<a name="line.1121"></a>
+<FONT color="green">1122</FONT>       *<a name="line.1122"></a>
+<FONT color="green">1123</FONT>       * <a name="line.1123"></a>
+<FONT color="green">1124</FONT>       * @exception org.xml.sax.SAXException Any SAX exception, possibly<a name="line.1124"></a>
+<FONT color="green">1125</FONT>       *            wrapping another exception.<a name="line.1125"></a>
+<FONT color="green">1126</FONT>       */<a name="line.1126"></a>
+<FONT color="green">1127</FONT>      static int sendNormalizedSAXcharacters(char ch[], <a name="line.1127"></a>
+<FONT color="green">1128</FONT>                 int start, int length, <a name="line.1128"></a>
+<FONT color="green">1129</FONT>                 org.xml.sax.ContentHandler handler,<a name="line.1129"></a>
+<FONT color="green">1130</FONT>                                                     int edgeTreatmentFlags)<a name="line.1130"></a>
+<FONT color="green">1131</FONT>              throws org.xml.sax.SAXException<a name="line.1131"></a>
+<FONT color="green">1132</FONT>      {<a name="line.1132"></a>
+<FONT color="green">1133</FONT>         boolean processingLeadingWhitespace =<a name="line.1133"></a>
+<FONT color="green">1134</FONT>                           ((edgeTreatmentFlags &amp; SUPPRESS_LEADING_WS) != 0);<a name="line.1134"></a>
+<FONT color="green">1135</FONT>         boolean seenWhitespace = ((edgeTreatmentFlags &amp; CARRY_WS) != 0);<a name="line.1135"></a>
+<FONT color="green">1136</FONT>         int currPos = start;<a name="line.1136"></a>
+<FONT color="green">1137</FONT>         int limit = start+length;<a name="line.1137"></a>
+<FONT color="green">1138</FONT>    <a name="line.1138"></a>
+<FONT color="green">1139</FONT>         // Strip any leading spaces first, if required<a name="line.1139"></a>
+<FONT color="green">1140</FONT>         if (processingLeadingWhitespace) {<a name="line.1140"></a>
+<FONT color="green">1141</FONT>             for (; currPos &lt; limit<a name="line.1141"></a>
+<FONT color="green">1142</FONT>                    &amp;&amp; XMLCharacterRecognizer.isWhiteSpace(ch[currPos]);<a name="line.1142"></a>
+<FONT color="green">1143</FONT>                  currPos++) { }<a name="line.1143"></a>
+<FONT color="green">1144</FONT>    <a name="line.1144"></a>
+<FONT color="green">1145</FONT>             // If we've only encountered leading spaces, the<a name="line.1145"></a>
+<FONT color="green">1146</FONT>             // current state remains unchanged<a name="line.1146"></a>
+<FONT color="green">1147</FONT>             if (currPos == limit) {<a name="line.1147"></a>
+<FONT color="green">1148</FONT>                 return edgeTreatmentFlags;<a name="line.1148"></a>
+<FONT color="green">1149</FONT>             }<a name="line.1149"></a>
+<FONT color="green">1150</FONT>         }<a name="line.1150"></a>
+<FONT color="green">1151</FONT>    <a name="line.1151"></a>
+<FONT color="green">1152</FONT>         // If we get here, there are no more leading spaces to strip<a name="line.1152"></a>
+<FONT color="green">1153</FONT>         while (currPos &lt; limit) {<a name="line.1153"></a>
+<FONT color="green">1154</FONT>             int startNonWhitespace = currPos;<a name="line.1154"></a>
+<FONT color="green">1155</FONT>    <a name="line.1155"></a>
+<FONT color="green">1156</FONT>             // Grab a chunk of non-whitespace characters<a name="line.1156"></a>
+<FONT color="green">1157</FONT>             for (; currPos &lt; limit<a name="line.1157"></a>
+<FONT color="green">1158</FONT>                    &amp;&amp; !XMLCharacterRecognizer.isWhiteSpace(ch[currPos]);<a name="line.1158"></a>
+<FONT color="green">1159</FONT>                  currPos++) { }<a name="line.1159"></a>
+<FONT color="green">1160</FONT>    <a name="line.1160"></a>
+<FONT color="green">1161</FONT>             // Non-whitespace seen - emit them, along with a single<a name="line.1161"></a>
+<FONT color="green">1162</FONT>             // space for any preceding whitespace characters<a name="line.1162"></a>
+<FONT color="green">1163</FONT>             if (startNonWhitespace != currPos) {<a name="line.1163"></a>
+<FONT color="green">1164</FONT>                 if (seenWhitespace) {<a name="line.1164"></a>
+<FONT color="green">1165</FONT>                     handler.characters(SINGLE_SPACE, 0, 1);<a name="line.1165"></a>
+<FONT color="green">1166</FONT>                     seenWhitespace = false;<a name="line.1166"></a>
+<FONT color="green">1167</FONT>                 }<a name="line.1167"></a>
+<FONT color="green">1168</FONT>                 handler.characters(ch, startNonWhitespace,<a name="line.1168"></a>
+<FONT color="green">1169</FONT>                                    currPos - startNonWhitespace);<a name="line.1169"></a>
+<FONT color="green">1170</FONT>             }<a name="line.1170"></a>
+<FONT color="green">1171</FONT>    <a name="line.1171"></a>
+<FONT color="green">1172</FONT>             int startWhitespace = currPos;<a name="line.1172"></a>
+<FONT color="green">1173</FONT>    <a name="line.1173"></a>
+<FONT color="green">1174</FONT>             // Consume any whitespace characters<a name="line.1174"></a>
+<FONT color="green">1175</FONT>             for (; currPos &lt; limit<a name="line.1175"></a>
+<FONT color="green">1176</FONT>                    &amp;&amp; XMLCharacterRecognizer.isWhiteSpace(ch[currPos]);<a name="line.1176"></a>
+<FONT color="green">1177</FONT>                  currPos++) { }<a name="line.1177"></a>
+<FONT color="green">1178</FONT>    <a name="line.1178"></a>
+<FONT color="green">1179</FONT>             if (startWhitespace != currPos) {<a name="line.1179"></a>
+<FONT color="green">1180</FONT>                 seenWhitespace = true;<a name="line.1180"></a>
+<FONT color="green">1181</FONT>             }<a name="line.1181"></a>
+<FONT color="green">1182</FONT>         }<a name="line.1182"></a>
+<FONT color="green">1183</FONT>    <a name="line.1183"></a>
+<FONT color="green">1184</FONT>         return (seenWhitespace ? CARRY_WS : 0)<a name="line.1184"></a>
+<FONT color="green">1185</FONT>                | (edgeTreatmentFlags &amp; SUPPRESS_TRAILING_WS);<a name="line.1185"></a>
+<FONT color="green">1186</FONT>      }<a name="line.1186"></a>
+<FONT color="green">1187</FONT>    <a name="line.1187"></a>
+<FONT color="green">1188</FONT>      /**<a name="line.1188"></a>
+<FONT color="green">1189</FONT>       * Directly normalize and dispatch the character array.<a name="line.1189"></a>
+<FONT color="green">1190</FONT>       *<a name="line.1190"></a>
+<FONT color="green">1191</FONT>       * @param ch The characters from the XML document.<a name="line.1191"></a>
+<FONT color="green">1192</FONT>       * @param start The start position in the array.<a name="line.1192"></a>
+<FONT color="green">1193</FONT>       * @param length The number of characters to read from the array.<a name="line.1193"></a>
+<FONT color="green">1194</FONT>       * @param handler SAX ContentHandler object to receive the event.<a name="line.1194"></a>
+<FONT color="green">1195</FONT>       * @exception org.xml.sax.SAXException Any SAX exception, possibly<a name="line.1195"></a>
+<FONT color="green">1196</FONT>       *            wrapping another exception.<a name="line.1196"></a>
+<FONT color="green">1197</FONT>       */<a name="line.1197"></a>
+<FONT color="green">1198</FONT>      public static void sendNormalizedSAXcharacters(char ch[], <a name="line.1198"></a>
+<FONT color="green">1199</FONT>                 int start, int length, <a name="line.1199"></a>
+<FONT color="green">1200</FONT>                 org.xml.sax.ContentHandler handler)<a name="line.1200"></a>
+<FONT color="green">1201</FONT>              throws org.xml.sax.SAXException<a name="line.1201"></a>
+<FONT color="green">1202</FONT>      {<a name="line.1202"></a>
+<FONT color="green">1203</FONT>                    sendNormalizedSAXcharacters(ch, start, length, <a name="line.1203"></a>
+<FONT color="green">1204</FONT>                 handler, SUPPRESS_BOTH);<a name="line.1204"></a>
+<FONT color="green">1205</FONT>            }<a name="line.1205"></a>
+<FONT color="green">1206</FONT>                    <a name="line.1206"></a>
+<FONT color="green">1207</FONT>            /**<a name="line.1207"></a>
+<FONT color="green">1208</FONT>       * Sends the specified range of characters as sax Comment.<a name="line.1208"></a>
+<FONT color="green">1209</FONT>       * &lt;p&gt;<a name="line.1209"></a>
+<FONT color="green">1210</FONT>       * Note that, unlike sendSAXcharacters, this has to be done as a single <a name="line.1210"></a>
+<FONT color="green">1211</FONT>       * call to LexicalHandler#comment.<a name="line.1211"></a>
+<FONT color="green">1212</FONT>       *<a name="line.1212"></a>
+<FONT color="green">1213</FONT>       * @param ch SAX LexicalHandler object to receive the event.<a name="line.1213"></a>
+<FONT color="green">1214</FONT>       * @param start Offset of first character in the range.<a name="line.1214"></a>
+<FONT color="green">1215</FONT>       * @param length Number of characters to send.<a name="line.1215"></a>
+<FONT color="green">1216</FONT>       * @exception org.xml.sax.SAXException may be thrown by handler's<a name="line.1216"></a>
+<FONT color="green">1217</FONT>       * characters() method.<a name="line.1217"></a>
+<FONT color="green">1218</FONT>       */<a name="line.1218"></a>
+<FONT color="green">1219</FONT>      public void sendSAXComment(<a name="line.1219"></a>
+<FONT color="green">1220</FONT>              org.xml.sax.ext.LexicalHandler ch, int start, int length)<a name="line.1220"></a>
+<FONT color="green">1221</FONT>                throws org.xml.sax.SAXException<a name="line.1221"></a>
+<FONT color="green">1222</FONT>      {<a name="line.1222"></a>
+<FONT color="green">1223</FONT>    <a name="line.1223"></a>
+<FONT color="green">1224</FONT>        // %OPT% Do it this way for now...<a name="line.1224"></a>
+<FONT color="green">1225</FONT>        String comment = getString(start, length);<a name="line.1225"></a>
+<FONT color="green">1226</FONT>        ch.comment(comment.toCharArray(), 0, length);<a name="line.1226"></a>
+<FONT color="green">1227</FONT>      }<a name="line.1227"></a>
+<FONT color="green">1228</FONT>    <a name="line.1228"></a>
+<FONT color="green">1229</FONT>      /**<a name="line.1229"></a>
+<FONT color="green">1230</FONT>       * Copies characters from this string into the destination character<a name="line.1230"></a>
+<FONT color="green">1231</FONT>       * array.<a name="line.1231"></a>
+<FONT color="green">1232</FONT>       *<a name="line.1232"></a>
+<FONT color="green">1233</FONT>       * @param      srcBegin   index of the first character in the string<a name="line.1233"></a>
+<FONT color="green">1234</FONT>       *                        to copy.<a name="line.1234"></a>
+<FONT color="green">1235</FONT>       * @param      srcEnd     index after the last character in the string<a name="line.1235"></a>
+<FONT color="green">1236</FONT>       *                        to copy.<a name="line.1236"></a>
+<FONT color="green">1237</FONT>       * @param      dst        the destination array.<a name="line.1237"></a>
+<FONT color="green">1238</FONT>       * @param      dstBegin   the start offset in the destination array.<a name="line.1238"></a>
+<FONT color="green">1239</FONT>       * @exception IndexOutOfBoundsException If any of the following<a name="line.1239"></a>
+<FONT color="green">1240</FONT>       *            is true:<a name="line.1240"></a>
+<FONT color="green">1241</FONT>       *            &lt;ul&gt;&lt;li&gt;&lt;code&gt;srcBegin&lt;/code&gt; is negative.<a name="line.1241"></a>
+<FONT color="green">1242</FONT>       *            &lt;li&gt;&lt;code&gt;srcBegin&lt;/code&gt; is greater than &lt;code&gt;srcEnd&lt;/code&gt;<a name="line.1242"></a>
+<FONT color="green">1243</FONT>       *            &lt;li&gt;&lt;code&gt;srcEnd&lt;/code&gt; is greater than the length of this<a name="line.1243"></a>
+<FONT color="green">1244</FONT>       *                string<a name="line.1244"></a>
+<FONT color="green">1245</FONT>       *            &lt;li&gt;&lt;code&gt;dstBegin&lt;/code&gt; is negative<a name="line.1245"></a>
+<FONT color="green">1246</FONT>       *            &lt;li&gt;&lt;code&gt;dstBegin+(srcEnd-srcBegin)&lt;/code&gt; is larger than<a name="line.1246"></a>
+<FONT color="green">1247</FONT>       *                &lt;code&gt;dst.length&lt;/code&gt;&lt;/ul&gt;<a name="line.1247"></a>
+<FONT color="green">1248</FONT>       * @exception NullPointerException if &lt;code&gt;dst&lt;/code&gt; is &lt;code&gt;null&lt;/code&gt;<a name="line.1248"></a>
+<FONT color="green">1249</FONT>       */<a name="line.1249"></a>
+<FONT color="green">1250</FONT>      private void getChars(int srcBegin, int srcEnd, char dst[], int dstBegin)<a name="line.1250"></a>
+<FONT color="green">1251</FONT>      {<a name="line.1251"></a>
+<FONT color="green">1252</FONT>        // %TBD% Joe needs to write this function.  Make public when implemented.<a name="line.1252"></a>
+<FONT color="green">1253</FONT>      }<a name="line.1253"></a>
+<FONT color="green">1254</FONT>    <a name="line.1254"></a>
+<FONT color="green">1255</FONT>      /**<a name="line.1255"></a>
+<FONT color="green">1256</FONT>       * Encapsulation c'tor. After this is called, the source FastStringBuffer<a name="line.1256"></a>
+<FONT color="green">1257</FONT>       * will be reset to use the new object as its m_innerFSB, and will have<a name="line.1257"></a>
+<FONT color="green">1258</FONT>       * had its chunk size reset appropriately. IT SHOULD NEVER BE CALLED<a name="line.1258"></a>
+<FONT color="green">1259</FONT>       * EXCEPT WHEN source.length()==1&lt;&lt;(source.m_chunkBits+source.m_rebundleBits)<a name="line.1259"></a>
+<FONT color="green">1260</FONT>       *<a name="line.1260"></a>
+<FONT color="green">1261</FONT>       * NEEDSDOC @param source<a name="line.1261"></a>
+<FONT color="green">1262</FONT>       */<a name="line.1262"></a>
+<FONT color="green">1263</FONT>      private FastStringBuffer(FastStringBuffer source)<a name="line.1263"></a>
+<FONT color="green">1264</FONT>      {<a name="line.1264"></a>
+<FONT color="green">1265</FONT>    <a name="line.1265"></a>
+<FONT color="green">1266</FONT>        // Copy existing information into new encapsulation<a name="line.1266"></a>
+<FONT color="green">1267</FONT>        m_chunkBits = source.m_chunkBits;<a name="line.1267"></a>
+<FONT color="green">1268</FONT>        m_maxChunkBits = source.m_maxChunkBits;<a name="line.1268"></a>
+<FONT color="green">1269</FONT>        m_rebundleBits = source.m_rebundleBits;<a name="line.1269"></a>
+<FONT color="green">1270</FONT>        m_chunkSize = source.m_chunkSize;<a name="line.1270"></a>
+<FONT color="green">1271</FONT>        m_chunkMask = source.m_chunkMask;<a name="line.1271"></a>
+<FONT color="green">1272</FONT>        m_array = source.m_array;<a name="line.1272"></a>
+<FONT color="green">1273</FONT>        m_innerFSB = source.m_innerFSB;<a name="line.1273"></a>
+<FONT color="green">1274</FONT>    <a name="line.1274"></a>
+<FONT color="green">1275</FONT>        // These have to be adjusted because we're calling just at the time<a name="line.1275"></a>
+<FONT color="green">1276</FONT>        // when we would be about to allocate another chunk<a name="line.1276"></a>
+<FONT color="green">1277</FONT>        m_lastChunk = source.m_lastChunk - 1;<a name="line.1277"></a>
+<FONT color="green">1278</FONT>        m_firstFree = source.m_chunkSize;<a name="line.1278"></a>
+<FONT color="green">1279</FONT>    <a name="line.1279"></a>
+<FONT color="green">1280</FONT>        // Establish capsule as the Inner FSB, reset chunk sizes/addressing<a name="line.1280"></a>
+<FONT color="green">1281</FONT>        source.m_array = new char[16][];<a name="line.1281"></a>
+<FONT color="green">1282</FONT>        source.m_innerFSB = this;<a name="line.1282"></a>
+<FONT color="green">1283</FONT>    <a name="line.1283"></a>
+<FONT color="green">1284</FONT>        // Since we encapsulated just as we were about to append another<a name="line.1284"></a>
+<FONT color="green">1285</FONT>        // chunk, return ready to create the chunk after the innerFSB<a name="line.1285"></a>
+<FONT color="green">1286</FONT>        // -- 1, not 0.<a name="line.1286"></a>
+<FONT color="green">1287</FONT>        source.m_lastChunk = 1;<a name="line.1287"></a>
+<FONT color="green">1288</FONT>        source.m_firstFree = 0;<a name="line.1288"></a>
+<FONT color="green">1289</FONT>        source.m_chunkBits += m_rebundleBits;<a name="line.1289"></a>
+<FONT color="green">1290</FONT>        source.m_chunkSize = 1 &lt;&lt; (source.m_chunkBits);<a name="line.1290"></a>
+<FONT color="green">1291</FONT>        source.m_chunkMask = source.m_chunkSize - 1;<a name="line.1291"></a>
+<FONT color="green">1292</FONT>      }<a name="line.1292"></a>
+<FONT color="green">1293</FONT>    }<a name="line.1293"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

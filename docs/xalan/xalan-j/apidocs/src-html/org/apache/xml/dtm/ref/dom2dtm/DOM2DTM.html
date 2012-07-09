@@ -1,0 +1,1832 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: DOM2DTM.java 478671 2006-11-23 21:00:31Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    package org.apache.xml.dtm.ref.dom2dtm;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    import java.util.Vector;<a name="line.23"></a>
+<FONT color="green">024</FONT>    <a name="line.24"></a>
+<FONT color="green">025</FONT>    import javax.xml.transform.SourceLocator;<a name="line.25"></a>
+<FONT color="green">026</FONT>    import javax.xml.transform.dom.DOMSource;<a name="line.26"></a>
+<FONT color="green">027</FONT>    <a name="line.27"></a>
+<FONT color="green">028</FONT>    import org.apache.xml.dtm.DTM;<a name="line.28"></a>
+<FONT color="green">029</FONT>    import org.apache.xml.dtm.DTMManager;<a name="line.29"></a>
+<FONT color="green">030</FONT>    import org.apache.xml.dtm.DTMWSFilter;<a name="line.30"></a>
+<FONT color="green">031</FONT>    import org.apache.xml.dtm.ref.DTMDefaultBaseIterators;<a name="line.31"></a>
+<FONT color="green">032</FONT>    import org.apache.xml.dtm.ref.DTMManagerDefault;<a name="line.32"></a>
+<FONT color="green">033</FONT>    import org.apache.xml.dtm.ref.ExpandedNameTable;<a name="line.33"></a>
+<FONT color="green">034</FONT>    import org.apache.xml.dtm.ref.IncrementalSAXSource;<a name="line.34"></a>
+<FONT color="green">035</FONT>    import org.apache.xml.res.XMLErrorResources;<a name="line.35"></a>
+<FONT color="green">036</FONT>    import org.apache.xml.res.XMLMessages;<a name="line.36"></a>
+<FONT color="green">037</FONT>    import org.apache.xml.utils.FastStringBuffer;<a name="line.37"></a>
+<FONT color="green">038</FONT>    import org.apache.xml.utils.QName;<a name="line.38"></a>
+<FONT color="green">039</FONT>    import org.apache.xml.utils.StringBufferPool;<a name="line.39"></a>
+<FONT color="green">040</FONT>    import org.apache.xml.utils.TreeWalker;<a name="line.40"></a>
+<FONT color="green">041</FONT>    import org.apache.xml.utils.XMLCharacterRecognizer;<a name="line.41"></a>
+<FONT color="green">042</FONT>    import org.apache.xml.utils.XMLString;<a name="line.42"></a>
+<FONT color="green">043</FONT>    import org.apache.xml.utils.XMLStringFactory;<a name="line.43"></a>
+<FONT color="green">044</FONT>    import org.w3c.dom.Attr;<a name="line.44"></a>
+<FONT color="green">045</FONT>    import org.w3c.dom.Document;<a name="line.45"></a>
+<FONT color="green">046</FONT>    import org.w3c.dom.DocumentType;<a name="line.46"></a>
+<FONT color="green">047</FONT>    import org.w3c.dom.Element;<a name="line.47"></a>
+<FONT color="green">048</FONT>    import org.w3c.dom.Entity;<a name="line.48"></a>
+<FONT color="green">049</FONT>    import org.w3c.dom.NamedNodeMap;<a name="line.49"></a>
+<FONT color="green">050</FONT>    import org.w3c.dom.Node;<a name="line.50"></a>
+<FONT color="green">051</FONT>    import org.xml.sax.ContentHandler;<a name="line.51"></a>
+<FONT color="green">052</FONT>    <a name="line.52"></a>
+<FONT color="green">053</FONT>    /** The &lt;code&gt;DOM2DTM&lt;/code&gt; class serves up a DOM's contents via the<a name="line.53"></a>
+<FONT color="green">054</FONT>     * DTM API.<a name="line.54"></a>
+<FONT color="green">055</FONT>     *<a name="line.55"></a>
+<FONT color="green">056</FONT>     * Note that it doesn't necessarily represent a full Document<a name="line.56"></a>
+<FONT color="green">057</FONT>     * tree. You can wrap a DOM2DTM around a specific node and its subtree<a name="line.57"></a>
+<FONT color="green">058</FONT>     * and the right things should happen. (I don't _think_ we currently<a name="line.58"></a>
+<FONT color="green">059</FONT>     * support DocumentFrgment nodes as roots, though that might be worth<a name="line.59"></a>
+<FONT color="green">060</FONT>     * considering.)<a name="line.60"></a>
+<FONT color="green">061</FONT>     *<a name="line.61"></a>
+<FONT color="green">062</FONT>     * Note too that we do not currently attempt to track document<a name="line.62"></a>
+<FONT color="green">063</FONT>     * mutation. If you alter the DOM after wrapping DOM2DTM around it,<a name="line.63"></a>
+<FONT color="green">064</FONT>     * all bets are off.<a name="line.64"></a>
+<FONT color="green">065</FONT>     * */<a name="line.65"></a>
+<FONT color="green">066</FONT>    public class DOM2DTM extends DTMDefaultBaseIterators<a name="line.66"></a>
+<FONT color="green">067</FONT>    {<a name="line.67"></a>
+<FONT color="green">068</FONT>      static final boolean JJK_DEBUG=false;<a name="line.68"></a>
+<FONT color="green">069</FONT>      static final boolean JJK_NEWCODE=true;<a name="line.69"></a>
+<FONT color="green">070</FONT>      <a name="line.70"></a>
+<FONT color="green">071</FONT>      /** Manefest constant<a name="line.71"></a>
+<FONT color="green">072</FONT>       */<a name="line.72"></a>
+<FONT color="green">073</FONT>      static final String NAMESPACE_DECL_NS="http://www.w3.org/XML/1998/namespace";<a name="line.73"></a>
+<FONT color="green">074</FONT>      <a name="line.74"></a>
+<FONT color="green">075</FONT>      /** The current position in the DOM tree. Last node examined for<a name="line.75"></a>
+<FONT color="green">076</FONT>       * possible copying to DTM. */<a name="line.76"></a>
+<FONT color="green">077</FONT>      transient private Node m_pos;<a name="line.77"></a>
+<FONT color="green">078</FONT>      /** The current position in the DTM tree. Who children get appended to. */<a name="line.78"></a>
+<FONT color="green">079</FONT>      private int m_last_parent=0;<a name="line.79"></a>
+<FONT color="green">080</FONT>      /** The current position in the DTM tree. Who children reference as their <a name="line.80"></a>
+<FONT color="green">081</FONT>       * previous sib. */<a name="line.81"></a>
+<FONT color="green">082</FONT>      private int m_last_kid=NULL;<a name="line.82"></a>
+<FONT color="green">083</FONT>    <a name="line.83"></a>
+<FONT color="green">084</FONT>      /** The top of the subtree.<a name="line.84"></a>
+<FONT color="green">085</FONT>       * %REVIEW%: 'may not be the same as m_context if "//foo" pattern.'<a name="line.85"></a>
+<FONT color="green">086</FONT>       * */<a name="line.86"></a>
+<FONT color="green">087</FONT>      transient private Node m_root;<a name="line.87"></a>
+<FONT color="green">088</FONT>    <a name="line.88"></a>
+<FONT color="green">089</FONT>      /** True iff the first element has been processed. This is used to control<a name="line.89"></a>
+<FONT color="green">090</FONT>          synthesis of the implied xml: namespace declaration node. */<a name="line.90"></a>
+<FONT color="green">091</FONT>      boolean m_processedFirstElement=false;<a name="line.91"></a>
+<FONT color="green">092</FONT>            <a name="line.92"></a>
+<FONT color="green">093</FONT>      /** true if ALL the nodes in the m_root subtree have been processed;<a name="line.93"></a>
+<FONT color="green">094</FONT>       * false if our incremental build has not yet finished scanning the<a name="line.94"></a>
+<FONT color="green">095</FONT>       * DOM tree.  */<a name="line.95"></a>
+<FONT color="green">096</FONT>      transient private boolean m_nodesAreProcessed;<a name="line.96"></a>
+<FONT color="green">097</FONT>    <a name="line.97"></a>
+<FONT color="green">098</FONT>      /** The node objects.  The instance part of the handle indexes<a name="line.98"></a>
+<FONT color="green">099</FONT>       * directly into this vector.  Each DTM node may actually be<a name="line.99"></a>
+<FONT color="green">100</FONT>       * composed of several DOM nodes (for example, if logically-adjacent<a name="line.100"></a>
+<FONT color="green">101</FONT>       * Text/CDATASection nodes in the DOM have been coalesced into a<a name="line.101"></a>
+<FONT color="green">102</FONT>       * single DTM Text node); this table points only to the first in<a name="line.102"></a>
+<FONT color="green">103</FONT>       * that sequence. */<a name="line.103"></a>
+<FONT color="green">104</FONT>      protected Vector m_nodes = new Vector();<a name="line.104"></a>
+<FONT color="green">105</FONT>    <a name="line.105"></a>
+<FONT color="green">106</FONT>      /**<a name="line.106"></a>
+<FONT color="green">107</FONT>       * Construct a DOM2DTM object from a DOM node.<a name="line.107"></a>
+<FONT color="green">108</FONT>       *<a name="line.108"></a>
+<FONT color="green">109</FONT>       * @param mgr The DTMManager who owns this DTM.<a name="line.109"></a>
+<FONT color="green">110</FONT>       * @param domSource the DOM source that this DTM will wrap.<a name="line.110"></a>
+<FONT color="green">111</FONT>       * @param dtmIdentity The DTM identity ID for this DTM.<a name="line.111"></a>
+<FONT color="green">112</FONT>       * @param whiteSpaceFilter The white space filter for this DTM, which may <a name="line.112"></a>
+<FONT color="green">113</FONT>       *                         be null.<a name="line.113"></a>
+<FONT color="green">114</FONT>       * @param xstringfactory XMLString factory for creating character content.<a name="line.114"></a>
+<FONT color="green">115</FONT>       * @param doIndexing true if the caller considers it worth it to use <a name="line.115"></a>
+<FONT color="green">116</FONT>       *                   indexing schemes.<a name="line.116"></a>
+<FONT color="green">117</FONT>       */<a name="line.117"></a>
+<FONT color="green">118</FONT>      public DOM2DTM(DTMManager mgr, DOMSource domSource, <a name="line.118"></a>
+<FONT color="green">119</FONT>                     int dtmIdentity, DTMWSFilter whiteSpaceFilter,<a name="line.119"></a>
+<FONT color="green">120</FONT>                     XMLStringFactory xstringfactory,<a name="line.120"></a>
+<FONT color="green">121</FONT>                     boolean doIndexing)<a name="line.121"></a>
+<FONT color="green">122</FONT>      {<a name="line.122"></a>
+<FONT color="green">123</FONT>        super(mgr, domSource, dtmIdentity, whiteSpaceFilter, <a name="line.123"></a>
+<FONT color="green">124</FONT>              xstringfactory, doIndexing);<a name="line.124"></a>
+<FONT color="green">125</FONT>    <a name="line.125"></a>
+<FONT color="green">126</FONT>        // Initialize DOM navigation<a name="line.126"></a>
+<FONT color="green">127</FONT>        m_pos=m_root = domSource.getNode();<a name="line.127"></a>
+<FONT color="green">128</FONT>        // Initialize DTM navigation<a name="line.128"></a>
+<FONT color="green">129</FONT>        m_last_parent=m_last_kid=NULL;<a name="line.129"></a>
+<FONT color="green">130</FONT>        m_last_kid=addNode(m_root, m_last_parent,m_last_kid, NULL);<a name="line.130"></a>
+<FONT color="green">131</FONT>    <a name="line.131"></a>
+<FONT color="green">132</FONT>        // Apparently the domSource root may not actually be the<a name="line.132"></a>
+<FONT color="green">133</FONT>        // Document node. If it's an Element node, we need to immediately<a name="line.133"></a>
+<FONT color="green">134</FONT>        // add its attributes. Adapted from nextNode().<a name="line.134"></a>
+<FONT color="green">135</FONT>        // %REVIEW% Move this logic into addNode and recurse? Cleaner!<a name="line.135"></a>
+<FONT color="green">136</FONT>        //<a name="line.136"></a>
+<FONT color="green">137</FONT>        // (If it's an EntityReference node, we're probably in <a name="line.137"></a>
+<FONT color="green">138</FONT>        // seriously bad trouble. For now<a name="line.138"></a>
+<FONT color="green">139</FONT>        // I'm just hoping nobody is ever quite that foolish... %REVIEW%)<a name="line.139"></a>
+<FONT color="green">140</FONT>                    //<a name="line.140"></a>
+<FONT color="green">141</FONT>                    // %ISSUE% What about inherited namespaces in this case?<a name="line.141"></a>
+<FONT color="green">142</FONT>                    // Do we need to special-case initialize them into the DTM model?<a name="line.142"></a>
+<FONT color="green">143</FONT>        if(ELEMENT_NODE == m_root.getNodeType())<a name="line.143"></a>
+<FONT color="green">144</FONT>        {<a name="line.144"></a>
+<FONT color="green">145</FONT>          NamedNodeMap attrs=m_root.getAttributes();<a name="line.145"></a>
+<FONT color="green">146</FONT>          int attrsize=(attrs==null) ? 0 : attrs.getLength();<a name="line.146"></a>
+<FONT color="green">147</FONT>          if(attrsize&gt;0)<a name="line.147"></a>
+<FONT color="green">148</FONT>          {<a name="line.148"></a>
+<FONT color="green">149</FONT>            int attrIndex=NULL; // start with no previous sib<a name="line.149"></a>
+<FONT color="green">150</FONT>            for(int i=0;i&lt;attrsize;++i)<a name="line.150"></a>
+<FONT color="green">151</FONT>            {<a name="line.151"></a>
+<FONT color="green">152</FONT>              // No need to force nodetype in this case;<a name="line.152"></a>
+<FONT color="green">153</FONT>              // addNode() will take care of switching it from<a name="line.153"></a>
+<FONT color="green">154</FONT>              // Attr to Namespace if necessary.<a name="line.154"></a>
+<FONT color="green">155</FONT>              attrIndex=addNode(attrs.item(i),0,attrIndex,NULL);<a name="line.155"></a>
+<FONT color="green">156</FONT>              m_firstch.setElementAt(DTM.NULL,attrIndex);<a name="line.156"></a>
+<FONT color="green">157</FONT>            }<a name="line.157"></a>
+<FONT color="green">158</FONT>            // Terminate list of attrs, and make sure they aren't<a name="line.158"></a>
+<FONT color="green">159</FONT>            // considered children of the element<a name="line.159"></a>
+<FONT color="green">160</FONT>            m_nextsib.setElementAt(DTM.NULL,attrIndex);<a name="line.160"></a>
+<FONT color="green">161</FONT>    <a name="line.161"></a>
+<FONT color="green">162</FONT>            // IMPORTANT: This does NOT change m_last_parent or m_last_kid!<a name="line.162"></a>
+<FONT color="green">163</FONT>          } // if attrs exist<a name="line.163"></a>
+<FONT color="green">164</FONT>        } //if(ELEMENT_NODE)<a name="line.164"></a>
+<FONT color="green">165</FONT>    <a name="line.165"></a>
+<FONT color="green">166</FONT>        // Initialize DTM-completed status <a name="line.166"></a>
+<FONT color="green">167</FONT>        m_nodesAreProcessed = false;<a name="line.167"></a>
+<FONT color="green">168</FONT>      }<a name="line.168"></a>
+<FONT color="green">169</FONT>    <a name="line.169"></a>
+<FONT color="green">170</FONT>      /**<a name="line.170"></a>
+<FONT color="green">171</FONT>       * Construct the node map from the node.<a name="line.171"></a>
+<FONT color="green">172</FONT>       *<a name="line.172"></a>
+<FONT color="green">173</FONT>       * @param node The node that is to be added to the DTM.<a name="line.173"></a>
+<FONT color="green">174</FONT>       * @param parentIndex The current parent index.<a name="line.174"></a>
+<FONT color="green">175</FONT>       * @param previousSibling The previous sibling index.<a name="line.175"></a>
+<FONT color="green">176</FONT>       * @param forceNodeType If not DTM.NULL, overrides the DOM node type.<a name="line.176"></a>
+<FONT color="green">177</FONT>       *    Used to force nodes to Text rather than CDATASection when their<a name="line.177"></a>
+<FONT color="green">178</FONT>       *    coalesced value includes ordinary Text nodes (current DTM behavior).<a name="line.178"></a>
+<FONT color="green">179</FONT>       *<a name="line.179"></a>
+<FONT color="green">180</FONT>       * @return The index identity of the node that was added.<a name="line.180"></a>
+<FONT color="green">181</FONT>       */<a name="line.181"></a>
+<FONT color="green">182</FONT>      protected int addNode(Node node, int parentIndex,<a name="line.182"></a>
+<FONT color="green">183</FONT>                            int previousSibling, int forceNodeType)<a name="line.183"></a>
+<FONT color="green">184</FONT>      {<a name="line.184"></a>
+<FONT color="green">185</FONT>        int nodeIndex = m_nodes.size();<a name="line.185"></a>
+<FONT color="green">186</FONT>    <a name="line.186"></a>
+<FONT color="green">187</FONT>        // Have we overflowed a DTM Identity's addressing range?<a name="line.187"></a>
+<FONT color="green">188</FONT>        if(m_dtmIdent.size() == (nodeIndex&gt;&gt;&gt;DTMManager.IDENT_DTM_NODE_BITS))<a name="line.188"></a>
+<FONT color="green">189</FONT>        {<a name="line.189"></a>
+<FONT color="green">190</FONT>          try<a name="line.190"></a>
+<FONT color="green">191</FONT>          {<a name="line.191"></a>
+<FONT color="green">192</FONT>            if(m_mgr==null)<a name="line.192"></a>
+<FONT color="green">193</FONT>              throw new ClassCastException();<a name="line.193"></a>
+<FONT color="green">194</FONT>                                    <a name="line.194"></a>
+<FONT color="green">195</FONT>                                    // Handle as Extended Addressing<a name="line.195"></a>
+<FONT color="green">196</FONT>            DTMManagerDefault mgrD=(DTMManagerDefault)m_mgr;<a name="line.196"></a>
+<FONT color="green">197</FONT>            int id=mgrD.getFirstFreeDTMID();<a name="line.197"></a>
+<FONT color="green">198</FONT>            mgrD.addDTM(this,id,nodeIndex);<a name="line.198"></a>
+<FONT color="green">199</FONT>            m_dtmIdent.addElement(id&lt;&lt;DTMManager.IDENT_DTM_NODE_BITS);<a name="line.199"></a>
+<FONT color="green">200</FONT>          }<a name="line.200"></a>
+<FONT color="green">201</FONT>          catch(ClassCastException e)<a name="line.201"></a>
+<FONT color="green">202</FONT>          {<a name="line.202"></a>
+<FONT color="green">203</FONT>            // %REVIEW% Wrong error message, but I've been told we're trying<a name="line.203"></a>
+<FONT color="green">204</FONT>            // not to add messages right not for I18N reasons.<a name="line.204"></a>
+<FONT color="green">205</FONT>            // %REVIEW% Should this be a Fatal Error?<a name="line.205"></a>
+<FONT color="green">206</FONT>            error(XMLMessages.createXMLMessage(XMLErrorResources.ER_NO_DTMIDS_AVAIL, null));//"No more DTM IDs are available";<a name="line.206"></a>
+<FONT color="green">207</FONT>          }<a name="line.207"></a>
+<FONT color="green">208</FONT>        }<a name="line.208"></a>
+<FONT color="green">209</FONT>    <a name="line.209"></a>
+<FONT color="green">210</FONT>        m_size++;<a name="line.210"></a>
+<FONT color="green">211</FONT>        // ensureSize(nodeIndex);<a name="line.211"></a>
+<FONT color="green">212</FONT>        <a name="line.212"></a>
+<FONT color="green">213</FONT>        int type;<a name="line.213"></a>
+<FONT color="green">214</FONT>        if(NULL==forceNodeType)<a name="line.214"></a>
+<FONT color="green">215</FONT>            type = node.getNodeType();<a name="line.215"></a>
+<FONT color="green">216</FONT>        else<a name="line.216"></a>
+<FONT color="green">217</FONT>            type=forceNodeType;<a name="line.217"></a>
+<FONT color="green">218</FONT>            <a name="line.218"></a>
+<FONT color="green">219</FONT>        // %REVIEW% The Namespace Spec currently says that Namespaces are<a name="line.219"></a>
+<FONT color="green">220</FONT>        // processed in a non-namespace-aware manner, by matching the<a name="line.220"></a>
+<FONT color="green">221</FONT>        // QName, even though there is in fact a namespace assigned to<a name="line.221"></a>
+<FONT color="green">222</FONT>        // these nodes in the DOM. If and when that changes, we will have<a name="line.222"></a>
+<FONT color="green">223</FONT>        // to consider whether we check the namespace-for-namespaces<a name="line.223"></a>
+<FONT color="green">224</FONT>        // rather than the node name.<a name="line.224"></a>
+<FONT color="green">225</FONT>        //<a name="line.225"></a>
+<FONT color="green">226</FONT>        // %TBD% Note that the DOM does not necessarily explicitly declare<a name="line.226"></a>
+<FONT color="green">227</FONT>        // all the namespaces it uses. DOM Level 3 will introduce a<a name="line.227"></a>
+<FONT color="green">228</FONT>        // namespace-normalization operation which reconciles that, and we<a name="line.228"></a>
+<FONT color="green">229</FONT>        // can request that users invoke it or otherwise ensure that the<a name="line.229"></a>
+<FONT color="green">230</FONT>        // tree is namespace-well-formed before passing the DOM to Xalan.<a name="line.230"></a>
+<FONT color="green">231</FONT>        // But if they don't, what should we do about it? We probably<a name="line.231"></a>
+<FONT color="green">232</FONT>        // don't want to alter the source DOM (and may not be able to do<a name="line.232"></a>
+<FONT color="green">233</FONT>        // so if it's read-only). The best available answer might be to<a name="line.233"></a>
+<FONT color="green">234</FONT>        // synthesize additional DTM Namespace Nodes that don't correspond<a name="line.234"></a>
+<FONT color="green">235</FONT>        // to DOM Attr Nodes.<a name="line.235"></a>
+<FONT color="green">236</FONT>        if (Node.ATTRIBUTE_NODE == type)<a name="line.236"></a>
+<FONT color="green">237</FONT>        {<a name="line.237"></a>
+<FONT color="green">238</FONT>          String name = node.getNodeName();<a name="line.238"></a>
+<FONT color="green">239</FONT>    <a name="line.239"></a>
+<FONT color="green">240</FONT>          if (name.startsWith("xmlns:") || name.equals("xmlns"))<a name="line.240"></a>
+<FONT color="green">241</FONT>          {<a name="line.241"></a>
+<FONT color="green">242</FONT>            type = DTM.NAMESPACE_NODE;<a name="line.242"></a>
+<FONT color="green">243</FONT>          }<a name="line.243"></a>
+<FONT color="green">244</FONT>        }<a name="line.244"></a>
+<FONT color="green">245</FONT>        <a name="line.245"></a>
+<FONT color="green">246</FONT>        m_nodes.addElement(node);<a name="line.246"></a>
+<FONT color="green">247</FONT>        <a name="line.247"></a>
+<FONT color="green">248</FONT>        m_firstch.setElementAt(NOTPROCESSED,nodeIndex);<a name="line.248"></a>
+<FONT color="green">249</FONT>        m_nextsib.setElementAt(NOTPROCESSED,nodeIndex);<a name="line.249"></a>
+<FONT color="green">250</FONT>        m_prevsib.setElementAt(previousSibling,nodeIndex);<a name="line.250"></a>
+<FONT color="green">251</FONT>        m_parent.setElementAt(parentIndex,nodeIndex);<a name="line.251"></a>
+<FONT color="green">252</FONT>        <a name="line.252"></a>
+<FONT color="green">253</FONT>        if(DTM.NULL != parentIndex &amp;&amp; <a name="line.253"></a>
+<FONT color="green">254</FONT>           type != DTM.ATTRIBUTE_NODE &amp;&amp; <a name="line.254"></a>
+<FONT color="green">255</FONT>           type != DTM.NAMESPACE_NODE)<a name="line.255"></a>
+<FONT color="green">256</FONT>        {<a name="line.256"></a>
+<FONT color="green">257</FONT>          // If the DTM parent had no children, this becomes its first child.<a name="line.257"></a>
+<FONT color="green">258</FONT>          if(NOTPROCESSED == m_firstch.elementAt(parentIndex))<a name="line.258"></a>
+<FONT color="green">259</FONT>            m_firstch.setElementAt(nodeIndex,parentIndex);<a name="line.259"></a>
+<FONT color="green">260</FONT>        }<a name="line.260"></a>
+<FONT color="green">261</FONT>        <a name="line.261"></a>
+<FONT color="green">262</FONT>        String nsURI = node.getNamespaceURI();<a name="line.262"></a>
+<FONT color="green">263</FONT>    <a name="line.263"></a>
+<FONT color="green">264</FONT>        // Deal with the difference between Namespace spec and XSLT<a name="line.264"></a>
+<FONT color="green">265</FONT>        // definitions of local name. (The former says PIs don't have<a name="line.265"></a>
+<FONT color="green">266</FONT>        // localnames; the latter says they do.)<a name="line.266"></a>
+<FONT color="green">267</FONT>        String localName =  (type == Node.PROCESSING_INSTRUCTION_NODE) ? <a name="line.267"></a>
+<FONT color="green">268</FONT>                             node.getNodeName() :<a name="line.268"></a>
+<FONT color="green">269</FONT>                             node.getLocalName();<a name="line.269"></a>
+<FONT color="green">270</FONT>                             <a name="line.270"></a>
+<FONT color="green">271</FONT>        // Hack to make DOM1 sort of work...<a name="line.271"></a>
+<FONT color="green">272</FONT>        if(((type == Node.ELEMENT_NODE) || (type == Node.ATTRIBUTE_NODE)) <a name="line.272"></a>
+<FONT color="green">273</FONT>            &amp;&amp; null == localName)<a name="line.273"></a>
+<FONT color="green">274</FONT>          localName = node.getNodeName(); // -sb<a name="line.274"></a>
+<FONT color="green">275</FONT>          <a name="line.275"></a>
+<FONT color="green">276</FONT>        ExpandedNameTable exnt = m_expandedNameTable;<a name="line.276"></a>
+<FONT color="green">277</FONT>    <a name="line.277"></a>
+<FONT color="green">278</FONT>        // %TBD% Nodes created with the old non-namespace-aware DOM<a name="line.278"></a>
+<FONT color="green">279</FONT>        // calls createElement() and createAttribute() will never have a<a name="line.279"></a>
+<FONT color="green">280</FONT>        // localname. That will cause their expandedNameID to be just the<a name="line.280"></a>
+<FONT color="green">281</FONT>        // nodeType... which will keep them from being matched<a name="line.281"></a>
+<FONT color="green">282</FONT>        // successfully by name. Since the DOM makes no promise that<a name="line.282"></a>
+<FONT color="green">283</FONT>        // those will participate in namespace processing, this is<a name="line.283"></a>
+<FONT color="green">284</FONT>        // officially accepted as Not Our Fault. But it might be nice to<a name="line.284"></a>
+<FONT color="green">285</FONT>        // issue a diagnostic message!<a name="line.285"></a>
+<FONT color="green">286</FONT>        if(node.getLocalName()==null &amp;&amp;<a name="line.286"></a>
+<FONT color="green">287</FONT>           (type==Node.ELEMENT_NODE || type==Node.ATTRIBUTE_NODE))<a name="line.287"></a>
+<FONT color="green">288</FONT>          {<a name="line.288"></a>
+<FONT color="green">289</FONT>            // warning("DOM 'level 1' node "+node.getNodeName()+" won't be mapped properly in DOM2DTM.");<a name="line.289"></a>
+<FONT color="green">290</FONT>          }<a name="line.290"></a>
+<FONT color="green">291</FONT>        <a name="line.291"></a>
+<FONT color="green">292</FONT>        int expandedNameID = (null != localName) <a name="line.292"></a>
+<FONT color="green">293</FONT>           ? exnt.getExpandedTypeID(nsURI, localName, type) :<a name="line.293"></a>
+<FONT color="green">294</FONT>             exnt.getExpandedTypeID(type);<a name="line.294"></a>
+<FONT color="green">295</FONT>    <a name="line.295"></a>
+<FONT color="green">296</FONT>        m_exptype.setElementAt(expandedNameID,nodeIndex);<a name="line.296"></a>
+<FONT color="green">297</FONT>        <a name="line.297"></a>
+<FONT color="green">298</FONT>        indexNode(expandedNameID, nodeIndex);<a name="line.298"></a>
+<FONT color="green">299</FONT>    <a name="line.299"></a>
+<FONT color="green">300</FONT>        if (DTM.NULL != previousSibling)<a name="line.300"></a>
+<FONT color="green">301</FONT>          m_nextsib.setElementAt(nodeIndex,previousSibling);<a name="line.301"></a>
+<FONT color="green">302</FONT>    <a name="line.302"></a>
+<FONT color="green">303</FONT>        // This should be done after m_exptype has been set, and probably should<a name="line.303"></a>
+<FONT color="green">304</FONT>        // always be the last thing we do<a name="line.304"></a>
+<FONT color="green">305</FONT>        if (type == DTM.NAMESPACE_NODE)<a name="line.305"></a>
+<FONT color="green">306</FONT>            declareNamespaceInContext(parentIndex,nodeIndex);<a name="line.306"></a>
+<FONT color="green">307</FONT>    <a name="line.307"></a>
+<FONT color="green">308</FONT>        return nodeIndex;<a name="line.308"></a>
+<FONT color="green">309</FONT>      }<a name="line.309"></a>
+<FONT color="green">310</FONT>      <a name="line.310"></a>
+<FONT color="green">311</FONT>      /**<a name="line.311"></a>
+<FONT color="green">312</FONT>       * Get the number of nodes that have been added.<a name="line.312"></a>
+<FONT color="green">313</FONT>       */<a name="line.313"></a>
+<FONT color="green">314</FONT>      public int getNumberOfNodes()<a name="line.314"></a>
+<FONT color="green">315</FONT>      {<a name="line.315"></a>
+<FONT color="green">316</FONT>        return m_nodes.size();<a name="line.316"></a>
+<FONT color="green">317</FONT>      }<a name="line.317"></a>
+<FONT color="green">318</FONT>      <a name="line.318"></a>
+<FONT color="green">319</FONT>     /**<a name="line.319"></a>
+<FONT color="green">320</FONT>       * This method iterates to the next node that will be added to the table.<a name="line.320"></a>
+<FONT color="green">321</FONT>       * Each call to this method adds a new node to the table, unless the end<a name="line.321"></a>
+<FONT color="green">322</FONT>       * is reached, in which case it returns null.<a name="line.322"></a>
+<FONT color="green">323</FONT>       *<a name="line.323"></a>
+<FONT color="green">324</FONT>       * @return The true if a next node is found or false if <a name="line.324"></a>
+<FONT color="green">325</FONT>       *         there are no more nodes.<a name="line.325"></a>
+<FONT color="green">326</FONT>       */<a name="line.326"></a>
+<FONT color="green">327</FONT>      protected boolean nextNode()<a name="line.327"></a>
+<FONT color="green">328</FONT>      {<a name="line.328"></a>
+<FONT color="green">329</FONT>        // Non-recursive one-fetch-at-a-time depth-first traversal with <a name="line.329"></a>
+<FONT color="green">330</FONT>        // attribute/namespace nodes and white-space stripping.<a name="line.330"></a>
+<FONT color="green">331</FONT>        // Navigating the DOM is simple, navigating the DTM is simple;<a name="line.331"></a>
+<FONT color="green">332</FONT>        // keeping track of both at once is a trifle baroque but at least<a name="line.332"></a>
+<FONT color="green">333</FONT>        // we've avoided most of the special cases.<a name="line.333"></a>
+<FONT color="green">334</FONT>        if (m_nodesAreProcessed)<a name="line.334"></a>
+<FONT color="green">335</FONT>          return false;<a name="line.335"></a>
+<FONT color="green">336</FONT>            <a name="line.336"></a>
+<FONT color="green">337</FONT>        // %REVIEW% Is this local copy Really Useful from a performance<a name="line.337"></a>
+<FONT color="green">338</FONT>        // point of view?  Or is this a false microoptimization?<a name="line.338"></a>
+<FONT color="green">339</FONT>        Node pos=m_pos; <a name="line.339"></a>
+<FONT color="green">340</FONT>        Node next=null;<a name="line.340"></a>
+<FONT color="green">341</FONT>        int nexttype=NULL;<a name="line.341"></a>
+<FONT color="green">342</FONT>    <a name="line.342"></a>
+<FONT color="green">343</FONT>        // Navigate DOM tree<a name="line.343"></a>
+<FONT color="green">344</FONT>        do<a name="line.344"></a>
+<FONT color="green">345</FONT>          {<a name="line.345"></a>
+<FONT color="green">346</FONT>            // Look down to first child.<a name="line.346"></a>
+<FONT color="green">347</FONT>            if (pos.hasChildNodes()) <a name="line.347"></a>
+<FONT color="green">348</FONT>              {<a name="line.348"></a>
+<FONT color="green">349</FONT>                next = pos.getFirstChild();<a name="line.349"></a>
+<FONT color="green">350</FONT>    <a name="line.350"></a>
+<FONT color="green">351</FONT>                // %REVIEW% There's probably a more elegant way to skip<a name="line.351"></a>
+<FONT color="green">352</FONT>                // the doctype. (Just let it go and Suppress it?<a name="line.352"></a>
+<FONT color="green">353</FONT>                if(next!=null &amp;&amp; DOCUMENT_TYPE_NODE==next.getNodeType())<a name="line.353"></a>
+<FONT color="green">354</FONT>                  next=next.getNextSibling();<a name="line.354"></a>
+<FONT color="green">355</FONT>    <a name="line.355"></a>
+<FONT color="green">356</FONT>                // Push DTM context -- except for children of Entity References, <a name="line.356"></a>
+<FONT color="green">357</FONT>                // which have no DTM equivalent and cause no DTM navigation.<a name="line.357"></a>
+<FONT color="green">358</FONT>                if(ENTITY_REFERENCE_NODE!=pos.getNodeType())<a name="line.358"></a>
+<FONT color="green">359</FONT>                  {<a name="line.359"></a>
+<FONT color="green">360</FONT>                    m_last_parent=m_last_kid;<a name="line.360"></a>
+<FONT color="green">361</FONT>                    m_last_kid=NULL;<a name="line.361"></a>
+<FONT color="green">362</FONT>                    // Whitespace-handler context stacking<a name="line.362"></a>
+<FONT color="green">363</FONT>                    if(null != m_wsfilter)<a name="line.363"></a>
+<FONT color="green">364</FONT>                    {<a name="line.364"></a>
+<FONT color="green">365</FONT>                      short wsv =<a name="line.365"></a>
+<FONT color="green">366</FONT>                        m_wsfilter.getShouldStripSpace(makeNodeHandle(m_last_parent),this);<a name="line.366"></a>
+<FONT color="green">367</FONT>                      boolean shouldStrip = (DTMWSFilter.INHERIT == wsv) <a name="line.367"></a>
+<FONT color="green">368</FONT>                        ? getShouldStripWhitespace() <a name="line.368"></a>
+<FONT color="green">369</FONT>                        : (DTMWSFilter.STRIP == wsv);<a name="line.369"></a>
+<FONT color="green">370</FONT>                      pushShouldStripWhitespace(shouldStrip);<a name="line.370"></a>
+<FONT color="green">371</FONT>                    } // if(m_wsfilter)<a name="line.371"></a>
+<FONT color="green">372</FONT>                  }<a name="line.372"></a>
+<FONT color="green">373</FONT>              }<a name="line.373"></a>
+<FONT color="green">374</FONT>    <a name="line.374"></a>
+<FONT color="green">375</FONT>            // If that fails, look up and right (but not past root!)<a name="line.375"></a>
+<FONT color="green">376</FONT>            else <a name="line.376"></a>
+<FONT color="green">377</FONT>              {<a name="line.377"></a>
+<FONT color="green">378</FONT>                if(m_last_kid!=NULL)<a name="line.378"></a>
+<FONT color="green">379</FONT>                  {<a name="line.379"></a>
+<FONT color="green">380</FONT>                    // Last node posted at this level had no more children<a name="line.380"></a>
+<FONT color="green">381</FONT>                    // If it has _no_ children, we need to record that.<a name="line.381"></a>
+<FONT color="green">382</FONT>                    if(m_firstch.elementAt(m_last_kid)==NOTPROCESSED)<a name="line.382"></a>
+<FONT color="green">383</FONT>                      m_firstch.setElementAt(NULL,m_last_kid);<a name="line.383"></a>
+<FONT color="green">384</FONT>                  }<a name="line.384"></a>
+<FONT color="green">385</FONT>                            <a name="line.385"></a>
+<FONT color="green">386</FONT>                while(m_last_parent != NULL)<a name="line.386"></a>
+<FONT color="green">387</FONT>                  {<a name="line.387"></a>
+<FONT color="green">388</FONT>                    // %REVIEW% There's probably a more elegant way to<a name="line.388"></a>
+<FONT color="green">389</FONT>                    // skip the doctype. (Just let it go and Suppress it?<a name="line.389"></a>
+<FONT color="green">390</FONT>                    next = pos.getNextSibling();<a name="line.390"></a>
+<FONT color="green">391</FONT>                    if(next!=null &amp;&amp; DOCUMENT_TYPE_NODE==next.getNodeType())<a name="line.391"></a>
+<FONT color="green">392</FONT>                      next=next.getNextSibling();<a name="line.392"></a>
+<FONT color="green">393</FONT>    <a name="line.393"></a>
+<FONT color="green">394</FONT>                    if(next!=null)<a name="line.394"></a>
+<FONT color="green">395</FONT>                      break; // Found it!<a name="line.395"></a>
+<FONT color="green">396</FONT>                    <a name="line.396"></a>
+<FONT color="green">397</FONT>                    // No next-sibling found. Pop the DOM.<a name="line.397"></a>
+<FONT color="green">398</FONT>                    pos=pos.getParentNode();<a name="line.398"></a>
+<FONT color="green">399</FONT>                    if(pos==null)<a name="line.399"></a>
+<FONT color="green">400</FONT>                      {<a name="line.400"></a>
+<FONT color="green">401</FONT>                        // %TBD% Should never arise, but I want to be sure of that...<a name="line.401"></a>
+<FONT color="green">402</FONT>                        if(JJK_DEBUG)<a name="line.402"></a>
+<FONT color="green">403</FONT>                          {<a name="line.403"></a>
+<FONT color="green">404</FONT>                            System.out.println("***** DOM2DTM Pop Control Flow problem");<a name="line.404"></a>
+<FONT color="green">405</FONT>                            for(;;); // Freeze right here!<a name="line.405"></a>
+<FONT color="green">406</FONT>                          }<a name="line.406"></a>
+<FONT color="green">407</FONT>                      }<a name="line.407"></a>
+<FONT color="green">408</FONT>                    <a name="line.408"></a>
+<FONT color="green">409</FONT>                    // The only parents in the DTM are Elements.  However,<a name="line.409"></a>
+<FONT color="green">410</FONT>                    // the DOM could contain EntityReferences.  If we<a name="line.410"></a>
+<FONT color="green">411</FONT>                    // encounter one, pop it _without_ popping DTM.<a name="line.411"></a>
+<FONT color="green">412</FONT>                    if(pos!=null &amp;&amp; ENTITY_REFERENCE_NODE == pos.getNodeType())<a name="line.412"></a>
+<FONT color="green">413</FONT>                      {<a name="line.413"></a>
+<FONT color="green">414</FONT>                        // Nothing needs doing<a name="line.414"></a>
+<FONT color="green">415</FONT>                        if(JJK_DEBUG)<a name="line.415"></a>
+<FONT color="green">416</FONT>                          System.out.println("***** DOM2DTM popping EntRef");<a name="line.416"></a>
+<FONT color="green">417</FONT>                      }<a name="line.417"></a>
+<FONT color="green">418</FONT>                    else<a name="line.418"></a>
+<FONT color="green">419</FONT>                      {<a name="line.419"></a>
+<FONT color="green">420</FONT>                        popShouldStripWhitespace();<a name="line.420"></a>
+<FONT color="green">421</FONT>                        // Fix and pop DTM<a name="line.421"></a>
+<FONT color="green">422</FONT>                        if(m_last_kid==NULL)<a name="line.422"></a>
+<FONT color="green">423</FONT>                          m_firstch.setElementAt(NULL,m_last_parent); // Popping from an element<a name="line.423"></a>
+<FONT color="green">424</FONT>                        else<a name="line.424"></a>
+<FONT color="green">425</FONT>                          m_nextsib.setElementAt(NULL,m_last_kid); // Popping from anything else<a name="line.425"></a>
+<FONT color="green">426</FONT>                        m_last_parent=m_parent.elementAt(m_last_kid=m_last_parent);<a name="line.426"></a>
+<FONT color="green">427</FONT>                      }<a name="line.427"></a>
+<FONT color="green">428</FONT>                  }<a name="line.428"></a>
+<FONT color="green">429</FONT>                if(m_last_parent==NULL)<a name="line.429"></a>
+<FONT color="green">430</FONT>                  next=null;<a name="line.430"></a>
+<FONT color="green">431</FONT>              }<a name="line.431"></a>
+<FONT color="green">432</FONT>                    <a name="line.432"></a>
+<FONT color="green">433</FONT>            if(next!=null)<a name="line.433"></a>
+<FONT color="green">434</FONT>              nexttype=next.getNodeType();<a name="line.434"></a>
+<FONT color="green">435</FONT>                    <a name="line.435"></a>
+<FONT color="green">436</FONT>            // If it's an entity ref, advance past it.<a name="line.436"></a>
+<FONT color="green">437</FONT>            //<a name="line.437"></a>
+<FONT color="green">438</FONT>            // %REVIEW% Should we let this out the door and just suppress it?<a name="line.438"></a>
+<FONT color="green">439</FONT>            // More work, but simpler code, more likely to be correct, and<a name="line.439"></a>
+<FONT color="green">440</FONT>            // it doesn't happen very often. We'd get rid of the loop too.<a name="line.440"></a>
+<FONT color="green">441</FONT>            if (ENTITY_REFERENCE_NODE == nexttype)<a name="line.441"></a>
+<FONT color="green">442</FONT>              pos=next;<a name="line.442"></a>
+<FONT color="green">443</FONT>          }<a name="line.443"></a>
+<FONT color="green">444</FONT>        while (ENTITY_REFERENCE_NODE == nexttype); <a name="line.444"></a>
+<FONT color="green">445</FONT>            <a name="line.445"></a>
+<FONT color="green">446</FONT>        // Did we run out of the tree?<a name="line.446"></a>
+<FONT color="green">447</FONT>        if(next==null)<a name="line.447"></a>
+<FONT color="green">448</FONT>          {<a name="line.448"></a>
+<FONT color="green">449</FONT>            m_nextsib.setElementAt(NULL,0);<a name="line.449"></a>
+<FONT color="green">450</FONT>            m_nodesAreProcessed = true;<a name="line.450"></a>
+<FONT color="green">451</FONT>            m_pos=null;<a name="line.451"></a>
+<FONT color="green">452</FONT>                    <a name="line.452"></a>
+<FONT color="green">453</FONT>            if(JJK_DEBUG)<a name="line.453"></a>
+<FONT color="green">454</FONT>              {<a name="line.454"></a>
+<FONT color="green">455</FONT>                System.out.println("***** DOM2DTM Crosscheck:");<a name="line.455"></a>
+<FONT color="green">456</FONT>                for(int i=0;i&lt;m_nodes.size();++i)<a name="line.456"></a>
+<FONT color="green">457</FONT>                  System.out.println(i+":\t"+m_firstch.elementAt(i)+"\t"+m_nextsib.elementAt(i));<a name="line.457"></a>
+<FONT color="green">458</FONT>              }<a name="line.458"></a>
+<FONT color="green">459</FONT>                    <a name="line.459"></a>
+<FONT color="green">460</FONT>            return false;<a name="line.460"></a>
+<FONT color="green">461</FONT>          }<a name="line.461"></a>
+<FONT color="green">462</FONT>    <a name="line.462"></a>
+<FONT color="green">463</FONT>        // Text needs some special handling:<a name="line.463"></a>
+<FONT color="green">464</FONT>        //<a name="line.464"></a>
+<FONT color="green">465</FONT>        // DTM may skip whitespace. This is handled by the suppressNode flag, which<a name="line.465"></a>
+<FONT color="green">466</FONT>        // when true will keep the DTM node from being created.<a name="line.466"></a>
+<FONT color="green">467</FONT>        //<a name="line.467"></a>
+<FONT color="green">468</FONT>        // DTM only directly records the first DOM node of any logically-contiguous<a name="line.468"></a>
+<FONT color="green">469</FONT>        // sequence. The lastTextNode value will be set to the last node in the <a name="line.469"></a>
+<FONT color="green">470</FONT>        // contiguous sequence, and -- AFTER the DTM addNode -- can be used to <a name="line.470"></a>
+<FONT color="green">471</FONT>        // advance next over this whole block. Should be simpler than special-casing<a name="line.471"></a>
+<FONT color="green">472</FONT>        // the above loop for "Was the logically-preceeding sibling a text node".<a name="line.472"></a>
+<FONT color="green">473</FONT>        // <a name="line.473"></a>
+<FONT color="green">474</FONT>        // Finally, a DTM node should be considered a CDATASection only if all the<a name="line.474"></a>
+<FONT color="green">475</FONT>        // contiguous text it covers is CDATASections. The first Text should<a name="line.475"></a>
+<FONT color="green">476</FONT>        // force DTM to Text.<a name="line.476"></a>
+<FONT color="green">477</FONT>            <a name="line.477"></a>
+<FONT color="green">478</FONT>        boolean suppressNode=false;<a name="line.478"></a>
+<FONT color="green">479</FONT>        Node lastTextNode=null;<a name="line.479"></a>
+<FONT color="green">480</FONT>    <a name="line.480"></a>
+<FONT color="green">481</FONT>        nexttype=next.getNodeType();<a name="line.481"></a>
+<FONT color="green">482</FONT>            <a name="line.482"></a>
+<FONT color="green">483</FONT>        // nexttype=pos.getNodeType();<a name="line.483"></a>
+<FONT color="green">484</FONT>        if(TEXT_NODE == nexttype || CDATA_SECTION_NODE == nexttype)<a name="line.484"></a>
+<FONT color="green">485</FONT>          {<a name="line.485"></a>
+<FONT color="green">486</FONT>            // If filtering, initially assume we're going to suppress the node<a name="line.486"></a>
+<FONT color="green">487</FONT>            suppressNode=((null != m_wsfilter) &amp;&amp; getShouldStripWhitespace());<a name="line.487"></a>
+<FONT color="green">488</FONT>    <a name="line.488"></a>
+<FONT color="green">489</FONT>            // Scan logically contiguous text (siblings, plus "flattening"<a name="line.489"></a>
+<FONT color="green">490</FONT>            // of entity reference boundaries).<a name="line.490"></a>
+<FONT color="green">491</FONT>            Node n=next;<a name="line.491"></a>
+<FONT color="green">492</FONT>            while(n!=null)<a name="line.492"></a>
+<FONT color="green">493</FONT>              {<a name="line.493"></a>
+<FONT color="green">494</FONT>                lastTextNode=n;<a name="line.494"></a>
+<FONT color="green">495</FONT>                // Any Text node means DTM considers it all Text<a name="line.495"></a>
+<FONT color="green">496</FONT>                if(TEXT_NODE == n.getNodeType())<a name="line.496"></a>
+<FONT color="green">497</FONT>                  nexttype=TEXT_NODE;<a name="line.497"></a>
+<FONT color="green">498</FONT>                // Any non-whitespace in this sequence blocks whitespace<a name="line.498"></a>
+<FONT color="green">499</FONT>                // suppression<a name="line.499"></a>
+<FONT color="green">500</FONT>                suppressNode &amp;=<a name="line.500"></a>
+<FONT color="green">501</FONT>                  XMLCharacterRecognizer.isWhiteSpace(n.getNodeValue());<a name="line.501"></a>
+<FONT color="green">502</FONT>                            <a name="line.502"></a>
+<FONT color="green">503</FONT>                n=logicalNextDOMTextNode(n);<a name="line.503"></a>
+<FONT color="green">504</FONT>              }<a name="line.504"></a>
+<FONT color="green">505</FONT>          }<a name="line.505"></a>
+<FONT color="green">506</FONT>            <a name="line.506"></a>
+<FONT color="green">507</FONT>        // Special handling for PIs: Some DOMs represent the XML<a name="line.507"></a>
+<FONT color="green">508</FONT>        // Declaration as a PI. This is officially incorrect, per the DOM<a name="line.508"></a>
+<FONT color="green">509</FONT>        // spec, but is considered a "wrong but tolerable" temporary<a name="line.509"></a>
+<FONT color="green">510</FONT>        // workaround pending proper handling of these fields in DOM Level<a name="line.510"></a>
+<FONT color="green">511</FONT>        // 3. We want to recognize and reject that case.<a name="line.511"></a>
+<FONT color="green">512</FONT>        else if(PROCESSING_INSTRUCTION_NODE==nexttype)<a name="line.512"></a>
+<FONT color="green">513</FONT>          {<a name="line.513"></a>
+<FONT color="green">514</FONT>            suppressNode = (pos.getNodeName().toLowerCase().equals("xml"));<a name="line.514"></a>
+<FONT color="green">515</FONT>          }<a name="line.515"></a>
+<FONT color="green">516</FONT>            <a name="line.516"></a>
+<FONT color="green">517</FONT>            <a name="line.517"></a>
+<FONT color="green">518</FONT>        if(!suppressNode)<a name="line.518"></a>
+<FONT color="green">519</FONT>          {<a name="line.519"></a>
+<FONT color="green">520</FONT>            // Inserting next. NOTE that we force the node type; for<a name="line.520"></a>
+<FONT color="green">521</FONT>            // coalesced Text, this records CDATASections adjacent to<a name="line.521"></a>
+<FONT color="green">522</FONT>            // ordinary Text as Text.<a name="line.522"></a>
+<FONT color="green">523</FONT>            int nextindex=addNode(next,m_last_parent,m_last_kid,<a name="line.523"></a>
+<FONT color="green">524</FONT>                                  nexttype);<a name="line.524"></a>
+<FONT color="green">525</FONT>            <a name="line.525"></a>
+<FONT color="green">526</FONT>            m_last_kid=nextindex;<a name="line.526"></a>
+<FONT color="green">527</FONT>    <a name="line.527"></a>
+<FONT color="green">528</FONT>            if(ELEMENT_NODE == nexttype)<a name="line.528"></a>
+<FONT color="green">529</FONT>              {<a name="line.529"></a>
+<FONT color="green">530</FONT>                int attrIndex=NULL; // start with no previous sib<a name="line.530"></a>
+<FONT color="green">531</FONT>                // Process attributes _now_, rather than waiting.<a name="line.531"></a>
+<FONT color="green">532</FONT>                // Simpler control flow, makes NS cache available immediately.<a name="line.532"></a>
+<FONT color="green">533</FONT>                NamedNodeMap attrs=next.getAttributes();<a name="line.533"></a>
+<FONT color="green">534</FONT>                int attrsize=(attrs==null) ? 0 : attrs.getLength();<a name="line.534"></a>
+<FONT color="green">535</FONT>                if(attrsize&gt;0)<a name="line.535"></a>
+<FONT color="green">536</FONT>                  {<a name="line.536"></a>
+<FONT color="green">537</FONT>                    for(int i=0;i&lt;attrsize;++i)<a name="line.537"></a>
+<FONT color="green">538</FONT>                      {<a name="line.538"></a>
+<FONT color="green">539</FONT>                        // No need to force nodetype in this case;<a name="line.539"></a>
+<FONT color="green">540</FONT>                        // addNode() will take care of switching it from<a name="line.540"></a>
+<FONT color="green">541</FONT>                        // Attr to Namespace if necessary.<a name="line.541"></a>
+<FONT color="green">542</FONT>                        attrIndex=addNode(attrs.item(i),<a name="line.542"></a>
+<FONT color="green">543</FONT>                                          nextindex,attrIndex,NULL);<a name="line.543"></a>
+<FONT color="green">544</FONT>                        m_firstch.setElementAt(DTM.NULL,attrIndex);<a name="line.544"></a>
+<FONT color="green">545</FONT>    <a name="line.545"></a>
+<FONT color="green">546</FONT>                        // If the xml: prefix is explicitly declared<a name="line.546"></a>
+<FONT color="green">547</FONT>                        // we don't need to synthesize one.<a name="line.547"></a>
+<FONT color="green">548</FONT>                        //<a name="line.548"></a>
+<FONT color="green">549</FONT>                        // NOTE that XML Namespaces were not originally<a name="line.549"></a>
+<FONT color="green">550</FONT>                        // defined as being namespace-aware (grrr), and<a name="line.550"></a>
+<FONT color="green">551</FONT>                        // while the W3C is planning to fix this it's<a name="line.551"></a>
+<FONT color="green">552</FONT>                        // safer for now to test the QName and trust the<a name="line.552"></a>
+<FONT color="green">553</FONT>                        // parsers to prevent anyone from redefining the<a name="line.553"></a>
+<FONT color="green">554</FONT>                        // reserved xmlns: prefix<a name="line.554"></a>
+<FONT color="green">555</FONT>                        if(!m_processedFirstElement<a name="line.555"></a>
+<FONT color="green">556</FONT>                           &amp;&amp; "xmlns:xml".equals(attrs.item(i).getNodeName()))<a name="line.556"></a>
+<FONT color="green">557</FONT>                          m_processedFirstElement=true; <a name="line.557"></a>
+<FONT color="green">558</FONT>                      }<a name="line.558"></a>
+<FONT color="green">559</FONT>                    // Terminate list of attrs, and make sure they aren't<a name="line.559"></a>
+<FONT color="green">560</FONT>                    // considered children of the element<a name="line.560"></a>
+<FONT color="green">561</FONT>                  } // if attrs exist<a name="line.561"></a>
+<FONT color="green">562</FONT>                if(!m_processedFirstElement)<a name="line.562"></a>
+<FONT color="green">563</FONT>                {<a name="line.563"></a>
+<FONT color="green">564</FONT>                  // The DOM might not have an explicit declaration for the<a name="line.564"></a>
+<FONT color="green">565</FONT>                  // implicit "xml:" prefix, but the XPath data model<a name="line.565"></a>
+<FONT color="green">566</FONT>                  // requires that this appear as a Namespace Node so we<a name="line.566"></a>
+<FONT color="green">567</FONT>                  // have to synthesize one. You can think of this as<a name="line.567"></a>
+<FONT color="green">568</FONT>                  // being a default attribute defined by the XML<a name="line.568"></a>
+<FONT color="green">569</FONT>                  // Namespaces spec rather than by the DTD.<a name="line.569"></a>
+<FONT color="green">570</FONT>                  attrIndex=addNode(new DOM2DTMdefaultNamespaceDeclarationNode(<a name="line.570"></a>
+<FONT color="green">571</FONT>                                                                                                                                            (Element)next,"xml",NAMESPACE_DECL_NS,<a name="line.571"></a>
+<FONT color="green">572</FONT>                                                                                                                                            makeNodeHandle(((attrIndex==NULL)?nextindex:attrIndex)+1)<a name="line.572"></a>
+<FONT color="green">573</FONT>                                                                                                                                            ),<a name="line.573"></a>
+<FONT color="green">574</FONT>                                    nextindex,attrIndex,NULL);      <a name="line.574"></a>
+<FONT color="green">575</FONT>                  m_firstch.setElementAt(DTM.NULL,attrIndex);<a name="line.575"></a>
+<FONT color="green">576</FONT>                  m_processedFirstElement=true;<a name="line.576"></a>
+<FONT color="green">577</FONT>                }<a name="line.577"></a>
+<FONT color="green">578</FONT>                if(attrIndex!=NULL)<a name="line.578"></a>
+<FONT color="green">579</FONT>                  m_nextsib.setElementAt(DTM.NULL,attrIndex);<a name="line.579"></a>
+<FONT color="green">580</FONT>              } //if(ELEMENT_NODE)<a name="line.580"></a>
+<FONT color="green">581</FONT>          } // (if !suppressNode)<a name="line.581"></a>
+<FONT color="green">582</FONT>    <a name="line.582"></a>
+<FONT color="green">583</FONT>        // Text postprocessing: Act on values stored above<a name="line.583"></a>
+<FONT color="green">584</FONT>        if(TEXT_NODE == nexttype || CDATA_SECTION_NODE == nexttype)<a name="line.584"></a>
+<FONT color="green">585</FONT>          {<a name="line.585"></a>
+<FONT color="green">586</FONT>            // %TBD% If nexttype was forced to TEXT, patch the DTM node<a name="line.586"></a>
+<FONT color="green">587</FONT>                    <a name="line.587"></a>
+<FONT color="green">588</FONT>            next=lastTextNode;      // Advance the DOM cursor over contiguous text<a name="line.588"></a>
+<FONT color="green">589</FONT>          }<a name="line.589"></a>
+<FONT color="green">590</FONT>            <a name="line.590"></a>
+<FONT color="green">591</FONT>        // Remember where we left off.<a name="line.591"></a>
+<FONT color="green">592</FONT>        m_pos=next;<a name="line.592"></a>
+<FONT color="green">593</FONT>        return true;<a name="line.593"></a>
+<FONT color="green">594</FONT>      }  <a name="line.594"></a>
+<FONT color="green">595</FONT>    <a name="line.595"></a>
+<FONT color="green">596</FONT>    <a name="line.596"></a>
+<FONT color="green">597</FONT>      /**<a name="line.597"></a>
+<FONT color="green">598</FONT>       * Return an DOM node for the given node.<a name="line.598"></a>
+<FONT color="green">599</FONT>       *<a name="line.599"></a>
+<FONT color="green">600</FONT>       * @param nodeHandle The node ID.<a name="line.600"></a>
+<FONT color="green">601</FONT>       *<a name="line.601"></a>
+<FONT color="green">602</FONT>       * @return A node representation of the DTM node.<a name="line.602"></a>
+<FONT color="green">603</FONT>       */<a name="line.603"></a>
+<FONT color="green">604</FONT>      public Node getNode(int nodeHandle)<a name="line.604"></a>
+<FONT color="green">605</FONT>      {<a name="line.605"></a>
+<FONT color="green">606</FONT>    <a name="line.606"></a>
+<FONT color="green">607</FONT>        int identity = makeNodeIdentity(nodeHandle);<a name="line.607"></a>
+<FONT color="green">608</FONT>    <a name="line.608"></a>
+<FONT color="green">609</FONT>        return (Node) m_nodes.elementAt(identity);<a name="line.609"></a>
+<FONT color="green">610</FONT>      }<a name="line.610"></a>
+<FONT color="green">611</FONT>    <a name="line.611"></a>
+<FONT color="green">612</FONT>      /**<a name="line.612"></a>
+<FONT color="green">613</FONT>       * Get a Node from an identity index.<a name="line.613"></a>
+<FONT color="green">614</FONT>       *<a name="line.614"></a>
+<FONT color="green">615</FONT>       * NEEDSDOC @param nodeIdentity<a name="line.615"></a>
+<FONT color="green">616</FONT>       *<a name="line.616"></a>
+<FONT color="green">617</FONT>       * NEEDSDOC ($objectName$) @return<a name="line.617"></a>
+<FONT color="green">618</FONT>       */<a name="line.618"></a>
+<FONT color="green">619</FONT>      protected Node lookupNode(int nodeIdentity)<a name="line.619"></a>
+<FONT color="green">620</FONT>      {<a name="line.620"></a>
+<FONT color="green">621</FONT>        return (Node) m_nodes.elementAt(nodeIdentity);<a name="line.621"></a>
+<FONT color="green">622</FONT>      }<a name="line.622"></a>
+<FONT color="green">623</FONT>    <a name="line.623"></a>
+<FONT color="green">624</FONT>      /**<a name="line.624"></a>
+<FONT color="green">625</FONT>       * Get the next node identity value in the list, and call the iterator<a name="line.625"></a>
+<FONT color="green">626</FONT>       * if it hasn't been added yet.<a name="line.626"></a>
+<FONT color="green">627</FONT>       *<a name="line.627"></a>
+<FONT color="green">628</FONT>       * @param identity The node identity (index).<a name="line.628"></a>
+<FONT color="green">629</FONT>       * @return identity+1, or DTM.NULL.<a name="line.629"></a>
+<FONT color="green">630</FONT>       */<a name="line.630"></a>
+<FONT color="green">631</FONT>      protected int getNextNodeIdentity(int identity)<a name="line.631"></a>
+<FONT color="green">632</FONT>      {<a name="line.632"></a>
+<FONT color="green">633</FONT>    <a name="line.633"></a>
+<FONT color="green">634</FONT>        identity += 1;<a name="line.634"></a>
+<FONT color="green">635</FONT>    <a name="line.635"></a>
+<FONT color="green">636</FONT>        if (identity &gt;= m_nodes.size())<a name="line.636"></a>
+<FONT color="green">637</FONT>        {<a name="line.637"></a>
+<FONT color="green">638</FONT>          if (!nextNode())<a name="line.638"></a>
+<FONT color="green">639</FONT>            identity = DTM.NULL;<a name="line.639"></a>
+<FONT color="green">640</FONT>        }<a name="line.640"></a>
+<FONT color="green">641</FONT>    <a name="line.641"></a>
+<FONT color="green">642</FONT>        return identity;<a name="line.642"></a>
+<FONT color="green">643</FONT>      }<a name="line.643"></a>
+<FONT color="green">644</FONT>    <a name="line.644"></a>
+<FONT color="green">645</FONT>      /**<a name="line.645"></a>
+<FONT color="green">646</FONT>       * Get the handle from a Node.<a name="line.646"></a>
+<FONT color="green">647</FONT>       * &lt;p&gt;%OPT% This will be pretty slow.&lt;/p&gt;<a name="line.647"></a>
+<FONT color="green">648</FONT>       *<a name="line.648"></a>
+<FONT color="green">649</FONT>       * &lt;p&gt;%OPT% An XPath-like search (walk up DOM to root, tracking path;<a name="line.649"></a>
+<FONT color="green">650</FONT>       * walk down DTM reconstructing path) might be considerably faster<a name="line.650"></a>
+<FONT color="green">651</FONT>       * on later nodes in large documents. That might also imply improving<a name="line.651"></a>
+<FONT color="green">652</FONT>       * this call to handle nodes which would be in this DTM but<a name="line.652"></a>
+<FONT color="green">653</FONT>       * have not yet been built, which might or might not be a Good Thing.&lt;/p&gt;<a name="line.653"></a>
+<FONT color="green">654</FONT>       * <a name="line.654"></a>
+<FONT color="green">655</FONT>       * %REVIEW% This relies on being able to test node-identity via<a name="line.655"></a>
+<FONT color="green">656</FONT>       * object-identity. DTM2DOM proxying is a great example of a case where<a name="line.656"></a>
+<FONT color="green">657</FONT>       * that doesn't work. DOM Level 3 will provide the isSameNode() method<a name="line.657"></a>
+<FONT color="green">658</FONT>       * to fix that, but until then this is going to be flaky.<a name="line.658"></a>
+<FONT color="green">659</FONT>       *<a name="line.659"></a>
+<FONT color="green">660</FONT>       * @param node A node, which may be null.<a name="line.660"></a>
+<FONT color="green">661</FONT>       *<a name="line.661"></a>
+<FONT color="green">662</FONT>       * @return The node handle or &lt;code&gt;DTM.NULL&lt;/code&gt;.<a name="line.662"></a>
+<FONT color="green">663</FONT>       */<a name="line.663"></a>
+<FONT color="green">664</FONT>      private int getHandleFromNode(Node node)<a name="line.664"></a>
+<FONT color="green">665</FONT>      {<a name="line.665"></a>
+<FONT color="green">666</FONT>        if (null != node)<a name="line.666"></a>
+<FONT color="green">667</FONT>        {<a name="line.667"></a>
+<FONT color="green">668</FONT>          int len = m_nodes.size();        <a name="line.668"></a>
+<FONT color="green">669</FONT>          boolean isMore;<a name="line.669"></a>
+<FONT color="green">670</FONT>          int i = 0;<a name="line.670"></a>
+<FONT color="green">671</FONT>          do<a name="line.671"></a>
+<FONT color="green">672</FONT>          {          <a name="line.672"></a>
+<FONT color="green">673</FONT>            for (; i &lt; len; i++)<a name="line.673"></a>
+<FONT color="green">674</FONT>            {<a name="line.674"></a>
+<FONT color="green">675</FONT>              if (m_nodes.elementAt(i) == node)<a name="line.675"></a>
+<FONT color="green">676</FONT>                return makeNodeHandle(i);<a name="line.676"></a>
+<FONT color="green">677</FONT>            }<a name="line.677"></a>
+<FONT color="green">678</FONT>    <a name="line.678"></a>
+<FONT color="green">679</FONT>            isMore = nextNode();<a name="line.679"></a>
+<FONT color="green">680</FONT>      <a name="line.680"></a>
+<FONT color="green">681</FONT>            len = m_nodes.size();<a name="line.681"></a>
+<FONT color="green">682</FONT>                <a name="line.682"></a>
+<FONT color="green">683</FONT>          } <a name="line.683"></a>
+<FONT color="green">684</FONT>          while(isMore || i &lt; len);<a name="line.684"></a>
+<FONT color="green">685</FONT>        }<a name="line.685"></a>
+<FONT color="green">686</FONT>        <a name="line.686"></a>
+<FONT color="green">687</FONT>        return DTM.NULL;<a name="line.687"></a>
+<FONT color="green">688</FONT>      }<a name="line.688"></a>
+<FONT color="green">689</FONT>    <a name="line.689"></a>
+<FONT color="green">690</FONT>      /** Get the handle from a Node. This is a more robust version of<a name="line.690"></a>
+<FONT color="green">691</FONT>       * getHandleFromNode, intended to be usable by the public.<a name="line.691"></a>
+<FONT color="green">692</FONT>       *<a name="line.692"></a>
+<FONT color="green">693</FONT>       * &lt;p&gt;%OPT% This will be pretty slow.&lt;/p&gt;<a name="line.693"></a>
+<FONT color="green">694</FONT>       * <a name="line.694"></a>
+<FONT color="green">695</FONT>       * %REVIEW% This relies on being able to test node-identity via<a name="line.695"></a>
+<FONT color="green">696</FONT>       * object-identity. DTM2DOM proxying is a great example of a case where<a name="line.696"></a>
+<FONT color="green">697</FONT>       * that doesn't work. DOM Level 3 will provide the isSameNode() method<a name="line.697"></a>
+<FONT color="green">698</FONT>       * to fix that, but until then this is going to be flaky.<a name="line.698"></a>
+<FONT color="green">699</FONT>       *<a name="line.699"></a>
+<FONT color="green">700</FONT>       * @param node A node, which may be null.<a name="line.700"></a>
+<FONT color="green">701</FONT>       *<a name="line.701"></a>
+<FONT color="green">702</FONT>       * @return The node handle or &lt;code&gt;DTM.NULL&lt;/code&gt;.  */<a name="line.702"></a>
+<FONT color="green">703</FONT>      public int getHandleOfNode(Node node)<a name="line.703"></a>
+<FONT color="green">704</FONT>      {<a name="line.704"></a>
+<FONT color="green">705</FONT>        if (null != node)<a name="line.705"></a>
+<FONT color="green">706</FONT>        {<a name="line.706"></a>
+<FONT color="green">707</FONT>          // Is Node actually within the same document? If not, don't search!<a name="line.707"></a>
+<FONT color="green">708</FONT>          // This would be easier if m_root was always the Document node, but<a name="line.708"></a>
+<FONT color="green">709</FONT>          // we decided to allow wrapping a DTM around a subtree.<a name="line.709"></a>
+<FONT color="green">710</FONT>          if((m_root==node) ||<a name="line.710"></a>
+<FONT color="green">711</FONT>             (m_root.getNodeType()==DOCUMENT_NODE &amp;&amp;<a name="line.711"></a>
+<FONT color="green">712</FONT>              m_root==node.getOwnerDocument()) ||<a name="line.712"></a>
+<FONT color="green">713</FONT>             (m_root.getNodeType()!=DOCUMENT_NODE &amp;&amp;<a name="line.713"></a>
+<FONT color="green">714</FONT>              m_root.getOwnerDocument()==node.getOwnerDocument())<a name="line.714"></a>
+<FONT color="green">715</FONT>             )<a name="line.715"></a>
+<FONT color="green">716</FONT>            {<a name="line.716"></a>
+<FONT color="green">717</FONT>              // If node _is_ in m_root's tree, find its handle<a name="line.717"></a>
+<FONT color="green">718</FONT>              //<a name="line.718"></a>
+<FONT color="green">719</FONT>              // %OPT% This check may be improved significantly when DOM<a name="line.719"></a>
+<FONT color="green">720</FONT>              // Level 3 nodeKey and relative-order tests become<a name="line.720"></a>
+<FONT color="green">721</FONT>              // available!<a name="line.721"></a>
+<FONT color="green">722</FONT>              for(Node cursor=node;<a name="line.722"></a>
+<FONT color="green">723</FONT>                  cursor!=null;<a name="line.723"></a>
+<FONT color="green">724</FONT>                  cursor=<a name="line.724"></a>
+<FONT color="green">725</FONT>                    (cursor.getNodeType()!=ATTRIBUTE_NODE)<a name="line.725"></a>
+<FONT color="green">726</FONT>                    ? cursor.getParentNode()<a name="line.726"></a>
+<FONT color="green">727</FONT>                    : ((org.w3c.dom.Attr)cursor).getOwnerElement())<a name="line.727"></a>
+<FONT color="green">728</FONT>                {<a name="line.728"></a>
+<FONT color="green">729</FONT>                  if(cursor==m_root)<a name="line.729"></a>
+<FONT color="green">730</FONT>                    // We know this node; find its handle.<a name="line.730"></a>
+<FONT color="green">731</FONT>                    return getHandleFromNode(node); <a name="line.731"></a>
+<FONT color="green">732</FONT>                } // for ancestors of node<a name="line.732"></a>
+<FONT color="green">733</FONT>            } // if node and m_root in same Document<a name="line.733"></a>
+<FONT color="green">734</FONT>        } // if node!=null<a name="line.734"></a>
+<FONT color="green">735</FONT>    <a name="line.735"></a>
+<FONT color="green">736</FONT>        return DTM.NULL;<a name="line.736"></a>
+<FONT color="green">737</FONT>      }<a name="line.737"></a>
+<FONT color="green">738</FONT>    <a name="line.738"></a>
+<FONT color="green">739</FONT>      /**<a name="line.739"></a>
+<FONT color="green">740</FONT>       * Retrieves an attribute node by by qualified name and namespace URI.<a name="line.740"></a>
+<FONT color="green">741</FONT>       *<a name="line.741"></a>
+<FONT color="green">742</FONT>       * @param nodeHandle int Handle of the node upon which to look up this attribute..<a name="line.742"></a>
+<FONT color="green">743</FONT>       * @param namespaceURI The namespace URI of the attribute to<a name="line.743"></a>
+<FONT color="green">744</FONT>       *   retrieve, or null.<a name="line.744"></a>
+<FONT color="green">745</FONT>       * @param name The local name of the attribute to<a name="line.745"></a>
+<FONT color="green">746</FONT>       *   retrieve.<a name="line.746"></a>
+<FONT color="green">747</FONT>       * @return The attribute node handle with the specified name (<a name="line.747"></a>
+<FONT color="green">748</FONT>       *   &lt;code&gt;nodeName&lt;/code&gt;) or &lt;code&gt;DTM.NULL&lt;/code&gt; if there is no such<a name="line.748"></a>
+<FONT color="green">749</FONT>       *   attribute.<a name="line.749"></a>
+<FONT color="green">750</FONT>       */<a name="line.750"></a>
+<FONT color="green">751</FONT>      public int getAttributeNode(int nodeHandle, String namespaceURI,<a name="line.751"></a>
+<FONT color="green">752</FONT>                                  String name)<a name="line.752"></a>
+<FONT color="green">753</FONT>      {<a name="line.753"></a>
+<FONT color="green">754</FONT>    <a name="line.754"></a>
+<FONT color="green">755</FONT>        // %OPT% This is probably slower than it needs to be.<a name="line.755"></a>
+<FONT color="green">756</FONT>        if (null == namespaceURI)<a name="line.756"></a>
+<FONT color="green">757</FONT>          namespaceURI = "";<a name="line.757"></a>
+<FONT color="green">758</FONT>    <a name="line.758"></a>
+<FONT color="green">759</FONT>        int type = getNodeType(nodeHandle);<a name="line.759"></a>
+<FONT color="green">760</FONT>    <a name="line.760"></a>
+<FONT color="green">761</FONT>        if (DTM.ELEMENT_NODE == type)<a name="line.761"></a>
+<FONT color="green">762</FONT>        {<a name="line.762"></a>
+<FONT color="green">763</FONT>    <a name="line.763"></a>
+<FONT color="green">764</FONT>          // Assume that attributes immediately follow the element.<a name="line.764"></a>
+<FONT color="green">765</FONT>          int identity = makeNodeIdentity(nodeHandle);<a name="line.765"></a>
+<FONT color="green">766</FONT>    <a name="line.766"></a>
+<FONT color="green">767</FONT>          while (DTM.NULL != (identity = getNextNodeIdentity(identity)))<a name="line.767"></a>
+<FONT color="green">768</FONT>          {<a name="line.768"></a>
+<FONT color="green">769</FONT>            // Assume this can not be null.<a name="line.769"></a>
+<FONT color="green">770</FONT>            type = _type(identity);<a name="line.770"></a>
+<FONT color="green">771</FONT>    <a name="line.771"></a>
+<FONT color="green">772</FONT>                                    // %REVIEW%<a name="line.772"></a>
+<FONT color="green">773</FONT>                                    // Should namespace nodes be retrievable DOM-style as attrs?<a name="line.773"></a>
+<FONT color="green">774</FONT>                                    // If not we need a separate function... which may be desirable<a name="line.774"></a>
+<FONT color="green">775</FONT>                                    // architecturally, but which is ugly from a code point of view.<a name="line.775"></a>
+<FONT color="green">776</FONT>                                    // (If we REALLY insist on it, this code should become a subroutine<a name="line.776"></a>
+<FONT color="green">777</FONT>                                    // of both -- retrieve the node, then test if the type matches<a name="line.777"></a>
+<FONT color="green">778</FONT>                                    // what you're looking for.)<a name="line.778"></a>
+<FONT color="green">779</FONT>            if (type == DTM.ATTRIBUTE_NODE || type==DTM.NAMESPACE_NODE)<a name="line.779"></a>
+<FONT color="green">780</FONT>            {<a name="line.780"></a>
+<FONT color="green">781</FONT>              Node node = lookupNode(identity);<a name="line.781"></a>
+<FONT color="green">782</FONT>              String nodeuri = node.getNamespaceURI();<a name="line.782"></a>
+<FONT color="green">783</FONT>    <a name="line.783"></a>
+<FONT color="green">784</FONT>              if (null == nodeuri)<a name="line.784"></a>
+<FONT color="green">785</FONT>                nodeuri = "";<a name="line.785"></a>
+<FONT color="green">786</FONT>    <a name="line.786"></a>
+<FONT color="green">787</FONT>              String nodelocalname = node.getLocalName();<a name="line.787"></a>
+<FONT color="green">788</FONT>    <a name="line.788"></a>
+<FONT color="green">789</FONT>              if (nodeuri.equals(namespaceURI) &amp;&amp; name.equals(nodelocalname))<a name="line.789"></a>
+<FONT color="green">790</FONT>                return makeNodeHandle(identity);<a name="line.790"></a>
+<FONT color="green">791</FONT>            }<a name="line.791"></a>
+<FONT color="green">792</FONT>                                    <a name="line.792"></a>
+<FONT color="green">793</FONT>            else // if (DTM.NAMESPACE_NODE != type)<a name="line.793"></a>
+<FONT color="green">794</FONT>            {<a name="line.794"></a>
+<FONT color="green">795</FONT>              break;<a name="line.795"></a>
+<FONT color="green">796</FONT>            }<a name="line.796"></a>
+<FONT color="green">797</FONT>          }<a name="line.797"></a>
+<FONT color="green">798</FONT>        }<a name="line.798"></a>
+<FONT color="green">799</FONT>    <a name="line.799"></a>
+<FONT color="green">800</FONT>        return DTM.NULL;<a name="line.800"></a>
+<FONT color="green">801</FONT>      }<a name="line.801"></a>
+<FONT color="green">802</FONT>    <a name="line.802"></a>
+<FONT color="green">803</FONT>      /**<a name="line.803"></a>
+<FONT color="green">804</FONT>       * Get the string-value of a node as a String object<a name="line.804"></a>
+<FONT color="green">805</FONT>       * (see http://www.w3.org/TR/xpath#data-model<a name="line.805"></a>
+<FONT color="green">806</FONT>       * for the definition of a node's string-value).<a name="line.806"></a>
+<FONT color="green">807</FONT>       *<a name="line.807"></a>
+<FONT color="green">808</FONT>       * @param nodeHandle The node ID.<a name="line.808"></a>
+<FONT color="green">809</FONT>       *<a name="line.809"></a>
+<FONT color="green">810</FONT>       * @return A string object that represents the string-value of the given node.<a name="line.810"></a>
+<FONT color="green">811</FONT>       */<a name="line.811"></a>
+<FONT color="green">812</FONT>      public XMLString getStringValue(int nodeHandle)<a name="line.812"></a>
+<FONT color="green">813</FONT>      {<a name="line.813"></a>
+<FONT color="green">814</FONT>    <a name="line.814"></a>
+<FONT color="green">815</FONT>        int type = getNodeType(nodeHandle);<a name="line.815"></a>
+<FONT color="green">816</FONT>        Node node = getNode(nodeHandle);<a name="line.816"></a>
+<FONT color="green">817</FONT>        // %TBD% If an element only has one text node, we should just use it <a name="line.817"></a>
+<FONT color="green">818</FONT>        // directly.<a name="line.818"></a>
+<FONT color="green">819</FONT>        if(DTM.ELEMENT_NODE == type || DTM.DOCUMENT_NODE == type <a name="line.819"></a>
+<FONT color="green">820</FONT>        || DTM.DOCUMENT_FRAGMENT_NODE == type)<a name="line.820"></a>
+<FONT color="green">821</FONT>        {<a name="line.821"></a>
+<FONT color="green">822</FONT>          FastStringBuffer buf = StringBufferPool.get();<a name="line.822"></a>
+<FONT color="green">823</FONT>          String s;<a name="line.823"></a>
+<FONT color="green">824</FONT>      <a name="line.824"></a>
+<FONT color="green">825</FONT>          try<a name="line.825"></a>
+<FONT color="green">826</FONT>          {<a name="line.826"></a>
+<FONT color="green">827</FONT>            getNodeData(node, buf);<a name="line.827"></a>
+<FONT color="green">828</FONT>      <a name="line.828"></a>
+<FONT color="green">829</FONT>            s = (buf.length() &gt; 0) ? buf.toString() : "";<a name="line.829"></a>
+<FONT color="green">830</FONT>          }<a name="line.830"></a>
+<FONT color="green">831</FONT>          finally<a name="line.831"></a>
+<FONT color="green">832</FONT>          {<a name="line.832"></a>
+<FONT color="green">833</FONT>            StringBufferPool.free(buf);<a name="line.833"></a>
+<FONT color="green">834</FONT>          }<a name="line.834"></a>
+<FONT color="green">835</FONT>      <a name="line.835"></a>
+<FONT color="green">836</FONT>          return m_xstrf.newstr( s );<a name="line.836"></a>
+<FONT color="green">837</FONT>        }<a name="line.837"></a>
+<FONT color="green">838</FONT>        else if(TEXT_NODE == type || CDATA_SECTION_NODE == type)<a name="line.838"></a>
+<FONT color="green">839</FONT>        {<a name="line.839"></a>
+<FONT color="green">840</FONT>          // If this is a DTM text node, it may be made of multiple DOM text<a name="line.840"></a>
+<FONT color="green">841</FONT>          // nodes -- including navigating into Entity References. DOM2DTM<a name="line.841"></a>
+<FONT color="green">842</FONT>          // records the first node in the sequence and requires that we<a name="line.842"></a>
+<FONT color="green">843</FONT>          // pick up the others when we retrieve the DTM node's value.<a name="line.843"></a>
+<FONT color="green">844</FONT>          //<a name="line.844"></a>
+<FONT color="green">845</FONT>          // %REVIEW% DOM Level 3 is expected to add a "whole text"<a name="line.845"></a>
+<FONT color="green">846</FONT>          // retrieval method which performs this function for us.<a name="line.846"></a>
+<FONT color="green">847</FONT>          FastStringBuffer buf = StringBufferPool.get();<a name="line.847"></a>
+<FONT color="green">848</FONT>          while(node!=null)<a name="line.848"></a>
+<FONT color="green">849</FONT>          {<a name="line.849"></a>
+<FONT color="green">850</FONT>            buf.append(node.getNodeValue());<a name="line.850"></a>
+<FONT color="green">851</FONT>            node=logicalNextDOMTextNode(node);<a name="line.851"></a>
+<FONT color="green">852</FONT>          }<a name="line.852"></a>
+<FONT color="green">853</FONT>          String s=(buf.length() &gt; 0) ? buf.toString() : "";<a name="line.853"></a>
+<FONT color="green">854</FONT>          StringBufferPool.free(buf);<a name="line.854"></a>
+<FONT color="green">855</FONT>          return m_xstrf.newstr( s );<a name="line.855"></a>
+<FONT color="green">856</FONT>        }<a name="line.856"></a>
+<FONT color="green">857</FONT>        else<a name="line.857"></a>
+<FONT color="green">858</FONT>          return m_xstrf.newstr( node.getNodeValue() );<a name="line.858"></a>
+<FONT color="green">859</FONT>      }<a name="line.859"></a>
+<FONT color="green">860</FONT>      <a name="line.860"></a>
+<FONT color="green">861</FONT>      /**<a name="line.861"></a>
+<FONT color="green">862</FONT>       * Determine if the string-value of a node is whitespace<a name="line.862"></a>
+<FONT color="green">863</FONT>       *<a name="line.863"></a>
+<FONT color="green">864</FONT>       * @param nodeHandle The node Handle.<a name="line.864"></a>
+<FONT color="green">865</FONT>       *<a name="line.865"></a>
+<FONT color="green">866</FONT>       * @return Return true if the given node is whitespace.<a name="line.866"></a>
+<FONT color="green">867</FONT>       */<a name="line.867"></a>
+<FONT color="green">868</FONT>      public boolean isWhitespace(int nodeHandle)<a name="line.868"></a>
+<FONT color="green">869</FONT>      {<a name="line.869"></a>
+<FONT color="green">870</FONT>            int type = getNodeType(nodeHandle);<a name="line.870"></a>
+<FONT color="green">871</FONT>        Node node = getNode(nodeHandle);<a name="line.871"></a>
+<FONT color="green">872</FONT>            if(TEXT_NODE == type || CDATA_SECTION_NODE == type)<a name="line.872"></a>
+<FONT color="green">873</FONT>        {<a name="line.873"></a>
+<FONT color="green">874</FONT>          // If this is a DTM text node, it may be made of multiple DOM text<a name="line.874"></a>
+<FONT color="green">875</FONT>          // nodes -- including navigating into Entity References. DOM2DTM<a name="line.875"></a>
+<FONT color="green">876</FONT>          // records the first node in the sequence and requires that we<a name="line.876"></a>
+<FONT color="green">877</FONT>          // pick up the others when we retrieve the DTM node's value.<a name="line.877"></a>
+<FONT color="green">878</FONT>          //<a name="line.878"></a>
+<FONT color="green">879</FONT>          // %REVIEW% DOM Level 3 is expected to add a "whole text"<a name="line.879"></a>
+<FONT color="green">880</FONT>          // retrieval method which performs this function for us.<a name="line.880"></a>
+<FONT color="green">881</FONT>          FastStringBuffer buf = StringBufferPool.get();<a name="line.881"></a>
+<FONT color="green">882</FONT>          while(node!=null)<a name="line.882"></a>
+<FONT color="green">883</FONT>          {<a name="line.883"></a>
+<FONT color="green">884</FONT>            buf.append(node.getNodeValue());<a name="line.884"></a>
+<FONT color="green">885</FONT>            node=logicalNextDOMTextNode(node);<a name="line.885"></a>
+<FONT color="green">886</FONT>          }<a name="line.886"></a>
+<FONT color="green">887</FONT>         boolean b = buf.isWhitespace(0, buf.length());<a name="line.887"></a>
+<FONT color="green">888</FONT>          StringBufferPool.free(buf);<a name="line.888"></a>
+<FONT color="green">889</FONT>         return b;<a name="line.889"></a>
+<FONT color="green">890</FONT>        }<a name="line.890"></a>
+<FONT color="green">891</FONT>        return false;<a name="line.891"></a>
+<FONT color="green">892</FONT>      }<a name="line.892"></a>
+<FONT color="green">893</FONT>      <a name="line.893"></a>
+<FONT color="green">894</FONT>      /**<a name="line.894"></a>
+<FONT color="green">895</FONT>       * Retrieve the text content of a DOM subtree, appending it into a<a name="line.895"></a>
+<FONT color="green">896</FONT>       * user-supplied FastStringBuffer object. Note that attributes are<a name="line.896"></a>
+<FONT color="green">897</FONT>       * not considered part of the content of an element.<a name="line.897"></a>
+<FONT color="green">898</FONT>       * &lt;p&gt;<a name="line.898"></a>
+<FONT color="green">899</FONT>       * There are open questions regarding whitespace stripping. <a name="line.899"></a>
+<FONT color="green">900</FONT>       * Currently we make no special effort in that regard, since the standard<a name="line.900"></a>
+<FONT color="green">901</FONT>       * DOM doesn't yet provide DTD-based information to distinguish<a name="line.901"></a>
+<FONT color="green">902</FONT>       * whitespace-in-element-context from genuine #PCDATA. Note that we<a name="line.902"></a>
+<FONT color="green">903</FONT>       * should probably also consider xml:space if/when we address this.<a name="line.903"></a>
+<FONT color="green">904</FONT>       * DOM Level 3 may solve the problem for us.<a name="line.904"></a>
+<FONT color="green">905</FONT>       * &lt;p&gt;<a name="line.905"></a>
+<FONT color="green">906</FONT>       * %REVIEW% Actually, since this method operates on the DOM side of the<a name="line.906"></a>
+<FONT color="green">907</FONT>       * fence rather than the DTM side, it SHOULDN'T do<a name="line.907"></a>
+<FONT color="green">908</FONT>       * any special handling. The DOM does what the DOM does; if you want<a name="line.908"></a>
+<FONT color="green">909</FONT>       * DTM-level abstractions, use DTM-level methods.<a name="line.909"></a>
+<FONT color="green">910</FONT>       *<a name="line.910"></a>
+<FONT color="green">911</FONT>       * @param node Node whose subtree is to be walked, gathering the<a name="line.911"></a>
+<FONT color="green">912</FONT>       * contents of all Text or CDATASection nodes.<a name="line.912"></a>
+<FONT color="green">913</FONT>       * @param buf FastStringBuffer into which the contents of the text<a name="line.913"></a>
+<FONT color="green">914</FONT>       * nodes are to be concatenated.<a name="line.914"></a>
+<FONT color="green">915</FONT>       */<a name="line.915"></a>
+<FONT color="green">916</FONT>      protected static void getNodeData(Node node, FastStringBuffer buf)<a name="line.916"></a>
+<FONT color="green">917</FONT>      {<a name="line.917"></a>
+<FONT color="green">918</FONT>    <a name="line.918"></a>
+<FONT color="green">919</FONT>        switch (node.getNodeType())<a name="line.919"></a>
+<FONT color="green">920</FONT>        {<a name="line.920"></a>
+<FONT color="green">921</FONT>        case Node.DOCUMENT_FRAGMENT_NODE :<a name="line.921"></a>
+<FONT color="green">922</FONT>        case Node.DOCUMENT_NODE :<a name="line.922"></a>
+<FONT color="green">923</FONT>        case Node.ELEMENT_NODE :<a name="line.923"></a>
+<FONT color="green">924</FONT>        {<a name="line.924"></a>
+<FONT color="green">925</FONT>          for (Node child = node.getFirstChild(); null != child;<a name="line.925"></a>
+<FONT color="green">926</FONT>                  child = child.getNextSibling())<a name="line.926"></a>
+<FONT color="green">927</FONT>          {<a name="line.927"></a>
+<FONT color="green">928</FONT>            getNodeData(child, buf);<a name="line.928"></a>
+<FONT color="green">929</FONT>          }<a name="line.929"></a>
+<FONT color="green">930</FONT>        }<a name="line.930"></a>
+<FONT color="green">931</FONT>        break;<a name="line.931"></a>
+<FONT color="green">932</FONT>        case Node.TEXT_NODE :<a name="line.932"></a>
+<FONT color="green">933</FONT>        case Node.CDATA_SECTION_NODE :<a name="line.933"></a>
+<FONT color="green">934</FONT>        case Node.ATTRIBUTE_NODE :  // Never a child but might be our starting node<a name="line.934"></a>
+<FONT color="green">935</FONT>          buf.append(node.getNodeValue());<a name="line.935"></a>
+<FONT color="green">936</FONT>          break;<a name="line.936"></a>
+<FONT color="green">937</FONT>        case Node.PROCESSING_INSTRUCTION_NODE :<a name="line.937"></a>
+<FONT color="green">938</FONT>          // warning(XPATHErrorResources.WG_PARSING_AND_PREPARING);        <a name="line.938"></a>
+<FONT color="green">939</FONT>          break;<a name="line.939"></a>
+<FONT color="green">940</FONT>        default :<a name="line.940"></a>
+<FONT color="green">941</FONT>          // ignore<a name="line.941"></a>
+<FONT color="green">942</FONT>          break;<a name="line.942"></a>
+<FONT color="green">943</FONT>        }<a name="line.943"></a>
+<FONT color="green">944</FONT>      }<a name="line.944"></a>
+<FONT color="green">945</FONT>    <a name="line.945"></a>
+<FONT color="green">946</FONT>      /**<a name="line.946"></a>
+<FONT color="green">947</FONT>       * Given a node handle, return its DOM-style node name. This will<a name="line.947"></a>
+<FONT color="green">948</FONT>       * include names such as #text or #document.<a name="line.948"></a>
+<FONT color="green">949</FONT>       *<a name="line.949"></a>
+<FONT color="green">950</FONT>       * @param nodeHandle the id of the node.<a name="line.950"></a>
+<FONT color="green">951</FONT>       * @return String Name of this node, which may be an empty string.<a name="line.951"></a>
+<FONT color="green">952</FONT>       * %REVIEW% Document when empty string is possible...<a name="line.952"></a>
+<FONT color="green">953</FONT>       * %REVIEW-COMMENT% It should never be empty, should it?<a name="line.953"></a>
+<FONT color="green">954</FONT>       */<a name="line.954"></a>
+<FONT color="green">955</FONT>      public String getNodeName(int nodeHandle)<a name="line.955"></a>
+<FONT color="green">956</FONT>      {<a name="line.956"></a>
+<FONT color="green">957</FONT>    <a name="line.957"></a>
+<FONT color="green">958</FONT>        Node node = getNode(nodeHandle);<a name="line.958"></a>
+<FONT color="green">959</FONT>    <a name="line.959"></a>
+<FONT color="green">960</FONT>        // Assume non-null.<a name="line.960"></a>
+<FONT color="green">961</FONT>        return node.getNodeName();<a name="line.961"></a>
+<FONT color="green">962</FONT>      }<a name="line.962"></a>
+<FONT color="green">963</FONT>    <a name="line.963"></a>
+<FONT color="green">964</FONT>      /**<a name="line.964"></a>
+<FONT color="green">965</FONT>       * Given a node handle, return the XPath node name.  This should be<a name="line.965"></a>
+<FONT color="green">966</FONT>       * the name as described by the XPath data model, NOT the DOM-style<a name="line.966"></a>
+<FONT color="green">967</FONT>       * name.<a name="line.967"></a>
+<FONT color="green">968</FONT>       *<a name="line.968"></a>
+<FONT color="green">969</FONT>       * @param nodeHandle the id of the node.<a name="line.969"></a>
+<FONT color="green">970</FONT>       * @return String Name of this node, which may be an empty string.<a name="line.970"></a>
+<FONT color="green">971</FONT>       */<a name="line.971"></a>
+<FONT color="green">972</FONT>      public String getNodeNameX(int nodeHandle)<a name="line.972"></a>
+<FONT color="green">973</FONT>      {<a name="line.973"></a>
+<FONT color="green">974</FONT>    <a name="line.974"></a>
+<FONT color="green">975</FONT>        String name;<a name="line.975"></a>
+<FONT color="green">976</FONT>        short type = getNodeType(nodeHandle);<a name="line.976"></a>
+<FONT color="green">977</FONT>    <a name="line.977"></a>
+<FONT color="green">978</FONT>        switch (type)<a name="line.978"></a>
+<FONT color="green">979</FONT>        {<a name="line.979"></a>
+<FONT color="green">980</FONT>        case DTM.NAMESPACE_NODE :<a name="line.980"></a>
+<FONT color="green">981</FONT>        {<a name="line.981"></a>
+<FONT color="green">982</FONT>          Node node = getNode(nodeHandle);<a name="line.982"></a>
+<FONT color="green">983</FONT>    <a name="line.983"></a>
+<FONT color="green">984</FONT>          // assume not null.<a name="line.984"></a>
+<FONT color="green">985</FONT>          name = node.getNodeName();<a name="line.985"></a>
+<FONT color="green">986</FONT>          if(name.startsWith("xmlns:"))<a name="line.986"></a>
+<FONT color="green">987</FONT>          {<a name="line.987"></a>
+<FONT color="green">988</FONT>            name = QName.getLocalPart(name);<a name="line.988"></a>
+<FONT color="green">989</FONT>          }<a name="line.989"></a>
+<FONT color="green">990</FONT>          else if(name.equals("xmlns"))<a name="line.990"></a>
+<FONT color="green">991</FONT>          {<a name="line.991"></a>
+<FONT color="green">992</FONT>            name = "";<a name="line.992"></a>
+<FONT color="green">993</FONT>          }<a name="line.993"></a>
+<FONT color="green">994</FONT>        }<a name="line.994"></a>
+<FONT color="green">995</FONT>        break;<a name="line.995"></a>
+<FONT color="green">996</FONT>        case DTM.ATTRIBUTE_NODE :<a name="line.996"></a>
+<FONT color="green">997</FONT>        case DTM.ELEMENT_NODE :<a name="line.997"></a>
+<FONT color="green">998</FONT>        case DTM.ENTITY_REFERENCE_NODE :<a name="line.998"></a>
+<FONT color="green">999</FONT>        case DTM.PROCESSING_INSTRUCTION_NODE :<a name="line.999"></a>
+<FONT color="green">1000</FONT>        {<a name="line.1000"></a>
+<FONT color="green">1001</FONT>          Node node = getNode(nodeHandle);<a name="line.1001"></a>
+<FONT color="green">1002</FONT>    <a name="line.1002"></a>
+<FONT color="green">1003</FONT>          // assume not null.<a name="line.1003"></a>
+<FONT color="green">1004</FONT>          name = node.getNodeName();<a name="line.1004"></a>
+<FONT color="green">1005</FONT>        }<a name="line.1005"></a>
+<FONT color="green">1006</FONT>        break;<a name="line.1006"></a>
+<FONT color="green">1007</FONT>        default :<a name="line.1007"></a>
+<FONT color="green">1008</FONT>          name = "";<a name="line.1008"></a>
+<FONT color="green">1009</FONT>        }<a name="line.1009"></a>
+<FONT color="green">1010</FONT>    <a name="line.1010"></a>
+<FONT color="green">1011</FONT>        return name;<a name="line.1011"></a>
+<FONT color="green">1012</FONT>      }<a name="line.1012"></a>
+<FONT color="green">1013</FONT>    <a name="line.1013"></a>
+<FONT color="green">1014</FONT>      /**<a name="line.1014"></a>
+<FONT color="green">1015</FONT>       * Given a node handle, return its XPath-style localname.<a name="line.1015"></a>
+<FONT color="green">1016</FONT>       * (As defined in Namespaces, this is the portion of the name after any<a name="line.1016"></a>
+<FONT color="green">1017</FONT>       * colon character).<a name="line.1017"></a>
+<FONT color="green">1018</FONT>       *<a name="line.1018"></a>
+<FONT color="green">1019</FONT>       * @param nodeHandle the id of the node.<a name="line.1019"></a>
+<FONT color="green">1020</FONT>       * @return String Local name of this node.<a name="line.1020"></a>
+<FONT color="green">1021</FONT>       */<a name="line.1021"></a>
+<FONT color="green">1022</FONT>      public String getLocalName(int nodeHandle)<a name="line.1022"></a>
+<FONT color="green">1023</FONT>      {<a name="line.1023"></a>
+<FONT color="green">1024</FONT>        if(JJK_NEWCODE)<a name="line.1024"></a>
+<FONT color="green">1025</FONT>        {<a name="line.1025"></a>
+<FONT color="green">1026</FONT>          int id=makeNodeIdentity(nodeHandle);<a name="line.1026"></a>
+<FONT color="green">1027</FONT>          if(NULL==id) return null;<a name="line.1027"></a>
+<FONT color="green">1028</FONT>          Node newnode=(Node)m_nodes.elementAt(id);<a name="line.1028"></a>
+<FONT color="green">1029</FONT>          String newname=newnode.getLocalName();<a name="line.1029"></a>
+<FONT color="green">1030</FONT>          if (null == newname)<a name="line.1030"></a>
+<FONT color="green">1031</FONT>          {<a name="line.1031"></a>
+<FONT color="green">1032</FONT>            // XSLT treats PIs, and possibly other things, as having QNames.<a name="line.1032"></a>
+<FONT color="green">1033</FONT>            String qname = newnode.getNodeName();<a name="line.1033"></a>
+<FONT color="green">1034</FONT>            if('#'==qname.charAt(0))<a name="line.1034"></a>
+<FONT color="green">1035</FONT>            {<a name="line.1035"></a>
+<FONT color="green">1036</FONT>              //  Match old default for this function<a name="line.1036"></a>
+<FONT color="green">1037</FONT>              // This conversion may or may not be necessary<a name="line.1037"></a>
+<FONT color="green">1038</FONT>              newname="";<a name="line.1038"></a>
+<FONT color="green">1039</FONT>            }<a name="line.1039"></a>
+<FONT color="green">1040</FONT>            else<a name="line.1040"></a>
+<FONT color="green">1041</FONT>            {<a name="line.1041"></a>
+<FONT color="green">1042</FONT>              int index = qname.indexOf(':');<a name="line.1042"></a>
+<FONT color="green">1043</FONT>              newname = (index &lt; 0) ? qname : qname.substring(index + 1);<a name="line.1043"></a>
+<FONT color="green">1044</FONT>            }<a name="line.1044"></a>
+<FONT color="green">1045</FONT>          }<a name="line.1045"></a>
+<FONT color="green">1046</FONT>          return newname;<a name="line.1046"></a>
+<FONT color="green">1047</FONT>        }<a name="line.1047"></a>
+<FONT color="green">1048</FONT>        else<a name="line.1048"></a>
+<FONT color="green">1049</FONT>        {<a name="line.1049"></a>
+<FONT color="green">1050</FONT>          String name;<a name="line.1050"></a>
+<FONT color="green">1051</FONT>          short type = getNodeType(nodeHandle);<a name="line.1051"></a>
+<FONT color="green">1052</FONT>          switch (type)<a name="line.1052"></a>
+<FONT color="green">1053</FONT>          {<a name="line.1053"></a>
+<FONT color="green">1054</FONT>          case DTM.ATTRIBUTE_NODE :<a name="line.1054"></a>
+<FONT color="green">1055</FONT>          case DTM.ELEMENT_NODE :<a name="line.1055"></a>
+<FONT color="green">1056</FONT>          case DTM.ENTITY_REFERENCE_NODE :<a name="line.1056"></a>
+<FONT color="green">1057</FONT>          case DTM.NAMESPACE_NODE :<a name="line.1057"></a>
+<FONT color="green">1058</FONT>          case DTM.PROCESSING_INSTRUCTION_NODE :<a name="line.1058"></a>
+<FONT color="green">1059</FONT>            {<a name="line.1059"></a>
+<FONT color="green">1060</FONT>              Node node = getNode(nodeHandle);<a name="line.1060"></a>
+<FONT color="green">1061</FONT>              <a name="line.1061"></a>
+<FONT color="green">1062</FONT>              // assume not null.<a name="line.1062"></a>
+<FONT color="green">1063</FONT>              name = node.getLocalName();<a name="line.1063"></a>
+<FONT color="green">1064</FONT>              <a name="line.1064"></a>
+<FONT color="green">1065</FONT>              if (null == name)<a name="line.1065"></a>
+<FONT color="green">1066</FONT>              {<a name="line.1066"></a>
+<FONT color="green">1067</FONT>                String qname = node.getNodeName();<a name="line.1067"></a>
+<FONT color="green">1068</FONT>                int index = qname.indexOf(':');<a name="line.1068"></a>
+<FONT color="green">1069</FONT>                <a name="line.1069"></a>
+<FONT color="green">1070</FONT>                name = (index &lt; 0) ? qname : qname.substring(index + 1);<a name="line.1070"></a>
+<FONT color="green">1071</FONT>              }<a name="line.1071"></a>
+<FONT color="green">1072</FONT>            }<a name="line.1072"></a>
+<FONT color="green">1073</FONT>            break;<a name="line.1073"></a>
+<FONT color="green">1074</FONT>          default :<a name="line.1074"></a>
+<FONT color="green">1075</FONT>            name = "";<a name="line.1075"></a>
+<FONT color="green">1076</FONT>          }<a name="line.1076"></a>
+<FONT color="green">1077</FONT>          return name;<a name="line.1077"></a>
+<FONT color="green">1078</FONT>        }<a name="line.1078"></a>
+<FONT color="green">1079</FONT>      }<a name="line.1079"></a>
+<FONT color="green">1080</FONT>    <a name="line.1080"></a>
+<FONT color="green">1081</FONT>      /**<a name="line.1081"></a>
+<FONT color="green">1082</FONT>       * Given a namespace handle, return the prefix that the namespace decl is<a name="line.1082"></a>
+<FONT color="green">1083</FONT>       * mapping.<a name="line.1083"></a>
+<FONT color="green">1084</FONT>       * Given a node handle, return the prefix used to map to the namespace.<a name="line.1084"></a>
+<FONT color="green">1085</FONT>       *<a name="line.1085"></a>
+<FONT color="green">1086</FONT>       * &lt;p&gt; %REVIEW% Are you sure you want "" for no prefix?  &lt;/p&gt;<a name="line.1086"></a>
+<FONT color="green">1087</FONT>       * &lt;p&gt; %REVIEW-COMMENT% I think so... not totally sure. -sb  &lt;/p&gt;<a name="line.1087"></a>
+<FONT color="green">1088</FONT>       *<a name="line.1088"></a>
+<FONT color="green">1089</FONT>       * @param nodeHandle the id of the node.<a name="line.1089"></a>
+<FONT color="green">1090</FONT>       * @return String prefix of this node's name, or "" if no explicit<a name="line.1090"></a>
+<FONT color="green">1091</FONT>       * namespace prefix was given.<a name="line.1091"></a>
+<FONT color="green">1092</FONT>       */<a name="line.1092"></a>
+<FONT color="green">1093</FONT>      public String getPrefix(int nodeHandle)<a name="line.1093"></a>
+<FONT color="green">1094</FONT>      {<a name="line.1094"></a>
+<FONT color="green">1095</FONT>    <a name="line.1095"></a>
+<FONT color="green">1096</FONT>        String prefix;<a name="line.1096"></a>
+<FONT color="green">1097</FONT>        short type = getNodeType(nodeHandle);<a name="line.1097"></a>
+<FONT color="green">1098</FONT>    <a name="line.1098"></a>
+<FONT color="green">1099</FONT>        switch (type)<a name="line.1099"></a>
+<FONT color="green">1100</FONT>        {<a name="line.1100"></a>
+<FONT color="green">1101</FONT>        case DTM.NAMESPACE_NODE :<a name="line.1101"></a>
+<FONT color="green">1102</FONT>        {<a name="line.1102"></a>
+<FONT color="green">1103</FONT>          Node node = getNode(nodeHandle);<a name="line.1103"></a>
+<FONT color="green">1104</FONT>    <a name="line.1104"></a>
+<FONT color="green">1105</FONT>          // assume not null.<a name="line.1105"></a>
+<FONT color="green">1106</FONT>          String qname = node.getNodeName();<a name="line.1106"></a>
+<FONT color="green">1107</FONT>          int index = qname.indexOf(':');<a name="line.1107"></a>
+<FONT color="green">1108</FONT>    <a name="line.1108"></a>
+<FONT color="green">1109</FONT>          prefix = (index &lt; 0) ? "" : qname.substring(index + 1);<a name="line.1109"></a>
+<FONT color="green">1110</FONT>        }<a name="line.1110"></a>
+<FONT color="green">1111</FONT>        break;<a name="line.1111"></a>
+<FONT color="green">1112</FONT>        case DTM.ATTRIBUTE_NODE :<a name="line.1112"></a>
+<FONT color="green">1113</FONT>        case DTM.ELEMENT_NODE :<a name="line.1113"></a>
+<FONT color="green">1114</FONT>        {<a name="line.1114"></a>
+<FONT color="green">1115</FONT>          Node node = getNode(nodeHandle);<a name="line.1115"></a>
+<FONT color="green">1116</FONT>    <a name="line.1116"></a>
+<FONT color="green">1117</FONT>          // assume not null.<a name="line.1117"></a>
+<FONT color="green">1118</FONT>          String qname = node.getNodeName();<a name="line.1118"></a>
+<FONT color="green">1119</FONT>          int index = qname.indexOf(':');<a name="line.1119"></a>
+<FONT color="green">1120</FONT>    <a name="line.1120"></a>
+<FONT color="green">1121</FONT>          prefix = (index &lt; 0) ? "" : qname.substring(0, index);<a name="line.1121"></a>
+<FONT color="green">1122</FONT>        }<a name="line.1122"></a>
+<FONT color="green">1123</FONT>        break;<a name="line.1123"></a>
+<FONT color="green">1124</FONT>        default :<a name="line.1124"></a>
+<FONT color="green">1125</FONT>          prefix = "";<a name="line.1125"></a>
+<FONT color="green">1126</FONT>        }<a name="line.1126"></a>
+<FONT color="green">1127</FONT>    <a name="line.1127"></a>
+<FONT color="green">1128</FONT>        return prefix;<a name="line.1128"></a>
+<FONT color="green">1129</FONT>      }<a name="line.1129"></a>
+<FONT color="green">1130</FONT>    <a name="line.1130"></a>
+<FONT color="green">1131</FONT>      /**<a name="line.1131"></a>
+<FONT color="green">1132</FONT>       * Given a node handle, return its DOM-style namespace URI<a name="line.1132"></a>
+<FONT color="green">1133</FONT>       * (As defined in Namespaces, this is the declared URI which this node's<a name="line.1133"></a>
+<FONT color="green">1134</FONT>       * prefix -- or default in lieu thereof -- was mapped to.)<a name="line.1134"></a>
+<FONT color="green">1135</FONT>       *<a name="line.1135"></a>
+<FONT color="green">1136</FONT>       * &lt;p&gt;%REVIEW% Null or ""? -sb&lt;/p&gt;<a name="line.1136"></a>
+<FONT color="green">1137</FONT>       *<a name="line.1137"></a>
+<FONT color="green">1138</FONT>       * @param nodeHandle the id of the node.<a name="line.1138"></a>
+<FONT color="green">1139</FONT>       * @return String URI value of this node's namespace, or null if no<a name="line.1139"></a>
+<FONT color="green">1140</FONT>       * namespace was resolved.<a name="line.1140"></a>
+<FONT color="green">1141</FONT>       */<a name="line.1141"></a>
+<FONT color="green">1142</FONT>      public String getNamespaceURI(int nodeHandle)<a name="line.1142"></a>
+<FONT color="green">1143</FONT>      {<a name="line.1143"></a>
+<FONT color="green">1144</FONT>        if(JJK_NEWCODE)<a name="line.1144"></a>
+<FONT color="green">1145</FONT>        {<a name="line.1145"></a>
+<FONT color="green">1146</FONT>          int id=makeNodeIdentity(nodeHandle);<a name="line.1146"></a>
+<FONT color="green">1147</FONT>          if(id==NULL) return null;<a name="line.1147"></a>
+<FONT color="green">1148</FONT>          Node node=(Node)m_nodes.elementAt(id);<a name="line.1148"></a>
+<FONT color="green">1149</FONT>          return node.getNamespaceURI();<a name="line.1149"></a>
+<FONT color="green">1150</FONT>        }<a name="line.1150"></a>
+<FONT color="green">1151</FONT>        else<a name="line.1151"></a>
+<FONT color="green">1152</FONT>        {<a name="line.1152"></a>
+<FONT color="green">1153</FONT>          String nsuri;<a name="line.1153"></a>
+<FONT color="green">1154</FONT>          short type = getNodeType(nodeHandle);<a name="line.1154"></a>
+<FONT color="green">1155</FONT>          <a name="line.1155"></a>
+<FONT color="green">1156</FONT>          switch (type)<a name="line.1156"></a>
+<FONT color="green">1157</FONT>          {<a name="line.1157"></a>
+<FONT color="green">1158</FONT>          case DTM.ATTRIBUTE_NODE :<a name="line.1158"></a>
+<FONT color="green">1159</FONT>          case DTM.ELEMENT_NODE :<a name="line.1159"></a>
+<FONT color="green">1160</FONT>          case DTM.ENTITY_REFERENCE_NODE :<a name="line.1160"></a>
+<FONT color="green">1161</FONT>          case DTM.NAMESPACE_NODE :<a name="line.1161"></a>
+<FONT color="green">1162</FONT>          case DTM.PROCESSING_INSTRUCTION_NODE :<a name="line.1162"></a>
+<FONT color="green">1163</FONT>            {<a name="line.1163"></a>
+<FONT color="green">1164</FONT>              Node node = getNode(nodeHandle);<a name="line.1164"></a>
+<FONT color="green">1165</FONT>              <a name="line.1165"></a>
+<FONT color="green">1166</FONT>              // assume not null.<a name="line.1166"></a>
+<FONT color="green">1167</FONT>              nsuri = node.getNamespaceURI();<a name="line.1167"></a>
+<FONT color="green">1168</FONT>              <a name="line.1168"></a>
+<FONT color="green">1169</FONT>              // %TBD% Handle DOM1?<a name="line.1169"></a>
+<FONT color="green">1170</FONT>            }<a name="line.1170"></a>
+<FONT color="green">1171</FONT>            break;<a name="line.1171"></a>
+<FONT color="green">1172</FONT>          default :<a name="line.1172"></a>
+<FONT color="green">1173</FONT>            nsuri = null;<a name="line.1173"></a>
+<FONT color="green">1174</FONT>          }<a name="line.1174"></a>
+<FONT color="green">1175</FONT>    <a name="line.1175"></a>
+<FONT color="green">1176</FONT>          return nsuri;<a name="line.1176"></a>
+<FONT color="green">1177</FONT>        }<a name="line.1177"></a>
+<FONT color="green">1178</FONT>        <a name="line.1178"></a>
+<FONT color="green">1179</FONT>      }<a name="line.1179"></a>
+<FONT color="green">1180</FONT>      <a name="line.1180"></a>
+<FONT color="green">1181</FONT>      /** Utility function: Given a DOM Text node, determine whether it is<a name="line.1181"></a>
+<FONT color="green">1182</FONT>       * logically followed by another Text or CDATASection node. This may<a name="line.1182"></a>
+<FONT color="green">1183</FONT>       * involve traversing into Entity References.<a name="line.1183"></a>
+<FONT color="green">1184</FONT>       * <a name="line.1184"></a>
+<FONT color="green">1185</FONT>       * %REVIEW% DOM Level 3 is expected to add functionality which may <a name="line.1185"></a>
+<FONT color="green">1186</FONT>       * allow us to retire this.<a name="line.1186"></a>
+<FONT color="green">1187</FONT>       */<a name="line.1187"></a>
+<FONT color="green">1188</FONT>      private Node logicalNextDOMTextNode(Node n)<a name="line.1188"></a>
+<FONT color="green">1189</FONT>      {<a name="line.1189"></a>
+<FONT color="green">1190</FONT>            Node p=n.getNextSibling();<a name="line.1190"></a>
+<FONT color="green">1191</FONT>            if(p==null)<a name="line.1191"></a>
+<FONT color="green">1192</FONT>            {<a name="line.1192"></a>
+<FONT color="green">1193</FONT>                    // Walk out of any EntityReferenceNodes that ended with text<a name="line.1193"></a>
+<FONT color="green">1194</FONT>                    for(n=n.getParentNode();<a name="line.1194"></a>
+<FONT color="green">1195</FONT>                            n!=null &amp;&amp; ENTITY_REFERENCE_NODE == n.getNodeType();<a name="line.1195"></a>
+<FONT color="green">1196</FONT>                            n=n.getParentNode())<a name="line.1196"></a>
+<FONT color="green">1197</FONT>                    {<a name="line.1197"></a>
+<FONT color="green">1198</FONT>                            p=n.getNextSibling();<a name="line.1198"></a>
+<FONT color="green">1199</FONT>                            if(p!=null)<a name="line.1199"></a>
+<FONT color="green">1200</FONT>                                    break;<a name="line.1200"></a>
+<FONT color="green">1201</FONT>                    }<a name="line.1201"></a>
+<FONT color="green">1202</FONT>            }<a name="line.1202"></a>
+<FONT color="green">1203</FONT>            n=p;<a name="line.1203"></a>
+<FONT color="green">1204</FONT>            while(n!=null &amp;&amp; ENTITY_REFERENCE_NODE == n.getNodeType())<a name="line.1204"></a>
+<FONT color="green">1205</FONT>            {<a name="line.1205"></a>
+<FONT color="green">1206</FONT>                    // Walk into any EntityReferenceNodes that start with text<a name="line.1206"></a>
+<FONT color="green">1207</FONT>                    if(n.hasChildNodes())<a name="line.1207"></a>
+<FONT color="green">1208</FONT>                            n=n.getFirstChild();<a name="line.1208"></a>
+<FONT color="green">1209</FONT>                    else<a name="line.1209"></a>
+<FONT color="green">1210</FONT>                            n=n.getNextSibling();<a name="line.1210"></a>
+<FONT color="green">1211</FONT>            }<a name="line.1211"></a>
+<FONT color="green">1212</FONT>            if(n!=null)<a name="line.1212"></a>
+<FONT color="green">1213</FONT>            {<a name="line.1213"></a>
+<FONT color="green">1214</FONT>                    // Found a logical next sibling. Is it text?<a name="line.1214"></a>
+<FONT color="green">1215</FONT>                    int ntype=n.getNodeType();<a name="line.1215"></a>
+<FONT color="green">1216</FONT>                    if(TEXT_NODE != ntype &amp;&amp; CDATA_SECTION_NODE != ntype)<a name="line.1216"></a>
+<FONT color="green">1217</FONT>                            n=null;<a name="line.1217"></a>
+<FONT color="green">1218</FONT>            }<a name="line.1218"></a>
+<FONT color="green">1219</FONT>            return n;<a name="line.1219"></a>
+<FONT color="green">1220</FONT>      }<a name="line.1220"></a>
+<FONT color="green">1221</FONT>    <a name="line.1221"></a>
+<FONT color="green">1222</FONT>      /**<a name="line.1222"></a>
+<FONT color="green">1223</FONT>       * Given a node handle, return its node value. This is mostly<a name="line.1223"></a>
+<FONT color="green">1224</FONT>       * as defined by the DOM, but may ignore some conveniences.<a name="line.1224"></a>
+<FONT color="green">1225</FONT>       * &lt;p&gt;<a name="line.1225"></a>
+<FONT color="green">1226</FONT>       *<a name="line.1226"></a>
+<FONT color="green">1227</FONT>       * @param nodeHandle The node id.<a name="line.1227"></a>
+<FONT color="green">1228</FONT>       * @return String Value of this node, or null if not<a name="line.1228"></a>
+<FONT color="green">1229</FONT>       * meaningful for this node type.<a name="line.1229"></a>
+<FONT color="green">1230</FONT>       */<a name="line.1230"></a>
+<FONT color="green">1231</FONT>      public String getNodeValue(int nodeHandle)<a name="line.1231"></a>
+<FONT color="green">1232</FONT>      {<a name="line.1232"></a>
+<FONT color="green">1233</FONT>        // The _type(nodeHandle) call was taking the lion's share of our<a name="line.1233"></a>
+<FONT color="green">1234</FONT>        // time, and was wrong anyway since it wasn't coverting handle to<a name="line.1234"></a>
+<FONT color="green">1235</FONT>        // identity. Inlined it.<a name="line.1235"></a>
+<FONT color="green">1236</FONT>        int type = _exptype(makeNodeIdentity(nodeHandle));<a name="line.1236"></a>
+<FONT color="green">1237</FONT>        type=(NULL != type) ? getNodeType(nodeHandle) : NULL;<a name="line.1237"></a>
+<FONT color="green">1238</FONT>        <a name="line.1238"></a>
+<FONT color="green">1239</FONT>        if(TEXT_NODE!=type &amp;&amp; CDATA_SECTION_NODE!=type)<a name="line.1239"></a>
+<FONT color="green">1240</FONT>          return getNode(nodeHandle).getNodeValue();<a name="line.1240"></a>
+<FONT color="green">1241</FONT>        <a name="line.1241"></a>
+<FONT color="green">1242</FONT>        // If this is a DTM text node, it may be made of multiple DOM text<a name="line.1242"></a>
+<FONT color="green">1243</FONT>        // nodes -- including navigating into Entity References. DOM2DTM<a name="line.1243"></a>
+<FONT color="green">1244</FONT>        // records the first node in the sequence and requires that we<a name="line.1244"></a>
+<FONT color="green">1245</FONT>        // pick up the others when we retrieve the DTM node's value.<a name="line.1245"></a>
+<FONT color="green">1246</FONT>        //<a name="line.1246"></a>
+<FONT color="green">1247</FONT>        // %REVIEW% DOM Level 3 is expected to add a "whole text"<a name="line.1247"></a>
+<FONT color="green">1248</FONT>        // retrieval method which performs this function for us.<a name="line.1248"></a>
+<FONT color="green">1249</FONT>        Node node = getNode(nodeHandle);<a name="line.1249"></a>
+<FONT color="green">1250</FONT>        Node n=logicalNextDOMTextNode(node);<a name="line.1250"></a>
+<FONT color="green">1251</FONT>        if(n==null)<a name="line.1251"></a>
+<FONT color="green">1252</FONT>          return node.getNodeValue();<a name="line.1252"></a>
+<FONT color="green">1253</FONT>        <a name="line.1253"></a>
+<FONT color="green">1254</FONT>        FastStringBuffer buf = StringBufferPool.get();<a name="line.1254"></a>
+<FONT color="green">1255</FONT>            buf.append(node.getNodeValue());<a name="line.1255"></a>
+<FONT color="green">1256</FONT>        while(n!=null)<a name="line.1256"></a>
+<FONT color="green">1257</FONT>        {<a name="line.1257"></a>
+<FONT color="green">1258</FONT>          buf.append(n.getNodeValue());<a name="line.1258"></a>
+<FONT color="green">1259</FONT>          n=logicalNextDOMTextNode(n);<a name="line.1259"></a>
+<FONT color="green">1260</FONT>        }<a name="line.1260"></a>
+<FONT color="green">1261</FONT>        String s = (buf.length() &gt; 0) ? buf.toString() : "";<a name="line.1261"></a>
+<FONT color="green">1262</FONT>        StringBufferPool.free(buf);<a name="line.1262"></a>
+<FONT color="green">1263</FONT>        return s;<a name="line.1263"></a>
+<FONT color="green">1264</FONT>      }<a name="line.1264"></a>
+<FONT color="green">1265</FONT>    <a name="line.1265"></a>
+<FONT color="green">1266</FONT>      /**<a name="line.1266"></a>
+<FONT color="green">1267</FONT>       *   A document type declaration information item has the following properties:<a name="line.1267"></a>
+<FONT color="green">1268</FONT>       *<a name="line.1268"></a>
+<FONT color="green">1269</FONT>       *     1. [system identifier] The system identifier of the external subset, if<a name="line.1269"></a>
+<FONT color="green">1270</FONT>       *        it exists. Otherwise this property has no value.<a name="line.1270"></a>
+<FONT color="green">1271</FONT>       *<a name="line.1271"></a>
+<FONT color="green">1272</FONT>       * @return the system identifier String object, or null if there is none.<a name="line.1272"></a>
+<FONT color="green">1273</FONT>       */<a name="line.1273"></a>
+<FONT color="green">1274</FONT>      public String getDocumentTypeDeclarationSystemIdentifier()<a name="line.1274"></a>
+<FONT color="green">1275</FONT>      {<a name="line.1275"></a>
+<FONT color="green">1276</FONT>    <a name="line.1276"></a>
+<FONT color="green">1277</FONT>        Document doc;<a name="line.1277"></a>
+<FONT color="green">1278</FONT>    <a name="line.1278"></a>
+<FONT color="green">1279</FONT>        if (m_root.getNodeType() == Node.DOCUMENT_NODE)<a name="line.1279"></a>
+<FONT color="green">1280</FONT>          doc = (Document) m_root;<a name="line.1280"></a>
+<FONT color="green">1281</FONT>        else<a name="line.1281"></a>
+<FONT color="green">1282</FONT>          doc = m_root.getOwnerDocument();<a name="line.1282"></a>
+<FONT color="green">1283</FONT>    <a name="line.1283"></a>
+<FONT color="green">1284</FONT>        if (null != doc)<a name="line.1284"></a>
+<FONT color="green">1285</FONT>        {<a name="line.1285"></a>
+<FONT color="green">1286</FONT>          DocumentType dtd = doc.getDoctype();<a name="line.1286"></a>
+<FONT color="green">1287</FONT>    <a name="line.1287"></a>
+<FONT color="green">1288</FONT>          if (null != dtd)<a name="line.1288"></a>
+<FONT color="green">1289</FONT>          {<a name="line.1289"></a>
+<FONT color="green">1290</FONT>            return dtd.getSystemId();<a name="line.1290"></a>
+<FONT color="green">1291</FONT>          }<a name="line.1291"></a>
+<FONT color="green">1292</FONT>        }<a name="line.1292"></a>
+<FONT color="green">1293</FONT>    <a name="line.1293"></a>
+<FONT color="green">1294</FONT>        return null;<a name="line.1294"></a>
+<FONT color="green">1295</FONT>      }<a name="line.1295"></a>
+<FONT color="green">1296</FONT>    <a name="line.1296"></a>
+<FONT color="green">1297</FONT>      /**<a name="line.1297"></a>
+<FONT color="green">1298</FONT>       * Return the public identifier of the external subset,<a name="line.1298"></a>
+<FONT color="green">1299</FONT>       * normalized as described in 4.2.2 External Entities [XML]. If there is<a name="line.1299"></a>
+<FONT color="green">1300</FONT>       * no external subset or if it has no public identifier, this property<a name="line.1300"></a>
+<FONT color="green">1301</FONT>       * has no value.<a name="line.1301"></a>
+<FONT color="green">1302</FONT>       *<a name="line.1302"></a>
+<FONT color="green">1303</FONT>       * @return the public identifier String object, or null if there is none.<a name="line.1303"></a>
+<FONT color="green">1304</FONT>       */<a name="line.1304"></a>
+<FONT color="green">1305</FONT>      public String getDocumentTypeDeclarationPublicIdentifier()<a name="line.1305"></a>
+<FONT color="green">1306</FONT>      {<a name="line.1306"></a>
+<FONT color="green">1307</FONT>    <a name="line.1307"></a>
+<FONT color="green">1308</FONT>        Document doc;<a name="line.1308"></a>
+<FONT color="green">1309</FONT>    <a name="line.1309"></a>
+<FONT color="green">1310</FONT>        if (m_root.getNodeType() == Node.DOCUMENT_NODE)<a name="line.1310"></a>
+<FONT color="green">1311</FONT>          doc = (Document) m_root;<a name="line.1311"></a>
+<FONT color="green">1312</FONT>        else<a name="line.1312"></a>
+<FONT color="green">1313</FONT>          doc = m_root.getOwnerDocument();<a name="line.1313"></a>
+<FONT color="green">1314</FONT>    <a name="line.1314"></a>
+<FONT color="green">1315</FONT>        if (null != doc)<a name="line.1315"></a>
+<FONT color="green">1316</FONT>        {<a name="line.1316"></a>
+<FONT color="green">1317</FONT>          DocumentType dtd = doc.getDoctype();<a name="line.1317"></a>
+<FONT color="green">1318</FONT>    <a name="line.1318"></a>
+<FONT color="green">1319</FONT>          if (null != dtd)<a name="line.1319"></a>
+<FONT color="green">1320</FONT>          {<a name="line.1320"></a>
+<FONT color="green">1321</FONT>            return dtd.getPublicId();<a name="line.1321"></a>
+<FONT color="green">1322</FONT>          }<a name="line.1322"></a>
+<FONT color="green">1323</FONT>        }<a name="line.1323"></a>
+<FONT color="green">1324</FONT>    <a name="line.1324"></a>
+<FONT color="green">1325</FONT>        return null;<a name="line.1325"></a>
+<FONT color="green">1326</FONT>      }<a name="line.1326"></a>
+<FONT color="green">1327</FONT>    <a name="line.1327"></a>
+<FONT color="green">1328</FONT>      /**<a name="line.1328"></a>
+<FONT color="green">1329</FONT>       * Returns the &lt;code&gt;Element&lt;/code&gt; whose &lt;code&gt;ID&lt;/code&gt; is given by<a name="line.1329"></a>
+<FONT color="green">1330</FONT>       * &lt;code&gt;elementId&lt;/code&gt;. If no such element exists, returns<a name="line.1330"></a>
+<FONT color="green">1331</FONT>       * &lt;code&gt;DTM.NULL&lt;/code&gt;. Behavior is not defined if more than one element<a name="line.1331"></a>
+<FONT color="green">1332</FONT>       * has this &lt;code&gt;ID&lt;/code&gt;. Attributes (including those<a name="line.1332"></a>
+<FONT color="green">1333</FONT>       * with the name "ID") are not of type ID unless so defined by DTD/Schema<a name="line.1333"></a>
+<FONT color="green">1334</FONT>       * information available to the DTM implementation.<a name="line.1334"></a>
+<FONT color="green">1335</FONT>       * Implementations that do not know whether attributes are of type ID or<a name="line.1335"></a>
+<FONT color="green">1336</FONT>       * not are expected to return &lt;code&gt;DTM.NULL&lt;/code&gt;.<a name="line.1336"></a>
+<FONT color="green">1337</FONT>       *<a name="line.1337"></a>
+<FONT color="green">1338</FONT>       * &lt;p&gt;%REVIEW% Presumably IDs are still scoped to a single document,<a name="line.1338"></a>
+<FONT color="green">1339</FONT>       * and this operation searches only within a single document, right?<a name="line.1339"></a>
+<FONT color="green">1340</FONT>       * Wouldn't want collisions between DTMs in the same process.&lt;/p&gt;<a name="line.1340"></a>
+<FONT color="green">1341</FONT>       *<a name="line.1341"></a>
+<FONT color="green">1342</FONT>       * @param elementId The unique &lt;code&gt;id&lt;/code&gt; value for an element.<a name="line.1342"></a>
+<FONT color="green">1343</FONT>       * @return The handle of the matching element.<a name="line.1343"></a>
+<FONT color="green">1344</FONT>       */<a name="line.1344"></a>
+<FONT color="green">1345</FONT>      public int getElementById(String elementId)<a name="line.1345"></a>
+<FONT color="green">1346</FONT>      {<a name="line.1346"></a>
+<FONT color="green">1347</FONT>    <a name="line.1347"></a>
+<FONT color="green">1348</FONT>        Document doc = (m_root.getNodeType() == Node.DOCUMENT_NODE) <a name="line.1348"></a>
+<FONT color="green">1349</FONT>            ? (Document) m_root : m_root.getOwnerDocument();<a name="line.1349"></a>
+<FONT color="green">1350</FONT>            <a name="line.1350"></a>
+<FONT color="green">1351</FONT>        if(null != doc)<a name="line.1351"></a>
+<FONT color="green">1352</FONT>        {<a name="line.1352"></a>
+<FONT color="green">1353</FONT>          Node elem = doc.getElementById(elementId);<a name="line.1353"></a>
+<FONT color="green">1354</FONT>          if(null != elem)<a name="line.1354"></a>
+<FONT color="green">1355</FONT>          {<a name="line.1355"></a>
+<FONT color="green">1356</FONT>            int elemHandle = getHandleFromNode(elem);<a name="line.1356"></a>
+<FONT color="green">1357</FONT>            <a name="line.1357"></a>
+<FONT color="green">1358</FONT>            if(DTM.NULL == elemHandle)<a name="line.1358"></a>
+<FONT color="green">1359</FONT>            {<a name="line.1359"></a>
+<FONT color="green">1360</FONT>              int identity = m_nodes.size()-1;<a name="line.1360"></a>
+<FONT color="green">1361</FONT>              while (DTM.NULL != (identity = getNextNodeIdentity(identity)))<a name="line.1361"></a>
+<FONT color="green">1362</FONT>              {<a name="line.1362"></a>
+<FONT color="green">1363</FONT>                Node node = getNode(identity);<a name="line.1363"></a>
+<FONT color="green">1364</FONT>                if(node == elem)<a name="line.1364"></a>
+<FONT color="green">1365</FONT>                {<a name="line.1365"></a>
+<FONT color="green">1366</FONT>                  elemHandle = getHandleFromNode(elem);<a name="line.1366"></a>
+<FONT color="green">1367</FONT>                  break;<a name="line.1367"></a>
+<FONT color="green">1368</FONT>                }<a name="line.1368"></a>
+<FONT color="green">1369</FONT>               }<a name="line.1369"></a>
+<FONT color="green">1370</FONT>            }<a name="line.1370"></a>
+<FONT color="green">1371</FONT>            <a name="line.1371"></a>
+<FONT color="green">1372</FONT>            return elemHandle;<a name="line.1372"></a>
+<FONT color="green">1373</FONT>          }<a name="line.1373"></a>
+<FONT color="green">1374</FONT>        <a name="line.1374"></a>
+<FONT color="green">1375</FONT>        }<a name="line.1375"></a>
+<FONT color="green">1376</FONT>        return DTM.NULL;<a name="line.1376"></a>
+<FONT color="green">1377</FONT>      }<a name="line.1377"></a>
+<FONT color="green">1378</FONT>    <a name="line.1378"></a>
+<FONT color="green">1379</FONT>      /**<a name="line.1379"></a>
+<FONT color="green">1380</FONT>       * The getUnparsedEntityURI function returns the URI of the unparsed<a name="line.1380"></a>
+<FONT color="green">1381</FONT>       * entity with the specified name in the same document as the context<a name="line.1381"></a>
+<FONT color="green">1382</FONT>       * node (see [3.3 Unparsed Entities]). It returns the empty string if<a name="line.1382"></a>
+<FONT color="green">1383</FONT>       * there is no such entity.<a name="line.1383"></a>
+<FONT color="green">1384</FONT>       * &lt;p&gt;<a name="line.1384"></a>
+<FONT color="green">1385</FONT>       * XML processors may choose to use the System Identifier (if one<a name="line.1385"></a>
+<FONT color="green">1386</FONT>       * is provided) to resolve the entity, rather than the URI in the<a name="line.1386"></a>
+<FONT color="green">1387</FONT>       * Public Identifier. The details are dependent on the processor, and<a name="line.1387"></a>
+<FONT color="green">1388</FONT>       * we would have to support some form of plug-in resolver to handle<a name="line.1388"></a>
+<FONT color="green">1389</FONT>       * this properly. Currently, we simply return the System Identifier if<a name="line.1389"></a>
+<FONT color="green">1390</FONT>       * present, and hope that it a usable URI or that our caller can<a name="line.1390"></a>
+<FONT color="green">1391</FONT>       * map it to one.<a name="line.1391"></a>
+<FONT color="green">1392</FONT>       * TODO: Resolve Public Identifiers... or consider changing function name.<a name="line.1392"></a>
+<FONT color="green">1393</FONT>       * &lt;p&gt;<a name="line.1393"></a>
+<FONT color="green">1394</FONT>       * If we find a relative URI<a name="line.1394"></a>
+<FONT color="green">1395</FONT>       * reference, XML expects it to be resolved in terms of the base URI<a name="line.1395"></a>
+<FONT color="green">1396</FONT>       * of the document. The DOM doesn't do that for us, and it isn't<a name="line.1396"></a>
+<FONT color="green">1397</FONT>       * entirely clear whether that should be done here; currently that's<a name="line.1397"></a>
+<FONT color="green">1398</FONT>       * pushed up to a higher level of our application. (Note that DOM Level<a name="line.1398"></a>
+<FONT color="green">1399</FONT>       * 1 didn't store the document's base URI.)<a name="line.1399"></a>
+<FONT color="green">1400</FONT>       * TODO: Consider resolving Relative URIs.<a name="line.1400"></a>
+<FONT color="green">1401</FONT>       * &lt;p&gt;<a name="line.1401"></a>
+<FONT color="green">1402</FONT>       * (The DOM's statement that "An XML processor may choose to<a name="line.1402"></a>
+<FONT color="green">1403</FONT>       * completely expand entities before the structure model is passed<a name="line.1403"></a>
+<FONT color="green">1404</FONT>       * to the DOM" refers only to parsed entities, not unparsed, and hence<a name="line.1404"></a>
+<FONT color="green">1405</FONT>       * doesn't affect this function.)<a name="line.1405"></a>
+<FONT color="green">1406</FONT>       *<a name="line.1406"></a>
+<FONT color="green">1407</FONT>       * @param name A string containing the Entity Name of the unparsed<a name="line.1407"></a>
+<FONT color="green">1408</FONT>       * entity.<a name="line.1408"></a>
+<FONT color="green">1409</FONT>       *<a name="line.1409"></a>
+<FONT color="green">1410</FONT>       * @return String containing the URI of the Unparsed Entity, or an<a name="line.1410"></a>
+<FONT color="green">1411</FONT>       * empty string if no such entity exists.<a name="line.1411"></a>
+<FONT color="green">1412</FONT>       */<a name="line.1412"></a>
+<FONT color="green">1413</FONT>      public String getUnparsedEntityURI(String name)<a name="line.1413"></a>
+<FONT color="green">1414</FONT>      {<a name="line.1414"></a>
+<FONT color="green">1415</FONT>    <a name="line.1415"></a>
+<FONT color="green">1416</FONT>        String url = "";<a name="line.1416"></a>
+<FONT color="green">1417</FONT>        Document doc = (m_root.getNodeType() == Node.DOCUMENT_NODE) <a name="line.1417"></a>
+<FONT color="green">1418</FONT>            ? (Document) m_root : m_root.getOwnerDocument();<a name="line.1418"></a>
+<FONT color="green">1419</FONT>    <a name="line.1419"></a>
+<FONT color="green">1420</FONT>        if (null != doc)<a name="line.1420"></a>
+<FONT color="green">1421</FONT>        {<a name="line.1421"></a>
+<FONT color="green">1422</FONT>          DocumentType doctype = doc.getDoctype();<a name="line.1422"></a>
+<FONT color="green">1423</FONT>      <a name="line.1423"></a>
+<FONT color="green">1424</FONT>          if (null != doctype)<a name="line.1424"></a>
+<FONT color="green">1425</FONT>          {<a name="line.1425"></a>
+<FONT color="green">1426</FONT>            NamedNodeMap entities = doctype.getEntities();<a name="line.1426"></a>
+<FONT color="green">1427</FONT>            if(null == entities)<a name="line.1427"></a>
+<FONT color="green">1428</FONT>              return url;<a name="line.1428"></a>
+<FONT color="green">1429</FONT>            Entity entity = (Entity) entities.getNamedItem(name);<a name="line.1429"></a>
+<FONT color="green">1430</FONT>            if(null == entity)<a name="line.1430"></a>
+<FONT color="green">1431</FONT>              return url;<a name="line.1431"></a>
+<FONT color="green">1432</FONT>            <a name="line.1432"></a>
+<FONT color="green">1433</FONT>            String notationName = entity.getNotationName();<a name="line.1433"></a>
+<FONT color="green">1434</FONT>      <a name="line.1434"></a>
+<FONT color="green">1435</FONT>            if (null != notationName)  // then it's unparsed<a name="line.1435"></a>
+<FONT color="green">1436</FONT>            {<a name="line.1436"></a>
+<FONT color="green">1437</FONT>              // The draft says: "The XSLT processor may use the public <a name="line.1437"></a>
+<FONT color="green">1438</FONT>              // identifier to generate a URI for the entity instead of the URI <a name="line.1438"></a>
+<FONT color="green">1439</FONT>              // specified in the system identifier. If the XSLT processor does <a name="line.1439"></a>
+<FONT color="green">1440</FONT>              // not use the public identifier to generate the URI, it must use <a name="line.1440"></a>
+<FONT color="green">1441</FONT>              // the system identifier; if the system identifier is a relative <a name="line.1441"></a>
+<FONT color="green">1442</FONT>              // URI, it must be resolved into an absolute URI using the URI of <a name="line.1442"></a>
+<FONT color="green">1443</FONT>              // the resource containing the entity declaration as the base <a name="line.1443"></a>
+<FONT color="green">1444</FONT>              // URI [RFC2396]."<a name="line.1444"></a>
+<FONT color="green">1445</FONT>              // So I'm falling a bit short here.<a name="line.1445"></a>
+<FONT color="green">1446</FONT>              url = entity.getSystemId();<a name="line.1446"></a>
+<FONT color="green">1447</FONT>      <a name="line.1447"></a>
+<FONT color="green">1448</FONT>              if (null == url)<a name="line.1448"></a>
+<FONT color="green">1449</FONT>              {<a name="line.1449"></a>
+<FONT color="green">1450</FONT>                url = entity.getPublicId();<a name="line.1450"></a>
+<FONT color="green">1451</FONT>              }<a name="line.1451"></a>
+<FONT color="green">1452</FONT>              else<a name="line.1452"></a>
+<FONT color="green">1453</FONT>              {<a name="line.1453"></a>
+<FONT color="green">1454</FONT>                // This should be resolved to an absolute URL, but that's hard <a name="line.1454"></a>
+<FONT color="green">1455</FONT>                // to do from here.<a name="line.1455"></a>
+<FONT color="green">1456</FONT>              }        <a name="line.1456"></a>
+<FONT color="green">1457</FONT>            }<a name="line.1457"></a>
+<FONT color="green">1458</FONT>          }<a name="line.1458"></a>
+<FONT color="green">1459</FONT>        }<a name="line.1459"></a>
+<FONT color="green">1460</FONT>    <a name="line.1460"></a>
+<FONT color="green">1461</FONT>        return url;<a name="line.1461"></a>
+<FONT color="green">1462</FONT>      }<a name="line.1462"></a>
+<FONT color="green">1463</FONT>    <a name="line.1463"></a>
+<FONT color="green">1464</FONT>      /**<a name="line.1464"></a>
+<FONT color="green">1465</FONT>       *     5. [specified] A flag indicating whether this attribute was actually<a name="line.1465"></a>
+<FONT color="green">1466</FONT>       *        specified in the start-tag of its element, or was defaulted from the<a name="line.1466"></a>
+<FONT color="green">1467</FONT>       *        DTD.<a name="line.1467"></a>
+<FONT color="green">1468</FONT>       *<a name="line.1468"></a>
+<FONT color="green">1469</FONT>       * @param attributeHandle the attribute handle<a name="line.1469"></a>
+<FONT color="green">1470</FONT>       * @return &lt;code&gt;true&lt;/code&gt; if the attribute was specified;<a name="line.1470"></a>
+<FONT color="green">1471</FONT>       *         &lt;code&gt;false&lt;/code&gt; if it was defaulted.<a name="line.1471"></a>
+<FONT color="green">1472</FONT>       */<a name="line.1472"></a>
+<FONT color="green">1473</FONT>      public boolean isAttributeSpecified(int attributeHandle)<a name="line.1473"></a>
+<FONT color="green">1474</FONT>      {<a name="line.1474"></a>
+<FONT color="green">1475</FONT>        int type = getNodeType(attributeHandle);<a name="line.1475"></a>
+<FONT color="green">1476</FONT>    <a name="line.1476"></a>
+<FONT color="green">1477</FONT>        if (DTM.ATTRIBUTE_NODE == type)<a name="line.1477"></a>
+<FONT color="green">1478</FONT>        {<a name="line.1478"></a>
+<FONT color="green">1479</FONT>          Attr attr = (Attr)getNode(attributeHandle);<a name="line.1479"></a>
+<FONT color="green">1480</FONT>          return attr.getSpecified();<a name="line.1480"></a>
+<FONT color="green">1481</FONT>        }<a name="line.1481"></a>
+<FONT color="green">1482</FONT>        return false;<a name="line.1482"></a>
+<FONT color="green">1483</FONT>      }<a name="line.1483"></a>
+<FONT color="green">1484</FONT>    <a name="line.1484"></a>
+<FONT color="green">1485</FONT>      /** Bind an IncrementalSAXSource to this DTM. NOT RELEVANT for DOM2DTM, since<a name="line.1485"></a>
+<FONT color="green">1486</FONT>       * we're wrapped around an existing DOM.<a name="line.1486"></a>
+<FONT color="green">1487</FONT>       *<a name="line.1487"></a>
+<FONT color="green">1488</FONT>       * @param source The IncrementalSAXSource that we want to recieve events from<a name="line.1488"></a>
+<FONT color="green">1489</FONT>       * on demand.<a name="line.1489"></a>
+<FONT color="green">1490</FONT>       */<a name="line.1490"></a>
+<FONT color="green">1491</FONT>      public void setIncrementalSAXSource(IncrementalSAXSource source)<a name="line.1491"></a>
+<FONT color="green">1492</FONT>      {<a name="line.1492"></a>
+<FONT color="green">1493</FONT>      }<a name="line.1493"></a>
+<FONT color="green">1494</FONT>      <a name="line.1494"></a>
+<FONT color="green">1495</FONT>      /** getContentHandler returns "our SAX builder" -- the thing that<a name="line.1495"></a>
+<FONT color="green">1496</FONT>       * someone else should send SAX events to in order to extend this<a name="line.1496"></a>
+<FONT color="green">1497</FONT>       * DTM model.<a name="line.1497"></a>
+<FONT color="green">1498</FONT>       *<a name="line.1498"></a>
+<FONT color="green">1499</FONT>       * @return null if this model doesn't respond to SAX events,<a name="line.1499"></a>
+<FONT color="green">1500</FONT>       * "this" if the DTM object has a built-in SAX ContentHandler,<a name="line.1500"></a>
+<FONT color="green">1501</FONT>       * the IncrmentalSAXSource if we're bound to one and should receive<a name="line.1501"></a>
+<FONT color="green">1502</FONT>       * the SAX stream via it for incremental build purposes...<a name="line.1502"></a>
+<FONT color="green">1503</FONT>       * */<a name="line.1503"></a>
+<FONT color="green">1504</FONT>      public org.xml.sax.ContentHandler getContentHandler()<a name="line.1504"></a>
+<FONT color="green">1505</FONT>      {<a name="line.1505"></a>
+<FONT color="green">1506</FONT>          return null;<a name="line.1506"></a>
+<FONT color="green">1507</FONT>      }<a name="line.1507"></a>
+<FONT color="green">1508</FONT>      <a name="line.1508"></a>
+<FONT color="green">1509</FONT>      /**<a name="line.1509"></a>
+<FONT color="green">1510</FONT>       * Return this DTM's lexical handler.<a name="line.1510"></a>
+<FONT color="green">1511</FONT>       *<a name="line.1511"></a>
+<FONT color="green">1512</FONT>       * %REVIEW% Should this return null if constrution already done/begun?<a name="line.1512"></a>
+<FONT color="green">1513</FONT>       *<a name="line.1513"></a>
+<FONT color="green">1514</FONT>       * @return null if this model doesn't respond to lexical SAX events,<a name="line.1514"></a>
+<FONT color="green">1515</FONT>       * "this" if the DTM object has a built-in SAX ContentHandler,<a name="line.1515"></a>
+<FONT color="green">1516</FONT>       * the IncrementalSAXSource if we're bound to one and should receive<a name="line.1516"></a>
+<FONT color="green">1517</FONT>       * the SAX stream via it for incremental build purposes...<a name="line.1517"></a>
+<FONT color="green">1518</FONT>       */<a name="line.1518"></a>
+<FONT color="green">1519</FONT>      public org.xml.sax.ext.LexicalHandler getLexicalHandler()<a name="line.1519"></a>
+<FONT color="green">1520</FONT>      {<a name="line.1520"></a>
+<FONT color="green">1521</FONT>    <a name="line.1521"></a>
+<FONT color="green">1522</FONT>        return null;<a name="line.1522"></a>
+<FONT color="green">1523</FONT>      }<a name="line.1523"></a>
+<FONT color="green">1524</FONT>    <a name="line.1524"></a>
+<FONT color="green">1525</FONT>      <a name="line.1525"></a>
+<FONT color="green">1526</FONT>      /**<a name="line.1526"></a>
+<FONT color="green">1527</FONT>       * Return this DTM's EntityResolver.<a name="line.1527"></a>
+<FONT color="green">1528</FONT>       *<a name="line.1528"></a>
+<FONT color="green">1529</FONT>       * @return null if this model doesn't respond to SAX entity ref events.<a name="line.1529"></a>
+<FONT color="green">1530</FONT>       */<a name="line.1530"></a>
+<FONT color="green">1531</FONT>      public org.xml.sax.EntityResolver getEntityResolver()<a name="line.1531"></a>
+<FONT color="green">1532</FONT>      {<a name="line.1532"></a>
+<FONT color="green">1533</FONT>    <a name="line.1533"></a>
+<FONT color="green">1534</FONT>        return null;<a name="line.1534"></a>
+<FONT color="green">1535</FONT>      }<a name="line.1535"></a>
+<FONT color="green">1536</FONT>      <a name="line.1536"></a>
+<FONT color="green">1537</FONT>      /**<a name="line.1537"></a>
+<FONT color="green">1538</FONT>       * Return this DTM's DTDHandler.<a name="line.1538"></a>
+<FONT color="green">1539</FONT>       *<a name="line.1539"></a>
+<FONT color="green">1540</FONT>       * @return null if this model doesn't respond to SAX dtd events.<a name="line.1540"></a>
+<FONT color="green">1541</FONT>       */<a name="line.1541"></a>
+<FONT color="green">1542</FONT>      public org.xml.sax.DTDHandler getDTDHandler()<a name="line.1542"></a>
+<FONT color="green">1543</FONT>      {<a name="line.1543"></a>
+<FONT color="green">1544</FONT>    <a name="line.1544"></a>
+<FONT color="green">1545</FONT>        return null;<a name="line.1545"></a>
+<FONT color="green">1546</FONT>      }<a name="line.1546"></a>
+<FONT color="green">1547</FONT>    <a name="line.1547"></a>
+<FONT color="green">1548</FONT>      /**<a name="line.1548"></a>
+<FONT color="green">1549</FONT>       * Return this DTM's ErrorHandler.<a name="line.1549"></a>
+<FONT color="green">1550</FONT>       *<a name="line.1550"></a>
+<FONT color="green">1551</FONT>       * @return null if this model doesn't respond to SAX error events.<a name="line.1551"></a>
+<FONT color="green">1552</FONT>       */<a name="line.1552"></a>
+<FONT color="green">1553</FONT>      public org.xml.sax.ErrorHandler getErrorHandler()<a name="line.1553"></a>
+<FONT color="green">1554</FONT>      {<a name="line.1554"></a>
+<FONT color="green">1555</FONT>    <a name="line.1555"></a>
+<FONT color="green">1556</FONT>        return null;<a name="line.1556"></a>
+<FONT color="green">1557</FONT>      }<a name="line.1557"></a>
+<FONT color="green">1558</FONT>      <a name="line.1558"></a>
+<FONT color="green">1559</FONT>      /**<a name="line.1559"></a>
+<FONT color="green">1560</FONT>       * Return this DTM's DeclHandler.<a name="line.1560"></a>
+<FONT color="green">1561</FONT>       *<a name="line.1561"></a>
+<FONT color="green">1562</FONT>       * @return null if this model doesn't respond to SAX Decl events.<a name="line.1562"></a>
+<FONT color="green">1563</FONT>       */<a name="line.1563"></a>
+<FONT color="green">1564</FONT>      public org.xml.sax.ext.DeclHandler getDeclHandler()<a name="line.1564"></a>
+<FONT color="green">1565</FONT>      {<a name="line.1565"></a>
+<FONT color="green">1566</FONT>    <a name="line.1566"></a>
+<FONT color="green">1567</FONT>        return null;<a name="line.1567"></a>
+<FONT color="green">1568</FONT>      }  <a name="line.1568"></a>
+<FONT color="green">1569</FONT>    <a name="line.1569"></a>
+<FONT color="green">1570</FONT>      /** @return true iff we're building this model incrementally (eg<a name="line.1570"></a>
+<FONT color="green">1571</FONT>       * we're partnered with a IncrementalSAXSource) and thus require that the<a name="line.1571"></a>
+<FONT color="green">1572</FONT>       * transformation and the parse run simultaneously. Guidance to the<a name="line.1572"></a>
+<FONT color="green">1573</FONT>       * DTMManager.<a name="line.1573"></a>
+<FONT color="green">1574</FONT>       * */<a name="line.1574"></a>
+<FONT color="green">1575</FONT>      public boolean needsTwoThreads()<a name="line.1575"></a>
+<FONT color="green">1576</FONT>      {<a name="line.1576"></a>
+<FONT color="green">1577</FONT>        return false;<a name="line.1577"></a>
+<FONT color="green">1578</FONT>      }<a name="line.1578"></a>
+<FONT color="green">1579</FONT>    <a name="line.1579"></a>
+<FONT color="green">1580</FONT>      // ========== Direct SAX Dispatch, for optimization purposes ========<a name="line.1580"></a>
+<FONT color="green">1581</FONT>      <a name="line.1581"></a>
+<FONT color="green">1582</FONT>      /**<a name="line.1582"></a>
+<FONT color="green">1583</FONT>       * Returns whether the specified &lt;var&gt;ch&lt;/var&gt; conforms to the XML 1.0 definition<a name="line.1583"></a>
+<FONT color="green">1584</FONT>       * of whitespace.  Refer to &lt;A href="http://www.w3.org/TR/1998/REC-xml-19980210#NT-S"&gt;<a name="line.1584"></a>
+<FONT color="green">1585</FONT>       * the definition of &lt;CODE&gt;S&lt;/CODE&gt;&lt;/A&gt; for details.<a name="line.1585"></a>
+<FONT color="green">1586</FONT>       * @param   ch      Character to check as XML whitespace.<a name="line.1586"></a>
+<FONT color="green">1587</FONT>       * @return          =true if &lt;var&gt;ch&lt;/var&gt; is XML whitespace; otherwise =false.<a name="line.1587"></a>
+<FONT color="green">1588</FONT>       */<a name="line.1588"></a>
+<FONT color="green">1589</FONT>      private static boolean isSpace(char ch)<a name="line.1589"></a>
+<FONT color="green">1590</FONT>      {<a name="line.1590"></a>
+<FONT color="green">1591</FONT>        return XMLCharacterRecognizer.isWhiteSpace(ch);  // Take the easy way out for now.<a name="line.1591"></a>
+<FONT color="green">1592</FONT>      }<a name="line.1592"></a>
+<FONT color="green">1593</FONT>    <a name="line.1593"></a>
+<FONT color="green">1594</FONT>      /**<a name="line.1594"></a>
+<FONT color="green">1595</FONT>       * Directly call the<a name="line.1595"></a>
+<FONT color="green">1596</FONT>       * characters method on the passed ContentHandler for the<a name="line.1596"></a>
+<FONT color="green">1597</FONT>       * string-value of the given node (see http://www.w3.org/TR/xpath#data-model<a name="line.1597"></a>
+<FONT color="green">1598</FONT>       * for the definition of a node's string-value). Multiple calls to the<a name="line.1598"></a>
+<FONT color="green">1599</FONT>       * ContentHandler's characters methods may well occur for a single call to<a name="line.1599"></a>
+<FONT color="green">1600</FONT>       * this method.<a name="line.1600"></a>
+<FONT color="green">1601</FONT>       *<a name="line.1601"></a>
+<FONT color="green">1602</FONT>       * @param nodeHandle The node ID.<a name="line.1602"></a>
+<FONT color="green">1603</FONT>       * @param ch A non-null reference to a ContentHandler.<a name="line.1603"></a>
+<FONT color="green">1604</FONT>       *<a name="line.1604"></a>
+<FONT color="green">1605</FONT>       * @throws org.xml.sax.SAXException<a name="line.1605"></a>
+<FONT color="green">1606</FONT>       */<a name="line.1606"></a>
+<FONT color="green">1607</FONT>      public void dispatchCharactersEvents(<a name="line.1607"></a>
+<FONT color="green">1608</FONT>              int nodeHandle, org.xml.sax.ContentHandler ch, <a name="line.1608"></a>
+<FONT color="green">1609</FONT>              boolean normalize)<a name="line.1609"></a>
+<FONT color="green">1610</FONT>                throws org.xml.sax.SAXException<a name="line.1610"></a>
+<FONT color="green">1611</FONT>      {<a name="line.1611"></a>
+<FONT color="green">1612</FONT>        if(normalize)<a name="line.1612"></a>
+<FONT color="green">1613</FONT>        {<a name="line.1613"></a>
+<FONT color="green">1614</FONT>          XMLString str = getStringValue(nodeHandle);<a name="line.1614"></a>
+<FONT color="green">1615</FONT>          str = str.fixWhiteSpace(true, true, false);<a name="line.1615"></a>
+<FONT color="green">1616</FONT>          str.dispatchCharactersEvents(ch);<a name="line.1616"></a>
+<FONT color="green">1617</FONT>        }<a name="line.1617"></a>
+<FONT color="green">1618</FONT>        else<a name="line.1618"></a>
+<FONT color="green">1619</FONT>        {<a name="line.1619"></a>
+<FONT color="green">1620</FONT>          int type = getNodeType(nodeHandle);<a name="line.1620"></a>
+<FONT color="green">1621</FONT>          Node node = getNode(nodeHandle);<a name="line.1621"></a>
+<FONT color="green">1622</FONT>          dispatchNodeData(node, ch, 0);<a name="line.1622"></a>
+<FONT color="green">1623</FONT>              // Text coalition -- a DTM text node may represent multiple<a name="line.1623"></a>
+<FONT color="green">1624</FONT>              // DOM nodes.<a name="line.1624"></a>
+<FONT color="green">1625</FONT>              if(TEXT_NODE == type || CDATA_SECTION_NODE == type)<a name="line.1625"></a>
+<FONT color="green">1626</FONT>              {<a name="line.1626"></a>
+<FONT color="green">1627</FONT>                      while( null != (node=logicalNextDOMTextNode(node)) )<a name="line.1627"></a>
+<FONT color="green">1628</FONT>                      {<a name="line.1628"></a>
+<FONT color="green">1629</FONT>                          dispatchNodeData(node, ch, 0);<a name="line.1629"></a>
+<FONT color="green">1630</FONT>                      }<a name="line.1630"></a>
+<FONT color="green">1631</FONT>              }<a name="line.1631"></a>
+<FONT color="green">1632</FONT>        }<a name="line.1632"></a>
+<FONT color="green">1633</FONT>      }<a name="line.1633"></a>
+<FONT color="green">1634</FONT>      <a name="line.1634"></a>
+<FONT color="green">1635</FONT>      /**<a name="line.1635"></a>
+<FONT color="green">1636</FONT>       * Retrieve the text content of a DOM subtree, appending it into a<a name="line.1636"></a>
+<FONT color="green">1637</FONT>       * user-supplied FastStringBuffer object. Note that attributes are<a name="line.1637"></a>
+<FONT color="green">1638</FONT>       * not considered part of the content of an element.<a name="line.1638"></a>
+<FONT color="green">1639</FONT>       * &lt;p&gt;<a name="line.1639"></a>
+<FONT color="green">1640</FONT>       * There are open questions regarding whitespace stripping. <a name="line.1640"></a>
+<FONT color="green">1641</FONT>       * Currently we make no special effort in that regard, since the standard<a name="line.1641"></a>
+<FONT color="green">1642</FONT>       * DOM doesn't yet provide DTD-based information to distinguish<a name="line.1642"></a>
+<FONT color="green">1643</FONT>       * whitespace-in-element-context from genuine #PCDATA. Note that we<a name="line.1643"></a>
+<FONT color="green">1644</FONT>       * should probably also consider xml:space if/when we address this.<a name="line.1644"></a>
+<FONT color="green">1645</FONT>       * DOM Level 3 may solve the problem for us.<a name="line.1645"></a>
+<FONT color="green">1646</FONT>       * &lt;p&gt;<a name="line.1646"></a>
+<FONT color="green">1647</FONT>       * %REVIEW% Note that as a DOM-level operation, it can be argued that this<a name="line.1647"></a>
+<FONT color="green">1648</FONT>       * routine _shouldn't_ perform any processing beyond what the DOM already<a name="line.1648"></a>
+<FONT color="green">1649</FONT>       * does, and that whitespace stripping and so on belong at the DTM level.<a name="line.1649"></a>
+<FONT color="green">1650</FONT>       * If you want a stripped DOM view, wrap DTM2DOM around DOM2DTM.<a name="line.1650"></a>
+<FONT color="green">1651</FONT>       *<a name="line.1651"></a>
+<FONT color="green">1652</FONT>       * @param node Node whose subtree is to be walked, gathering the<a name="line.1652"></a>
+<FONT color="green">1653</FONT>       * contents of all Text or CDATASection nodes.<a name="line.1653"></a>
+<FONT color="green">1654</FONT>       */<a name="line.1654"></a>
+<FONT color="green">1655</FONT>      protected static void dispatchNodeData(Node node, <a name="line.1655"></a>
+<FONT color="green">1656</FONT>                                             org.xml.sax.ContentHandler ch, <a name="line.1656"></a>
+<FONT color="green">1657</FONT>                                             int depth)<a name="line.1657"></a>
+<FONT color="green">1658</FONT>                throws org.xml.sax.SAXException<a name="line.1658"></a>
+<FONT color="green">1659</FONT>      {<a name="line.1659"></a>
+<FONT color="green">1660</FONT>    <a name="line.1660"></a>
+<FONT color="green">1661</FONT>        switch (node.getNodeType())<a name="line.1661"></a>
+<FONT color="green">1662</FONT>        {<a name="line.1662"></a>
+<FONT color="green">1663</FONT>        case Node.DOCUMENT_FRAGMENT_NODE :<a name="line.1663"></a>
+<FONT color="green">1664</FONT>        case Node.DOCUMENT_NODE :<a name="line.1664"></a>
+<FONT color="green">1665</FONT>        case Node.ELEMENT_NODE :<a name="line.1665"></a>
+<FONT color="green">1666</FONT>        {<a name="line.1666"></a>
+<FONT color="green">1667</FONT>          for (Node child = node.getFirstChild(); null != child;<a name="line.1667"></a>
+<FONT color="green">1668</FONT>                  child = child.getNextSibling())<a name="line.1668"></a>
+<FONT color="green">1669</FONT>          {<a name="line.1669"></a>
+<FONT color="green">1670</FONT>            dispatchNodeData(child, ch, depth+1);<a name="line.1670"></a>
+<FONT color="green">1671</FONT>          }<a name="line.1671"></a>
+<FONT color="green">1672</FONT>        }<a name="line.1672"></a>
+<FONT color="green">1673</FONT>        break;<a name="line.1673"></a>
+<FONT color="green">1674</FONT>        case Node.PROCESSING_INSTRUCTION_NODE : // %REVIEW%<a name="line.1674"></a>
+<FONT color="green">1675</FONT>        case Node.COMMENT_NODE :<a name="line.1675"></a>
+<FONT color="green">1676</FONT>          if(0 != depth)<a name="line.1676"></a>
+<FONT color="green">1677</FONT>            break;<a name="line.1677"></a>
+<FONT color="green">1678</FONT>            // NOTE: Because this operation works in the DOM space, it does _not_ attempt<a name="line.1678"></a>
+<FONT color="green">1679</FONT>            // to perform Text Coalition. That should only be done in DTM space. <a name="line.1679"></a>
+<FONT color="green">1680</FONT>        case Node.TEXT_NODE :<a name="line.1680"></a>
+<FONT color="green">1681</FONT>        case Node.CDATA_SECTION_NODE :<a name="line.1681"></a>
+<FONT color="green">1682</FONT>        case Node.ATTRIBUTE_NODE :<a name="line.1682"></a>
+<FONT color="green">1683</FONT>          String str = node.getNodeValue();<a name="line.1683"></a>
+<FONT color="green">1684</FONT>          if(ch instanceof CharacterNodeHandler)<a name="line.1684"></a>
+<FONT color="green">1685</FONT>          {<a name="line.1685"></a>
+<FONT color="green">1686</FONT>            ((CharacterNodeHandler)ch).characters(node);<a name="line.1686"></a>
+<FONT color="green">1687</FONT>          }<a name="line.1687"></a>
+<FONT color="green">1688</FONT>          else<a name="line.1688"></a>
+<FONT color="green">1689</FONT>          {<a name="line.1689"></a>
+<FONT color="green">1690</FONT>            ch.characters(str.toCharArray(), 0, str.length());<a name="line.1690"></a>
+<FONT color="green">1691</FONT>          }<a name="line.1691"></a>
+<FONT color="green">1692</FONT>          break;<a name="line.1692"></a>
+<FONT color="green">1693</FONT>    //    /* case Node.PROCESSING_INSTRUCTION_NODE :<a name="line.1693"></a>
+<FONT color="green">1694</FONT>    //      // warning(XPATHErrorResources.WG_PARSING_AND_PREPARING);        <a name="line.1694"></a>
+<FONT color="green">1695</FONT>    //      break; */<a name="line.1695"></a>
+<FONT color="green">1696</FONT>        default :<a name="line.1696"></a>
+<FONT color="green">1697</FONT>          // ignore<a name="line.1697"></a>
+<FONT color="green">1698</FONT>          break;<a name="line.1698"></a>
+<FONT color="green">1699</FONT>        }<a name="line.1699"></a>
+<FONT color="green">1700</FONT>      }<a name="line.1700"></a>
+<FONT color="green">1701</FONT>      <a name="line.1701"></a>
+<FONT color="green">1702</FONT>      TreeWalker m_walker = new TreeWalker(null);<a name="line.1702"></a>
+<FONT color="green">1703</FONT>      <a name="line.1703"></a>
+<FONT color="green">1704</FONT>      /**<a name="line.1704"></a>
+<FONT color="green">1705</FONT>       * Directly create SAX parser events from a subtree.<a name="line.1705"></a>
+<FONT color="green">1706</FONT>       *<a name="line.1706"></a>
+<FONT color="green">1707</FONT>       * @param nodeHandle The node ID.<a name="line.1707"></a>
+<FONT color="green">1708</FONT>       * @param ch A non-null reference to a ContentHandler.<a name="line.1708"></a>
+<FONT color="green">1709</FONT>       *<a name="line.1709"></a>
+<FONT color="green">1710</FONT>       * @throws org.xml.sax.SAXException<a name="line.1710"></a>
+<FONT color="green">1711</FONT>       */<a name="line.1711"></a>
+<FONT color="green">1712</FONT>      public void dispatchToEvents(int nodeHandle, org.xml.sax.ContentHandler ch)<a name="line.1712"></a>
+<FONT color="green">1713</FONT>              throws org.xml.sax.SAXException<a name="line.1713"></a>
+<FONT color="green">1714</FONT>      {<a name="line.1714"></a>
+<FONT color="green">1715</FONT>        TreeWalker treeWalker = m_walker;<a name="line.1715"></a>
+<FONT color="green">1716</FONT>        ContentHandler prevCH = treeWalker.getContentHandler();<a name="line.1716"></a>
+<FONT color="green">1717</FONT>        <a name="line.1717"></a>
+<FONT color="green">1718</FONT>        if(null != prevCH)<a name="line.1718"></a>
+<FONT color="green">1719</FONT>        {<a name="line.1719"></a>
+<FONT color="green">1720</FONT>          treeWalker = new TreeWalker(null);<a name="line.1720"></a>
+<FONT color="green">1721</FONT>        }<a name="line.1721"></a>
+<FONT color="green">1722</FONT>        treeWalker.setContentHandler(ch);<a name="line.1722"></a>
+<FONT color="green">1723</FONT>        <a name="line.1723"></a>
+<FONT color="green">1724</FONT>        try<a name="line.1724"></a>
+<FONT color="green">1725</FONT>        {<a name="line.1725"></a>
+<FONT color="green">1726</FONT>          Node node = getNode(nodeHandle);<a name="line.1726"></a>
+<FONT color="green">1727</FONT>          treeWalker.traverseFragment(node);<a name="line.1727"></a>
+<FONT color="green">1728</FONT>        }<a name="line.1728"></a>
+<FONT color="green">1729</FONT>        finally<a name="line.1729"></a>
+<FONT color="green">1730</FONT>        {<a name="line.1730"></a>
+<FONT color="green">1731</FONT>          treeWalker.setContentHandler(null);<a name="line.1731"></a>
+<FONT color="green">1732</FONT>        }<a name="line.1732"></a>
+<FONT color="green">1733</FONT>      }<a name="line.1733"></a>
+<FONT color="green">1734</FONT>      <a name="line.1734"></a>
+<FONT color="green">1735</FONT>      public interface CharacterNodeHandler<a name="line.1735"></a>
+<FONT color="green">1736</FONT>      {<a name="line.1736"></a>
+<FONT color="green">1737</FONT>        public void characters(Node node)<a name="line.1737"></a>
+<FONT color="green">1738</FONT>                throws org.xml.sax.SAXException;<a name="line.1738"></a>
+<FONT color="green">1739</FONT>      }<a name="line.1739"></a>
+<FONT color="green">1740</FONT>    <a name="line.1740"></a>
+<FONT color="green">1741</FONT>      /**<a name="line.1741"></a>
+<FONT color="green">1742</FONT>       * For the moment all the run time properties are ignored by this<a name="line.1742"></a>
+<FONT color="green">1743</FONT>       * class.<a name="line.1743"></a>
+<FONT color="green">1744</FONT>       *<a name="line.1744"></a>
+<FONT color="green">1745</FONT>       * @param property a &lt;code&gt;String&lt;/code&gt; value<a name="line.1745"></a>
+<FONT color="green">1746</FONT>       * @param value an &lt;code&gt;Object&lt;/code&gt; value<a name="line.1746"></a>
+<FONT color="green">1747</FONT>       */<a name="line.1747"></a>
+<FONT color="green">1748</FONT>      public void setProperty(String property, Object value)<a name="line.1748"></a>
+<FONT color="green">1749</FONT>      {<a name="line.1749"></a>
+<FONT color="green">1750</FONT>      }<a name="line.1750"></a>
+<FONT color="green">1751</FONT>      <a name="line.1751"></a>
+<FONT color="green">1752</FONT>      /**<a name="line.1752"></a>
+<FONT color="green">1753</FONT>       * No source information is available for DOM2DTM, so return<a name="line.1753"></a>
+<FONT color="green">1754</FONT>       * &lt;code&gt;null&lt;/code&gt; here.<a name="line.1754"></a>
+<FONT color="green">1755</FONT>       *<a name="line.1755"></a>
+<FONT color="green">1756</FONT>       * @param node an &lt;code&gt;int&lt;/code&gt; value<a name="line.1756"></a>
+<FONT color="green">1757</FONT>       * @return null<a name="line.1757"></a>
+<FONT color="green">1758</FONT>       */<a name="line.1758"></a>
+<FONT color="green">1759</FONT>      public SourceLocator getSourceLocatorFor(int node)<a name="line.1759"></a>
+<FONT color="green">1760</FONT>      {<a name="line.1760"></a>
+<FONT color="green">1761</FONT>        return null;<a name="line.1761"></a>
+<FONT color="green">1762</FONT>      }<a name="line.1762"></a>
+<FONT color="green">1763</FONT>    <a name="line.1763"></a>
+<FONT color="green">1764</FONT>    }<a name="line.1764"></a>
+<FONT color="green">1765</FONT>    <a name="line.1765"></a>
+<FONT color="green">1766</FONT>    <a name="line.1766"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

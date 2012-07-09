@@ -1,0 +1,389 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: NodeType.java 468649 2006-10-28 07:00:55Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    <a name="line.21"></a>
+<FONT color="green">022</FONT>    package org.apache.xalan.xsltc.compiler.util;<a name="line.22"></a>
+<FONT color="green">023</FONT>    <a name="line.23"></a>
+<FONT color="green">024</FONT>    import org.apache.bcel.generic.BranchHandle;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import org.apache.bcel.generic.CHECKCAST;<a name="line.25"></a>
+<FONT color="green">026</FONT>    import org.apache.bcel.generic.ConstantPoolGen;<a name="line.26"></a>
+<FONT color="green">027</FONT>    import org.apache.bcel.generic.GETFIELD;<a name="line.27"></a>
+<FONT color="green">028</FONT>    import org.apache.bcel.generic.GOTO;<a name="line.28"></a>
+<FONT color="green">029</FONT>    import org.apache.bcel.generic.IFEQ;<a name="line.29"></a>
+<FONT color="green">030</FONT>    import org.apache.bcel.generic.ILOAD;<a name="line.30"></a>
+<FONT color="green">031</FONT>    import org.apache.bcel.generic.INVOKEINTERFACE;<a name="line.31"></a>
+<FONT color="green">032</FONT>    import org.apache.bcel.generic.INVOKESPECIAL;<a name="line.32"></a>
+<FONT color="green">033</FONT>    import org.apache.bcel.generic.ISTORE;<a name="line.33"></a>
+<FONT color="green">034</FONT>    import org.apache.bcel.generic.Instruction;<a name="line.34"></a>
+<FONT color="green">035</FONT>    import org.apache.bcel.generic.InstructionList;<a name="line.35"></a>
+<FONT color="green">036</FONT>    import org.apache.bcel.generic.NEW;<a name="line.36"></a>
+<FONT color="green">037</FONT>    import org.apache.bcel.generic.PUSH;<a name="line.37"></a>
+<FONT color="green">038</FONT>    import org.apache.xalan.xsltc.compiler.Constants;<a name="line.38"></a>
+<FONT color="green">039</FONT>    import org.apache.xalan.xsltc.compiler.FlowList;<a name="line.39"></a>
+<FONT color="green">040</FONT>    import org.apache.xalan.xsltc.compiler.NodeTest;<a name="line.40"></a>
+<FONT color="green">041</FONT>    <a name="line.41"></a>
+<FONT color="green">042</FONT>    /**<a name="line.42"></a>
+<FONT color="green">043</FONT>     * @author Jacek Ambroziak<a name="line.43"></a>
+<FONT color="green">044</FONT>     * @author Santiago Pericas-Geertsen<a name="line.44"></a>
+<FONT color="green">045</FONT>     */<a name="line.45"></a>
+<FONT color="green">046</FONT>    public final class NodeType extends Type {<a name="line.46"></a>
+<FONT color="green">047</FONT>        private final int _type;<a name="line.47"></a>
+<FONT color="green">048</FONT>    <a name="line.48"></a>
+<FONT color="green">049</FONT>        protected NodeType() {<a name="line.49"></a>
+<FONT color="green">050</FONT>            this(NodeTest.ANODE);<a name="line.50"></a>
+<FONT color="green">051</FONT>        }<a name="line.51"></a>
+<FONT color="green">052</FONT>    <a name="line.52"></a>
+<FONT color="green">053</FONT>        protected NodeType(int type) {<a name="line.53"></a>
+<FONT color="green">054</FONT>            _type = type;<a name="line.54"></a>
+<FONT color="green">055</FONT>        }<a name="line.55"></a>
+<FONT color="green">056</FONT>    <a name="line.56"></a>
+<FONT color="green">057</FONT>        public int getType() {<a name="line.57"></a>
+<FONT color="green">058</FONT>            return _type;<a name="line.58"></a>
+<FONT color="green">059</FONT>        }<a name="line.59"></a>
+<FONT color="green">060</FONT>    <a name="line.60"></a>
+<FONT color="green">061</FONT>        public String toString() {<a name="line.61"></a>
+<FONT color="green">062</FONT>            return "node-type";<a name="line.62"></a>
+<FONT color="green">063</FONT>        }<a name="line.63"></a>
+<FONT color="green">064</FONT>    <a name="line.64"></a>
+<FONT color="green">065</FONT>        public boolean identicalTo(Type other) {<a name="line.65"></a>
+<FONT color="green">066</FONT>            return other instanceof NodeType;<a name="line.66"></a>
+<FONT color="green">067</FONT>        }<a name="line.67"></a>
+<FONT color="green">068</FONT>    <a name="line.68"></a>
+<FONT color="green">069</FONT>        public int hashCode() {<a name="line.69"></a>
+<FONT color="green">070</FONT>            return _type;<a name="line.70"></a>
+<FONT color="green">071</FONT>        }<a name="line.71"></a>
+<FONT color="green">072</FONT>    <a name="line.72"></a>
+<FONT color="green">073</FONT>        public String toSignature() {<a name="line.73"></a>
+<FONT color="green">074</FONT>            return "I";<a name="line.74"></a>
+<FONT color="green">075</FONT>        }<a name="line.75"></a>
+<FONT color="green">076</FONT>    <a name="line.76"></a>
+<FONT color="green">077</FONT>        public org.apache.bcel.generic.Type toJCType() {<a name="line.77"></a>
+<FONT color="green">078</FONT>            return org.apache.bcel.generic.Type.INT;<a name="line.78"></a>
+<FONT color="green">079</FONT>        }<a name="line.79"></a>
+<FONT color="green">080</FONT>    <a name="line.80"></a>
+<FONT color="green">081</FONT>        /**<a name="line.81"></a>
+<FONT color="green">082</FONT>         * Translates a node into an object of internal type &lt;code&gt;type&lt;/code&gt;.<a name="line.82"></a>
+<FONT color="green">083</FONT>         * The translation to int is undefined since nodes are always converted<a name="line.83"></a>
+<FONT color="green">084</FONT>         * to reals in arithmetic expressions.<a name="line.84"></a>
+<FONT color="green">085</FONT>         *<a name="line.85"></a>
+<FONT color="green">086</FONT>         * @see     org.apache.xalan.xsltc.compiler.util.Type#translateTo<a name="line.86"></a>
+<FONT color="green">087</FONT>         */<a name="line.87"></a>
+<FONT color="green">088</FONT>        public void translateTo(ClassGenerator classGen, MethodGenerator methodGen, <a name="line.88"></a>
+<FONT color="green">089</FONT>                                Type type) {<a name="line.89"></a>
+<FONT color="green">090</FONT>            if (type == Type.String) {<a name="line.90"></a>
+<FONT color="green">091</FONT>                translateTo(classGen, methodGen, (StringType) type);<a name="line.91"></a>
+<FONT color="green">092</FONT>            }<a name="line.92"></a>
+<FONT color="green">093</FONT>            else if (type == Type.Boolean) {<a name="line.93"></a>
+<FONT color="green">094</FONT>                translateTo(classGen, methodGen, (BooleanType) type);<a name="line.94"></a>
+<FONT color="green">095</FONT>            }<a name="line.95"></a>
+<FONT color="green">096</FONT>            else if (type == Type.Real) {<a name="line.96"></a>
+<FONT color="green">097</FONT>                translateTo(classGen, methodGen, (RealType) type);<a name="line.97"></a>
+<FONT color="green">098</FONT>            }<a name="line.98"></a>
+<FONT color="green">099</FONT>            else if (type == Type.NodeSet) {<a name="line.99"></a>
+<FONT color="green">100</FONT>                translateTo(classGen, methodGen, (NodeSetType) type);<a name="line.100"></a>
+<FONT color="green">101</FONT>            }<a name="line.101"></a>
+<FONT color="green">102</FONT>            else if (type == Type.Reference) {<a name="line.102"></a>
+<FONT color="green">103</FONT>                translateTo(classGen, methodGen, (ReferenceType) type);<a name="line.103"></a>
+<FONT color="green">104</FONT>            }<a name="line.104"></a>
+<FONT color="green">105</FONT>            else if (type == Type.Object) {<a name="line.105"></a>
+<FONT color="green">106</FONT>                translateTo(classGen, methodGen, (ObjectType) type);<a name="line.106"></a>
+<FONT color="green">107</FONT>            }<a name="line.107"></a>
+<FONT color="green">108</FONT>            else {<a name="line.108"></a>
+<FONT color="green">109</FONT>                ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR,<a name="line.109"></a>
+<FONT color="green">110</FONT>                                            toString(), type.toString());<a name="line.110"></a>
+<FONT color="green">111</FONT>                classGen.getParser().reportError(Constants.FATAL, err);<a name="line.111"></a>
+<FONT color="green">112</FONT>            }<a name="line.112"></a>
+<FONT color="green">113</FONT>        }<a name="line.113"></a>
+<FONT color="green">114</FONT>    <a name="line.114"></a>
+<FONT color="green">115</FONT>        /**<a name="line.115"></a>
+<FONT color="green">116</FONT>         * Expects a node on the stack and pushes its string value. <a name="line.116"></a>
+<FONT color="green">117</FONT>         *<a name="line.117"></a>
+<FONT color="green">118</FONT>         * @see     org.apache.xalan.xsltc.compiler.util.Type#translateTo<a name="line.118"></a>
+<FONT color="green">119</FONT>         */<a name="line.119"></a>
+<FONT color="green">120</FONT>        public void translateTo(ClassGenerator classGen, MethodGenerator methodGen, <a name="line.120"></a>
+<FONT color="green">121</FONT>                                StringType type) {<a name="line.121"></a>
+<FONT color="green">122</FONT>            final ConstantPoolGen cpg = classGen.getConstantPool();<a name="line.122"></a>
+<FONT color="green">123</FONT>            final InstructionList il = methodGen.getInstructionList();<a name="line.123"></a>
+<FONT color="green">124</FONT>    <a name="line.124"></a>
+<FONT color="green">125</FONT>            switch (_type) {<a name="line.125"></a>
+<FONT color="green">126</FONT>            case NodeTest.ROOT:<a name="line.126"></a>
+<FONT color="green">127</FONT>            case NodeTest.ELEMENT:<a name="line.127"></a>
+<FONT color="green">128</FONT>                il.append(methodGen.loadDOM());<a name="line.128"></a>
+<FONT color="green">129</FONT>                il.append(SWAP); // dom ref must be below node index<a name="line.129"></a>
+<FONT color="green">130</FONT>                int index = cpg.addInterfaceMethodref(DOM_INTF,<a name="line.130"></a>
+<FONT color="green">131</FONT>                                                      GET_ELEMENT_VALUE,<a name="line.131"></a>
+<FONT color="green">132</FONT>                                                      GET_ELEMENT_VALUE_SIG);<a name="line.132"></a>
+<FONT color="green">133</FONT>                il.append(new INVOKEINTERFACE(index, 2));<a name="line.133"></a>
+<FONT color="green">134</FONT>                break;<a name="line.134"></a>
+<FONT color="green">135</FONT>    <a name="line.135"></a>
+<FONT color="green">136</FONT>            case NodeTest.ANODE:<a name="line.136"></a>
+<FONT color="green">137</FONT>            case NodeTest.COMMENT:<a name="line.137"></a>
+<FONT color="green">138</FONT>            case NodeTest.ATTRIBUTE:<a name="line.138"></a>
+<FONT color="green">139</FONT>            case NodeTest.PI:<a name="line.139"></a>
+<FONT color="green">140</FONT>                il.append(methodGen.loadDOM());<a name="line.140"></a>
+<FONT color="green">141</FONT>                il.append(SWAP); // dom ref must be below node index<a name="line.141"></a>
+<FONT color="green">142</FONT>                index = cpg.addInterfaceMethodref(DOM_INTF,<a name="line.142"></a>
+<FONT color="green">143</FONT>                                                  GET_NODE_VALUE,<a name="line.143"></a>
+<FONT color="green">144</FONT>                                                  GET_NODE_VALUE_SIG);<a name="line.144"></a>
+<FONT color="green">145</FONT>                il.append(new INVOKEINTERFACE(index, 2));<a name="line.145"></a>
+<FONT color="green">146</FONT>                break;<a name="line.146"></a>
+<FONT color="green">147</FONT>                <a name="line.147"></a>
+<FONT color="green">148</FONT>            default:<a name="line.148"></a>
+<FONT color="green">149</FONT>                ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR,<a name="line.149"></a>
+<FONT color="green">150</FONT>                                            toString(), type.toString());<a name="line.150"></a>
+<FONT color="green">151</FONT>                classGen.getParser().reportError(Constants.FATAL, err);<a name="line.151"></a>
+<FONT color="green">152</FONT>                break;<a name="line.152"></a>
+<FONT color="green">153</FONT>            }<a name="line.153"></a>
+<FONT color="green">154</FONT>        }<a name="line.154"></a>
+<FONT color="green">155</FONT>    <a name="line.155"></a>
+<FONT color="green">156</FONT>        /**<a name="line.156"></a>
+<FONT color="green">157</FONT>         * Translates a node into a synthesized boolean.<a name="line.157"></a>
+<FONT color="green">158</FONT>         * If the expression is "@attr", <a name="line.158"></a>
+<FONT color="green">159</FONT>         * then "true" is pushed iff "attr" is an attribute of the current node.<a name="line.159"></a>
+<FONT color="green">160</FONT>         * If the expression is ".", the result is always "true".   <a name="line.160"></a>
+<FONT color="green">161</FONT>         *<a name="line.161"></a>
+<FONT color="green">162</FONT>         * @see     org.apache.xalan.xsltc.compiler.util.Type#translateTo<a name="line.162"></a>
+<FONT color="green">163</FONT>         */<a name="line.163"></a>
+<FONT color="green">164</FONT>        public void translateTo(ClassGenerator classGen, MethodGenerator methodGen, <a name="line.164"></a>
+<FONT color="green">165</FONT>                                BooleanType type) {<a name="line.165"></a>
+<FONT color="green">166</FONT>            final InstructionList il = methodGen.getInstructionList();<a name="line.166"></a>
+<FONT color="green">167</FONT>            FlowList falsel = translateToDesynthesized(classGen, methodGen, type);<a name="line.167"></a>
+<FONT color="green">168</FONT>            il.append(ICONST_1);<a name="line.168"></a>
+<FONT color="green">169</FONT>            final BranchHandle truec = il.append(new GOTO(null));<a name="line.169"></a>
+<FONT color="green">170</FONT>            falsel.backPatch(il.append(ICONST_0));<a name="line.170"></a>
+<FONT color="green">171</FONT>            truec.setTarget(il.append(NOP));<a name="line.171"></a>
+<FONT color="green">172</FONT>        }<a name="line.172"></a>
+<FONT color="green">173</FONT>    <a name="line.173"></a>
+<FONT color="green">174</FONT>        /**<a name="line.174"></a>
+<FONT color="green">175</FONT>         * Expects a node on the stack and pushes a real.<a name="line.175"></a>
+<FONT color="green">176</FONT>         * First the node is converted to string, and from string to real.<a name="line.176"></a>
+<FONT color="green">177</FONT>         *<a name="line.177"></a>
+<FONT color="green">178</FONT>         * @see     org.apache.xalan.xsltc.compiler.util.Type#translateTo<a name="line.178"></a>
+<FONT color="green">179</FONT>         */<a name="line.179"></a>
+<FONT color="green">180</FONT>        public void translateTo(ClassGenerator classGen, MethodGenerator methodGen, <a name="line.180"></a>
+<FONT color="green">181</FONT>                                RealType type) {<a name="line.181"></a>
+<FONT color="green">182</FONT>            translateTo(classGen, methodGen, Type.String);<a name="line.182"></a>
+<FONT color="green">183</FONT>            Type.String.translateTo(classGen, methodGen, Type.Real);        <a name="line.183"></a>
+<FONT color="green">184</FONT>        }<a name="line.184"></a>
+<FONT color="green">185</FONT>    <a name="line.185"></a>
+<FONT color="green">186</FONT>        /**<a name="line.186"></a>
+<FONT color="green">187</FONT>         * Expects a node on the stack and pushes a singleton node-set. Singleton<a name="line.187"></a>
+<FONT color="green">188</FONT>         * iterators are already started after construction.<a name="line.188"></a>
+<FONT color="green">189</FONT>         *<a name="line.189"></a>
+<FONT color="green">190</FONT>         * @see     org.apache.xalan.xsltc.compiler.util.Type#translateTo<a name="line.190"></a>
+<FONT color="green">191</FONT>         */<a name="line.191"></a>
+<FONT color="green">192</FONT>        public void translateTo(ClassGenerator classGen, MethodGenerator methodGen, <a name="line.192"></a>
+<FONT color="green">193</FONT>                                NodeSetType type) {<a name="line.193"></a>
+<FONT color="green">194</FONT>            ConstantPoolGen cpg = classGen.getConstantPool();<a name="line.194"></a>
+<FONT color="green">195</FONT>            InstructionList il = methodGen.getInstructionList();<a name="line.195"></a>
+<FONT color="green">196</FONT>    <a name="line.196"></a>
+<FONT color="green">197</FONT>            // Create a new instance of SingletonIterator<a name="line.197"></a>
+<FONT color="green">198</FONT>            il.append(new NEW(cpg.addClass(SINGLETON_ITERATOR)));<a name="line.198"></a>
+<FONT color="green">199</FONT>            il.append(DUP_X1);<a name="line.199"></a>
+<FONT color="green">200</FONT>            il.append(SWAP);<a name="line.200"></a>
+<FONT color="green">201</FONT>            final int init = cpg.addMethodref(SINGLETON_ITERATOR, "&lt;init&gt;",<a name="line.201"></a>
+<FONT color="green">202</FONT>                                              "(" + NODE_SIG +")V");<a name="line.202"></a>
+<FONT color="green">203</FONT>            il.append(new INVOKESPECIAL(init));<a name="line.203"></a>
+<FONT color="green">204</FONT>        }<a name="line.204"></a>
+<FONT color="green">205</FONT>    <a name="line.205"></a>
+<FONT color="green">206</FONT>        /**<a name="line.206"></a>
+<FONT color="green">207</FONT>         * Subsume Node into ObjectType.<a name="line.207"></a>
+<FONT color="green">208</FONT>         *<a name="line.208"></a>
+<FONT color="green">209</FONT>         * @see     org.apache.xalan.xsltc.compiler.util.Type#translateTo<a name="line.209"></a>
+<FONT color="green">210</FONT>         */<a name="line.210"></a>
+<FONT color="green">211</FONT>        public void translateTo(ClassGenerator classGen, MethodGenerator methodGen, <a name="line.211"></a>
+<FONT color="green">212</FONT>                                ObjectType type) {<a name="line.212"></a>
+<FONT color="green">213</FONT>                methodGen.getInstructionList().append(NOP); <a name="line.213"></a>
+<FONT color="green">214</FONT>        }<a name="line.214"></a>
+<FONT color="green">215</FONT>    <a name="line.215"></a>
+<FONT color="green">216</FONT>        /**<a name="line.216"></a>
+<FONT color="green">217</FONT>         * Translates a node into a non-synthesized boolean. It does not push a <a name="line.217"></a>
+<FONT color="green">218</FONT>         * 0 or a 1 but instead returns branchhandle list to be appended to the <a name="line.218"></a>
+<FONT color="green">219</FONT>         * false list.<a name="line.219"></a>
+<FONT color="green">220</FONT>         *<a name="line.220"></a>
+<FONT color="green">221</FONT>         * @see     org.apache.xalan.xsltc.compiler.util.Type#translateToDesynthesized<a name="line.221"></a>
+<FONT color="green">222</FONT>         */<a name="line.222"></a>
+<FONT color="green">223</FONT>        public FlowList translateToDesynthesized(ClassGenerator classGen, <a name="line.223"></a>
+<FONT color="green">224</FONT>                                                 MethodGenerator methodGen, <a name="line.224"></a>
+<FONT color="green">225</FONT>                                                 BooleanType type) {<a name="line.225"></a>
+<FONT color="green">226</FONT>            final InstructionList il = methodGen.getInstructionList();<a name="line.226"></a>
+<FONT color="green">227</FONT>            return new FlowList(il.append(new IFEQ(null)));<a name="line.227"></a>
+<FONT color="green">228</FONT>        }<a name="line.228"></a>
+<FONT color="green">229</FONT>    <a name="line.229"></a>
+<FONT color="green">230</FONT>        /**<a name="line.230"></a>
+<FONT color="green">231</FONT>         * Expects a node on the stack and pushes a boxed node. Boxed nodes<a name="line.231"></a>
+<FONT color="green">232</FONT>         * are represented by an instance of &lt;code&gt;org.apache.xalan.xsltc.dom.Node&lt;/code&gt;.<a name="line.232"></a>
+<FONT color="green">233</FONT>         *<a name="line.233"></a>
+<FONT color="green">234</FONT>         * @see     org.apache.xalan.xsltc.compiler.util.Type#translateTo<a name="line.234"></a>
+<FONT color="green">235</FONT>         */<a name="line.235"></a>
+<FONT color="green">236</FONT>        public void translateTo(ClassGenerator classGen, MethodGenerator methodGen, <a name="line.236"></a>
+<FONT color="green">237</FONT>                                ReferenceType type) {<a name="line.237"></a>
+<FONT color="green">238</FONT>            final ConstantPoolGen cpg = classGen.getConstantPool();<a name="line.238"></a>
+<FONT color="green">239</FONT>            final InstructionList il = methodGen.getInstructionList();<a name="line.239"></a>
+<FONT color="green">240</FONT>            il.append(new NEW(cpg.addClass(RUNTIME_NODE_CLASS)));<a name="line.240"></a>
+<FONT color="green">241</FONT>            il.append(DUP_X1);<a name="line.241"></a>
+<FONT color="green">242</FONT>            il.append(SWAP);<a name="line.242"></a>
+<FONT color="green">243</FONT>            il.append(new PUSH(cpg, _type));<a name="line.243"></a>
+<FONT color="green">244</FONT>            il.append(new INVOKESPECIAL(cpg.addMethodref(RUNTIME_NODE_CLASS,<a name="line.244"></a>
+<FONT color="green">245</FONT>                                                         "&lt;init&gt;", "(II)V")));<a name="line.245"></a>
+<FONT color="green">246</FONT>        }<a name="line.246"></a>
+<FONT color="green">247</FONT>    <a name="line.247"></a>
+<FONT color="green">248</FONT>        /**<a name="line.248"></a>
+<FONT color="green">249</FONT>         * Translates a node into the Java type denoted by &lt;code&gt;clazz&lt;/code&gt;. <a name="line.249"></a>
+<FONT color="green">250</FONT>         * Expects a node on the stack and pushes an object of the appropriate<a name="line.250"></a>
+<FONT color="green">251</FONT>         * type after coercion.<a name="line.251"></a>
+<FONT color="green">252</FONT>         */<a name="line.252"></a>
+<FONT color="green">253</FONT>        public void translateTo(ClassGenerator classGen, MethodGenerator methodGen, <a name="line.253"></a>
+<FONT color="green">254</FONT>                                Class clazz) {<a name="line.254"></a>
+<FONT color="green">255</FONT>            final ConstantPoolGen cpg = classGen.getConstantPool();<a name="line.255"></a>
+<FONT color="green">256</FONT>            final InstructionList il = methodGen.getInstructionList();<a name="line.256"></a>
+<FONT color="green">257</FONT>    <a name="line.257"></a>
+<FONT color="green">258</FONT>            String className = clazz.getName();<a name="line.258"></a>
+<FONT color="green">259</FONT>            if (className.equals("java.lang.String")) {<a name="line.259"></a>
+<FONT color="green">260</FONT>               translateTo(classGen, methodGen, Type.String);<a name="line.260"></a>
+<FONT color="green">261</FONT>               return;<a name="line.261"></a>
+<FONT color="green">262</FONT>            }<a name="line.262"></a>
+<FONT color="green">263</FONT>    <a name="line.263"></a>
+<FONT color="green">264</FONT>            il.append(methodGen.loadDOM());<a name="line.264"></a>
+<FONT color="green">265</FONT>            il.append(SWAP);                // dom ref must be below node index<a name="line.265"></a>
+<FONT color="green">266</FONT>    <a name="line.266"></a>
+<FONT color="green">267</FONT>            if (className.equals("org.w3c.dom.Node") ||<a name="line.267"></a>
+<FONT color="green">268</FONT>                className.equals("java.lang.Object")) {<a name="line.268"></a>
+<FONT color="green">269</FONT>                int index = cpg.addInterfaceMethodref(DOM_INTF,<a name="line.269"></a>
+<FONT color="green">270</FONT>                                                      MAKE_NODE,<a name="line.270"></a>
+<FONT color="green">271</FONT>                                                      MAKE_NODE_SIG);<a name="line.271"></a>
+<FONT color="green">272</FONT>                il.append(new INVOKEINTERFACE(index, 2));<a name="line.272"></a>
+<FONT color="green">273</FONT>            }<a name="line.273"></a>
+<FONT color="green">274</FONT>            else if (className.equals("org.w3c.dom.NodeList")) {<a name="line.274"></a>
+<FONT color="green">275</FONT>                int index = cpg.addInterfaceMethodref(DOM_INTF,<a name="line.275"></a>
+<FONT color="green">276</FONT>                                                      MAKE_NODE_LIST,<a name="line.276"></a>
+<FONT color="green">277</FONT>                                                      MAKE_NODE_LIST_SIG);<a name="line.277"></a>
+<FONT color="green">278</FONT>                il.append(new INVOKEINTERFACE(index, 2));<a name="line.278"></a>
+<FONT color="green">279</FONT>            }<a name="line.279"></a>
+<FONT color="green">280</FONT>            else {<a name="line.280"></a>
+<FONT color="green">281</FONT>                ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR,<a name="line.281"></a>
+<FONT color="green">282</FONT>                                            toString(), className);<a name="line.282"></a>
+<FONT color="green">283</FONT>                classGen.getParser().reportError(Constants.FATAL, err);<a name="line.283"></a>
+<FONT color="green">284</FONT>            }<a name="line.284"></a>
+<FONT color="green">285</FONT>        }<a name="line.285"></a>
+<FONT color="green">286</FONT>    <a name="line.286"></a>
+<FONT color="green">287</FONT>        /**<a name="line.287"></a>
+<FONT color="green">288</FONT>         * Translates an object of this type to its boxed representation.<a name="line.288"></a>
+<FONT color="green">289</FONT>         */ <a name="line.289"></a>
+<FONT color="green">290</FONT>        public void translateBox(ClassGenerator classGen,<a name="line.290"></a>
+<FONT color="green">291</FONT>                                 MethodGenerator methodGen) {<a name="line.291"></a>
+<FONT color="green">292</FONT>            translateTo(classGen, methodGen, Type.Reference);<a name="line.292"></a>
+<FONT color="green">293</FONT>        }<a name="line.293"></a>
+<FONT color="green">294</FONT>    <a name="line.294"></a>
+<FONT color="green">295</FONT>        /**<a name="line.295"></a>
+<FONT color="green">296</FONT>         * Translates an object of this type to its unboxed representation.<a name="line.296"></a>
+<FONT color="green">297</FONT>         */ <a name="line.297"></a>
+<FONT color="green">298</FONT>        public void translateUnBox(ClassGenerator classGen,<a name="line.298"></a>
+<FONT color="green">299</FONT>                                   MethodGenerator methodGen) {<a name="line.299"></a>
+<FONT color="green">300</FONT>            final ConstantPoolGen cpg = classGen.getConstantPool();<a name="line.300"></a>
+<FONT color="green">301</FONT>            final InstructionList il = methodGen.getInstructionList();<a name="line.301"></a>
+<FONT color="green">302</FONT>            il.append(new CHECKCAST(cpg.addClass(RUNTIME_NODE_CLASS)));<a name="line.302"></a>
+<FONT color="green">303</FONT>            il.append(new GETFIELD(cpg.addFieldref(RUNTIME_NODE_CLASS,<a name="line.303"></a>
+<FONT color="green">304</FONT>                                                   NODE_FIELD,<a name="line.304"></a>
+<FONT color="green">305</FONT>                                                   NODE_FIELD_SIG)));<a name="line.305"></a>
+<FONT color="green">306</FONT>        }<a name="line.306"></a>
+<FONT color="green">307</FONT>    <a name="line.307"></a>
+<FONT color="green">308</FONT>        /**<a name="line.308"></a>
+<FONT color="green">309</FONT>         * Returns the class name of an internal type's external representation.<a name="line.309"></a>
+<FONT color="green">310</FONT>         */<a name="line.310"></a>
+<FONT color="green">311</FONT>        public String getClassName() {<a name="line.311"></a>
+<FONT color="green">312</FONT>            return(RUNTIME_NODE_CLASS);<a name="line.312"></a>
+<FONT color="green">313</FONT>        }<a name="line.313"></a>
+<FONT color="green">314</FONT>    <a name="line.314"></a>
+<FONT color="green">315</FONT>        public Instruction LOAD(int slot) {<a name="line.315"></a>
+<FONT color="green">316</FONT>            return new ILOAD(slot);<a name="line.316"></a>
+<FONT color="green">317</FONT>        }<a name="line.317"></a>
+<FONT color="green">318</FONT>            <a name="line.318"></a>
+<FONT color="green">319</FONT>        public Instruction STORE(int slot) {<a name="line.319"></a>
+<FONT color="green">320</FONT>            return new ISTORE(slot);<a name="line.320"></a>
+<FONT color="green">321</FONT>        }<a name="line.321"></a>
+<FONT color="green">322</FONT>    }<a name="line.322"></a>
+<FONT color="green">323</FONT>    <a name="line.323"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

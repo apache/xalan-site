@@ -1,0 +1,288 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: ElemContext.java 468654 2006-10-28 07:09:23Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    package org.apache.xml.serializer;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    /**<a name="line.23"></a>
+<FONT color="green">024</FONT>     * This class is a stack frame that consists of <a name="line.24"></a>
+<FONT color="green">025</FONT>     * information about the element currently being processed <a name="line.25"></a>
+<FONT color="green">026</FONT>     * by a serializer. Consider this example:<a name="line.26"></a>
+<FONT color="green">027</FONT>     * &lt;pre&gt;<a name="line.27"></a>
+<FONT color="green">028</FONT>     *   &lt;A&gt;<a name="line.28"></a>
+<FONT color="green">029</FONT>     *     &lt;B1&gt;<a name="line.29"></a>
+<FONT color="green">030</FONT>     *     &lt;/B1&gt;<a name="line.30"></a>
+<FONT color="green">031</FONT>     *     &lt;B2&gt;<a name="line.31"></a>
+<FONT color="green">032</FONT>     *     &lt;/B2&gt;<a name="line.32"></a>
+<FONT color="green">033</FONT>     *   &lt;A&gt;<a name="line.33"></a>
+<FONT color="green">034</FONT>     * &lt;/pre&gt; <a name="line.34"></a>
+<FONT color="green">035</FONT>     * <a name="line.35"></a>
+<FONT color="green">036</FONT>     * A stack frame will be pushed for "A" at depth 1, <a name="line.36"></a>
+<FONT color="green">037</FONT>     * then another one for "B1" at depth 2.<a name="line.37"></a>
+<FONT color="green">038</FONT>     * Then "B1" stackframe is popped.  When the stack frame for "B2" is <a name="line.38"></a>
+<FONT color="green">039</FONT>     * pushed, this implementation re-uses the old stack fram object used<a name="line.39"></a>
+<FONT color="green">040</FONT>     * by "B1" to be efficient at not creating too many of these object.<a name="line.40"></a>
+<FONT color="green">041</FONT>     * <a name="line.41"></a>
+<FONT color="green">042</FONT>     * This is by no means a public class, and neither are its fields or methods,<a name="line.42"></a>
+<FONT color="green">043</FONT>     * they are all helper fields for a serializer.<a name="line.43"></a>
+<FONT color="green">044</FONT>     * <a name="line.44"></a>
+<FONT color="green">045</FONT>     * The purpose of this class is to be more consistent with pushing information<a name="line.45"></a>
+<FONT color="green">046</FONT>     * when a new element is being serialized and more quickly restoring the old<a name="line.46"></a>
+<FONT color="green">047</FONT>     * information about the parent element with a simple pop() when the<a name="line.47"></a>
+<FONT color="green">048</FONT>     * child element is done.  Previously there was some redundant and error-prone<a name="line.48"></a>
+<FONT color="green">049</FONT>     * calculations going on to retore information.<a name="line.49"></a>
+<FONT color="green">050</FONT>     * <a name="line.50"></a>
+<FONT color="green">051</FONT>     * @xsl.usage internal<a name="line.51"></a>
+<FONT color="green">052</FONT>     */<a name="line.52"></a>
+<FONT color="green">053</FONT>    final class ElemContext<a name="line.53"></a>
+<FONT color="green">054</FONT>    {<a name="line.54"></a>
+<FONT color="green">055</FONT>        // Fields that form the context of the element<a name="line.55"></a>
+<FONT color="green">056</FONT>    <a name="line.56"></a>
+<FONT color="green">057</FONT>        /**<a name="line.57"></a>
+<FONT color="green">058</FONT>         * The nesting depth of the element inside other elements.<a name="line.58"></a>
+<FONT color="green">059</FONT>         */<a name="line.59"></a>
+<FONT color="green">060</FONT>        final int m_currentElemDepth;<a name="line.60"></a>
+<FONT color="green">061</FONT>    <a name="line.61"></a>
+<FONT color="green">062</FONT>        /** HTML field, the element description of the HTML element */<a name="line.62"></a>
+<FONT color="green">063</FONT>        ElemDesc m_elementDesc = null;<a name="line.63"></a>
+<FONT color="green">064</FONT>    <a name="line.64"></a>
+<FONT color="green">065</FONT>        /**<a name="line.65"></a>
+<FONT color="green">066</FONT>         * The local name of the element.<a name="line.66"></a>
+<FONT color="green">067</FONT>         */<a name="line.67"></a>
+<FONT color="green">068</FONT>        String m_elementLocalName = null;<a name="line.68"></a>
+<FONT color="green">069</FONT>    <a name="line.69"></a>
+<FONT color="green">070</FONT>        /**<a name="line.70"></a>
+<FONT color="green">071</FONT>         * The fully qualified name of the element (with prefix, if any).<a name="line.71"></a>
+<FONT color="green">072</FONT>         */<a name="line.72"></a>
+<FONT color="green">073</FONT>        String m_elementName = null;<a name="line.73"></a>
+<FONT color="green">074</FONT>    <a name="line.74"></a>
+<FONT color="green">075</FONT>        /**<a name="line.75"></a>
+<FONT color="green">076</FONT>         * The URI of the element.<a name="line.76"></a>
+<FONT color="green">077</FONT>         * If this value is null it means that the URI is not yet determined<a name="line.77"></a>
+<FONT color="green">078</FONT>         * for the element. Valid values are the empty string "", meaning<a name="line.78"></a>
+<FONT color="green">079</FONT>         * that it is in no namespace, or a string of non-zero length.<a name="line.79"></a>
+<FONT color="green">080</FONT>         */<a name="line.80"></a>
+<FONT color="green">081</FONT>        String m_elementURI = null;<a name="line.81"></a>
+<FONT color="green">082</FONT>    <a name="line.82"></a>
+<FONT color="green">083</FONT>        /** If the element is in the cdata-section-names list<a name="line.83"></a>
+<FONT color="green">084</FONT>         * then the value is true. If it is true the text children of the element<a name="line.84"></a>
+<FONT color="green">085</FONT>         * should be output in CDATA section blocks. <a name="line.85"></a>
+<FONT color="green">086</FONT>         */<a name="line.86"></a>
+<FONT color="green">087</FONT>        boolean m_isCdataSection;<a name="line.87"></a>
+<FONT color="green">088</FONT>    <a name="line.88"></a>
+<FONT color="green">089</FONT>        /** True if the current element has output escaping disabled.<a name="line.89"></a>
+<FONT color="green">090</FONT>         * This is true for SCRIPT and STYLE elements. <a name="line.90"></a>
+<FONT color="green">091</FONT>         */<a name="line.91"></a>
+<FONT color="green">092</FONT>        boolean m_isRaw = false;<a name="line.92"></a>
+<FONT color="green">093</FONT>    <a name="line.93"></a>
+<FONT color="green">094</FONT>        /** The next element "stack frame". This value will only be<a name="line.94"></a>
+<FONT color="green">095</FONT>         * set once as deeper stack frames are not deleted when popped off,<a name="line.95"></a>
+<FONT color="green">096</FONT>         * but are rather re-used when a push is required.<a name="line.96"></a>
+<FONT color="green">097</FONT>         * <a name="line.97"></a>
+<FONT color="green">098</FONT>         * This makes for very fast pushing and popping of stack frames <a name="line.98"></a>
+<FONT color="green">099</FONT>         * because very few stack frame objects are ever created, they are<a name="line.99"></a>
+<FONT color="green">100</FONT>         * mostly re-used.  This re-use saves object creation but it also means<a name="line.100"></a>
+<FONT color="green">101</FONT>         * that connections between the frames via m_next and m_prev<a name="line.101"></a>
+<FONT color="green">102</FONT>         * never changes either. Just the contents of the frames change<a name="line.102"></a>
+<FONT color="green">103</FONT>         * as they are re-used. Only the reference to the current stack frame, which<a name="line.103"></a>
+<FONT color="green">104</FONT>         * is held by the serializer is changed via a quick pop() or push().<a name="line.104"></a>
+<FONT color="green">105</FONT>         */<a name="line.105"></a>
+<FONT color="green">106</FONT>        private ElemContext m_next;<a name="line.106"></a>
+<FONT color="green">107</FONT>    <a name="line.107"></a>
+<FONT color="green">108</FONT>        /** The previous element "stack frame". */<a name="line.108"></a>
+<FONT color="green">109</FONT>        final ElemContext m_prev;<a name="line.109"></a>
+<FONT color="green">110</FONT>    <a name="line.110"></a>
+<FONT color="green">111</FONT>        /**<a name="line.111"></a>
+<FONT color="green">112</FONT>         * Set to true when a start tag is started, or open, but not all the<a name="line.112"></a>
+<FONT color="green">113</FONT>         * attributes or namespace information is yet collected.<a name="line.113"></a>
+<FONT color="green">114</FONT>         */<a name="line.114"></a>
+<FONT color="green">115</FONT>        boolean m_startTagOpen = false;<a name="line.115"></a>
+<FONT color="green">116</FONT>    <a name="line.116"></a>
+<FONT color="green">117</FONT>        /**<a name="line.117"></a>
+<FONT color="green">118</FONT>         * Constructor to create the root of the element contexts. <a name="line.118"></a>
+<FONT color="green">119</FONT>         *<a name="line.119"></a>
+<FONT color="green">120</FONT>         */<a name="line.120"></a>
+<FONT color="green">121</FONT>        ElemContext()<a name="line.121"></a>
+<FONT color="green">122</FONT>        {<a name="line.122"></a>
+<FONT color="green">123</FONT>            // this assignment means can never pop this context off<a name="line.123"></a>
+<FONT color="green">124</FONT>            m_prev = this;<a name="line.124"></a>
+<FONT color="green">125</FONT>            // depth 0 because it doesn't correspond to any element<a name="line.125"></a>
+<FONT color="green">126</FONT>            m_currentElemDepth = 0;<a name="line.126"></a>
+<FONT color="green">127</FONT>        }<a name="line.127"></a>
+<FONT color="green">128</FONT>    <a name="line.128"></a>
+<FONT color="green">129</FONT>        /**<a name="line.129"></a>
+<FONT color="green">130</FONT>         * Constructor to create the "stack frame" for a given element depth.<a name="line.130"></a>
+<FONT color="green">131</FONT>         * <a name="line.131"></a>
+<FONT color="green">132</FONT>         * This implementation will re-use the context at each depth. If<a name="line.132"></a>
+<FONT color="green">133</FONT>         * a documents deepest element depth is N then there will be (N+1)<a name="line.133"></a>
+<FONT color="green">134</FONT>         * such objects created, no more than that.<a name="line.134"></a>
+<FONT color="green">135</FONT>         * <a name="line.135"></a>
+<FONT color="green">136</FONT>         * @param previous The "stack frame" corresponding to the new<a name="line.136"></a>
+<FONT color="green">137</FONT>         * elements parent element.<a name="line.137"></a>
+<FONT color="green">138</FONT>         */<a name="line.138"></a>
+<FONT color="green">139</FONT>        private ElemContext(final ElemContext previous)<a name="line.139"></a>
+<FONT color="green">140</FONT>        {<a name="line.140"></a>
+<FONT color="green">141</FONT>            m_prev = previous;<a name="line.141"></a>
+<FONT color="green">142</FONT>            m_currentElemDepth = previous.m_currentElemDepth + 1;<a name="line.142"></a>
+<FONT color="green">143</FONT>        }<a name="line.143"></a>
+<FONT color="green">144</FONT>    <a name="line.144"></a>
+<FONT color="green">145</FONT>        /**<a name="line.145"></a>
+<FONT color="green">146</FONT>         * Pop the current "stack frame".<a name="line.146"></a>
+<FONT color="green">147</FONT>         * @return Returns the parent "stack frame" of the one popped.<a name="line.147"></a>
+<FONT color="green">148</FONT>         */<a name="line.148"></a>
+<FONT color="green">149</FONT>        final ElemContext pop()<a name="line.149"></a>
+<FONT color="green">150</FONT>        {<a name="line.150"></a>
+<FONT color="green">151</FONT>            /* a very simple pop.  No clean up is done of the deeper<a name="line.151"></a>
+<FONT color="green">152</FONT>             * stack frame.  All deeper stack frames are still attached<a name="line.152"></a>
+<FONT color="green">153</FONT>             * but dormant, just waiting to be re-used.<a name="line.153"></a>
+<FONT color="green">154</FONT>             */<a name="line.154"></a>
+<FONT color="green">155</FONT>            return this.m_prev;<a name="line.155"></a>
+<FONT color="green">156</FONT>        }<a name="line.156"></a>
+<FONT color="green">157</FONT>    <a name="line.157"></a>
+<FONT color="green">158</FONT>        /**<a name="line.158"></a>
+<FONT color="green">159</FONT>         * This method pushes an element "stack frame" <a name="line.159"></a>
+<FONT color="green">160</FONT>         * but with no initialization of values in that frame.<a name="line.160"></a>
+<FONT color="green">161</FONT>         * This method is used for optimization purposes, like when pushing<a name="line.161"></a>
+<FONT color="green">162</FONT>         * a stack frame for an HTML "IMG" tag which has no children and<a name="line.162"></a>
+<FONT color="green">163</FONT>         * the stack frame will almost immediately be popped.<a name="line.163"></a>
+<FONT color="green">164</FONT>         */<a name="line.164"></a>
+<FONT color="green">165</FONT>        final ElemContext push()<a name="line.165"></a>
+<FONT color="green">166</FONT>        {<a name="line.166"></a>
+<FONT color="green">167</FONT>            ElemContext frame = this.m_next;<a name="line.167"></a>
+<FONT color="green">168</FONT>            if (frame == null)<a name="line.168"></a>
+<FONT color="green">169</FONT>            {<a name="line.169"></a>
+<FONT color="green">170</FONT>                /* We have never been at this depth yet, and there is no<a name="line.170"></a>
+<FONT color="green">171</FONT>                 * stack frame to re-use, so we now make a new one.<a name="line.171"></a>
+<FONT color="green">172</FONT>                 */<a name="line.172"></a>
+<FONT color="green">173</FONT>                frame = new ElemContext(this);<a name="line.173"></a>
+<FONT color="green">174</FONT>                this.m_next = frame;<a name="line.174"></a>
+<FONT color="green">175</FONT>            }<a name="line.175"></a>
+<FONT color="green">176</FONT>            /*<a name="line.176"></a>
+<FONT color="green">177</FONT>             * We shouldn't need to set this true because we should just<a name="line.177"></a>
+<FONT color="green">178</FONT>             * be pushing a dummy stack frame that will be instantly popped.<a name="line.178"></a>
+<FONT color="green">179</FONT>             * Yet we need to be ready in case this element does have<a name="line.179"></a>
+<FONT color="green">180</FONT>             * unexpected children.<a name="line.180"></a>
+<FONT color="green">181</FONT>             */<a name="line.181"></a>
+<FONT color="green">182</FONT>            frame.m_startTagOpen = true;<a name="line.182"></a>
+<FONT color="green">183</FONT>            return frame;<a name="line.183"></a>
+<FONT color="green">184</FONT>        }<a name="line.184"></a>
+<FONT color="green">185</FONT>        <a name="line.185"></a>
+<FONT color="green">186</FONT>        /**<a name="line.186"></a>
+<FONT color="green">187</FONT>         * Push an element context on the stack. This context keeps track of<a name="line.187"></a>
+<FONT color="green">188</FONT>         * information gathered about the element.<a name="line.188"></a>
+<FONT color="green">189</FONT>         * @param uri The URI for the namespace for the element name, <a name="line.189"></a>
+<FONT color="green">190</FONT>         * can be null if it is not yet known.<a name="line.190"></a>
+<FONT color="green">191</FONT>         * @param localName The local name of the element (no prefix),  <a name="line.191"></a>
+<FONT color="green">192</FONT>         * can be null.<a name="line.192"></a>
+<FONT color="green">193</FONT>         * @param qName The qualified name (with prefix, if any) <a name="line.193"></a>
+<FONT color="green">194</FONT>         * of the element, this parameter is required.<a name="line.194"></a>
+<FONT color="green">195</FONT>         */<a name="line.195"></a>
+<FONT color="green">196</FONT>        final ElemContext push(<a name="line.196"></a>
+<FONT color="green">197</FONT>            final String uri,<a name="line.197"></a>
+<FONT color="green">198</FONT>            final String localName,<a name="line.198"></a>
+<FONT color="green">199</FONT>            final String qName)<a name="line.199"></a>
+<FONT color="green">200</FONT>        {<a name="line.200"></a>
+<FONT color="green">201</FONT>            ElemContext frame = this.m_next;<a name="line.201"></a>
+<FONT color="green">202</FONT>            if (frame == null)<a name="line.202"></a>
+<FONT color="green">203</FONT>            {<a name="line.203"></a>
+<FONT color="green">204</FONT>                /* We have never been at this depth yet, and there is no<a name="line.204"></a>
+<FONT color="green">205</FONT>                 * stack frame to re-use, so we now make a new one.<a name="line.205"></a>
+<FONT color="green">206</FONT>                 */<a name="line.206"></a>
+<FONT color="green">207</FONT>                frame = new ElemContext(this);<a name="line.207"></a>
+<FONT color="green">208</FONT>                this.m_next = frame;<a name="line.208"></a>
+<FONT color="green">209</FONT>            }<a name="line.209"></a>
+<FONT color="green">210</FONT>    <a name="line.210"></a>
+<FONT color="green">211</FONT>            // Initialize, or reset values in the new or re-used stack frame.<a name="line.211"></a>
+<FONT color="green">212</FONT>            frame.m_elementName = qName;<a name="line.212"></a>
+<FONT color="green">213</FONT>            frame.m_elementLocalName = localName;<a name="line.213"></a>
+<FONT color="green">214</FONT>            frame.m_elementURI = uri;<a name="line.214"></a>
+<FONT color="green">215</FONT>            frame.m_isCdataSection = false;<a name="line.215"></a>
+<FONT color="green">216</FONT>            frame.m_startTagOpen = true;<a name="line.216"></a>
+<FONT color="green">217</FONT>    <a name="line.217"></a>
+<FONT color="green">218</FONT>            // is_Raw is already set in the HTML startElement() method<a name="line.218"></a>
+<FONT color="green">219</FONT>            // frame.m_isRaw = false; <a name="line.219"></a>
+<FONT color="green">220</FONT>            return frame;<a name="line.220"></a>
+<FONT color="green">221</FONT>        }<a name="line.221"></a>
+<FONT color="green">222</FONT>    }<a name="line.222"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

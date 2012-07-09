@@ -1,0 +1,332 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: BitArray.java 478667 2006-11-23 20:50:36Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    <a name="line.21"></a>
+<FONT color="green">022</FONT>    package org.apache.xalan.xsltc.dom;<a name="line.22"></a>
+<FONT color="green">023</FONT>    <a name="line.23"></a>
+<FONT color="green">024</FONT>    import java.io.Externalizable;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import java.io.IOException;<a name="line.25"></a>
+<FONT color="green">026</FONT>    import java.io.ObjectInput;<a name="line.26"></a>
+<FONT color="green">027</FONT>    import java.io.ObjectOutput;<a name="line.27"></a>
+<FONT color="green">028</FONT>    <a name="line.28"></a>
+<FONT color="green">029</FONT>    import org.apache.xml.dtm.DTMAxisIterator;<a name="line.29"></a>
+<FONT color="green">030</FONT>    <a name="line.30"></a>
+<FONT color="green">031</FONT>    <a name="line.31"></a>
+<FONT color="green">032</FONT>    /**<a name="line.32"></a>
+<FONT color="green">033</FONT>     * @author Morten Jorgensen<a name="line.33"></a>
+<FONT color="green">034</FONT>     */<a name="line.34"></a>
+<FONT color="green">035</FONT>    public class BitArray implements Externalizable {<a name="line.35"></a>
+<FONT color="green">036</FONT>        static final long serialVersionUID = -4876019880708377663L;<a name="line.36"></a>
+<FONT color="green">037</FONT>    <a name="line.37"></a>
+<FONT color="green">038</FONT>        private int[] _bits;<a name="line.38"></a>
+<FONT color="green">039</FONT>        private int   _bitSize;<a name="line.39"></a>
+<FONT color="green">040</FONT>        private int   _intSize;<a name="line.40"></a>
+<FONT color="green">041</FONT>        private int   _mask;<a name="line.41"></a>
+<FONT color="green">042</FONT>    <a name="line.42"></a>
+<FONT color="green">043</FONT>        // This table is used to prevent expensive shift operations<a name="line.43"></a>
+<FONT color="green">044</FONT>        // (These operations are inexpensive on CPUs but very expensive on JVMs.)<a name="line.44"></a>
+<FONT color="green">045</FONT>        private final static int[] _masks = {<a name="line.45"></a>
+<FONT color="green">046</FONT>            0x80000000, 0x40000000, 0x20000000, 0x10000000,<a name="line.46"></a>
+<FONT color="green">047</FONT>            0x08000000, 0x04000000, 0x02000000, 0x01000000,<a name="line.47"></a>
+<FONT color="green">048</FONT>            0x00800000, 0x00400000, 0x00200000, 0x00100000,<a name="line.48"></a>
+<FONT color="green">049</FONT>            0x00080000, 0x00040000, 0x00020000, 0x00010000,<a name="line.49"></a>
+<FONT color="green">050</FONT>            0x00008000, 0x00004000, 0x00002000, 0x00001000,<a name="line.50"></a>
+<FONT color="green">051</FONT>            0x00000800, 0x00000400, 0x00000200, 0x00000100,<a name="line.51"></a>
+<FONT color="green">052</FONT>            0x00000080, 0x00000040, 0x00000020, 0x00000010,<a name="line.52"></a>
+<FONT color="green">053</FONT>            0x00000008, 0x00000004, 0x00000002, 0x00000001 };<a name="line.53"></a>
+<FONT color="green">054</FONT>    <a name="line.54"></a>
+<FONT color="green">055</FONT>        private final static boolean DEBUG_ASSERTIONS = false;<a name="line.55"></a>
+<FONT color="green">056</FONT>        <a name="line.56"></a>
+<FONT color="green">057</FONT>        /**<a name="line.57"></a>
+<FONT color="green">058</FONT>         * Constructor. Defines the initial size of the bit array (in bits).<a name="line.58"></a>
+<FONT color="green">059</FONT>         */<a name="line.59"></a>
+<FONT color="green">060</FONT>        public BitArray() {<a name="line.60"></a>
+<FONT color="green">061</FONT>            this(32);<a name="line.61"></a>
+<FONT color="green">062</FONT>        }<a name="line.62"></a>
+<FONT color="green">063</FONT>    <a name="line.63"></a>
+<FONT color="green">064</FONT>        public BitArray(int size) {        <a name="line.64"></a>
+<FONT color="green">065</FONT>            if (size &lt; 32) size = 32;<a name="line.65"></a>
+<FONT color="green">066</FONT>            _bitSize = size;<a name="line.66"></a>
+<FONT color="green">067</FONT>            _intSize = (_bitSize &gt;&gt;&gt; 5) + 1;<a name="line.67"></a>
+<FONT color="green">068</FONT>            _bits = new int[_intSize + 1];<a name="line.68"></a>
+<FONT color="green">069</FONT>        }<a name="line.69"></a>
+<FONT color="green">070</FONT>    <a name="line.70"></a>
+<FONT color="green">071</FONT>        public BitArray(int size, int[] bits) {<a name="line.71"></a>
+<FONT color="green">072</FONT>            if (size &lt; 32) size = 32;<a name="line.72"></a>
+<FONT color="green">073</FONT>            _bitSize = size;<a name="line.73"></a>
+<FONT color="green">074</FONT>            _intSize = (_bitSize &gt;&gt;&gt; 5) + 1;<a name="line.74"></a>
+<FONT color="green">075</FONT>            _bits = bits;<a name="line.75"></a>
+<FONT color="green">076</FONT>        }<a name="line.76"></a>
+<FONT color="green">077</FONT>    <a name="line.77"></a>
+<FONT color="green">078</FONT>        /**<a name="line.78"></a>
+<FONT color="green">079</FONT>         * Set the mask for this bit array. The upper 8 bits of this mask<a name="line.79"></a>
+<FONT color="green">080</FONT>         * indicate the DOM in which the nodes in this array belong.<a name="line.80"></a>
+<FONT color="green">081</FONT>         */    <a name="line.81"></a>
+<FONT color="green">082</FONT>        public void setMask(int mask) {<a name="line.82"></a>
+<FONT color="green">083</FONT>            _mask = mask;<a name="line.83"></a>
+<FONT color="green">084</FONT>        }<a name="line.84"></a>
+<FONT color="green">085</FONT>    <a name="line.85"></a>
+<FONT color="green">086</FONT>        /**<a name="line.86"></a>
+<FONT color="green">087</FONT>         * See setMask()<a name="line.87"></a>
+<FONT color="green">088</FONT>         */<a name="line.88"></a>
+<FONT color="green">089</FONT>        public int getMask() {<a name="line.89"></a>
+<FONT color="green">090</FONT>            return(_mask);<a name="line.90"></a>
+<FONT color="green">091</FONT>        }<a name="line.91"></a>
+<FONT color="green">092</FONT>    <a name="line.92"></a>
+<FONT color="green">093</FONT>        /**<a name="line.93"></a>
+<FONT color="green">094</FONT>         * Returns the size of this bit array (in bits).<a name="line.94"></a>
+<FONT color="green">095</FONT>         */<a name="line.95"></a>
+<FONT color="green">096</FONT>        public final int size() {<a name="line.96"></a>
+<FONT color="green">097</FONT>            return(_bitSize);<a name="line.97"></a>
+<FONT color="green">098</FONT>        }<a name="line.98"></a>
+<FONT color="green">099</FONT>    <a name="line.99"></a>
+<FONT color="green">100</FONT>        /**<a name="line.100"></a>
+<FONT color="green">101</FONT>         * Returns true if the given bit is set<a name="line.101"></a>
+<FONT color="green">102</FONT>         */<a name="line.102"></a>
+<FONT color="green">103</FONT>        public final boolean getBit(int bit) {<a name="line.103"></a>
+<FONT color="green">104</FONT>            if (DEBUG_ASSERTIONS) {<a name="line.104"></a>
+<FONT color="green">105</FONT>                if (bit &gt;= _bitSize) {<a name="line.105"></a>
+<FONT color="green">106</FONT>                    throw new Error(<a name="line.106"></a>
+<FONT color="green">107</FONT>                                 "Programmer's assertion in  BitArray.getBit");<a name="line.107"></a>
+<FONT color="green">108</FONT>                }<a name="line.108"></a>
+<FONT color="green">109</FONT>            }<a name="line.109"></a>
+<FONT color="green">110</FONT>    <a name="line.110"></a>
+<FONT color="green">111</FONT>            return((_bits[bit&gt;&gt;&gt;5] &amp; _masks[bit%32]) != 0);<a name="line.111"></a>
+<FONT color="green">112</FONT>        }<a name="line.112"></a>
+<FONT color="green">113</FONT>    <a name="line.113"></a>
+<FONT color="green">114</FONT>        /**<a name="line.114"></a>
+<FONT color="green">115</FONT>         * Returns the next set bit from a given position<a name="line.115"></a>
+<FONT color="green">116</FONT>         */<a name="line.116"></a>
+<FONT color="green">117</FONT>        public final int getNextBit(int startBit) {<a name="line.117"></a>
+<FONT color="green">118</FONT>            for (int i = (startBit &gt;&gt;&gt; 5) ; i&lt;=_intSize; i++) {<a name="line.118"></a>
+<FONT color="green">119</FONT>                int bits = _bits[i];<a name="line.119"></a>
+<FONT color="green">120</FONT>                if (bits != 0) {<a name="line.120"></a>
+<FONT color="green">121</FONT>                    for (int b = (startBit % 32); b&lt;32; b++) {<a name="line.121"></a>
+<FONT color="green">122</FONT>                        if ((bits &amp; _masks[b]) != 0) {<a name="line.122"></a>
+<FONT color="green">123</FONT>                            return((i &lt;&lt; 5) + b);<a name="line.123"></a>
+<FONT color="green">124</FONT>                        }<a name="line.124"></a>
+<FONT color="green">125</FONT>                    }<a name="line.125"></a>
+<FONT color="green">126</FONT>                }<a name="line.126"></a>
+<FONT color="green">127</FONT>                startBit = 0;<a name="line.127"></a>
+<FONT color="green">128</FONT>            }<a name="line.128"></a>
+<FONT color="green">129</FONT>            return(DTMAxisIterator.END);<a name="line.129"></a>
+<FONT color="green">130</FONT>        }<a name="line.130"></a>
+<FONT color="green">131</FONT>    <a name="line.131"></a>
+<FONT color="green">132</FONT>        /**<a name="line.132"></a>
+<FONT color="green">133</FONT>         * This method returns the Nth bit that is set in the bit array. The<a name="line.133"></a>
+<FONT color="green">134</FONT>         * current position is cached in the following 4 variables and will<a name="line.134"></a>
+<FONT color="green">135</FONT>         * help speed up a sequence of next() call in an index iterator. This<a name="line.135"></a>
+<FONT color="green">136</FONT>         * method is a mess, but it is fast and it works, so don't change it.<a name="line.136"></a>
+<FONT color="green">137</FONT>         */<a name="line.137"></a>
+<FONT color="green">138</FONT>        private int _pos = Integer.MAX_VALUE;<a name="line.138"></a>
+<FONT color="green">139</FONT>        private int _node = 0;<a name="line.139"></a>
+<FONT color="green">140</FONT>        private int _int = 0;<a name="line.140"></a>
+<FONT color="green">141</FONT>        private int _bit = 0;<a name="line.141"></a>
+<FONT color="green">142</FONT>    <a name="line.142"></a>
+<FONT color="green">143</FONT>        public final int getBitNumber(int pos) {<a name="line.143"></a>
+<FONT color="green">144</FONT>    <a name="line.144"></a>
+<FONT color="green">145</FONT>            // Return last node if position we're looking for is the same<a name="line.145"></a>
+<FONT color="green">146</FONT>            if (pos == _pos) return(_node);<a name="line.146"></a>
+<FONT color="green">147</FONT>            <a name="line.147"></a>
+<FONT color="green">148</FONT>            // Start from beginning of position we're looking for is before<a name="line.148"></a>
+<FONT color="green">149</FONT>            // the point where we left off the last time.<a name="line.149"></a>
+<FONT color="green">150</FONT>            if (pos &lt; _pos) {<a name="line.150"></a>
+<FONT color="green">151</FONT>                _int = _bit = _pos = 0;<a name="line.151"></a>
+<FONT color="green">152</FONT>            }<a name="line.152"></a>
+<FONT color="green">153</FONT>    <a name="line.153"></a>
+<FONT color="green">154</FONT>            // Scan through the bit array - skip integers that have no bits set<a name="line.154"></a>
+<FONT color="green">155</FONT>            for ( ; _int &lt;= _intSize; _int++) {<a name="line.155"></a>
+<FONT color="green">156</FONT>                int bits = _bits[_int];<a name="line.156"></a>
+<FONT color="green">157</FONT>                if (bits != 0) { // Any bits set?<a name="line.157"></a>
+<FONT color="green">158</FONT>                    for ( ; _bit &lt; 32; _bit++) {<a name="line.158"></a>
+<FONT color="green">159</FONT>                        if ((bits &amp; _masks[_bit]) != 0) {<a name="line.159"></a>
+<FONT color="green">160</FONT>                            if (++_pos == pos) {<a name="line.160"></a>
+<FONT color="green">161</FONT>                                _node = ((_int &lt;&lt; 5) + _bit) - 1;<a name="line.161"></a>
+<FONT color="green">162</FONT>                                return (_node);<a name="line.162"></a>
+<FONT color="green">163</FONT>                            }<a name="line.163"></a>
+<FONT color="green">164</FONT>                        }<a name="line.164"></a>
+<FONT color="green">165</FONT>                    }<a name="line.165"></a>
+<FONT color="green">166</FONT>                    _bit = 0;<a name="line.166"></a>
+<FONT color="green">167</FONT>                }<a name="line.167"></a>
+<FONT color="green">168</FONT>            }<a name="line.168"></a>
+<FONT color="green">169</FONT>            return(0);<a name="line.169"></a>
+<FONT color="green">170</FONT>        }<a name="line.170"></a>
+<FONT color="green">171</FONT>    <a name="line.171"></a>
+<FONT color="green">172</FONT>        /**<a name="line.172"></a>
+<FONT color="green">173</FONT>         * Returns the integer array in which the bit array is contained<a name="line.173"></a>
+<FONT color="green">174</FONT>         */<a name="line.174"></a>
+<FONT color="green">175</FONT>        public final int[] data() {<a name="line.175"></a>
+<FONT color="green">176</FONT>            return(_bits);<a name="line.176"></a>
+<FONT color="green">177</FONT>        }<a name="line.177"></a>
+<FONT color="green">178</FONT>    <a name="line.178"></a>
+<FONT color="green">179</FONT>        int _first = Integer.MAX_VALUE; // The index where first set bit is<a name="line.179"></a>
+<FONT color="green">180</FONT>        int _last  = Integer.MIN_VALUE; // The _INTEGER INDEX_ where last set bit is<a name="line.180"></a>
+<FONT color="green">181</FONT>    <a name="line.181"></a>
+<FONT color="green">182</FONT>        /**<a name="line.182"></a>
+<FONT color="green">183</FONT>         * Sets a given bit<a name="line.183"></a>
+<FONT color="green">184</FONT>         */<a name="line.184"></a>
+<FONT color="green">185</FONT>        public final void setBit(int bit) {<a name="line.185"></a>
+<FONT color="green">186</FONT>            if (DEBUG_ASSERTIONS) {<a name="line.186"></a>
+<FONT color="green">187</FONT>                if (bit &gt;= _bitSize) {<a name="line.187"></a>
+<FONT color="green">188</FONT>                    throw new Error(<a name="line.188"></a>
+<FONT color="green">189</FONT>                                 "Programmer's assertion in  BitArray.getBit");<a name="line.189"></a>
+<FONT color="green">190</FONT>                }<a name="line.190"></a>
+<FONT color="green">191</FONT>            }<a name="line.191"></a>
+<FONT color="green">192</FONT>    <a name="line.192"></a>
+<FONT color="green">193</FONT>            if (bit &gt;= _bitSize) return;<a name="line.193"></a>
+<FONT color="green">194</FONT>            final int i = (bit &gt;&gt;&gt; 5);<a name="line.194"></a>
+<FONT color="green">195</FONT>            if (i &lt; _first) _first = i;<a name="line.195"></a>
+<FONT color="green">196</FONT>            if (i &gt; _last) _last = i;<a name="line.196"></a>
+<FONT color="green">197</FONT>            _bits[i] |= _masks[bit % 32];<a name="line.197"></a>
+<FONT color="green">198</FONT>        }<a name="line.198"></a>
+<FONT color="green">199</FONT>    <a name="line.199"></a>
+<FONT color="green">200</FONT>        /**<a name="line.200"></a>
+<FONT color="green">201</FONT>         * Merge two bit arrays. This currently only works for nodes from<a name="line.201"></a>
+<FONT color="green">202</FONT>         * a single DOM (because there is only one _mask per array).<a name="line.202"></a>
+<FONT color="green">203</FONT>         */<a name="line.203"></a>
+<FONT color="green">204</FONT>        public final BitArray merge(BitArray other) {<a name="line.204"></a>
+<FONT color="green">205</FONT>            // Take other array's bits if we have node set<a name="line.205"></a>
+<FONT color="green">206</FONT>            if (_last == -1) {<a name="line.206"></a>
+<FONT color="green">207</FONT>                _bits = other._bits;<a name="line.207"></a>
+<FONT color="green">208</FONT>            }<a name="line.208"></a>
+<FONT color="green">209</FONT>            // Only merge if other array has any bits set<a name="line.209"></a>
+<FONT color="green">210</FONT>            else if (other._last != -1) {<a name="line.210"></a>
+<FONT color="green">211</FONT>                int start = (_first &lt; other._first) ? _first : other._first;<a name="line.211"></a>
+<FONT color="green">212</FONT>                int stop  = (_last &gt; other._last) ? _last : other._last;<a name="line.212"></a>
+<FONT color="green">213</FONT>    <a name="line.213"></a>
+<FONT color="green">214</FONT>                // Merge these bits into other array if other array is larger<a name="line.214"></a>
+<FONT color="green">215</FONT>                if (other._intSize &gt; _intSize) {<a name="line.215"></a>
+<FONT color="green">216</FONT>                    if (stop &gt; _intSize) stop = _intSize;<a name="line.216"></a>
+<FONT color="green">217</FONT>                    for (int i=start; i&lt;=stop; i++)<a name="line.217"></a>
+<FONT color="green">218</FONT>                        other._bits[i] |= _bits[i];<a name="line.218"></a>
+<FONT color="green">219</FONT>                    _bits = other._bits;<a name="line.219"></a>
+<FONT color="green">220</FONT>                }<a name="line.220"></a>
+<FONT color="green">221</FONT>                // Merge other bits into this array if this arrai is large/equal.<a name="line.221"></a>
+<FONT color="green">222</FONT>                else {<a name="line.222"></a>
+<FONT color="green">223</FONT>                    if (stop &gt; other._intSize) stop = other._intSize;<a name="line.223"></a>
+<FONT color="green">224</FONT>                    for (int i=start; i&lt;=stop; i++)<a name="line.224"></a>
+<FONT color="green">225</FONT>                        _bits[i] |= other._bits[i];<a name="line.225"></a>
+<FONT color="green">226</FONT>                }<a name="line.226"></a>
+<FONT color="green">227</FONT>            }<a name="line.227"></a>
+<FONT color="green">228</FONT>            return(this);<a name="line.228"></a>
+<FONT color="green">229</FONT>        }<a name="line.229"></a>
+<FONT color="green">230</FONT>    <a name="line.230"></a>
+<FONT color="green">231</FONT>        /**<a name="line.231"></a>
+<FONT color="green">232</FONT>         * Resizes the bit array - try to avoid using this method!!!<a name="line.232"></a>
+<FONT color="green">233</FONT>         */<a name="line.233"></a>
+<FONT color="green">234</FONT>        public final void resize(int newSize) {<a name="line.234"></a>
+<FONT color="green">235</FONT>            if (newSize &gt; _bitSize) {<a name="line.235"></a>
+<FONT color="green">236</FONT>                _intSize = (newSize &gt;&gt;&gt; 5) + 1;<a name="line.236"></a>
+<FONT color="green">237</FONT>                final int[] newBits = new int[_intSize + 1];<a name="line.237"></a>
+<FONT color="green">238</FONT>                System.arraycopy(_bits, 0, newBits, 0, (_bitSize&gt;&gt;&gt;5) + 1);<a name="line.238"></a>
+<FONT color="green">239</FONT>                _bits = newBits;<a name="line.239"></a>
+<FONT color="green">240</FONT>                _bitSize = newSize;<a name="line.240"></a>
+<FONT color="green">241</FONT>            }<a name="line.241"></a>
+<FONT color="green">242</FONT>        }<a name="line.242"></a>
+<FONT color="green">243</FONT>    <a name="line.243"></a>
+<FONT color="green">244</FONT>        public BitArray cloneArray() {<a name="line.244"></a>
+<FONT color="green">245</FONT>            return(new BitArray(_intSize, _bits));<a name="line.245"></a>
+<FONT color="green">246</FONT>        }<a name="line.246"></a>
+<FONT color="green">247</FONT>    <a name="line.247"></a>
+<FONT color="green">248</FONT>        public void writeExternal(ObjectOutput out) throws IOException {<a name="line.248"></a>
+<FONT color="green">249</FONT>            out.writeInt(_bitSize);<a name="line.249"></a>
+<FONT color="green">250</FONT>            out.writeInt(_mask);<a name="line.250"></a>
+<FONT color="green">251</FONT>            out.writeObject(_bits);<a name="line.251"></a>
+<FONT color="green">252</FONT>            out.flush();<a name="line.252"></a>
+<FONT color="green">253</FONT>        }<a name="line.253"></a>
+<FONT color="green">254</FONT>    <a name="line.254"></a>
+<FONT color="green">255</FONT>        /**<a name="line.255"></a>
+<FONT color="green">256</FONT>         * Read the whole tree from a file (serialized)<a name="line.256"></a>
+<FONT color="green">257</FONT>         */<a name="line.257"></a>
+<FONT color="green">258</FONT>        public void readExternal(ObjectInput in)<a name="line.258"></a>
+<FONT color="green">259</FONT>            throws IOException, ClassNotFoundException {<a name="line.259"></a>
+<FONT color="green">260</FONT>            _bitSize = in.readInt();<a name="line.260"></a>
+<FONT color="green">261</FONT>            _intSize = (_bitSize &gt;&gt;&gt; 5) + 1;<a name="line.261"></a>
+<FONT color="green">262</FONT>            _mask    = in.readInt();<a name="line.262"></a>
+<FONT color="green">263</FONT>            _bits    = (int[])in.readObject();<a name="line.263"></a>
+<FONT color="green">264</FONT>        }<a name="line.264"></a>
+<FONT color="green">265</FONT>    <a name="line.265"></a>
+<FONT color="green">266</FONT>    }<a name="line.266"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

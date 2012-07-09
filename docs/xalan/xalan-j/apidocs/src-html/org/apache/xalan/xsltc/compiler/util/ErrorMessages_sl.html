@@ -1,0 +1,979 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: ErrorMessages_sl.java 1225426 2011-12-29 04:13:08Z mrglavas $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    <a name="line.21"></a>
+<FONT color="green">022</FONT>    package org.apache.xalan.xsltc.compiler.util;<a name="line.22"></a>
+<FONT color="green">023</FONT>    <a name="line.23"></a>
+<FONT color="green">024</FONT>    import java.util.ListResourceBundle;<a name="line.24"></a>
+<FONT color="green">025</FONT>    <a name="line.25"></a>
+<FONT color="green">026</FONT>    /**<a name="line.26"></a>
+<FONT color="green">027</FONT>     * @author Morten Jorgensen<a name="line.27"></a>
+<FONT color="green">028</FONT>     */<a name="line.28"></a>
+<FONT color="green">029</FONT>    public class ErrorMessages_sl extends ListResourceBundle {<a name="line.29"></a>
+<FONT color="green">030</FONT>    <a name="line.30"></a>
+<FONT color="green">031</FONT>    /*<a name="line.31"></a>
+<FONT color="green">032</FONT>     * XSLTC compile-time error messages.<a name="line.32"></a>
+<FONT color="green">033</FONT>     *<a name="line.33"></a>
+<FONT color="green">034</FONT>     * General notes to translators and definitions:<a name="line.34"></a>
+<FONT color="green">035</FONT>     *<a name="line.35"></a>
+<FONT color="green">036</FONT>     *   1) XSLTC is the name of the product.  It is an acronym for "XSLT Compiler".<a name="line.36"></a>
+<FONT color="green">037</FONT>     *      XSLT is an acronym for "XML Stylesheet Language: Transformations".<a name="line.37"></a>
+<FONT color="green">038</FONT>     *<a name="line.38"></a>
+<FONT color="green">039</FONT>     *   2) A stylesheet is a description of how to transform an input XML document<a name="line.39"></a>
+<FONT color="green">040</FONT>     *      into a resultant XML document (or HTML document or text).  The<a name="line.40"></a>
+<FONT color="green">041</FONT>     *      stylesheet itself is described in the form of an XML document.<a name="line.41"></a>
+<FONT color="green">042</FONT>     *<a name="line.42"></a>
+<FONT color="green">043</FONT>     *   3) A template is a component of a stylesheet that is used to match a<a name="line.43"></a>
+<FONT color="green">044</FONT>     *      particular portion of an input document and specifies the form of the<a name="line.44"></a>
+<FONT color="green">045</FONT>     *      corresponding portion of the output document.<a name="line.45"></a>
+<FONT color="green">046</FONT>     *<a name="line.46"></a>
+<FONT color="green">047</FONT>     *   4) An axis is a particular "dimension" in a tree representation of an XML<a name="line.47"></a>
+<FONT color="green">048</FONT>     *      document; the nodes in the tree are divided along different axes.<a name="line.48"></a>
+<FONT color="green">049</FONT>     *      Traversing the "child" axis, for instance, means that the program<a name="line.49"></a>
+<FONT color="green">050</FONT>     *      would visit each child of a particular node; traversing the "descendant"<a name="line.50"></a>
+<FONT color="green">051</FONT>     *      axis means that the program would visit the child nodes of a particular<a name="line.51"></a>
+<FONT color="green">052</FONT>     *      node, their children, and so on until the leaf nodes of the tree are<a name="line.52"></a>
+<FONT color="green">053</FONT>     *      reached.<a name="line.53"></a>
+<FONT color="green">054</FONT>     *<a name="line.54"></a>
+<FONT color="green">055</FONT>     *   5) An iterator is an object that traverses nodes in a tree along a<a name="line.55"></a>
+<FONT color="green">056</FONT>     *      particular axis, one at a time.<a name="line.56"></a>
+<FONT color="green">057</FONT>     *<a name="line.57"></a>
+<FONT color="green">058</FONT>     *   6) An element is a mark-up tag in an XML document; an attribute is a<a name="line.58"></a>
+<FONT color="green">059</FONT>     *      modifier on the tag.  For example, in &lt;elem attr='val' attr2='val2'&gt;<a name="line.59"></a>
+<FONT color="green">060</FONT>     *      "elem" is an element name, "attr" and "attr2" are attribute names with<a name="line.60"></a>
+<FONT color="green">061</FONT>     *      the values "val" and "val2", respectively.<a name="line.61"></a>
+<FONT color="green">062</FONT>     *<a name="line.62"></a>
+<FONT color="green">063</FONT>     *   7) A namespace declaration is a special attribute that is used to associate<a name="line.63"></a>
+<FONT color="green">064</FONT>     *      a prefix with a URI (the namespace).  The meanings of element names and<a name="line.64"></a>
+<FONT color="green">065</FONT>     *      attribute names that use that prefix are defined with respect to that<a name="line.65"></a>
+<FONT color="green">066</FONT>     *      namespace.<a name="line.66"></a>
+<FONT color="green">067</FONT>     *<a name="line.67"></a>
+<FONT color="green">068</FONT>     *   8) DOM is an acronym for Document Object Model.  It is a tree<a name="line.68"></a>
+<FONT color="green">069</FONT>     *      representation of an XML document.<a name="line.69"></a>
+<FONT color="green">070</FONT>     *<a name="line.70"></a>
+<FONT color="green">071</FONT>     *      SAX is an acronym for the Simple API for XML processing.  It is an API<a name="line.71"></a>
+<FONT color="green">072</FONT>     *      used inform an XML processor (in this case XSLTC) of the structure and<a name="line.72"></a>
+<FONT color="green">073</FONT>     *      content of an XML document.<a name="line.73"></a>
+<FONT color="green">074</FONT>     *<a name="line.74"></a>
+<FONT color="green">075</FONT>     *      Input to the stylesheet processor can come from an XML parser in the<a name="line.75"></a>
+<FONT color="green">076</FONT>     *      form of a DOM tree or through the SAX API.<a name="line.76"></a>
+<FONT color="green">077</FONT>     *<a name="line.77"></a>
+<FONT color="green">078</FONT>     *   9) DTD is a document type declaration.  It is a way of specifying the<a name="line.78"></a>
+<FONT color="green">079</FONT>     *      grammar for an XML file, the names and types of elements, attributes,<a name="line.79"></a>
+<FONT color="green">080</FONT>     *      etc.<a name="line.80"></a>
+<FONT color="green">081</FONT>     *<a name="line.81"></a>
+<FONT color="green">082</FONT>     *  10) XPath is a specification that describes a notation for identifying<a name="line.82"></a>
+<FONT color="green">083</FONT>     *      nodes in a tree-structured representation of an XML document.  An<a name="line.83"></a>
+<FONT color="green">084</FONT>     *      instance of that notation is referred to as an XPath expression.<a name="line.84"></a>
+<FONT color="green">085</FONT>     *<a name="line.85"></a>
+<FONT color="green">086</FONT>     *  11) Translet is an invented term that refers to the class file that contains<a name="line.86"></a>
+<FONT color="green">087</FONT>     *      the compiled form of a stylesheet.<a name="line.87"></a>
+<FONT color="green">088</FONT>     */<a name="line.88"></a>
+<FONT color="green">089</FONT>    <a name="line.89"></a>
+<FONT color="green">090</FONT>        // These message should be read from a locale-specific resource bundle<a name="line.90"></a>
+<FONT color="green">091</FONT>        /** Get the lookup table for error messages.<a name="line.91"></a>
+<FONT color="green">092</FONT>         *<a name="line.92"></a>
+<FONT color="green">093</FONT>         * @return The message lookup table.<a name="line.93"></a>
+<FONT color="green">094</FONT>         */<a name="line.94"></a>
+<FONT color="green">095</FONT>        public Object[][] getContents()<a name="line.95"></a>
+<FONT color="green">096</FONT>        {<a name="line.96"></a>
+<FONT color="green">097</FONT>          return new Object[][] {<a name="line.97"></a>
+<FONT color="green">098</FONT>            {ErrorMsg.MULTIPLE_STYLESHEET_ERR,<a name="line.98"></a>
+<FONT color="green">099</FONT>            "V isti datoteki je dolo\u010denih ve\u010d slogovnih datotek."},<a name="line.99"></a>
+<FONT color="green">100</FONT>    <a name="line.100"></a>
+<FONT color="green">101</FONT>            /*<a name="line.101"></a>
+<FONT color="green">102</FONT>             * Note to translators:  The substitution text is the name of a<a name="line.102"></a>
+<FONT color="green">103</FONT>             * template.  The same name was used on two different templates in the<a name="line.103"></a>
+<FONT color="green">104</FONT>             * same stylesheet.<a name="line.104"></a>
+<FONT color="green">105</FONT>             */<a name="line.105"></a>
+<FONT color="green">106</FONT>            {ErrorMsg.TEMPLATE_REDEF_ERR,<a name="line.106"></a>
+<FONT color="green">107</FONT>            "Predloga ''{0}'' je \u017ee dolo\u010dena v tej slogovni datoteki."},<a name="line.107"></a>
+<FONT color="green">108</FONT>    <a name="line.108"></a>
+<FONT color="green">109</FONT>    <a name="line.109"></a>
+<FONT color="green">110</FONT>            /*<a name="line.110"></a>
+<FONT color="green">111</FONT>             * Note to translators:  The substitution text is the name of a<a name="line.111"></a>
+<FONT color="green">112</FONT>             * template.  A reference to the template name was encountered, but the<a name="line.112"></a>
+<FONT color="green">113</FONT>             * template is undefined.<a name="line.113"></a>
+<FONT color="green">114</FONT>             */<a name="line.114"></a>
+<FONT color="green">115</FONT>            {ErrorMsg.TEMPLATE_UNDEF_ERR,<a name="line.115"></a>
+<FONT color="green">116</FONT>            "Predloga ''{0}'' ni dolo\u010dena v tej slogovni datoteki."},<a name="line.116"></a>
+<FONT color="green">117</FONT>    <a name="line.117"></a>
+<FONT color="green">118</FONT>            /*<a name="line.118"></a>
+<FONT color="green">119</FONT>             * Note to translators:  The substitution text is the name of a variable<a name="line.119"></a>
+<FONT color="green">120</FONT>             * that was defined more than once.<a name="line.120"></a>
+<FONT color="green">121</FONT>             */<a name="line.121"></a>
+<FONT color="green">122</FONT>            {ErrorMsg.VARIABLE_REDEF_ERR,<a name="line.122"></a>
+<FONT color="green">123</FONT>            "Spremenljivka ''{0}'' je ve\u010dkrat dolo\u010dena znotraj istega obsega."},<a name="line.123"></a>
+<FONT color="green">124</FONT>    <a name="line.124"></a>
+<FONT color="green">125</FONT>            /*<a name="line.125"></a>
+<FONT color="green">126</FONT>             * Note to translators:  The substitution text is the name of a variable<a name="line.126"></a>
+<FONT color="green">127</FONT>             * or parameter.  A reference to the variable or parameter was found,<a name="line.127"></a>
+<FONT color="green">128</FONT>             * but it was never defined.<a name="line.128"></a>
+<FONT color="green">129</FONT>             */<a name="line.129"></a>
+<FONT color="green">130</FONT>            {ErrorMsg.VARIABLE_UNDEF_ERR,<a name="line.130"></a>
+<FONT color="green">131</FONT>            "Spremenljivka ali parameter ''{0}'' je nedolo\u010den."},<a name="line.131"></a>
+<FONT color="green">132</FONT>    <a name="line.132"></a>
+<FONT color="green">133</FONT>            /*<a name="line.133"></a>
+<FONT color="green">134</FONT>             * Note to translators:  The word "class" here refers to a Java class.<a name="line.134"></a>
+<FONT color="green">135</FONT>             * Processing the stylesheet required a class to be loaded, but it could<a name="line.135"></a>
+<FONT color="green">136</FONT>             * not be found.  The substitution text is the name of the class.<a name="line.136"></a>
+<FONT color="green">137</FONT>             */<a name="line.137"></a>
+<FONT color="green">138</FONT>            {ErrorMsg.CLASS_NOT_FOUND_ERR,<a name="line.138"></a>
+<FONT color="green">139</FONT>            "Ni mogo\u010de najti razreda ''{0}''."},<a name="line.139"></a>
+<FONT color="green">140</FONT>    <a name="line.140"></a>
+<FONT color="green">141</FONT>            /*<a name="line.141"></a>
+<FONT color="green">142</FONT>             * Note to translators:  The word "method" here refers to a Java method.<a name="line.142"></a>
+<FONT color="green">143</FONT>             * Processing the stylesheet required a reference to the method named by<a name="line.143"></a>
+<FONT color="green">144</FONT>             * the substitution text, but it could not be found.  "public" is the<a name="line.144"></a>
+<FONT color="green">145</FONT>             * Java keyword.<a name="line.145"></a>
+<FONT color="green">146</FONT>             */<a name="line.146"></a>
+<FONT color="green">147</FONT>            {ErrorMsg.METHOD_NOT_FOUND_ERR,<a name="line.147"></a>
+<FONT color="green">148</FONT>            "Zunanje metode ''{0}'' ni mogo\u010de najti (mora biti javna)."},<a name="line.148"></a>
+<FONT color="green">149</FONT>    <a name="line.149"></a>
+<FONT color="green">150</FONT>            /*<a name="line.150"></a>
+<FONT color="green">151</FONT>             * Note to translators:  The word "method" here refers to a Java method.<a name="line.151"></a>
+<FONT color="green">152</FONT>             * Processing the stylesheet required a reference to the method named by<a name="line.152"></a>
+<FONT color="green">153</FONT>             * the substitution text, but no method with the required types of<a name="line.153"></a>
+<FONT color="green">154</FONT>             * arguments or return type could be found.<a name="line.154"></a>
+<FONT color="green">155</FONT>             */<a name="line.155"></a>
+<FONT color="green">156</FONT>            {ErrorMsg.ARGUMENT_CONVERSION_ERR,<a name="line.156"></a>
+<FONT color="green">157</FONT>            "Ni mogo\u010de pretvoriti argumenta / tipa vrnitve v klicu metode ''{0}''"},<a name="line.157"></a>
+<FONT color="green">158</FONT>    <a name="line.158"></a>
+<FONT color="green">159</FONT>            /*<a name="line.159"></a>
+<FONT color="green">160</FONT>             * Note to translators:  The file or URI named in the substitution text<a name="line.160"></a>
+<FONT color="green">161</FONT>             * is missing.<a name="line.161"></a>
+<FONT color="green">162</FONT>             */<a name="line.162"></a>
+<FONT color="green">163</FONT>            {ErrorMsg.FILE_NOT_FOUND_ERR,<a name="line.163"></a>
+<FONT color="green">164</FONT>            "Datoteke ali URI-ja ''{0}'' ni mogo\u010de najti."},<a name="line.164"></a>
+<FONT color="green">165</FONT>    <a name="line.165"></a>
+<FONT color="green">166</FONT>            /*<a name="line.166"></a>
+<FONT color="green">167</FONT>             * Note to translators:  This message is displayed when the URI<a name="line.167"></a>
+<FONT color="green">168</FONT>             * mentioned in the substitution text is not well-formed syntactically.<a name="line.168"></a>
+<FONT color="green">169</FONT>             */<a name="line.169"></a>
+<FONT color="green">170</FONT>            {ErrorMsg.INVALID_URI_ERR,<a name="line.170"></a>
+<FONT color="green">171</FONT>            "Neveljaven URI ''{0}''."},<a name="line.171"></a>
+<FONT color="green">172</FONT>    <a name="line.172"></a>
+<FONT color="green">173</FONT>            /*<a name="line.173"></a>
+<FONT color="green">174</FONT>             * Note to translators:  The file or URI named in the substitution text<a name="line.174"></a>
+<FONT color="green">175</FONT>             * exists but could not be opened.<a name="line.175"></a>
+<FONT color="green">176</FONT>             */<a name="line.176"></a>
+<FONT color="green">177</FONT>            {ErrorMsg.FILE_ACCESS_ERR,<a name="line.177"></a>
+<FONT color="green">178</FONT>            "Datoteke ali URI-ja ''{0}'' ni mogo\u010de odpreti."},<a name="line.178"></a>
+<FONT color="green">179</FONT>    <a name="line.179"></a>
+<FONT color="green">180</FONT>            /*<a name="line.180"></a>
+<FONT color="green">181</FONT>             * Note to translators: &lt;xsl:stylesheet&gt; and &lt;xsl:transform&gt; are<a name="line.181"></a>
+<FONT color="green">182</FONT>             * keywords that should not be translated.<a name="line.182"></a>
+<FONT color="green">183</FONT>             */<a name="line.183"></a>
+<FONT color="green">184</FONT>            {ErrorMsg.MISSING_ROOT_ERR,<a name="line.184"></a>
+<FONT color="green">185</FONT>            "Pri\u010dakovan element &lt;xsl:stylesheet&gt; ali &lt;xsl:transform&gt;."},<a name="line.185"></a>
+<FONT color="green">186</FONT>    <a name="line.186"></a>
+<FONT color="green">187</FONT>            /*<a name="line.187"></a>
+<FONT color="green">188</FONT>             * Note to translators:  The stylesheet contained a reference to a<a name="line.188"></a>
+<FONT color="green">189</FONT>             * namespace prefix that was undefined.  The value of the substitution<a name="line.189"></a>
+<FONT color="green">190</FONT>             * text is the name of the prefix.<a name="line.190"></a>
+<FONT color="green">191</FONT>             */<a name="line.191"></a>
+<FONT color="green">192</FONT>            {ErrorMsg.NAMESPACE_UNDEF_ERR,<a name="line.192"></a>
+<FONT color="green">193</FONT>            "Predpona imenskega prostora ''{0}'' ni dolo\u010dena."},<a name="line.193"></a>
+<FONT color="green">194</FONT>    <a name="line.194"></a>
+<FONT color="green">195</FONT>            /*<a name="line.195"></a>
+<FONT color="green">196</FONT>             * Note to translators:  The Java function named in the stylesheet could<a name="line.196"></a>
+<FONT color="green">197</FONT>             * not be found.<a name="line.197"></a>
+<FONT color="green">198</FONT>             */<a name="line.198"></a>
+<FONT color="green">199</FONT>            {ErrorMsg.FUNCTION_RESOLVE_ERR,<a name="line.199"></a>
+<FONT color="green">200</FONT>            "Klica funkcije ''{0}'' ni mogo\u010de razre\u0161iti."},<a name="line.200"></a>
+<FONT color="green">201</FONT>    <a name="line.201"></a>
+<FONT color="green">202</FONT>            /*<a name="line.202"></a>
+<FONT color="green">203</FONT>             * Note to translators:  The substitution text is the name of a<a name="line.203"></a>
+<FONT color="green">204</FONT>             * function.  A literal string here means a constant string value.<a name="line.204"></a>
+<FONT color="green">205</FONT>             */<a name="line.205"></a>
+<FONT color="green">206</FONT>            {ErrorMsg.NEED_LITERAL_ERR,<a name="line.206"></a>
+<FONT color="green">207</FONT>            "Argument za ''{0}'' mora biti dobesedni niz."},<a name="line.207"></a>
+<FONT color="green">208</FONT>    <a name="line.208"></a>
+<FONT color="green">209</FONT>            /*<a name="line.209"></a>
+<FONT color="green">210</FONT>             * Note to translators:  This message indicates there was a syntactic<a name="line.210"></a>
+<FONT color="green">211</FONT>             * error in the form of an XPath expression.  The substitution text is<a name="line.211"></a>
+<FONT color="green">212</FONT>             * the expression.<a name="line.212"></a>
+<FONT color="green">213</FONT>             */<a name="line.213"></a>
+<FONT color="green">214</FONT>            {ErrorMsg.XPATH_PARSER_ERR,<a name="line.214"></a>
+<FONT color="green">215</FONT>            "Napaka pri raz\u010dlenjevanju izraza XPath ''{0}''."},<a name="line.215"></a>
+<FONT color="green">216</FONT>    <a name="line.216"></a>
+<FONT color="green">217</FONT>            /*<a name="line.217"></a>
+<FONT color="green">218</FONT>             * Note to translators:  An element in the stylesheet requires a<a name="line.218"></a>
+<FONT color="green">219</FONT>             * particular attribute named by the substitution text, but that<a name="line.219"></a>
+<FONT color="green">220</FONT>             * attribute was not specified in the stylesheet.<a name="line.220"></a>
+<FONT color="green">221</FONT>             */<a name="line.221"></a>
+<FONT color="green">222</FONT>            {ErrorMsg.REQUIRED_ATTR_ERR,<a name="line.222"></a>
+<FONT color="green">223</FONT>            "Manjka zahtevani atribut ''{0}''."},<a name="line.223"></a>
+<FONT color="green">224</FONT>    <a name="line.224"></a>
+<FONT color="green">225</FONT>            /*<a name="line.225"></a>
+<FONT color="green">226</FONT>             * Note to translators:  This message indicates that a character not<a name="line.226"></a>
+<FONT color="green">227</FONT>             * permitted in an XPath expression was encountered.  The substitution<a name="line.227"></a>
+<FONT color="green">228</FONT>             * text is the offending character.<a name="line.228"></a>
+<FONT color="green">229</FONT>             */<a name="line.229"></a>
+<FONT color="green">230</FONT>            {ErrorMsg.ILLEGAL_CHAR_ERR,<a name="line.230"></a>
+<FONT color="green">231</FONT>            "Neveljavni znak ''{0}'' v izrazu XPath."},<a name="line.231"></a>
+<FONT color="green">232</FONT>    <a name="line.232"></a>
+<FONT color="green">233</FONT>            /*<a name="line.233"></a>
+<FONT color="green">234</FONT>             * Note to translators:  A processing instruction is a mark-up item in<a name="line.234"></a>
+<FONT color="green">235</FONT>             * an XML document that request some behaviour of an XML processor.  The<a name="line.235"></a>
+<FONT color="green">236</FONT>             * form of the name of was invalid in this case, and the substitution<a name="line.236"></a>
+<FONT color="green">237</FONT>             * text is the name.<a name="line.237"></a>
+<FONT color="green">238</FONT>             */<a name="line.238"></a>
+<FONT color="green">239</FONT>            {ErrorMsg.ILLEGAL_PI_ERR,<a name="line.239"></a>
+<FONT color="green">240</FONT>            "Neveljavno ime ''{0}'' za navodila za obdelavo."},<a name="line.240"></a>
+<FONT color="green">241</FONT>    <a name="line.241"></a>
+<FONT color="green">242</FONT>            /*<a name="line.242"></a>
+<FONT color="green">243</FONT>             * Note to translators:  This message is reported if the stylesheet<a name="line.243"></a>
+<FONT color="green">244</FONT>             * being processed attempted to construct an XML document with an<a name="line.244"></a>
+<FONT color="green">245</FONT>             * attribute in a place other than on an element.  The substitution text<a name="line.245"></a>
+<FONT color="green">246</FONT>             * specifies the name of the attribute.<a name="line.246"></a>
+<FONT color="green">247</FONT>             */<a name="line.247"></a>
+<FONT color="green">248</FONT>            {ErrorMsg.STRAY_ATTRIBUTE_ERR,<a name="line.248"></a>
+<FONT color="green">249</FONT>            "Atribut ''{0}'' zunaj elementa."},<a name="line.249"></a>
+<FONT color="green">250</FONT>    <a name="line.250"></a>
+<FONT color="green">251</FONT>            /*<a name="line.251"></a>
+<FONT color="green">252</FONT>             * Note to translators:  An attribute that wasn't recognized was<a name="line.252"></a>
+<FONT color="green">253</FONT>             * specified on an element in the stylesheet.  The attribute is named<a name="line.253"></a>
+<FONT color="green">254</FONT>             * by the substitution<a name="line.254"></a>
+<FONT color="green">255</FONT>             * text.<a name="line.255"></a>
+<FONT color="green">256</FONT>             */<a name="line.256"></a>
+<FONT color="green">257</FONT>            {ErrorMsg.ILLEGAL_ATTRIBUTE_ERR,<a name="line.257"></a>
+<FONT color="green">258</FONT>            "Neveljaven atribut ''{0}''."},<a name="line.258"></a>
+<FONT color="green">259</FONT>    <a name="line.259"></a>
+<FONT color="green">260</FONT>            /*<a name="line.260"></a>
+<FONT color="green">261</FONT>             * Note to translators:  "import" and "include" are keywords that should<a name="line.261"></a>
+<FONT color="green">262</FONT>             * not be translated.  This messages indicates that the stylesheet<a name="line.262"></a>
+<FONT color="green">263</FONT>             * named in the substitution text imported or included itself either<a name="line.263"></a>
+<FONT color="green">264</FONT>             * directly or indirectly.<a name="line.264"></a>
+<FONT color="green">265</FONT>             */<a name="line.265"></a>
+<FONT color="green">266</FONT>            {ErrorMsg.CIRCULAR_INCLUDE_ERR,<a name="line.266"></a>
+<FONT color="green">267</FONT>            "Kro\u017eni uvoz/vklju\u010ditev. Slogovna datoteka ''{0}'' je \u017ee nalo\u017eena."},<a name="line.267"></a>
+<FONT color="green">268</FONT>    <a name="line.268"></a>
+<FONT color="green">269</FONT>            /*<a name="line.269"></a>
+<FONT color="green">270</FONT>             * Note to translators:  A result-tree fragment is a portion of a<a name="line.270"></a>
+<FONT color="green">271</FONT>             * resulting XML document represented as a tree.  "&lt;xsl:sort&gt;" is a<a name="line.271"></a>
+<FONT color="green">272</FONT>             * keyword and should not be translated.<a name="line.272"></a>
+<FONT color="green">273</FONT>             */<a name="line.273"></a>
+<FONT color="green">274</FONT>            {ErrorMsg.RESULT_TREE_SORT_ERR,<a name="line.274"></a>
+<FONT color="green">275</FONT>            "Ne morem razvrstiti fragmentov drevesa rezultatov (elementi &lt;xsl:sort&gt; so prezrti). Pri pripravi drevesa rezultatov morate razvrstiti vozli\u0161\u010da."},<a name="line.275"></a>
+<FONT color="green">276</FONT>    <a name="line.276"></a>
+<FONT color="green">277</FONT>            /*<a name="line.277"></a>
+<FONT color="green">278</FONT>             * Note to translators:  A name can be given to a particular style to be<a name="line.278"></a>
+<FONT color="green">279</FONT>             * used to format decimal values.  The substitution text gives the name<a name="line.279"></a>
+<FONT color="green">280</FONT>             * of such a style for which more than one declaration was encountered.<a name="line.280"></a>
+<FONT color="green">281</FONT>             */<a name="line.281"></a>
+<FONT color="green">282</FONT>            {ErrorMsg.SYMBOLS_REDEF_ERR,<a name="line.282"></a>
+<FONT color="green">283</FONT>            "Decimalno oblikovanje ''{0}'' je \u017ee dolo\u010deno."},<a name="line.283"></a>
+<FONT color="green">284</FONT>    <a name="line.284"></a>
+<FONT color="green">285</FONT>            /*<a name="line.285"></a>
+<FONT color="green">286</FONT>             * Note to translators:  The stylesheet version named in the<a name="line.286"></a>
+<FONT color="green">287</FONT>             * substitution text is not supported.<a name="line.287"></a>
+<FONT color="green">288</FONT>             */<a name="line.288"></a>
+<FONT color="green">289</FONT>            {ErrorMsg.XSL_VERSION_ERR,<a name="line.289"></a>
+<FONT color="green">290</FONT>            "XSL razli\u010dice ''{0}'' XSLTC ne podpira."},<a name="line.290"></a>
+<FONT color="green">291</FONT>    <a name="line.291"></a>
+<FONT color="green">292</FONT>            /*<a name="line.292"></a>
+<FONT color="green">293</FONT>             * Note to translators:  The definitions of one or more variables or<a name="line.293"></a>
+<FONT color="green">294</FONT>             * parameters depend on one another.<a name="line.294"></a>
+<FONT color="green">295</FONT>             */<a name="line.295"></a>
+<FONT color="green">296</FONT>            {ErrorMsg.CIRCULAR_VARIABLE_ERR,<a name="line.296"></a>
+<FONT color="green">297</FONT>            "Sklic na kro\u017eno spremenljivko/parameter v ''{0}''."},<a name="line.297"></a>
+<FONT color="green">298</FONT>    <a name="line.298"></a>
+<FONT color="green">299</FONT>            /*<a name="line.299"></a>
+<FONT color="green">300</FONT>             * Note to translators:  The operator in an expresion with two operands was<a name="line.300"></a>
+<FONT color="green">301</FONT>             * not recognized.<a name="line.301"></a>
+<FONT color="green">302</FONT>             */<a name="line.302"></a>
+<FONT color="green">303</FONT>            {ErrorMsg.ILLEGAL_BINARY_OP_ERR,<a name="line.303"></a>
+<FONT color="green">304</FONT>            "Neznan operator za binarni izraz."},<a name="line.304"></a>
+<FONT color="green">305</FONT>    <a name="line.305"></a>
+<FONT color="green">306</FONT>            /*<a name="line.306"></a>
+<FONT color="green">307</FONT>             * Note to translators:  This message is produced if a reference to a<a name="line.307"></a>
+<FONT color="green">308</FONT>             * function has too many or too few arguments.<a name="line.308"></a>
+<FONT color="green">309</FONT>             */<a name="line.309"></a>
+<FONT color="green">310</FONT>            {ErrorMsg.ILLEGAL_ARG_ERR,<a name="line.310"></a>
+<FONT color="green">311</FONT>            "Neveljavni argument(i) za klic funkcije."},<a name="line.311"></a>
+<FONT color="green">312</FONT>    <a name="line.312"></a>
+<FONT color="green">313</FONT>            /*<a name="line.313"></a>
+<FONT color="green">314</FONT>             * Note to translators:  "document()" is the name of function and must<a name="line.314"></a>
+<FONT color="green">315</FONT>             * not be translated.  A node-set is a set of the nodes in the tree<a name="line.315"></a>
+<FONT color="green">316</FONT>             * representation of an XML document.<a name="line.316"></a>
+<FONT color="green">317</FONT>             */<a name="line.317"></a>
+<FONT color="green">318</FONT>            {ErrorMsg.DOCUMENT_ARG_ERR,<a name="line.318"></a>
+<FONT color="green">319</FONT>            "Drugi argument funkcije document() mora biti skupina vozli\u0161\u010d."},<a name="line.319"></a>
+<FONT color="green">320</FONT>    <a name="line.320"></a>
+<FONT color="green">321</FONT>            /*<a name="line.321"></a>
+<FONT color="green">322</FONT>             * Note to translators:  "&lt;xsl:when&gt;" and "&lt;xsl:choose&gt;" are keywords<a name="line.322"></a>
+<FONT color="green">323</FONT>             * and should not be translated.  This message describes a syntax error<a name="line.323"></a>
+<FONT color="green">324</FONT>             * in the stylesheet.<a name="line.324"></a>
+<FONT color="green">325</FONT>             */<a name="line.325"></a>
+<FONT color="green">326</FONT>            {ErrorMsg.MISSING_WHEN_ERR,<a name="line.326"></a>
+<FONT color="green">327</FONT>            "Zahtevan vsaj en element &lt;xsl:when&gt; v &lt;xsl:choose&gt;."},<a name="line.327"></a>
+<FONT color="green">328</FONT>    <a name="line.328"></a>
+<FONT color="green">329</FONT>            /*<a name="line.329"></a>
+<FONT color="green">330</FONT>             * Note to translators:  "&lt;xsl:otherwise&gt;" and "&lt;xsl:choose&gt;" are<a name="line.330"></a>
+<FONT color="green">331</FONT>             * keywords and should not be translated.  This message describes a<a name="line.331"></a>
+<FONT color="green">332</FONT>             * syntax error in the stylesheet.<a name="line.332"></a>
+<FONT color="green">333</FONT>             */<a name="line.333"></a>
+<FONT color="green">334</FONT>            {ErrorMsg.MULTIPLE_OTHERWISE_ERR,<a name="line.334"></a>
+<FONT color="green">335</FONT>            "Dovoljen samo en element &lt;xsl:otherwise&gt; v &lt;xsl:choose&gt;."},<a name="line.335"></a>
+<FONT color="green">336</FONT>    <a name="line.336"></a>
+<FONT color="green">337</FONT>            /*<a name="line.337"></a>
+<FONT color="green">338</FONT>             * Note to translators:  "&lt;xsl:otherwise&gt;" and "&lt;xsl:choose&gt;" are<a name="line.338"></a>
+<FONT color="green">339</FONT>             * keywords and should not be translated.  This message describes a<a name="line.339"></a>
+<FONT color="green">340</FONT>             * syntax error in the stylesheet.<a name="line.340"></a>
+<FONT color="green">341</FONT>             */<a name="line.341"></a>
+<FONT color="green">342</FONT>            {ErrorMsg.STRAY_OTHERWISE_ERR,<a name="line.342"></a>
+<FONT color="green">343</FONT>            "&lt;xsl:otherwise&gt; lahko uporabljamo samo znotraj &lt;xsl:choose&gt;."},<a name="line.343"></a>
+<FONT color="green">344</FONT>    <a name="line.344"></a>
+<FONT color="green">345</FONT>            /*<a name="line.345"></a>
+<FONT color="green">346</FONT>             * Note to translators:  "&lt;xsl:when&gt;" and "&lt;xsl:choose&gt;" are keywords<a name="line.346"></a>
+<FONT color="green">347</FONT>             * and should not be translated.  This message describes a syntax error<a name="line.347"></a>
+<FONT color="green">348</FONT>             * in the stylesheet.<a name="line.348"></a>
+<FONT color="green">349</FONT>             */<a name="line.349"></a>
+<FONT color="green">350</FONT>            {ErrorMsg.STRAY_WHEN_ERR,<a name="line.350"></a>
+<FONT color="green">351</FONT>            "&lt;xsl:when&gt; lahko uporabljamo samo znotraj &lt;xsl:choose&gt;."},<a name="line.351"></a>
+<FONT color="green">352</FONT>    <a name="line.352"></a>
+<FONT color="green">353</FONT>            /*<a name="line.353"></a>
+<FONT color="green">354</FONT>             * Note to translators:  "&lt;xsl:when&gt;", "&lt;xsl:otherwise&gt;" and<a name="line.354"></a>
+<FONT color="green">355</FONT>             * "&lt;xsl:choose&gt;" are keywords and should not be translated.  This<a name="line.355"></a>
+<FONT color="green">356</FONT>             * message describes a syntax error in the stylesheet.<a name="line.356"></a>
+<FONT color="green">357</FONT>             */<a name="line.357"></a>
+<FONT color="green">358</FONT>            {ErrorMsg.WHEN_ELEMENT_ERR,<a name="line.358"></a>
+<FONT color="green">359</FONT>            "V &lt;xsl:choose&gt; sta dovoljena samo elementa &lt;xsl:when&gt; in &lt;xsl:otherwise&gt;."},<a name="line.359"></a>
+<FONT color="green">360</FONT>    <a name="line.360"></a>
+<FONT color="green">361</FONT>            /*<a name="line.361"></a>
+<FONT color="green">362</FONT>             * Note to translators:  "&lt;xsl:attribute-set&gt;" and "name" are keywords<a name="line.362"></a>
+<FONT color="green">363</FONT>             * that should not be translated.<a name="line.363"></a>
+<FONT color="green">364</FONT>             */<a name="line.364"></a>
+<FONT color="green">365</FONT>            {ErrorMsg.UNNAMED_ATTRIBSET_ERR,<a name="line.365"></a>
+<FONT color="green">366</FONT>            "V &lt;xsl:attribute-set&gt; manjka atribut 'name'."},<a name="line.366"></a>
+<FONT color="green">367</FONT>    <a name="line.367"></a>
+<FONT color="green">368</FONT>            /*<a name="line.368"></a>
+<FONT color="green">369</FONT>             * Note to translators:  An element in the stylesheet contained an<a name="line.369"></a>
+<FONT color="green">370</FONT>             * element of a type that it was not permitted to contain.<a name="line.370"></a>
+<FONT color="green">371</FONT>             */<a name="line.371"></a>
+<FONT color="green">372</FONT>            {ErrorMsg.ILLEGAL_CHILD_ERR,<a name="line.372"></a>
+<FONT color="green">373</FONT>            "Neveljavni podrejeni element."},<a name="line.373"></a>
+<FONT color="green">374</FONT>    <a name="line.374"></a>
+<FONT color="green">375</FONT>            /*<a name="line.375"></a>
+<FONT color="green">376</FONT>             * Note to translators:  The stylesheet tried to create an element with<a name="line.376"></a>
+<FONT color="green">377</FONT>             * a name that was not a valid XML name.  The substitution text contains<a name="line.377"></a>
+<FONT color="green">378</FONT>             * the name.<a name="line.378"></a>
+<FONT color="green">379</FONT>             */<a name="line.379"></a>
+<FONT color="green">380</FONT>            {ErrorMsg.ILLEGAL_ELEM_NAME_ERR,<a name="line.380"></a>
+<FONT color="green">381</FONT>            "Elementa ''{0}'' ni mogo\u010de poklicati"},<a name="line.381"></a>
+<FONT color="green">382</FONT>    <a name="line.382"></a>
+<FONT color="green">383</FONT>            /*<a name="line.383"></a>
+<FONT color="green">384</FONT>             * Note to translators:  The stylesheet tried to create an attribute<a name="line.384"></a>
+<FONT color="green">385</FONT>             * with a name that was not a valid XML name.  The substitution text<a name="line.385"></a>
+<FONT color="green">386</FONT>             * contains the name.<a name="line.386"></a>
+<FONT color="green">387</FONT>             */<a name="line.387"></a>
+<FONT color="green">388</FONT>            {ErrorMsg.ILLEGAL_ATTR_NAME_ERR,<a name="line.388"></a>
+<FONT color="green">389</FONT>            "Atributa ''{0}'' ni mogo\u010de poklicati"},<a name="line.389"></a>
+<FONT color="green">390</FONT>    <a name="line.390"></a>
+<FONT color="green">391</FONT>            /*<a name="line.391"></a>
+<FONT color="green">392</FONT>             * Note to translators:  The children of the outermost element of a<a name="line.392"></a>
+<FONT color="green">393</FONT>             * stylesheet are referred to as top-level elements.  No text should<a name="line.393"></a>
+<FONT color="green">394</FONT>             * occur within that outermost element unless it is within a top-level<a name="line.394"></a>
+<FONT color="green">395</FONT>             * element.  This message indicates that that constraint was violated.<a name="line.395"></a>
+<FONT color="green">396</FONT>             * "&lt;xsl:stylesheet&gt;" is a keyword that should not be translated.<a name="line.396"></a>
+<FONT color="green">397</FONT>             */<a name="line.397"></a>
+<FONT color="green">398</FONT>            {ErrorMsg.ILLEGAL_TEXT_NODE_ERR,<a name="line.398"></a>
+<FONT color="green">399</FONT>            "Tekstovni podatki zunaj elementa na najvi\u0161ji ravni &lt;xsl:stylesheet&gt;."},<a name="line.399"></a>
+<FONT color="green">400</FONT>    <a name="line.400"></a>
+<FONT color="green">401</FONT>            /*<a name="line.401"></a>
+<FONT color="green">402</FONT>             * Note to translators:  JAXP is an acronym for the Java API for XML<a name="line.402"></a>
+<FONT color="green">403</FONT>             * Processing.  This message indicates that the XML parser provided to<a name="line.403"></a>
+<FONT color="green">404</FONT>             * XSLTC to process the XML input document had a configuration problem.<a name="line.404"></a>
+<FONT color="green">405</FONT>             */<a name="line.405"></a>
+<FONT color="green">406</FONT>            {ErrorMsg.SAX_PARSER_CONFIG_ERR,<a name="line.406"></a>
+<FONT color="green">407</FONT>            "Raz\u010dlenjevalnik JAXP ni pravilno konfiguriran"},<a name="line.407"></a>
+<FONT color="green">408</FONT>    <a name="line.408"></a>
+<FONT color="green">409</FONT>            /*<a name="line.409"></a>
+<FONT color="green">410</FONT>             * Note to translators:  The substitution text names the internal error<a name="line.410"></a>
+<FONT color="green">411</FONT>             * encountered.<a name="line.411"></a>
+<FONT color="green">412</FONT>             */<a name="line.412"></a>
+<FONT color="green">413</FONT>            {ErrorMsg.INTERNAL_ERR,<a name="line.413"></a>
+<FONT color="green">414</FONT>            "Nepopravljiva XSLTC-notranja napaka: ''{0}''"},<a name="line.414"></a>
+<FONT color="green">415</FONT>    <a name="line.415"></a>
+<FONT color="green">416</FONT>            /*<a name="line.416"></a>
+<FONT color="green">417</FONT>             * Note to translators:  The stylesheet contained an element that was<a name="line.417"></a>
+<FONT color="green">418</FONT>             * not recognized as part of the XSL syntax.  The substitution text<a name="line.418"></a>
+<FONT color="green">419</FONT>             * gives the element name.<a name="line.419"></a>
+<FONT color="green">420</FONT>             */<a name="line.420"></a>
+<FONT color="green">421</FONT>            {ErrorMsg.UNSUPPORTED_XSL_ERR,<a name="line.421"></a>
+<FONT color="green">422</FONT>            "Nepodprt XSL element ''{0}''."},<a name="line.422"></a>
+<FONT color="green">423</FONT>    <a name="line.423"></a>
+<FONT color="green">424</FONT>            /*<a name="line.424"></a>
+<FONT color="green">425</FONT>             * Note to translators:  The stylesheet referred to an extension to the<a name="line.425"></a>
+<FONT color="green">426</FONT>             * XSL syntax and indicated that it was defined by XSLTC, but XSTLC does<a name="line.426"></a>
+<FONT color="green">427</FONT>             * not recognized the particular extension named.  The substitution text<a name="line.427"></a>
+<FONT color="green">428</FONT>             * gives the extension name.<a name="line.428"></a>
+<FONT color="green">429</FONT>             */<a name="line.429"></a>
+<FONT color="green">430</FONT>            {ErrorMsg.UNSUPPORTED_EXT_ERR,<a name="line.430"></a>
+<FONT color="green">431</FONT>            "Neprepoznana pripona XSLTC ''{0}''."},<a name="line.431"></a>
+<FONT color="green">432</FONT>    <a name="line.432"></a>
+<FONT color="green">433</FONT>            /*<a name="line.433"></a>
+<FONT color="green">434</FONT>             * Note to translators:  The XML document given to XSLTC as a stylesheet<a name="line.434"></a>
+<FONT color="green">435</FONT>             * was not, in fact, a stylesheet.  XSLTC is able to detect that in this<a name="line.435"></a>
+<FONT color="green">436</FONT>             * case because the outermost element in the stylesheet has to be<a name="line.436"></a>
+<FONT color="green">437</FONT>             * declared with respect to the XSL namespace URI, but no declaration<a name="line.437"></a>
+<FONT color="green">438</FONT>             * for that namespace was seen.<a name="line.438"></a>
+<FONT color="green">439</FONT>             */<a name="line.439"></a>
+<FONT color="green">440</FONT>            {ErrorMsg.MISSING_XSLT_URI_ERR,<a name="line.440"></a>
+<FONT color="green">441</FONT>            "Vhodni dokument ni slogovna datoteka (v korenskem elementu ni naveden imenski prostor XSL)."},<a name="line.441"></a>
+<FONT color="green">442</FONT>    <a name="line.442"></a>
+<FONT color="green">443</FONT>            /*<a name="line.443"></a>
+<FONT color="green">444</FONT>             * Note to translators:  XSLTC could not find the stylesheet document<a name="line.444"></a>
+<FONT color="green">445</FONT>             * with the name specified by the substitution text.<a name="line.445"></a>
+<FONT color="green">446</FONT>             */<a name="line.446"></a>
+<FONT color="green">447</FONT>            {ErrorMsg.MISSING_XSLT_TARGET_ERR,<a name="line.447"></a>
+<FONT color="green">448</FONT>            "Cilja slogovne datoteke ''{0}'' ni mogo\u010de najti."},<a name="line.448"></a>
+<FONT color="green">449</FONT>    <a name="line.449"></a>
+<FONT color="green">450</FONT>            /*<a name="line.450"></a>
+<FONT color="green">451</FONT>             * Note to translators:  This message represents an internal error in<a name="line.451"></a>
+<FONT color="green">452</FONT>             * condition in XSLTC.  The substitution text is the class name in XSLTC<a name="line.452"></a>
+<FONT color="green">453</FONT>             * that is missing some functionality.<a name="line.453"></a>
+<FONT color="green">454</FONT>             */<a name="line.454"></a>
+<FONT color="green">455</FONT>            {ErrorMsg.NOT_IMPLEMENTED_ERR,<a name="line.455"></a>
+<FONT color="green">456</FONT>            "Ni izvedeno: ''{0}''."},<a name="line.456"></a>
+<FONT color="green">457</FONT>    <a name="line.457"></a>
+<FONT color="green">458</FONT>            /*<a name="line.458"></a>
+<FONT color="green">459</FONT>             * Note to translators:  The XML document given to XSLTC as a stylesheet<a name="line.459"></a>
+<FONT color="green">460</FONT>             * was not, in fact, a stylesheet.<a name="line.460"></a>
+<FONT color="green">461</FONT>             */<a name="line.461"></a>
+<FONT color="green">462</FONT>            {ErrorMsg.NOT_STYLESHEET_ERR,<a name="line.462"></a>
+<FONT color="green">463</FONT>            "Vhodni dokument ne vsebuje slogovne datoteke XSL."},<a name="line.463"></a>
+<FONT color="green">464</FONT>    <a name="line.464"></a>
+<FONT color="green">465</FONT>            /*<a name="line.465"></a>
+<FONT color="green">466</FONT>             * Note to translators:  The element named in the substitution text was<a name="line.466"></a>
+<FONT color="green">467</FONT>             * encountered in the stylesheet but is not recognized.<a name="line.467"></a>
+<FONT color="green">468</FONT>             */<a name="line.468"></a>
+<FONT color="green">469</FONT>            {ErrorMsg.ELEMENT_PARSE_ERR,<a name="line.469"></a>
+<FONT color="green">470</FONT>            "Elementa ''{0}'' ni mogo\u010de raz\u010dleniti"},<a name="line.470"></a>
+<FONT color="green">471</FONT>    <a name="line.471"></a>
+<FONT color="green">472</FONT>            /*<a name="line.472"></a>
+<FONT color="green">473</FONT>             * Note to translators:  "use", "&lt;key&gt;", "node", "node-set", "string"<a name="line.473"></a>
+<FONT color="green">474</FONT>             * and "number" are keywords in this context and should not be<a name="line.474"></a>
+<FONT color="green">475</FONT>             * translated.  This message indicates that the value of the "use"<a name="line.475"></a>
+<FONT color="green">476</FONT>             * attribute was not one of the permitted values.<a name="line.476"></a>
+<FONT color="green">477</FONT>             */<a name="line.477"></a>
+<FONT color="green">478</FONT>            {ErrorMsg.KEY_USE_ATTR_ERR,<a name="line.478"></a>
+<FONT color="green">479</FONT>            "Atribut uporabe za &lt;key&gt; mora biti vozli\u0161\u010de, skupina vozli\u0161\u010d, niz ali \u0161tevilka."},<a name="line.479"></a>
+<FONT color="green">480</FONT>    <a name="line.480"></a>
+<FONT color="green">481</FONT>            /*<a name="line.481"></a>
+<FONT color="green">482</FONT>             * Note to translators:  An XML document can specify the version of the<a name="line.482"></a>
+<FONT color="green">483</FONT>             * XML specification to which it adheres.  This message indicates that<a name="line.483"></a>
+<FONT color="green">484</FONT>             * the version specified for the output document was not valid.<a name="line.484"></a>
+<FONT color="green">485</FONT>             */<a name="line.485"></a>
+<FONT color="green">486</FONT>            {ErrorMsg.OUTPUT_VERSION_ERR,<a name="line.486"></a>
+<FONT color="green">487</FONT>            "Razli\u010dica izhodnega dokumenta XML mora biti 1.0"},<a name="line.487"></a>
+<FONT color="green">488</FONT>    <a name="line.488"></a>
+<FONT color="green">489</FONT>            /*<a name="line.489"></a>
+<FONT color="green">490</FONT>             * Note to translators:  The operator in a comparison operation was<a name="line.490"></a>
+<FONT color="green">491</FONT>             * not recognized.<a name="line.491"></a>
+<FONT color="green">492</FONT>             */<a name="line.492"></a>
+<FONT color="green">493</FONT>            {ErrorMsg.ILLEGAL_RELAT_OP_ERR,<a name="line.493"></a>
+<FONT color="green">494</FONT>            "Neznan operator za relacijski izraz"},<a name="line.494"></a>
+<FONT color="green">495</FONT>    <a name="line.495"></a>
+<FONT color="green">496</FONT>            /*<a name="line.496"></a>
+<FONT color="green">497</FONT>             * Note to translators:  An attribute set defines as a set of XML<a name="line.497"></a>
+<FONT color="green">498</FONT>             * attributes that can be added to an element in the output XML document<a name="line.498"></a>
+<FONT color="green">499</FONT>             * as a group.  This message is reported if the name specified was not<a name="line.499"></a>
+<FONT color="green">500</FONT>             * used to declare an attribute set.  The substitution text is the name<a name="line.500"></a>
+<FONT color="green">501</FONT>             * that is in error.<a name="line.501"></a>
+<FONT color="green">502</FONT>             */<a name="line.502"></a>
+<FONT color="green">503</FONT>            {ErrorMsg.ATTRIBSET_UNDEF_ERR,<a name="line.503"></a>
+<FONT color="green">504</FONT>            "Poskus uporabe neobstoje\u010de skupine atributov ''{0}''."},<a name="line.504"></a>
+<FONT color="green">505</FONT>    <a name="line.505"></a>
+<FONT color="green">506</FONT>            /*<a name="line.506"></a>
+<FONT color="green">507</FONT>             * Note to translators:  The term "attribute value template" is a term<a name="line.507"></a>
+<FONT color="green">508</FONT>             * defined by XSLT which describes the value of an attribute that is<a name="line.508"></a>
+<FONT color="green">509</FONT>             * determined by an XPath expression.  The message indicates that the<a name="line.509"></a>
+<FONT color="green">510</FONT>             * expression was syntactically incorrect; the substitution text<a name="line.510"></a>
+<FONT color="green">511</FONT>             * contains the expression that was in error.<a name="line.511"></a>
+<FONT color="green">512</FONT>             */<a name="line.512"></a>
+<FONT color="green">513</FONT>            {ErrorMsg.ATTR_VAL_TEMPLATE_ERR,<a name="line.513"></a>
+<FONT color="green">514</FONT>            "Predloge vrednosti atributa ''{0}'' ni mogo\u010de raz\u010dleniti."},<a name="line.514"></a>
+<FONT color="green">515</FONT>    <a name="line.515"></a>
+<FONT color="green">516</FONT>            /*<a name="line.516"></a>
+<FONT color="green">517</FONT>             * Note to translators:  ???<a name="line.517"></a>
+<FONT color="green">518</FONT>             */<a name="line.518"></a>
+<FONT color="green">519</FONT>            {ErrorMsg.UNKNOWN_SIG_TYPE_ERR,<a name="line.519"></a>
+<FONT color="green">520</FONT>            "V podpisu za razred ''{0}'' je neznan podatkovni tip."},<a name="line.520"></a>
+<FONT color="green">521</FONT>    <a name="line.521"></a>
+<FONT color="green">522</FONT>            /*<a name="line.522"></a>
+<FONT color="green">523</FONT>             * Note to translators:  The substitution text refers to data types.<a name="line.523"></a>
+<FONT color="green">524</FONT>             * The message is displayed if a value in a particular context needs to<a name="line.524"></a>
+<FONT color="green">525</FONT>             * be converted to type {1}, but that's not possible for a value of<a name="line.525"></a>
+<FONT color="green">526</FONT>             * type {0}.<a name="line.526"></a>
+<FONT color="green">527</FONT>             */<a name="line.527"></a>
+<FONT color="green">528</FONT>            {ErrorMsg.DATA_CONVERSION_ERR,<a name="line.528"></a>
+<FONT color="green">529</FONT>            "Ni mogo\u010de pretvoriti podatkovnega tipa ''{0}'' v ''{1}''."},<a name="line.529"></a>
+<FONT color="green">530</FONT>    <a name="line.530"></a>
+<FONT color="green">531</FONT>            /*<a name="line.531"></a>
+<FONT color="green">532</FONT>             * Note to translators:  "Templates" is a Java class name that should<a name="line.532"></a>
+<FONT color="green">533</FONT>             * not be translated.<a name="line.533"></a>
+<FONT color="green">534</FONT>             */<a name="line.534"></a>
+<FONT color="green">535</FONT>            {ErrorMsg.NO_TRANSLET_CLASS_ERR,<a name="line.535"></a>
+<FONT color="green">536</FONT>            "Te Templates ne vsebujejo veljavne definicije razreda translet."},<a name="line.536"></a>
+<FONT color="green">537</FONT>    <a name="line.537"></a>
+<FONT color="green">538</FONT>            /*<a name="line.538"></a>
+<FONT color="green">539</FONT>             * Note to translators:  "Templates" is a Java class name that should<a name="line.539"></a>
+<FONT color="green">540</FONT>             * not be translated.<a name="line.540"></a>
+<FONT color="green">541</FONT>             */<a name="line.541"></a>
+<FONT color="green">542</FONT>            {ErrorMsg.NO_MAIN_TRANSLET_ERR,<a name="line.542"></a>
+<FONT color="green">543</FONT>            "Te predloge ne vsebujejo razreda z imenom ''{0}''."},<a name="line.543"></a>
+<FONT color="green">544</FONT>    <a name="line.544"></a>
+<FONT color="green">545</FONT>            /*<a name="line.545"></a>
+<FONT color="green">546</FONT>             * Note to translators:  The substitution text is the name of a class.<a name="line.546"></a>
+<FONT color="green">547</FONT>             */<a name="line.547"></a>
+<FONT color="green">548</FONT>            {ErrorMsg.TRANSLET_CLASS_ERR,<a name="line.548"></a>
+<FONT color="green">549</FONT>            "Ni mogo\u010de nalo\u017eiti razreda transleta ''{0}''."},<a name="line.549"></a>
+<FONT color="green">550</FONT>    <a name="line.550"></a>
+<FONT color="green">551</FONT>            {ErrorMsg.TRANSLET_OBJECT_ERR,<a name="line.551"></a>
+<FONT color="green">552</FONT>            "Razred transleta je nalo\u017een, vendar priprava primerka transleta ni mogo\u010da."},<a name="line.552"></a>
+<FONT color="green">553</FONT>    <a name="line.553"></a>
+<FONT color="green">554</FONT>            /*<a name="line.554"></a>
+<FONT color="green">555</FONT>             * Note to translators:  "ErrorListener" is a Java interface name that<a name="line.555"></a>
+<FONT color="green">556</FONT>             * should not be translated.  The message indicates that the user tried<a name="line.556"></a>
+<FONT color="green">557</FONT>             * to set an ErrorListener object on object of the class named in the<a name="line.557"></a>
+<FONT color="green">558</FONT>             * substitution text with "null" Java value.<a name="line.558"></a>
+<FONT color="green">559</FONT>             */<a name="line.559"></a>
+<FONT color="green">560</FONT>            {ErrorMsg.ERROR_LISTENER_NULL_ERR,<a name="line.560"></a>
+<FONT color="green">561</FONT>            "Poskus nastavitve ErrorListener za ''{0}'' na null"},<a name="line.561"></a>
+<FONT color="green">562</FONT>    <a name="line.562"></a>
+<FONT color="green">563</FONT>            /*<a name="line.563"></a>
+<FONT color="green">564</FONT>             * Note to translators:  StreamSource, SAXSource and DOMSource are Java<a name="line.564"></a>
+<FONT color="green">565</FONT>             * interface names that should not be translated.<a name="line.565"></a>
+<FONT color="green">566</FONT>             */<a name="line.566"></a>
+<FONT color="green">567</FONT>            {ErrorMsg.JAXP_UNKNOWN_SOURCE_ERR,<a name="line.567"></a>
+<FONT color="green">568</FONT>            "XSLTC podpira samo StreamSource, SAXSource in DOMSource"},<a name="line.568"></a>
+<FONT color="green">569</FONT>    <a name="line.569"></a>
+<FONT color="green">570</FONT>            /*<a name="line.570"></a>
+<FONT color="green">571</FONT>             * Note to translators:  "Source" is a Java class name that should not<a name="line.571"></a>
+<FONT color="green">572</FONT>             * be translated.  The substitution text is the name of Java method.<a name="line.572"></a>
+<FONT color="green">573</FONT>             */<a name="line.573"></a>
+<FONT color="green">574</FONT>            {ErrorMsg.JAXP_NO_SOURCE_ERR,<a name="line.574"></a>
+<FONT color="green">575</FONT>            "Predmet Source, ki je bil podan z ''{0}'', nima vsebine."},<a name="line.575"></a>
+<FONT color="green">576</FONT>    <a name="line.576"></a>
+<FONT color="green">577</FONT>            /*<a name="line.577"></a>
+<FONT color="green">578</FONT>             * Note to translators:  The message indicates that XSLTC failed to<a name="line.578"></a>
+<FONT color="green">579</FONT>             * compile the stylesheet into a translet (class file).<a name="line.579"></a>
+<FONT color="green">580</FONT>             */<a name="line.580"></a>
+<FONT color="green">581</FONT>            {ErrorMsg.JAXP_COMPILE_ERR,<a name="line.581"></a>
+<FONT color="green">582</FONT>            "Ni mogo\u010de prevesti slogovne datoteke"},<a name="line.582"></a>
+<FONT color="green">583</FONT>    <a name="line.583"></a>
+<FONT color="green">584</FONT>            /*<a name="line.584"></a>
+<FONT color="green">585</FONT>             * Note to translators:  "TransformerFactory" is a class name.  In this<a name="line.585"></a>
+<FONT color="green">586</FONT>             * context, an attribute is a property or setting of the<a name="line.586"></a>
+<FONT color="green">587</FONT>             * TransformerFactory object.  The substitution text is the name of the<a name="line.587"></a>
+<FONT color="green">588</FONT>             * unrecognised attribute.  The method used to retrieve the attribute is<a name="line.588"></a>
+<FONT color="green">589</FONT>             * "getAttribute", so it's not clear whether it would be best to<a name="line.589"></a>
+<FONT color="green">590</FONT>             * translate the term "attribute".<a name="line.590"></a>
+<FONT color="green">591</FONT>             */<a name="line.591"></a>
+<FONT color="green">592</FONT>            {ErrorMsg.JAXP_INVALID_ATTR_ERR,<a name="line.592"></a>
+<FONT color="green">593</FONT>            "TransformerFactory ne prepozna atributa ''{0}''."},<a name="line.593"></a>
+<FONT color="green">594</FONT>    <a name="line.594"></a>
+<FONT color="green">595</FONT>            /*<a name="line.595"></a>
+<FONT color="green">596</FONT>             * Note to translators:  "setResult()" and "startDocument()" are Java<a name="line.596"></a>
+<FONT color="green">597</FONT>             * method names that should not be translated.<a name="line.597"></a>
+<FONT color="green">598</FONT>             */<a name="line.598"></a>
+<FONT color="green">599</FONT>            {ErrorMsg.JAXP_SET_RESULT_ERR,<a name="line.599"></a>
+<FONT color="green">600</FONT>            "Klic za setResult() mora biti izveden pred klicem startDocument()."},<a name="line.600"></a>
+<FONT color="green">601</FONT>    <a name="line.601"></a>
+<FONT color="green">602</FONT>            /*<a name="line.602"></a>
+<FONT color="green">603</FONT>             * Note to translators:  "Transformer" is a Java interface name that<a name="line.603"></a>
+<FONT color="green">604</FONT>             * should not be translated.  A Transformer object should contained a<a name="line.604"></a>
+<FONT color="green">605</FONT>             * reference to a translet object in order to be used for<a name="line.605"></a>
+<FONT color="green">606</FONT>             * transformations; this message is produced if that requirement is not<a name="line.606"></a>
+<FONT color="green">607</FONT>             * met.<a name="line.607"></a>
+<FONT color="green">608</FONT>             */<a name="line.608"></a>
+<FONT color="green">609</FONT>            {ErrorMsg.JAXP_NO_TRANSLET_ERR,<a name="line.609"></a>
+<FONT color="green">610</FONT>            "Transformer ne vsebuje enkapsuliranih translet objektov."},<a name="line.610"></a>
+<FONT color="green">611</FONT>    <a name="line.611"></a>
+<FONT color="green">612</FONT>            /*<a name="line.612"></a>
+<FONT color="green">613</FONT>             * Note to translators:  The XML document that results from a<a name="line.613"></a>
+<FONT color="green">614</FONT>             * transformation needs to be sent to an output handler object; this<a name="line.614"></a>
+<FONT color="green">615</FONT>             * message is produced if that requirement is not met.<a name="line.615"></a>
+<FONT color="green">616</FONT>             */<a name="line.616"></a>
+<FONT color="green">617</FONT>            {ErrorMsg.JAXP_NO_HANDLER_ERR,<a name="line.617"></a>
+<FONT color="green">618</FONT>            "Za rezultat transformacije ni izhodne obravnave."},<a name="line.618"></a>
+<FONT color="green">619</FONT>    <a name="line.619"></a>
+<FONT color="green">620</FONT>            /*<a name="line.620"></a>
+<FONT color="green">621</FONT>             * Note to translators:  "Result" is a Java interface name in this<a name="line.621"></a>
+<FONT color="green">622</FONT>             * context.  The substitution text is a method name.<a name="line.622"></a>
+<FONT color="green">623</FONT>             */<a name="line.623"></a>
+<FONT color="green">624</FONT>            {ErrorMsg.JAXP_NO_RESULT_ERR,<a name="line.624"></a>
+<FONT color="green">625</FONT>            "Rezultat, ki je bil posredovan ''{0}'', je neveljaven."},<a name="line.625"></a>
+<FONT color="green">626</FONT>    <a name="line.626"></a>
+<FONT color="green">627</FONT>            /*<a name="line.627"></a>
+<FONT color="green">628</FONT>             * Note to translators:  "Transformer" is a Java interface name.  The<a name="line.628"></a>
+<FONT color="green">629</FONT>             * user's program attempted to access an unrecognized property with the<a name="line.629"></a>
+<FONT color="green">630</FONT>             * name specified in the substitution text.  The method used to retrieve<a name="line.630"></a>
+<FONT color="green">631</FONT>             * the property is "getOutputProperty", so it's not clear whether it<a name="line.631"></a>
+<FONT color="green">632</FONT>             * would be best to translate the term "property".<a name="line.632"></a>
+<FONT color="green">633</FONT>             */<a name="line.633"></a>
+<FONT color="green">634</FONT>            {ErrorMsg.JAXP_UNKNOWN_PROP_ERR,<a name="line.634"></a>
+<FONT color="green">635</FONT>            "Poskus dostopa do neveljavne lastnosti (property) Transformer ''{0}''."},<a name="line.635"></a>
+<FONT color="green">636</FONT>    <a name="line.636"></a>
+<FONT color="green">637</FONT>            /*<a name="line.637"></a>
+<FONT color="green">638</FONT>             * Note to translators:  SAX2DOM is the name of a Java class that should<a name="line.638"></a>
+<FONT color="green">639</FONT>             * not be translated.  This is an adapter in the sense that it takes a<a name="line.639"></a>
+<FONT color="green">640</FONT>             * DOM object and converts it to something that uses the SAX API.<a name="line.640"></a>
+<FONT color="green">641</FONT>             */<a name="line.641"></a>
+<FONT color="green">642</FONT>            {ErrorMsg.SAX2DOM_ADAPTER_ERR,<a name="line.642"></a>
+<FONT color="green">643</FONT>            "Ni mogo\u010de ustvariti adapterja SAX2DOM: ''{0}''."},<a name="line.643"></a>
+<FONT color="green">644</FONT>    <a name="line.644"></a>
+<FONT color="green">645</FONT>            /*<a name="line.645"></a>
+<FONT color="green">646</FONT>             * Note to translators:  "XSLTCSource.build()" is a Java method name.<a name="line.646"></a>
+<FONT color="green">647</FONT>             * "systemId" is an XML term that is short for "system identification".<a name="line.647"></a>
+<FONT color="green">648</FONT>             */<a name="line.648"></a>
+<FONT color="green">649</FONT>            {ErrorMsg.XSLTC_SOURCE_ERR,<a name="line.649"></a>
+<FONT color="green">650</FONT>            "Klic XSLTCSource.build() brez predhodne nastavitve systemId."},<a name="line.650"></a>
+<FONT color="green">651</FONT>    <a name="line.651"></a>
+<FONT color="green">652</FONT>            { ErrorMsg.ER_RESULT_NULL,<a name="line.652"></a>
+<FONT color="green">653</FONT>                "Rezultat naj ne bi bil NULL"},<a name="line.653"></a>
+<FONT color="green">654</FONT>    <a name="line.654"></a>
+<FONT color="green">655</FONT>            /*<a name="line.655"></a>
+<FONT color="green">656</FONT>             * Note to translators:  This message indicates that the value argument<a name="line.656"></a>
+<FONT color="green">657</FONT>             * of setParameter must be a valid Java Object.<a name="line.657"></a>
+<FONT color="green">658</FONT>             */<a name="line.658"></a>
+<FONT color="green">659</FONT>            {ErrorMsg.JAXP_INVALID_SET_PARAM_VALUE,<a name="line.659"></a>
+<FONT color="green">660</FONT>            "Vrednost parametra {0} mora biti veljaven javanski objekt"},<a name="line.660"></a>
+<FONT color="green">661</FONT>    <a name="line.661"></a>
+<FONT color="green">662</FONT>    <a name="line.662"></a>
+<FONT color="green">663</FONT>            {ErrorMsg.COMPILE_STDIN_ERR,<a name="line.663"></a>
+<FONT color="green">664</FONT>            "Mo\u017enost -i mora biti uporabljena skupaj z mo\u017enostjo -o."},<a name="line.664"></a>
+<FONT color="green">665</FONT>    <a name="line.665"></a>
+<FONT color="green">666</FONT>    <a name="line.666"></a>
+<FONT color="green">667</FONT>            /*<a name="line.667"></a>
+<FONT color="green">668</FONT>             * Note to translators:  This message contains usage information for a<a name="line.668"></a>
+<FONT color="green">669</FONT>             * means of invoking XSLTC from the command-line.  The message is<a name="line.669"></a>
+<FONT color="green">670</FONT>             * formatted for presentation in English.  The strings &lt;output&gt;,<a name="line.670"></a>
+<FONT color="green">671</FONT>             * &lt;directory&gt;, etc. indicate user-specified argument values, and can<a name="line.671"></a>
+<FONT color="green">672</FONT>             * be translated - the argument &lt;package&gt; refers to a Java package, so<a name="line.672"></a>
+<FONT color="green">673</FONT>             * it should be handled in the same way the term is handled for JDK<a name="line.673"></a>
+<FONT color="green">674</FONT>             * documentation.<a name="line.674"></a>
+<FONT color="green">675</FONT>             */<a name="line.675"></a>
+<FONT color="green">676</FONT>            {ErrorMsg.COMPILE_USAGE_STR,<a name="line.676"></a>
+<FONT color="green">677</FONT>            "SYNOPSIS\n   java org.apache.xalan.xsltc.cmdline.Compile [-o &lt;izhodna datoteka&gt;]\n      [-d &lt;directory&gt;] [-j  &lt;datoteka jar&gt;] [-p &lt;paket&gt;]\n      [-n] [-x] [-u] [-v] [-h] { &lt;stylesheet&gt; | -i }\n\nOPTIONS\n   -o &lt;izhodna datoteka&gt;    dodeli ime &lt;izhodna datoteka&gt; generiranemu\n                  transletu.  Ime transleta se po privzetih nastavitvah\n                 izpelje iz imena &lt;stylesheet&gt;.  Pri prevajanju\n                  ve\u010d slogovnih datotek je ta mo\u017enost prezrta.\n   -d &lt;directory&gt; dolo\u010di ciljno mapo za translet\n   -j &lt;datoteka jar&gt;   zdru\u017ei razrede translet v datoteko jar\n       pod imenom, dolo\u010denim z &lt;datoteka jar&gt;\n   -p &lt;paket&gt;   dolo\u010di predpono imena paketa vsem generiranim\n               razredom translet.\n   -n             omogo\u010da vrivanje predlog (v povpre\u010dju bolj\u0161e privzeto\n                      obna\u0161anje).\n   -x             vklopi dodatna izhodna sporo\u010dila za iskanje napak\n   -u             prevede argumente &lt;stylesheet&gt; kot URL-je\n   -i             prisili prevajalnik k branju slogovne datoteke iz stdin\n   -v             natisne razli\u010dico prevajalnika\n   -h             natisne ta stavek za uporabo\n"},<a name="line.677"></a>
+<FONT color="green">678</FONT>    <a name="line.678"></a>
+<FONT color="green">679</FONT>            /*<a name="line.679"></a>
+<FONT color="green">680</FONT>             * Note to translators:  This message contains usage information for a<a name="line.680"></a>
+<FONT color="green">681</FONT>             * means of invoking XSLTC from the command-line.  The message is<a name="line.681"></a>
+<FONT color="green">682</FONT>             * formatted for presentation in English.  The strings &lt;jarfile&gt;,<a name="line.682"></a>
+<FONT color="green">683</FONT>             * &lt;document&gt;, etc. indicate user-specified argument values, and can<a name="line.683"></a>
+<FONT color="green">684</FONT>             * be translated - the argument &lt;class&gt; refers to a Java class, so it<a name="line.684"></a>
+<FONT color="green">685</FONT>             * should be handled in the same way the term is handled for JDK<a name="line.685"></a>
+<FONT color="green">686</FONT>             * documentation.<a name="line.686"></a>
+<FONT color="green">687</FONT>             */<a name="line.687"></a>
+<FONT color="green">688</FONT>            {ErrorMsg.TRANSFORM_USAGE_STR,<a name="line.688"></a>
+<FONT color="green">689</FONT>            "SYNOPSIS \n   java org.apache.xalan.xsltc.cmdline.Transform [-j &lt;datoteka jar&gt;]\n      [-x] [-n &lt;ponovitve&gt;] {-u &lt;document_url&gt; | &lt;dokument&gt;}\n      &lt;razred&gt; [&lt;param1&gt;=&lt;value1&gt; ...]\n\n   uporablja translet &lt;razred&gt; za pretvorbo dokumenta XML \n   navedenega kot &lt;dokument&gt;. Translet &lt;razred&gt; je ali v\n   uporabnikovem CLASSPATH ali v izbirno navedeni datoteki &lt;datoteka jar&gt;.\nOPTIONS\n   -j &lt;datoteka jar&gt;    dolo\u010di datoteko jar, iz katere bo nalo\u017een translet\n   -x               vklopi dodatna sporo\u010dila za iskanje napak\n   n  &lt;ponovitve&gt; &lt;ponovitve&gt;-krat po\u017eene preoblikovanje in\n                   prika\u017ee informacije profiliranja\n   -u &lt;document_url&gt; dolo\u010di vhodni dokument XML za URL\n"},<a name="line.689"></a>
+<FONT color="green">690</FONT>    <a name="line.690"></a>
+<FONT color="green">691</FONT>    <a name="line.691"></a>
+<FONT color="green">692</FONT>    <a name="line.692"></a>
+<FONT color="green">693</FONT>            /*<a name="line.693"></a>
+<FONT color="green">694</FONT>             * Note to translators:  "&lt;xsl:sort&gt;", "&lt;xsl:for-each&gt;" and<a name="line.694"></a>
+<FONT color="green">695</FONT>             * "&lt;xsl:apply-templates&gt;" are keywords that should not be translated.<a name="line.695"></a>
+<FONT color="green">696</FONT>             * The message indicates that an xsl:sort element must be a child of<a name="line.696"></a>
+<FONT color="green">697</FONT>             * one of the other kinds of elements mentioned.<a name="line.697"></a>
+<FONT color="green">698</FONT>             */<a name="line.698"></a>
+<FONT color="green">699</FONT>            {ErrorMsg.STRAY_SORT_ERR,<a name="line.699"></a>
+<FONT color="green">700</FONT>            "&lt;xsl:sort&gt; je mogo\u010de uporabljati samo znotraj &lt;xsl:for-each&gt; ali &lt;xsl:apply-templates&gt;."},<a name="line.700"></a>
+<FONT color="green">701</FONT>    <a name="line.701"></a>
+<FONT color="green">702</FONT>            /*<a name="line.702"></a>
+<FONT color="green">703</FONT>             * Note to translators:  The message indicates that the encoding<a name="line.703"></a>
+<FONT color="green">704</FONT>             * requested for the output document was on that requires support that<a name="line.704"></a>
+<FONT color="green">705</FONT>             * is not available from the Java Virtual Machine being used to execute<a name="line.705"></a>
+<FONT color="green">706</FONT>             * the program.<a name="line.706"></a>
+<FONT color="green">707</FONT>             */<a name="line.707"></a>
+<FONT color="green">708</FONT>            {ErrorMsg.UNSUPPORTED_ENCODING,<a name="line.708"></a>
+<FONT color="green">709</FONT>            "Ta JVM ne podpira izhodnega kodiranja ''{0}''."},<a name="line.709"></a>
+<FONT color="green">710</FONT>    <a name="line.710"></a>
+<FONT color="green">711</FONT>            /*<a name="line.711"></a>
+<FONT color="green">712</FONT>             * Note to translators:  The message indicates that the XPath expression<a name="line.712"></a>
+<FONT color="green">713</FONT>             * named in the substitution text was not well formed syntactically.<a name="line.713"></a>
+<FONT color="green">714</FONT>             */<a name="line.714"></a>
+<FONT color="green">715</FONT>            {ErrorMsg.SYNTAX_ERR,<a name="line.715"></a>
+<FONT color="green">716</FONT>            "Napaka v sintaksi v ''{0}''."},<a name="line.716"></a>
+<FONT color="green">717</FONT>    <a name="line.717"></a>
+<FONT color="green">718</FONT>            /*<a name="line.718"></a>
+<FONT color="green">719</FONT>             * Note to translators:  The substitution text is the name of a Java<a name="line.719"></a>
+<FONT color="green">720</FONT>             * class.  The term "constructor" here is the Java term.  The message is<a name="line.720"></a>
+<FONT color="green">721</FONT>             * displayed if XSLTC could not find a constructor for the specified<a name="line.721"></a>
+<FONT color="green">722</FONT>             * class.<a name="line.722"></a>
+<FONT color="green">723</FONT>             */<a name="line.723"></a>
+<FONT color="green">724</FONT>            {ErrorMsg.CONSTRUCTOR_NOT_FOUND,<a name="line.724"></a>
+<FONT color="green">725</FONT>            "Ni mogo\u010de najti zunanjega konstruktorja ''{0}''."},<a name="line.725"></a>
+<FONT color="green">726</FONT>    <a name="line.726"></a>
+<FONT color="green">727</FONT>            /*<a name="line.727"></a>
+<FONT color="green">728</FONT>             * Note to translators:  "static" is the Java keyword.  The substitution<a name="line.728"></a>
+<FONT color="green">729</FONT>             * text is the name of a function.  The first argument of that function<a name="line.729"></a>
+<FONT color="green">730</FONT>             * is not of the required type.<a name="line.730"></a>
+<FONT color="green">731</FONT>             */<a name="line.731"></a>
+<FONT color="green">732</FONT>            {ErrorMsg.NO_JAVA_FUNCT_THIS_REF,<a name="line.732"></a>
+<FONT color="green">733</FONT>            "Prvi argument nestati\u010dne (non-static) javanske funkcije ''{0}'' ni veljaven sklic na objekt."},<a name="line.733"></a>
+<FONT color="green">734</FONT>    <a name="line.734"></a>
+<FONT color="green">735</FONT>            /*<a name="line.735"></a>
+<FONT color="green">736</FONT>             * Note to translators:  An XPath expression was not of the type<a name="line.736"></a>
+<FONT color="green">737</FONT>             * required in a particular context.  The substitution text is the<a name="line.737"></a>
+<FONT color="green">738</FONT>             * expression that was in error.<a name="line.738"></a>
+<FONT color="green">739</FONT>             */<a name="line.739"></a>
+<FONT color="green">740</FONT>            {ErrorMsg.TYPE_CHECK_ERR,<a name="line.740"></a>
+<FONT color="green">741</FONT>            "Napaka pri preverjanju tipa izraza ''{0}''."},<a name="line.741"></a>
+<FONT color="green">742</FONT>    <a name="line.742"></a>
+<FONT color="green">743</FONT>            /*<a name="line.743"></a>
+<FONT color="green">744</FONT>             * Note to translators:  An XPath expression was not of the type<a name="line.744"></a>
+<FONT color="green">745</FONT>             * required in a particular context.  However, the location of the<a name="line.745"></a>
+<FONT color="green">746</FONT>             * problematic expression is unknown.<a name="line.746"></a>
+<FONT color="green">747</FONT>             */<a name="line.747"></a>
+<FONT color="green">748</FONT>            {ErrorMsg.TYPE_CHECK_UNK_LOC_ERR,<a name="line.748"></a>
+<FONT color="green">749</FONT>            "Napaka pri preverjanju tipa izraza na neznani lokaciji."},<a name="line.749"></a>
+<FONT color="green">750</FONT>    <a name="line.750"></a>
+<FONT color="green">751</FONT>            /*<a name="line.751"></a>
+<FONT color="green">752</FONT>             * Note to translators:  The substitution text is the name of a command-<a name="line.752"></a>
+<FONT color="green">753</FONT>             * line option that was not recognized.<a name="line.753"></a>
+<FONT color="green">754</FONT>             */<a name="line.754"></a>
+<FONT color="green">755</FONT>            {ErrorMsg.ILLEGAL_CMDLINE_OPTION_ERR,<a name="line.755"></a>
+<FONT color="green">756</FONT>            "Mo\u017enost ukazne vrstice ''{0}'' ni veljavna."},<a name="line.756"></a>
+<FONT color="green">757</FONT>    <a name="line.757"></a>
+<FONT color="green">758</FONT>            /*<a name="line.758"></a>
+<FONT color="green">759</FONT>             * Note to translators:  The substitution text is the name of a command-<a name="line.759"></a>
+<FONT color="green">760</FONT>             * line option.<a name="line.760"></a>
+<FONT color="green">761</FONT>             */<a name="line.761"></a>
+<FONT color="green">762</FONT>            {ErrorMsg.CMDLINE_OPT_MISSING_ARG_ERR,<a name="line.762"></a>
+<FONT color="green">763</FONT>            "Mo\u017enosti ukazne vrstice ''{0}'' manjka zahtevani argument."},<a name="line.763"></a>
+<FONT color="green">764</FONT>    <a name="line.764"></a>
+<FONT color="green">765</FONT>            /*<a name="line.765"></a>
+<FONT color="green">766</FONT>             * Note to translators:  This message is used to indicate the severity<a name="line.766"></a>
+<FONT color="green">767</FONT>             * of another message.  The substitution text contains two error<a name="line.767"></a>
+<FONT color="green">768</FONT>             * messages.  The spacing before the second substitution text indents<a name="line.768"></a>
+<FONT color="green">769</FONT>             * it the same amount as the first in English.<a name="line.769"></a>
+<FONT color="green">770</FONT>             */<a name="line.770"></a>
+<FONT color="green">771</FONT>            {ErrorMsg.WARNING_PLUS_WRAPPED_MSG,<a name="line.771"></a>
+<FONT color="green">772</FONT>            "OPOZORILO:  ''{0}''\n       :{1}"},<a name="line.772"></a>
+<FONT color="green">773</FONT>    <a name="line.773"></a>
+<FONT color="green">774</FONT>            /*<a name="line.774"></a>
+<FONT color="green">775</FONT>             * Note to translators:  This message is used to indicate the severity<a name="line.775"></a>
+<FONT color="green">776</FONT>             * of another message.  The substitution text is an error message.<a name="line.776"></a>
+<FONT color="green">777</FONT>             */<a name="line.777"></a>
+<FONT color="green">778</FONT>            {ErrorMsg.WARNING_MSG,<a name="line.778"></a>
+<FONT color="green">779</FONT>            "OPOZORILO:  ''{0}''"},<a name="line.779"></a>
+<FONT color="green">780</FONT>    <a name="line.780"></a>
+<FONT color="green">781</FONT>            /*<a name="line.781"></a>
+<FONT color="green">782</FONT>             * Note to translators:  This message is used to indicate the severity<a name="line.782"></a>
+<FONT color="green">783</FONT>             * of another message.  The substitution text contains two error<a name="line.783"></a>
+<FONT color="green">784</FONT>             * messages.  The spacing before the second substitution text indents<a name="line.784"></a>
+<FONT color="green">785</FONT>             * it the same amount as the first in English.<a name="line.785"></a>
+<FONT color="green">786</FONT>             */<a name="line.786"></a>
+<FONT color="green">787</FONT>            {ErrorMsg.FATAL_ERR_PLUS_WRAPPED_MSG,<a name="line.787"></a>
+<FONT color="green">788</FONT>            "USODNA NAPAKA:  ''{0}''\n           :{1}"},<a name="line.788"></a>
+<FONT color="green">789</FONT>    <a name="line.789"></a>
+<FONT color="green">790</FONT>            /*<a name="line.790"></a>
+<FONT color="green">791</FONT>             * Note to translators:  This message is used to indicate the severity<a name="line.791"></a>
+<FONT color="green">792</FONT>             * of another message.  The substitution text is an error message.<a name="line.792"></a>
+<FONT color="green">793</FONT>             */<a name="line.793"></a>
+<FONT color="green">794</FONT>            {ErrorMsg.FATAL_ERR_MSG,<a name="line.794"></a>
+<FONT color="green">795</FONT>            "USODNA NAPAKA:  ''{0}''"},<a name="line.795"></a>
+<FONT color="green">796</FONT>    <a name="line.796"></a>
+<FONT color="green">797</FONT>            /*<a name="line.797"></a>
+<FONT color="green">798</FONT>             * Note to translators:  This message is used to indicate the severity<a name="line.798"></a>
+<FONT color="green">799</FONT>             * of another message.  The substitution text contains two error<a name="line.799"></a>
+<FONT color="green">800</FONT>             * messages.  The spacing before the second substitution text indents<a name="line.800"></a>
+<FONT color="green">801</FONT>             * it the same amount as the first in English.<a name="line.801"></a>
+<FONT color="green">802</FONT>             */<a name="line.802"></a>
+<FONT color="green">803</FONT>            {ErrorMsg.ERROR_PLUS_WRAPPED_MSG,<a name="line.803"></a>
+<FONT color="green">804</FONT>            "USODNA NAPAKA:  ''{0}''\n     :{1}"},<a name="line.804"></a>
+<FONT color="green">805</FONT>    <a name="line.805"></a>
+<FONT color="green">806</FONT>            /*<a name="line.806"></a>
+<FONT color="green">807</FONT>             * Note to translators:  This message is used to indicate the severity<a name="line.807"></a>
+<FONT color="green">808</FONT>             * of another message.  The substitution text is an error message.<a name="line.808"></a>
+<FONT color="green">809</FONT>             */<a name="line.809"></a>
+<FONT color="green">810</FONT>            {ErrorMsg.ERROR_MSG,<a name="line.810"></a>
+<FONT color="green">811</FONT>            "NAPAKA:  ''{0}''"},<a name="line.811"></a>
+<FONT color="green">812</FONT>    <a name="line.812"></a>
+<FONT color="green">813</FONT>            /*<a name="line.813"></a>
+<FONT color="green">814</FONT>             * Note to translators:  The substitution text is the name of a class.<a name="line.814"></a>
+<FONT color="green">815</FONT>             */<a name="line.815"></a>
+<FONT color="green">816</FONT>            {ErrorMsg.TRANSFORM_WITH_TRANSLET_STR,<a name="line.816"></a>
+<FONT color="green">817</FONT>            "Pretvorba z uporabo transleta ''{0}'' "},<a name="line.817"></a>
+<FONT color="green">818</FONT>    <a name="line.818"></a>
+<FONT color="green">819</FONT>            /*<a name="line.819"></a>
+<FONT color="green">820</FONT>             * Note to translators:  The first substitution is the name of a class,<a name="line.820"></a>
+<FONT color="green">821</FONT>             * while the second substitution is the name of a jar file.<a name="line.821"></a>
+<FONT color="green">822</FONT>             */<a name="line.822"></a>
+<FONT color="green">823</FONT>            {ErrorMsg.TRANSFORM_WITH_JAR_STR,<a name="line.823"></a>
+<FONT color="green">824</FONT>            "Pretvorba z uporabo transleta ''{0}'' iz datoteke jar ''{1}''"},<a name="line.824"></a>
+<FONT color="green">825</FONT>    <a name="line.825"></a>
+<FONT color="green">826</FONT>            /*<a name="line.826"></a>
+<FONT color="green">827</FONT>             * Note to translators:  "TransformerFactory" is the name of a Java<a name="line.827"></a>
+<FONT color="green">828</FONT>             * interface and must not be translated.  The substitution text is<a name="line.828"></a>
+<FONT color="green">829</FONT>             * the name of the class that could not be instantiated.<a name="line.829"></a>
+<FONT color="green">830</FONT>             */<a name="line.830"></a>
+<FONT color="green">831</FONT>            {ErrorMsg.COULD_NOT_CREATE_TRANS_FACT,<a name="line.831"></a>
+<FONT color="green">832</FONT>            "Ni mogo\u010de ustvariti primerka razreda TransformerFactory ''{0}''."},<a name="line.832"></a>
+<FONT color="green">833</FONT>    <a name="line.833"></a>
+<FONT color="green">834</FONT>            /*<a name="line.834"></a>
+<FONT color="green">835</FONT>             * Note to translators:  This message is produced when the user<a name="line.835"></a>
+<FONT color="green">836</FONT>             * specified a name for the translet class that contains characters<a name="line.836"></a>
+<FONT color="green">837</FONT>             * that are not permitted in a Java class name.  The substitution<a name="line.837"></a>
+<FONT color="green">838</FONT>             * text "{0}" specifies the name the user requested, while "{1}"<a name="line.838"></a>
+<FONT color="green">839</FONT>             * specifies the name the processor used instead.<a name="line.839"></a>
+<FONT color="green">840</FONT>             */<a name="line.840"></a>
+<FONT color="green">841</FONT>            {ErrorMsg.TRANSLET_NAME_JAVA_CONFLICT,<a name="line.841"></a>
+<FONT color="green">842</FONT>             "Imena ''{0}'' ni bilo mogo\u010de uporabiti kot ime razreda translet, saj vsebuje znake, ki v imenu javanskega razreda niso dovoljeni.  Uporabljeno je bilo ime ''{1}''."},<a name="line.842"></a>
+<FONT color="green">843</FONT>    <a name="line.843"></a>
+<FONT color="green">844</FONT>            /*<a name="line.844"></a>
+<FONT color="green">845</FONT>             * Note to translators:  The following message is used as a header.<a name="line.845"></a>
+<FONT color="green">846</FONT>             * All the error messages are collected together and displayed beneath<a name="line.846"></a>
+<FONT color="green">847</FONT>             * this message.<a name="line.847"></a>
+<FONT color="green">848</FONT>             */<a name="line.848"></a>
+<FONT color="green">849</FONT>            {ErrorMsg.COMPILER_ERROR_KEY,<a name="line.849"></a>
+<FONT color="green">850</FONT>            "Napake prevajalnika:"},<a name="line.850"></a>
+<FONT color="green">851</FONT>    <a name="line.851"></a>
+<FONT color="green">852</FONT>            /*<a name="line.852"></a>
+<FONT color="green">853</FONT>             * Note to translators:  The following message is used as a header.<a name="line.853"></a>
+<FONT color="green">854</FONT>             * All the warning messages are collected together and displayed<a name="line.854"></a>
+<FONT color="green">855</FONT>             * beneath this message.<a name="line.855"></a>
+<FONT color="green">856</FONT>             */<a name="line.856"></a>
+<FONT color="green">857</FONT>            {ErrorMsg.COMPILER_WARNING_KEY,<a name="line.857"></a>
+<FONT color="green">858</FONT>            "Opozorila prevajalnika:"},<a name="line.858"></a>
+<FONT color="green">859</FONT>    <a name="line.859"></a>
+<FONT color="green">860</FONT>            /*<a name="line.860"></a>
+<FONT color="green">861</FONT>             * Note to translators:  The following message is used as a header.<a name="line.861"></a>
+<FONT color="green">862</FONT>             * All the error messages that are produced when the stylesheet is<a name="line.862"></a>
+<FONT color="green">863</FONT>             * applied to an input document are collected together and displayed<a name="line.863"></a>
+<FONT color="green">864</FONT>             * beneath this message.  A 'translet' is the compiled form of a<a name="line.864"></a>
+<FONT color="green">865</FONT>             * stylesheet (see above).<a name="line.865"></a>
+<FONT color="green">866</FONT>             */<a name="line.866"></a>
+<FONT color="green">867</FONT>            {ErrorMsg.RUNTIME_ERROR_KEY,<a name="line.867"></a>
+<FONT color="green">868</FONT>            "Napake transleta:"},<a name="line.868"></a>
+<FONT color="green">869</FONT>    <a name="line.869"></a>
+<FONT color="green">870</FONT>            /*<a name="line.870"></a>
+<FONT color="green">871</FONT>             * Note to translators:  An attribute whose value is constrained to<a name="line.871"></a>
+<FONT color="green">872</FONT>             * be a "QName" or a list of "QNames" had a value that was incorrect.<a name="line.872"></a>
+<FONT color="green">873</FONT>             * 'QName' is an XML syntactic term that must not be translated.  The<a name="line.873"></a>
+<FONT color="green">874</FONT>             * substitution text contains the actual value of the attribute.<a name="line.874"></a>
+<FONT color="green">875</FONT>             */<a name="line.875"></a>
+<FONT color="green">876</FONT>            {ErrorMsg.INVALID_QNAME_ERR,<a name="line.876"></a>
+<FONT color="green">877</FONT>            "Atribut, katerega vrednost mora biti vrednost QName ali s presledki lo\u010den seznam vrednosti Qname, je imel vrednost ''{0}''"},<a name="line.877"></a>
+<FONT color="green">878</FONT>    <a name="line.878"></a>
+<FONT color="green">879</FONT>            /*<a name="line.879"></a>
+<FONT color="green">880</FONT>             * Note to translators:  An attribute whose value is required to<a name="line.880"></a>
+<FONT color="green">881</FONT>             * be an "NCName".<a name="line.881"></a>
+<FONT color="green">882</FONT>             * 'NCName' is an XML syntactic term that must not be translated.  The<a name="line.882"></a>
+<FONT color="green">883</FONT>             * substitution text contains the actual value of the attribute.<a name="line.883"></a>
+<FONT color="green">884</FONT>             */<a name="line.884"></a>
+<FONT color="green">885</FONT>            {ErrorMsg.INVALID_NCNAME_ERR,<a name="line.885"></a>
+<FONT color="green">886</FONT>            "Atribut, katerega vrednost mora biti NCName, je imel vrednost ''{0}''"},<a name="line.886"></a>
+<FONT color="green">887</FONT>    <a name="line.887"></a>
+<FONT color="green">888</FONT>            /*<a name="line.888"></a>
+<FONT color="green">889</FONT>             * Note to translators:  An attribute with an incorrect value was<a name="line.889"></a>
+<FONT color="green">890</FONT>             * encountered.  The permitted value is one of the literal values<a name="line.890"></a>
+<FONT color="green">891</FONT>             * "xml", "html" or "text"; it is also permitted to have the form of<a name="line.891"></a>
+<FONT color="green">892</FONT>             * a QName that is not also an NCName.  The terms "method",<a name="line.892"></a>
+<FONT color="green">893</FONT>             * "xsl:output", "xml", "html" and "text" are keywords that must not<a name="line.893"></a>
+<FONT color="green">894</FONT>             * be translated.  The term "qname-but-not-ncname" is an XML syntactic<a name="line.894"></a>
+<FONT color="green">895</FONT>             * term.  The substitution text contains the actual value of the<a name="line.895"></a>
+<FONT color="green">896</FONT>             * attribute.<a name="line.896"></a>
+<FONT color="green">897</FONT>             */<a name="line.897"></a>
+<FONT color="green">898</FONT>            {ErrorMsg.INVALID_METHOD_IN_OUTPUT,<a name="line.898"></a>
+<FONT color="green">899</FONT>            "Atribut metode elementa &lt;xsl:output&gt; je imel vrednost ''{0}''.  Vrednost mora biti ena izmed ''xml'', ''html'', ''text'', ali qname-but-not-ncname (qname, vendar pa ne ncname)"},<a name="line.899"></a>
+<FONT color="green">900</FONT>    <a name="line.900"></a>
+<FONT color="green">901</FONT>            {ErrorMsg.JAXP_GET_FEATURE_NULL_NAME,<a name="line.901"></a>
+<FONT color="green">902</FONT>            "Ime funkcije ne sme biti null v TransformerFactory.getFeature(Ime niza)."},<a name="line.902"></a>
+<FONT color="green">903</FONT>    <a name="line.903"></a>
+<FONT color="green">904</FONT>            {ErrorMsg.JAXP_SET_FEATURE_NULL_NAME,<a name="line.904"></a>
+<FONT color="green">905</FONT>            "Ime funkcije ne sme biti null v TransformerFactory.getFeature(Ime niza, boolova vrednost)."},<a name="line.905"></a>
+<FONT color="green">906</FONT>    <a name="line.906"></a>
+<FONT color="green">907</FONT>            {ErrorMsg.JAXP_UNSUPPORTED_FEATURE,<a name="line.907"></a>
+<FONT color="green">908</FONT>            "Ni mogo\u010de nastaviti funkcije ''{0}'' v tem TransformerFactory."}<a name="line.908"></a>
+<FONT color="green">909</FONT>    <a name="line.909"></a>
+<FONT color="green">910</FONT>        };<a name="line.910"></a>
+<FONT color="green">911</FONT>        }<a name="line.911"></a>
+<FONT color="green">912</FONT>    <a name="line.912"></a>
+<FONT color="green">913</FONT>    }<a name="line.913"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

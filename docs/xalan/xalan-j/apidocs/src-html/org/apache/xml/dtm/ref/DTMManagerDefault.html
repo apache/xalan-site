@@ -1,0 +1,925 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: DTMManagerDefault.java 468653 2006-10-28 07:07:05Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    package org.apache.xml.dtm.ref;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    import javax.xml.parsers.DocumentBuilder;<a name="line.23"></a>
+<FONT color="green">024</FONT>    import javax.xml.parsers.DocumentBuilderFactory;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import javax.xml.transform.Source;<a name="line.25"></a>
+<FONT color="green">026</FONT>    import javax.xml.transform.dom.DOMSource;<a name="line.26"></a>
+<FONT color="green">027</FONT>    import javax.xml.transform.sax.SAXSource;<a name="line.27"></a>
+<FONT color="green">028</FONT>    import javax.xml.transform.stream.StreamSource;<a name="line.28"></a>
+<FONT color="green">029</FONT>    <a name="line.29"></a>
+<FONT color="green">030</FONT>    import org.apache.xml.dtm.DTM;<a name="line.30"></a>
+<FONT color="green">031</FONT>    import org.apache.xml.dtm.DTMException;<a name="line.31"></a>
+<FONT color="green">032</FONT>    import org.apache.xml.dtm.DTMFilter;<a name="line.32"></a>
+<FONT color="green">033</FONT>    import org.apache.xml.dtm.DTMIterator;<a name="line.33"></a>
+<FONT color="green">034</FONT>    import org.apache.xml.dtm.DTMManager;<a name="line.34"></a>
+<FONT color="green">035</FONT>    import org.apache.xml.dtm.DTMWSFilter;<a name="line.35"></a>
+<FONT color="green">036</FONT>    import org.apache.xml.dtm.ref.dom2dtm.DOM2DTM;<a name="line.36"></a>
+<FONT color="green">037</FONT>    import org.apache.xml.dtm.ref.sax2dtm.SAX2DTM;<a name="line.37"></a>
+<FONT color="green">038</FONT>    import org.apache.xml.dtm.ref.sax2dtm.SAX2RTFDTM;<a name="line.38"></a>
+<FONT color="green">039</FONT>    import org.apache.xml.res.XMLErrorResources;<a name="line.39"></a>
+<FONT color="green">040</FONT>    import org.apache.xml.res.XMLMessages;<a name="line.40"></a>
+<FONT color="green">041</FONT>    import org.apache.xml.utils.PrefixResolver;<a name="line.41"></a>
+<FONT color="green">042</FONT>    import org.apache.xml.utils.SystemIDResolver;<a name="line.42"></a>
+<FONT color="green">043</FONT>    import org.apache.xml.utils.XMLReaderManager;<a name="line.43"></a>
+<FONT color="green">044</FONT>    import org.apache.xml.utils.XMLStringFactory;<a name="line.44"></a>
+<FONT color="green">045</FONT>    <a name="line.45"></a>
+<FONT color="green">046</FONT>    import org.w3c.dom.Document;<a name="line.46"></a>
+<FONT color="green">047</FONT>    import org.w3c.dom.Node;<a name="line.47"></a>
+<FONT color="green">048</FONT>    <a name="line.48"></a>
+<FONT color="green">049</FONT>    import org.xml.sax.InputSource;<a name="line.49"></a>
+<FONT color="green">050</FONT>    import org.xml.sax.SAXException;<a name="line.50"></a>
+<FONT color="green">051</FONT>    import org.xml.sax.SAXNotRecognizedException;<a name="line.51"></a>
+<FONT color="green">052</FONT>    import org.xml.sax.SAXNotSupportedException;<a name="line.52"></a>
+<FONT color="green">053</FONT>    import org.xml.sax.XMLReader;<a name="line.53"></a>
+<FONT color="green">054</FONT>    import org.xml.sax.helpers.DefaultHandler;<a name="line.54"></a>
+<FONT color="green">055</FONT>    <a name="line.55"></a>
+<FONT color="green">056</FONT>    /**<a name="line.56"></a>
+<FONT color="green">057</FONT>     * The default implementation for the DTMManager.<a name="line.57"></a>
+<FONT color="green">058</FONT>     *<a name="line.58"></a>
+<FONT color="green">059</FONT>     * %REVIEW% There is currently a reentrancy issue, since the finalizer<a name="line.59"></a>
+<FONT color="green">060</FONT>     * for XRTreeFrag (which runs in the GC thread) wants to call<a name="line.60"></a>
+<FONT color="green">061</FONT>     * DTMManager.release(), and may do so at the same time that the main<a name="line.61"></a>
+<FONT color="green">062</FONT>     * transformation thread is accessing the manager. Our current solution is<a name="line.62"></a>
+<FONT color="green">063</FONT>     * to make most of the manager's methods &lt;code&gt;synchronized&lt;/code&gt;.<a name="line.63"></a>
+<FONT color="green">064</FONT>     * Early tests suggest that doing so is not causing a significant<a name="line.64"></a>
+<FONT color="green">065</FONT>     * performance hit in Xalan. However, it should be noted that there<a name="line.65"></a>
+<FONT color="green">066</FONT>     * is a possible alternative solution: rewrite release() so it merely<a name="line.66"></a>
+<FONT color="green">067</FONT>     * posts a request for release onto a threadsafe queue, and explicitly<a name="line.67"></a>
+<FONT color="green">068</FONT>     * process that queue on an infrequent basis during main-thread<a name="line.68"></a>
+<FONT color="green">069</FONT>     * activity (eg, when getDTM() is invoked). The downside of that solution<a name="line.69"></a>
+<FONT color="green">070</FONT>     * would be a greater delay before the DTM's storage is actually released<a name="line.70"></a>
+<FONT color="green">071</FONT>     * for reuse.<a name="line.71"></a>
+<FONT color="green">072</FONT>     * */<a name="line.72"></a>
+<FONT color="green">073</FONT>    public class DTMManagerDefault extends DTMManager<a name="line.73"></a>
+<FONT color="green">074</FONT>    {<a name="line.74"></a>
+<FONT color="green">075</FONT>      //static final boolean JKESS_XNI_EXPERIMENT=true;<a name="line.75"></a>
+<FONT color="green">076</FONT>    <a name="line.76"></a>
+<FONT color="green">077</FONT>      /** Set this to true if you want a dump of the DTM after creation. */<a name="line.77"></a>
+<FONT color="green">078</FONT>      private static final boolean DUMPTREE = false;<a name="line.78"></a>
+<FONT color="green">079</FONT>    <a name="line.79"></a>
+<FONT color="green">080</FONT>      /** Set this to true if you want a basic diagnostics. */<a name="line.80"></a>
+<FONT color="green">081</FONT>      private static final boolean DEBUG = false;<a name="line.81"></a>
+<FONT color="green">082</FONT>    <a name="line.82"></a>
+<FONT color="green">083</FONT>      /**<a name="line.83"></a>
+<FONT color="green">084</FONT>       * Map from DTM identifier numbers to DTM objects that this manager manages.<a name="line.84"></a>
+<FONT color="green">085</FONT>       * One DTM may have several prefix numbers, if extended node indexing<a name="line.85"></a>
+<FONT color="green">086</FONT>       * is in use; in that case, m_dtm_offsets[] will used to control which<a name="line.86"></a>
+<FONT color="green">087</FONT>       * prefix maps to which section of the DTM.<a name="line.87"></a>
+<FONT color="green">088</FONT>       * <a name="line.88"></a>
+<FONT color="green">089</FONT>       * This array grows as necessary; see addDTM().<a name="line.89"></a>
+<FONT color="green">090</FONT>       * <a name="line.90"></a>
+<FONT color="green">091</FONT>       * This array grows as necessary; see addDTM(). Growth is uncommon... but<a name="line.91"></a>
+<FONT color="green">092</FONT>       * access needs to be blindingly fast since it's used in node addressing.<a name="line.92"></a>
+<FONT color="green">093</FONT>       */<a name="line.93"></a>
+<FONT color="green">094</FONT>      protected DTM m_dtms[] = new DTM[256];<a name="line.94"></a>
+<FONT color="green">095</FONT>            <a name="line.95"></a>
+<FONT color="green">096</FONT>      /** Map from DTM identifier numbers to offsets. For small DTMs with a <a name="line.96"></a>
+<FONT color="green">097</FONT>       * single identifier, this will always be 0. In overflow addressing, where<a name="line.97"></a>
+<FONT color="green">098</FONT>       * additional identifiers are allocated to access nodes beyond the range of<a name="line.98"></a>
+<FONT color="green">099</FONT>       * a single Node Handle, this table is used to map the handle's node field<a name="line.99"></a>
+<FONT color="green">100</FONT>       * into the actual node identifier.<a name="line.100"></a>
+<FONT color="green">101</FONT>       * <a name="line.101"></a>
+<FONT color="green">102</FONT>       * This array grows as necessary; see addDTM().<a name="line.102"></a>
+<FONT color="green">103</FONT>       * <a name="line.103"></a>
+<FONT color="green">104</FONT>       * This array grows as necessary; see addDTM(). Growth is uncommon... but<a name="line.104"></a>
+<FONT color="green">105</FONT>       * access needs to be blindingly fast since it's used in node addressing.<a name="line.105"></a>
+<FONT color="green">106</FONT>       * (And at the moment, that includes accessing it from DTMDefaultBase,<a name="line.106"></a>
+<FONT color="green">107</FONT>       * which is why this is not Protected or Private.)<a name="line.107"></a>
+<FONT color="green">108</FONT>       */<a name="line.108"></a>
+<FONT color="green">109</FONT>      int m_dtm_offsets[] = new int[256];<a name="line.109"></a>
+<FONT color="green">110</FONT>    <a name="line.110"></a>
+<FONT color="green">111</FONT>      /**<a name="line.111"></a>
+<FONT color="green">112</FONT>       * The cache for XMLReader objects to be used if the user did not<a name="line.112"></a>
+<FONT color="green">113</FONT>       * supply an XMLReader for a SAXSource or supplied a StreamSource.<a name="line.113"></a>
+<FONT color="green">114</FONT>       */<a name="line.114"></a>
+<FONT color="green">115</FONT>      protected XMLReaderManager m_readerManager = null;<a name="line.115"></a>
+<FONT color="green">116</FONT>      <a name="line.116"></a>
+<FONT color="green">117</FONT>      /**<a name="line.117"></a>
+<FONT color="green">118</FONT>       * The default implementation of ContentHandler, DTDHandler and ErrorHandler.<a name="line.118"></a>
+<FONT color="green">119</FONT>       */<a name="line.119"></a>
+<FONT color="green">120</FONT>      protected DefaultHandler m_defaultHandler = new DefaultHandler();<a name="line.120"></a>
+<FONT color="green">121</FONT>    <a name="line.121"></a>
+<FONT color="green">122</FONT>      /**<a name="line.122"></a>
+<FONT color="green">123</FONT>       * Add a DTM to the DTM table. This convenience call adds it as the <a name="line.123"></a>
+<FONT color="green">124</FONT>       * "base DTM ID", with offset 0. The other version of addDTM should <a name="line.124"></a>
+<FONT color="green">125</FONT>       * be used if you want to add "extended" DTM IDs with nonzero offsets.<a name="line.125"></a>
+<FONT color="green">126</FONT>       *<a name="line.126"></a>
+<FONT color="green">127</FONT>       * @param dtm Should be a valid reference to a DTM.<a name="line.127"></a>
+<FONT color="green">128</FONT>       * @param id Integer DTM ID to be bound to this DTM<a name="line.128"></a>
+<FONT color="green">129</FONT>       */<a name="line.129"></a>
+<FONT color="green">130</FONT>      synchronized public void addDTM(DTM dtm, int id) {    addDTM(dtm,id,0); }<a name="line.130"></a>
+<FONT color="green">131</FONT>    <a name="line.131"></a>
+<FONT color="green">132</FONT>            <a name="line.132"></a>
+<FONT color="green">133</FONT>      /**<a name="line.133"></a>
+<FONT color="green">134</FONT>       * Add a DTM to the DTM table.<a name="line.134"></a>
+<FONT color="green">135</FONT>       *<a name="line.135"></a>
+<FONT color="green">136</FONT>       * @param dtm Should be a valid reference to a DTM.<a name="line.136"></a>
+<FONT color="green">137</FONT>       * @param id Integer DTM ID to be bound to this DTM.<a name="line.137"></a>
+<FONT color="green">138</FONT>       * @param offset Integer addressing offset. The internal DTM Node ID is<a name="line.138"></a>
+<FONT color="green">139</FONT>       * obtained by adding this offset to the node-number field of the <a name="line.139"></a>
+<FONT color="green">140</FONT>       * public DTM Handle. For the first DTM ID accessing each DTM, this is 0;<a name="line.140"></a>
+<FONT color="green">141</FONT>       * for overflow addressing it will be a multiple of 1&lt;&lt;IDENT_DTM_NODE_BITS.<a name="line.141"></a>
+<FONT color="green">142</FONT>       */<a name="line.142"></a>
+<FONT color="green">143</FONT>      synchronized public void addDTM(DTM dtm, int id, int offset)<a name="line.143"></a>
+<FONT color="green">144</FONT>      {<a name="line.144"></a>
+<FONT color="green">145</FONT>                    if(id&gt;=IDENT_MAX_DTMS)<a name="line.145"></a>
+<FONT color="green">146</FONT>                    {<a name="line.146"></a>
+<FONT color="green">147</FONT>                            // TODO: %REVIEW% Not really the right error message.<a name="line.147"></a>
+<FONT color="green">148</FONT>                throw new DTMException(XMLMessages.createXMLMessage(XMLErrorResources.ER_NO_DTMIDS_AVAIL, null)); //"No more DTM IDs are available!");                       <a name="line.148"></a>
+<FONT color="green">149</FONT>                    }<a name="line.149"></a>
+<FONT color="green">150</FONT>                    <a name="line.150"></a>
+<FONT color="green">151</FONT>                    // We used to just allocate the array size to IDENT_MAX_DTMS.<a name="line.151"></a>
+<FONT color="green">152</FONT>                    // But we expect to increase that to 16 bits, and I'm not willing<a name="line.152"></a>
+<FONT color="green">153</FONT>                    // to allocate that much space unless needed. We could use one of our<a name="line.153"></a>
+<FONT color="green">154</FONT>                    // handy-dandy Fast*Vectors, but this will do for now.<a name="line.154"></a>
+<FONT color="green">155</FONT>                    // %REVIEW%<a name="line.155"></a>
+<FONT color="green">156</FONT>                    int oldlen=m_dtms.length;<a name="line.156"></a>
+<FONT color="green">157</FONT>                    if(oldlen&lt;=id)<a name="line.157"></a>
+<FONT color="green">158</FONT>                    {<a name="line.158"></a>
+<FONT color="green">159</FONT>                            // Various growth strategies are possible. I think we don't want <a name="line.159"></a>
+<FONT color="green">160</FONT>                            // to over-allocate excessively, and I'm willing to reallocate<a name="line.160"></a>
+<FONT color="green">161</FONT>                            // more often to get that. See also Fast*Vector classes.<a name="line.161"></a>
+<FONT color="green">162</FONT>                            //<a name="line.162"></a>
+<FONT color="green">163</FONT>                            // %REVIEW% Should throw a more diagnostic error if we go over the max...<a name="line.163"></a>
+<FONT color="green">164</FONT>                            int newlen=Math.min((id+256),IDENT_MAX_DTMS);<a name="line.164"></a>
+<FONT color="green">165</FONT>    <a name="line.165"></a>
+<FONT color="green">166</FONT>                            DTM new_m_dtms[] = new DTM[newlen];<a name="line.166"></a>
+<FONT color="green">167</FONT>                            System.arraycopy(m_dtms,0,new_m_dtms,0,oldlen);<a name="line.167"></a>
+<FONT color="green">168</FONT>                            m_dtms=new_m_dtms;<a name="line.168"></a>
+<FONT color="green">169</FONT>                            int new_m_dtm_offsets[] = new int[newlen];<a name="line.169"></a>
+<FONT color="green">170</FONT>                            System.arraycopy(m_dtm_offsets,0,new_m_dtm_offsets,0,oldlen);<a name="line.170"></a>
+<FONT color="green">171</FONT>                            m_dtm_offsets=new_m_dtm_offsets;<a name="line.171"></a>
+<FONT color="green">172</FONT>                    }<a name="line.172"></a>
+<FONT color="green">173</FONT>                    <a name="line.173"></a>
+<FONT color="green">174</FONT>        m_dtms[id] = dtm;<a name="line.174"></a>
+<FONT color="green">175</FONT>                    m_dtm_offsets[id]=offset;<a name="line.175"></a>
+<FONT color="green">176</FONT>        dtm.documentRegistration();<a name="line.176"></a>
+<FONT color="green">177</FONT>                    // The DTM should have been told who its manager was when we created it.<a name="line.177"></a>
+<FONT color="green">178</FONT>                    // Do we need to allow for adopting DTMs _not_ created by this manager?<a name="line.178"></a>
+<FONT color="green">179</FONT>      }<a name="line.179"></a>
+<FONT color="green">180</FONT>    <a name="line.180"></a>
+<FONT color="green">181</FONT>      /**<a name="line.181"></a>
+<FONT color="green">182</FONT>       * Get the first free DTM ID available. %OPT% Linear search is inefficient!<a name="line.182"></a>
+<FONT color="green">183</FONT>       */<a name="line.183"></a>
+<FONT color="green">184</FONT>      synchronized public int getFirstFreeDTMID()<a name="line.184"></a>
+<FONT color="green">185</FONT>      {<a name="line.185"></a>
+<FONT color="green">186</FONT>        int n = m_dtms.length;<a name="line.186"></a>
+<FONT color="green">187</FONT>        for (int i = 1; i &lt; n; i++)<a name="line.187"></a>
+<FONT color="green">188</FONT>        {<a name="line.188"></a>
+<FONT color="green">189</FONT>          if(null == m_dtms[i])<a name="line.189"></a>
+<FONT color="green">190</FONT>          {<a name="line.190"></a>
+<FONT color="green">191</FONT>            return i;<a name="line.191"></a>
+<FONT color="green">192</FONT>          }<a name="line.192"></a>
+<FONT color="green">193</FONT>        }<a name="line.193"></a>
+<FONT color="green">194</FONT>                    return n; // count on addDTM() to throw exception if out of range<a name="line.194"></a>
+<FONT color="green">195</FONT>      }<a name="line.195"></a>
+<FONT color="green">196</FONT>    <a name="line.196"></a>
+<FONT color="green">197</FONT>      /**<a name="line.197"></a>
+<FONT color="green">198</FONT>       * The default table for exandedNameID lookups.<a name="line.198"></a>
+<FONT color="green">199</FONT>       */<a name="line.199"></a>
+<FONT color="green">200</FONT>      private ExpandedNameTable m_expandedNameTable =<a name="line.200"></a>
+<FONT color="green">201</FONT>        new ExpandedNameTable();<a name="line.201"></a>
+<FONT color="green">202</FONT>    <a name="line.202"></a>
+<FONT color="green">203</FONT>      /**<a name="line.203"></a>
+<FONT color="green">204</FONT>       * Constructor DTMManagerDefault<a name="line.204"></a>
+<FONT color="green">205</FONT>       *<a name="line.205"></a>
+<FONT color="green">206</FONT>       */<a name="line.206"></a>
+<FONT color="green">207</FONT>      public DTMManagerDefault(){}<a name="line.207"></a>
+<FONT color="green">208</FONT>    <a name="line.208"></a>
+<FONT color="green">209</FONT>    <a name="line.209"></a>
+<FONT color="green">210</FONT>      /**<a name="line.210"></a>
+<FONT color="green">211</FONT>       * Get an instance of a DTM, loaded with the content from the<a name="line.211"></a>
+<FONT color="green">212</FONT>       * specified source.  If the unique flag is true, a new instance will<a name="line.212"></a>
+<FONT color="green">213</FONT>       * always be returned.  Otherwise it is up to the DTMManager to return a<a name="line.213"></a>
+<FONT color="green">214</FONT>       * new instance or an instance that it already created and may be being used<a name="line.214"></a>
+<FONT color="green">215</FONT>       * by someone else.<a name="line.215"></a>
+<FONT color="green">216</FONT>       * <a name="line.216"></a>
+<FONT color="green">217</FONT>       * A bit of magic in this implementation: If the source is null, unique is true,<a name="line.217"></a>
+<FONT color="green">218</FONT>       * and incremental and doIndexing are both false, we return an instance of<a name="line.218"></a>
+<FONT color="green">219</FONT>       * SAX2RTFDTM, which see.<a name="line.219"></a>
+<FONT color="green">220</FONT>       * <a name="line.220"></a>
+<FONT color="green">221</FONT>       * (I think more parameters will need to be added for error handling, and entity<a name="line.221"></a>
+<FONT color="green">222</FONT>       * resolution, and more explicit control of the RTF situation).<a name="line.222"></a>
+<FONT color="green">223</FONT>       *<a name="line.223"></a>
+<FONT color="green">224</FONT>       * @param source the specification of the source object.<a name="line.224"></a>
+<FONT color="green">225</FONT>       * @param unique true if the returned DTM must be unique, probably because it<a name="line.225"></a>
+<FONT color="green">226</FONT>       * is going to be mutated.<a name="line.226"></a>
+<FONT color="green">227</FONT>       * @param whiteSpaceFilter Enables filtering of whitespace nodes, and may<a name="line.227"></a>
+<FONT color="green">228</FONT>       *                         be null.<a name="line.228"></a>
+<FONT color="green">229</FONT>       * @param incremental true if the DTM should be built incrementally, if<a name="line.229"></a>
+<FONT color="green">230</FONT>       *                    possible.<a name="line.230"></a>
+<FONT color="green">231</FONT>       * @param doIndexing true if the caller considers it worth it to use<a name="line.231"></a>
+<FONT color="green">232</FONT>       *                   indexing schemes.<a name="line.232"></a>
+<FONT color="green">233</FONT>       *<a name="line.233"></a>
+<FONT color="green">234</FONT>       * @return a non-null DTM reference.<a name="line.234"></a>
+<FONT color="green">235</FONT>       */<a name="line.235"></a>
+<FONT color="green">236</FONT>      synchronized public DTM getDTM(Source source, boolean unique,<a name="line.236"></a>
+<FONT color="green">237</FONT>                                     DTMWSFilter whiteSpaceFilter,<a name="line.237"></a>
+<FONT color="green">238</FONT>                                     boolean incremental, boolean doIndexing)<a name="line.238"></a>
+<FONT color="green">239</FONT>      {<a name="line.239"></a>
+<FONT color="green">240</FONT>    <a name="line.240"></a>
+<FONT color="green">241</FONT>        if(DEBUG &amp;&amp; null != source)<a name="line.241"></a>
+<FONT color="green">242</FONT>          System.out.println("Starting "+<a name="line.242"></a>
+<FONT color="green">243</FONT>                             (unique ? "UNIQUE" : "shared")+<a name="line.243"></a>
+<FONT color="green">244</FONT>                             " source: "+source.getSystemId()<a name="line.244"></a>
+<FONT color="green">245</FONT>                             );<a name="line.245"></a>
+<FONT color="green">246</FONT>    <a name="line.246"></a>
+<FONT color="green">247</FONT>        XMLStringFactory xstringFactory = m_xsf;<a name="line.247"></a>
+<FONT color="green">248</FONT>        int dtmPos = getFirstFreeDTMID();<a name="line.248"></a>
+<FONT color="green">249</FONT>        int documentID = dtmPos &lt;&lt; IDENT_DTM_NODE_BITS;<a name="line.249"></a>
+<FONT color="green">250</FONT>    <a name="line.250"></a>
+<FONT color="green">251</FONT>        if ((null != source) &amp;&amp; source instanceof DOMSource)<a name="line.251"></a>
+<FONT color="green">252</FONT>        {<a name="line.252"></a>
+<FONT color="green">253</FONT>          DOM2DTM dtm = new DOM2DTM(this, (DOMSource) source, documentID,<a name="line.253"></a>
+<FONT color="green">254</FONT>                                    whiteSpaceFilter, xstringFactory, doIndexing);<a name="line.254"></a>
+<FONT color="green">255</FONT>    <a name="line.255"></a>
+<FONT color="green">256</FONT>          addDTM(dtm, dtmPos, 0);<a name="line.256"></a>
+<FONT color="green">257</FONT>    <a name="line.257"></a>
+<FONT color="green">258</FONT>          //      if (DUMPTREE)<a name="line.258"></a>
+<FONT color="green">259</FONT>          //      {<a name="line.259"></a>
+<FONT color="green">260</FONT>          //        dtm.dumpDTM();<a name="line.260"></a>
+<FONT color="green">261</FONT>          //      }<a name="line.261"></a>
+<FONT color="green">262</FONT>    <a name="line.262"></a>
+<FONT color="green">263</FONT>          return dtm;<a name="line.263"></a>
+<FONT color="green">264</FONT>        }<a name="line.264"></a>
+<FONT color="green">265</FONT>        else<a name="line.265"></a>
+<FONT color="green">266</FONT>        {<a name="line.266"></a>
+<FONT color="green">267</FONT>          boolean isSAXSource = (null != source)<a name="line.267"></a>
+<FONT color="green">268</FONT>            ? (source instanceof SAXSource) : true;<a name="line.268"></a>
+<FONT color="green">269</FONT>          boolean isStreamSource = (null != source)<a name="line.269"></a>
+<FONT color="green">270</FONT>            ? (source instanceof StreamSource) : false;<a name="line.270"></a>
+<FONT color="green">271</FONT>    <a name="line.271"></a>
+<FONT color="green">272</FONT>          if (isSAXSource || isStreamSource) {<a name="line.272"></a>
+<FONT color="green">273</FONT>            XMLReader reader = null;<a name="line.273"></a>
+<FONT color="green">274</FONT>            SAX2DTM dtm;<a name="line.274"></a>
+<FONT color="green">275</FONT>    <a name="line.275"></a>
+<FONT color="green">276</FONT>            try {<a name="line.276"></a>
+<FONT color="green">277</FONT>              InputSource xmlSource;<a name="line.277"></a>
+<FONT color="green">278</FONT>    <a name="line.278"></a>
+<FONT color="green">279</FONT>              if (null == source) {<a name="line.279"></a>
+<FONT color="green">280</FONT>                xmlSource = null;<a name="line.280"></a>
+<FONT color="green">281</FONT>              } else {<a name="line.281"></a>
+<FONT color="green">282</FONT>                reader = getXMLReader(source);<a name="line.282"></a>
+<FONT color="green">283</FONT>                xmlSource = SAXSource.sourceToInputSource(source);<a name="line.283"></a>
+<FONT color="green">284</FONT>    <a name="line.284"></a>
+<FONT color="green">285</FONT>                String urlOfSource = xmlSource.getSystemId();<a name="line.285"></a>
+<FONT color="green">286</FONT>    <a name="line.286"></a>
+<FONT color="green">287</FONT>                if (null != urlOfSource) {<a name="line.287"></a>
+<FONT color="green">288</FONT>                  try {<a name="line.288"></a>
+<FONT color="green">289</FONT>                    urlOfSource = SystemIDResolver.getAbsoluteURI(urlOfSource);<a name="line.289"></a>
+<FONT color="green">290</FONT>                  } catch (Exception e) {<a name="line.290"></a>
+<FONT color="green">291</FONT>                    // %REVIEW% Is there a better way to send a warning?<a name="line.291"></a>
+<FONT color="green">292</FONT>                    System.err.println("Can not absolutize URL: " + urlOfSource);<a name="line.292"></a>
+<FONT color="green">293</FONT>                  }<a name="line.293"></a>
+<FONT color="green">294</FONT>    <a name="line.294"></a>
+<FONT color="green">295</FONT>                  xmlSource.setSystemId(urlOfSource);<a name="line.295"></a>
+<FONT color="green">296</FONT>                }<a name="line.296"></a>
+<FONT color="green">297</FONT>              }<a name="line.297"></a>
+<FONT color="green">298</FONT>    <a name="line.298"></a>
+<FONT color="green">299</FONT>              if (source==null &amp;&amp; unique &amp;&amp; !incremental &amp;&amp; !doIndexing) {<a name="line.299"></a>
+<FONT color="green">300</FONT>                // Special case to support RTF construction into shared DTM.<a name="line.300"></a>
+<FONT color="green">301</FONT>                // It should actually still work for other uses,<a name="line.301"></a>
+<FONT color="green">302</FONT>                // but may be slightly deoptimized relative to the base<a name="line.302"></a>
+<FONT color="green">303</FONT>                // to allow it to deal with carrying multiple documents.<a name="line.303"></a>
+<FONT color="green">304</FONT>                //<a name="line.304"></a>
+<FONT color="green">305</FONT>                // %REVIEW% This is a sloppy way to request this mode;<a name="line.305"></a>
+<FONT color="green">306</FONT>                // we need to consider architectural improvements.<a name="line.306"></a>
+<FONT color="green">307</FONT>                dtm = new SAX2RTFDTM(this, source, documentID, whiteSpaceFilter,<a name="line.307"></a>
+<FONT color="green">308</FONT>                                     xstringFactory, doIndexing);<a name="line.308"></a>
+<FONT color="green">309</FONT>              }<a name="line.309"></a>
+<FONT color="green">310</FONT>              /**************************************************************<a name="line.310"></a>
+<FONT color="green">311</FONT>              // EXPERIMENTAL 3/22/02<a name="line.311"></a>
+<FONT color="green">312</FONT>              else if(JKESS_XNI_EXPERIMENT &amp;&amp; m_incremental) {              <a name="line.312"></a>
+<FONT color="green">313</FONT>                dtm = new XNI2DTM(this, source, documentID, whiteSpaceFilter,<a name="line.313"></a>
+<FONT color="green">314</FONT>                                  xstringFactory, doIndexing);<a name="line.314"></a>
+<FONT color="green">315</FONT>              }<a name="line.315"></a>
+<FONT color="green">316</FONT>              **************************************************************/<a name="line.316"></a>
+<FONT color="green">317</FONT>              // Create the basic SAX2DTM.<a name="line.317"></a>
+<FONT color="green">318</FONT>              else {<a name="line.318"></a>
+<FONT color="green">319</FONT>                dtm = new SAX2DTM(this, source, documentID, whiteSpaceFilter,<a name="line.319"></a>
+<FONT color="green">320</FONT>                                  xstringFactory, doIndexing);<a name="line.320"></a>
+<FONT color="green">321</FONT>              }<a name="line.321"></a>
+<FONT color="green">322</FONT>    <a name="line.322"></a>
+<FONT color="green">323</FONT>              // Go ahead and add the DTM to the lookup table.  This needs to be<a name="line.323"></a>
+<FONT color="green">324</FONT>              // done before any parsing occurs. Note offset 0, since we've just<a name="line.324"></a>
+<FONT color="green">325</FONT>              // created a new DTM.<a name="line.325"></a>
+<FONT color="green">326</FONT>              addDTM(dtm, dtmPos, 0);<a name="line.326"></a>
+<FONT color="green">327</FONT>    <a name="line.327"></a>
+<FONT color="green">328</FONT>    <a name="line.328"></a>
+<FONT color="green">329</FONT>              boolean haveXercesParser =<a name="line.329"></a>
+<FONT color="green">330</FONT>                         (null != reader)<a name="line.330"></a>
+<FONT color="green">331</FONT>                         &amp;&amp; (reader.getClass()<a name="line.331"></a>
+<FONT color="green">332</FONT>                                   .getName()<a name="line.332"></a>
+<FONT color="green">333</FONT>                                   .equals("org.apache.xerces.parsers.SAXParser") );<a name="line.333"></a>
+<FONT color="green">334</FONT>            <a name="line.334"></a>
+<FONT color="green">335</FONT>              if (haveXercesParser) {<a name="line.335"></a>
+<FONT color="green">336</FONT>                incremental = true;  // No matter what.  %REVIEW%<a name="line.336"></a>
+<FONT color="green">337</FONT>              }<a name="line.337"></a>
+<FONT color="green">338</FONT>            <a name="line.338"></a>
+<FONT color="green">339</FONT>              // If the reader is null, but they still requested an incremental<a name="line.339"></a>
+<FONT color="green">340</FONT>              // build, then we still want to set up the IncrementalSAXSource stuff.<a name="line.340"></a>
+<FONT color="green">341</FONT>              if (m_incremental &amp;&amp; incremental<a name="line.341"></a>
+<FONT color="green">342</FONT>                   /* || ((null == reader) &amp;&amp; incremental) */) {<a name="line.342"></a>
+<FONT color="green">343</FONT>                IncrementalSAXSource coParser=null;<a name="line.343"></a>
+<FONT color="green">344</FONT>    <a name="line.344"></a>
+<FONT color="green">345</FONT>                if (haveXercesParser) {<a name="line.345"></a>
+<FONT color="green">346</FONT>                  // IncrementalSAXSource_Xerces to avoid threading.<a name="line.346"></a>
+<FONT color="green">347</FONT>                  try {<a name="line.347"></a>
+<FONT color="green">348</FONT>                    coParser =(IncrementalSAXSource)<a name="line.348"></a>
+<FONT color="green">349</FONT>                      Class.forName("org.apache.xml.dtm.ref.IncrementalSAXSource_Xerces").newInstance();  <a name="line.349"></a>
+<FONT color="green">350</FONT>                  }  catch( Exception ex ) {<a name="line.350"></a>
+<FONT color="green">351</FONT>                    ex.printStackTrace();<a name="line.351"></a>
+<FONT color="green">352</FONT>                    coParser=null;<a name="line.352"></a>
+<FONT color="green">353</FONT>                  }<a name="line.353"></a>
+<FONT color="green">354</FONT>                }<a name="line.354"></a>
+<FONT color="green">355</FONT>    <a name="line.355"></a>
+<FONT color="green">356</FONT>                if (coParser==null ) {<a name="line.356"></a>
+<FONT color="green">357</FONT>                  // Create a IncrementalSAXSource to run on the secondary thread.<a name="line.357"></a>
+<FONT color="green">358</FONT>                  if (null == reader) {<a name="line.358"></a>
+<FONT color="green">359</FONT>                    coParser = new IncrementalSAXSource_Filter();<a name="line.359"></a>
+<FONT color="green">360</FONT>                  } else {<a name="line.360"></a>
+<FONT color="green">361</FONT>                    IncrementalSAXSource_Filter filter =<a name="line.361"></a>
+<FONT color="green">362</FONT>                             new IncrementalSAXSource_Filter();<a name="line.362"></a>
+<FONT color="green">363</FONT>                    filter.setXMLReader(reader);<a name="line.363"></a>
+<FONT color="green">364</FONT>                    coParser=filter;<a name="line.364"></a>
+<FONT color="green">365</FONT>                  }<a name="line.365"></a>
+<FONT color="green">366</FONT>                }<a name="line.366"></a>
+<FONT color="green">367</FONT>    <a name="line.367"></a>
+<FONT color="green">368</FONT>                            <a name="line.368"></a>
+<FONT color="green">369</FONT>                /**************************************************************<a name="line.369"></a>
+<FONT color="green">370</FONT>                // EXPERIMENTAL 3/22/02<a name="line.370"></a>
+<FONT color="green">371</FONT>                if (JKESS_XNI_EXPERIMENT &amp;&amp; m_incremental &amp;&amp;<a name="line.371"></a>
+<FONT color="green">372</FONT>                      dtm instanceof XNI2DTM &amp;&amp; <a name="line.372"></a>
+<FONT color="green">373</FONT>                      coParser instanceof IncrementalSAXSource_Xerces) {<a name="line.373"></a>
+<FONT color="green">374</FONT>                    org.apache.xerces.xni.parser.XMLPullParserConfiguration xpc=<a name="line.374"></a>
+<FONT color="green">375</FONT>                          ((IncrementalSAXSource_Xerces)coParser)<a name="line.375"></a>
+<FONT color="green">376</FONT>                                               .getXNIParserConfiguration();<a name="line.376"></a>
+<FONT color="green">377</FONT>                  if (xpc!=null) {<a name="line.377"></a>
+<FONT color="green">378</FONT>                    // Bypass SAX; listen to the XNI stream<a name="line.378"></a>
+<FONT color="green">379</FONT>                    ((XNI2DTM)dtm).setIncrementalXNISource(xpc);<a name="line.379"></a>
+<FONT color="green">380</FONT>                  } else {<a name="line.380"></a>
+<FONT color="green">381</FONT>                      // Listen to the SAX stream (will fail, diagnostically...)<a name="line.381"></a>
+<FONT color="green">382</FONT>                    dtm.setIncrementalSAXSource(coParser);<a name="line.382"></a>
+<FONT color="green">383</FONT>                  }<a name="line.383"></a>
+<FONT color="green">384</FONT>                } else<a name="line.384"></a>
+<FONT color="green">385</FONT>                ***************************************************************/<a name="line.385"></a>
+<FONT color="green">386</FONT>              <a name="line.386"></a>
+<FONT color="green">387</FONT>                // Have the DTM set itself up as IncrementalSAXSource's listener.<a name="line.387"></a>
+<FONT color="green">388</FONT>                dtm.setIncrementalSAXSource(coParser);<a name="line.388"></a>
+<FONT color="green">389</FONT>    <a name="line.389"></a>
+<FONT color="green">390</FONT>                if (null == xmlSource) {<a name="line.390"></a>
+<FONT color="green">391</FONT>    <a name="line.391"></a>
+<FONT color="green">392</FONT>                  // Then the user will construct it themselves.<a name="line.392"></a>
+<FONT color="green">393</FONT>                  return dtm;<a name="line.393"></a>
+<FONT color="green">394</FONT>                }<a name="line.394"></a>
+<FONT color="green">395</FONT>    <a name="line.395"></a>
+<FONT color="green">396</FONT>                if (null == reader.getErrorHandler()) {<a name="line.396"></a>
+<FONT color="green">397</FONT>                  reader.setErrorHandler(dtm);<a name="line.397"></a>
+<FONT color="green">398</FONT>                }<a name="line.398"></a>
+<FONT color="green">399</FONT>                reader.setDTDHandler(dtm);<a name="line.399"></a>
+<FONT color="green">400</FONT>    <a name="line.400"></a>
+<FONT color="green">401</FONT>                try {<a name="line.401"></a>
+<FONT color="green">402</FONT>                  // Launch parsing coroutine.  Launches a second thread,<a name="line.402"></a>
+<FONT color="green">403</FONT>                  // if we're using IncrementalSAXSource.filter().<a name="line.403"></a>
+<FONT color="green">404</FONT>    <a name="line.404"></a>
+<FONT color="green">405</FONT>                  coParser.startParse(xmlSource);<a name="line.405"></a>
+<FONT color="green">406</FONT>                } catch (RuntimeException re) {<a name="line.406"></a>
+<FONT color="green">407</FONT>    <a name="line.407"></a>
+<FONT color="green">408</FONT>                  dtm.clearCoRoutine();<a name="line.408"></a>
+<FONT color="green">409</FONT>    <a name="line.409"></a>
+<FONT color="green">410</FONT>                  throw re;<a name="line.410"></a>
+<FONT color="green">411</FONT>                } catch (Exception e) {<a name="line.411"></a>
+<FONT color="green">412</FONT>    <a name="line.412"></a>
+<FONT color="green">413</FONT>                  dtm.clearCoRoutine();<a name="line.413"></a>
+<FONT color="green">414</FONT>    <a name="line.414"></a>
+<FONT color="green">415</FONT>                  throw new org.apache.xml.utils.WrappedRuntimeException(e);<a name="line.415"></a>
+<FONT color="green">416</FONT>                }<a name="line.416"></a>
+<FONT color="green">417</FONT>              } else {<a name="line.417"></a>
+<FONT color="green">418</FONT>                if (null == reader) {<a name="line.418"></a>
+<FONT color="green">419</FONT>    <a name="line.419"></a>
+<FONT color="green">420</FONT>                  // Then the user will construct it themselves.<a name="line.420"></a>
+<FONT color="green">421</FONT>                  return dtm;<a name="line.421"></a>
+<FONT color="green">422</FONT>                }<a name="line.422"></a>
+<FONT color="green">423</FONT>    <a name="line.423"></a>
+<FONT color="green">424</FONT>                // not incremental<a name="line.424"></a>
+<FONT color="green">425</FONT>                reader.setContentHandler(dtm);<a name="line.425"></a>
+<FONT color="green">426</FONT>                reader.setDTDHandler(dtm);<a name="line.426"></a>
+<FONT color="green">427</FONT>                if (null == reader.getErrorHandler()) {<a name="line.427"></a>
+<FONT color="green">428</FONT>                  reader.setErrorHandler(dtm);<a name="line.428"></a>
+<FONT color="green">429</FONT>                }<a name="line.429"></a>
+<FONT color="green">430</FONT>    <a name="line.430"></a>
+<FONT color="green">431</FONT>                try {<a name="line.431"></a>
+<FONT color="green">432</FONT>                  reader.setProperty(<a name="line.432"></a>
+<FONT color="green">433</FONT>                                   "http://xml.org/sax/properties/lexical-handler",<a name="line.433"></a>
+<FONT color="green">434</FONT>                                   dtm);<a name="line.434"></a>
+<FONT color="green">435</FONT>                } catch (SAXNotRecognizedException e){}<a name="line.435"></a>
+<FONT color="green">436</FONT>                  catch (SAXNotSupportedException e){}<a name="line.436"></a>
+<FONT color="green">437</FONT>    <a name="line.437"></a>
+<FONT color="green">438</FONT>                try {<a name="line.438"></a>
+<FONT color="green">439</FONT>                  reader.parse(xmlSource);<a name="line.439"></a>
+<FONT color="green">440</FONT>                } catch (RuntimeException re) {<a name="line.440"></a>
+<FONT color="green">441</FONT>                  dtm.clearCoRoutine();<a name="line.441"></a>
+<FONT color="green">442</FONT>    <a name="line.442"></a>
+<FONT color="green">443</FONT>                  throw re;<a name="line.443"></a>
+<FONT color="green">444</FONT>                } catch (Exception e) {<a name="line.444"></a>
+<FONT color="green">445</FONT>                  dtm.clearCoRoutine();<a name="line.445"></a>
+<FONT color="green">446</FONT>    <a name="line.446"></a>
+<FONT color="green">447</FONT>                  throw new org.apache.xml.utils.WrappedRuntimeException(e);<a name="line.447"></a>
+<FONT color="green">448</FONT>                }<a name="line.448"></a>
+<FONT color="green">449</FONT>              }<a name="line.449"></a>
+<FONT color="green">450</FONT>    <a name="line.450"></a>
+<FONT color="green">451</FONT>              if (DUMPTREE) {<a name="line.451"></a>
+<FONT color="green">452</FONT>                System.out.println("Dumping SAX2DOM");<a name="line.452"></a>
+<FONT color="green">453</FONT>                dtm.dumpDTM(System.err);<a name="line.453"></a>
+<FONT color="green">454</FONT>              }<a name="line.454"></a>
+<FONT color="green">455</FONT>    <a name="line.455"></a>
+<FONT color="green">456</FONT>              return dtm;<a name="line.456"></a>
+<FONT color="green">457</FONT>            } finally {<a name="line.457"></a>
+<FONT color="green">458</FONT>              // Reset the ContentHandler, DTDHandler, ErrorHandler to the DefaultHandler<a name="line.458"></a>
+<FONT color="green">459</FONT>              // after creating the DTM.<a name="line.459"></a>
+<FONT color="green">460</FONT>              if (reader != null &amp;&amp; !(m_incremental &amp;&amp; incremental)) {<a name="line.460"></a>
+<FONT color="green">461</FONT>                reader.setContentHandler(m_defaultHandler);<a name="line.461"></a>
+<FONT color="green">462</FONT>                reader.setDTDHandler(m_defaultHandler);<a name="line.462"></a>
+<FONT color="green">463</FONT>                reader.setErrorHandler(m_defaultHandler);<a name="line.463"></a>
+<FONT color="green">464</FONT>                <a name="line.464"></a>
+<FONT color="green">465</FONT>                // Reset the LexicalHandler to null after creating the DTM.<a name="line.465"></a>
+<FONT color="green">466</FONT>                try {<a name="line.466"></a>
+<FONT color="green">467</FONT>                  reader.setProperty("http://xml.org/sax/properties/lexical-handler", null);<a name="line.467"></a>
+<FONT color="green">468</FONT>                }<a name="line.468"></a>
+<FONT color="green">469</FONT>                catch (Exception e) {}<a name="line.469"></a>
+<FONT color="green">470</FONT>              }<a name="line.470"></a>
+<FONT color="green">471</FONT>              releaseXMLReader(reader);<a name="line.471"></a>
+<FONT color="green">472</FONT>            }<a name="line.472"></a>
+<FONT color="green">473</FONT>          } else {<a name="line.473"></a>
+<FONT color="green">474</FONT>    <a name="line.474"></a>
+<FONT color="green">475</FONT>            // It should have been handled by a derived class or the caller<a name="line.475"></a>
+<FONT color="green">476</FONT>            // made a mistake.<a name="line.476"></a>
+<FONT color="green">477</FONT>            throw new DTMException(XMLMessages.createXMLMessage(XMLErrorResources.ER_NOT_SUPPORTED, new Object[]{source})); //"Not supported: " + source);<a name="line.477"></a>
+<FONT color="green">478</FONT>          }<a name="line.478"></a>
+<FONT color="green">479</FONT>        }<a name="line.479"></a>
+<FONT color="green">480</FONT>      }<a name="line.480"></a>
+<FONT color="green">481</FONT>    <a name="line.481"></a>
+<FONT color="green">482</FONT>      /**<a name="line.482"></a>
+<FONT color="green">483</FONT>       * Given a W3C DOM node, try and return a DTM handle.<a name="line.483"></a>
+<FONT color="green">484</FONT>       * Note: calling this may be non-optimal, and there is no guarantee that<a name="line.484"></a>
+<FONT color="green">485</FONT>       * the node will be found in any particular DTM.<a name="line.485"></a>
+<FONT color="green">486</FONT>       *<a name="line.486"></a>
+<FONT color="green">487</FONT>       * @param node Non-null reference to a DOM node.<a name="line.487"></a>
+<FONT color="green">488</FONT>       *<a name="line.488"></a>
+<FONT color="green">489</FONT>       * @return a valid DTM handle.<a name="line.489"></a>
+<FONT color="green">490</FONT>       */<a name="line.490"></a>
+<FONT color="green">491</FONT>      synchronized public int getDTMHandleFromNode(org.w3c.dom.Node node)<a name="line.491"></a>
+<FONT color="green">492</FONT>      {<a name="line.492"></a>
+<FONT color="green">493</FONT>        if(null == node)<a name="line.493"></a>
+<FONT color="green">494</FONT>          throw new IllegalArgumentException(XMLMessages.createXMLMessage(XMLErrorResources.ER_NODE_NON_NULL, null)); //"node must be non-null for getDTMHandleFromNode!");<a name="line.494"></a>
+<FONT color="green">495</FONT>    <a name="line.495"></a>
+<FONT color="green">496</FONT>        if (node instanceof org.apache.xml.dtm.ref.DTMNodeProxy)<a name="line.496"></a>
+<FONT color="green">497</FONT>          return ((org.apache.xml.dtm.ref.DTMNodeProxy) node).getDTMNodeNumber();<a name="line.497"></a>
+<FONT color="green">498</FONT>                    <a name="line.498"></a>
+<FONT color="green">499</FONT>        else<a name="line.499"></a>
+<FONT color="green">500</FONT>        {<a name="line.500"></a>
+<FONT color="green">501</FONT>          // Find the DOM2DTMs wrapped around this Document (if any)<a name="line.501"></a>
+<FONT color="green">502</FONT>          // and check whether they contain the Node in question.<a name="line.502"></a>
+<FONT color="green">503</FONT>          //<a name="line.503"></a>
+<FONT color="green">504</FONT>          // NOTE that since a DOM2DTM may represent a subtree rather<a name="line.504"></a>
+<FONT color="green">505</FONT>          // than a full document, we have to be prepared to check more<a name="line.505"></a>
+<FONT color="green">506</FONT>          // than one -- and there is no guarantee that we will find<a name="line.506"></a>
+<FONT color="green">507</FONT>          // one that contains ancestors or siblings of the node we're<a name="line.507"></a>
+<FONT color="green">508</FONT>          // seeking.<a name="line.508"></a>
+<FONT color="green">509</FONT>          //<a name="line.509"></a>
+<FONT color="green">510</FONT>          // %REVIEW% We could search for the one which contains this<a name="line.510"></a>
+<FONT color="green">511</FONT>          // node at the deepest level, and thus covers the widest<a name="line.511"></a>
+<FONT color="green">512</FONT>          // subtree, but that's going to entail additional work<a name="line.512"></a>
+<FONT color="green">513</FONT>          // checking more DTMs... and getHandleOfNode is not a<a name="line.513"></a>
+<FONT color="green">514</FONT>          // cheap operation in most implementations.<a name="line.514"></a>
+<FONT color="green">515</FONT>                            //<a name="line.515"></a>
+<FONT color="green">516</FONT>                            // TODO: %REVIEW% If overflow addressing, we may recheck a DTM<a name="line.516"></a>
+<FONT color="green">517</FONT>                            // already examined. Ouch. But with the increased number of DTMs,<a name="line.517"></a>
+<FONT color="green">518</FONT>                            // scanning back to check this is painful. <a name="line.518"></a>
+<FONT color="green">519</FONT>                            // POSSIBLE SOLUTIONS: <a name="line.519"></a>
+<FONT color="green">520</FONT>                            //   Generate a list of _unique_ DTM objects?<a name="line.520"></a>
+<FONT color="green">521</FONT>                            //   Have each DTM cache last DOM node search?<a name="line.521"></a>
+<FONT color="green">522</FONT>                            int max = m_dtms.length;<a name="line.522"></a>
+<FONT color="green">523</FONT>          for(int i = 0; i &lt; max; i++)<a name="line.523"></a>
+<FONT color="green">524</FONT>            {<a name="line.524"></a>
+<FONT color="green">525</FONT>              DTM thisDTM=m_dtms[i];<a name="line.525"></a>
+<FONT color="green">526</FONT>              if((null != thisDTM) &amp;&amp; thisDTM instanceof DOM2DTM)<a name="line.526"></a>
+<FONT color="green">527</FONT>              {<a name="line.527"></a>
+<FONT color="green">528</FONT>                int handle=((DOM2DTM)thisDTM).getHandleOfNode(node);<a name="line.528"></a>
+<FONT color="green">529</FONT>                if(handle!=DTM.NULL) return handle;<a name="line.529"></a>
+<FONT color="green">530</FONT>              }<a name="line.530"></a>
+<FONT color="green">531</FONT>             }<a name="line.531"></a>
+<FONT color="green">532</FONT>    <a name="line.532"></a>
+<FONT color="green">533</FONT>                            // Not found; generate a new DTM.<a name="line.533"></a>
+<FONT color="green">534</FONT>                            //<a name="line.534"></a>
+<FONT color="green">535</FONT>                            // %REVIEW% Is this really desirable, or should we return null<a name="line.535"></a>
+<FONT color="green">536</FONT>                            // and make folks explicitly instantiate from a DOMSource? The<a name="line.536"></a>
+<FONT color="green">537</FONT>                            // latter is more work but gives the caller the opportunity to<a name="line.537"></a>
+<FONT color="green">538</FONT>                            // explicitly add the DTM to a DTMManager... and thus to know when<a name="line.538"></a>
+<FONT color="green">539</FONT>                            // it can be discarded again, which is something we need to pay much<a name="line.539"></a>
+<FONT color="green">540</FONT>                            // more attention to. (Especially since only DTMs which are assigned<a name="line.540"></a>
+<FONT color="green">541</FONT>                            // to a manager can use the overflow addressing scheme.)<a name="line.541"></a>
+<FONT color="green">542</FONT>                            //<a name="line.542"></a>
+<FONT color="green">543</FONT>                            // %BUG% If the source node was a DOM2DTM$defaultNamespaceDeclarationNode<a name="line.543"></a>
+<FONT color="green">544</FONT>                            // and the DTM wasn't registered with this DTMManager, we will create<a name="line.544"></a>
+<FONT color="green">545</FONT>                            // a new DTM and _still_ not be able to find the node (since it will<a name="line.545"></a>
+<FONT color="green">546</FONT>                            // be resynthesized). Another reason to push hard on making all DTMs<a name="line.546"></a>
+<FONT color="green">547</FONT>                            // be managed DTMs.<a name="line.547"></a>
+<FONT color="green">548</FONT>    <a name="line.548"></a>
+<FONT color="green">549</FONT>                            // Since the real root of our tree may be a DocumentFragment, we need to<a name="line.549"></a>
+<FONT color="green">550</FONT>          // use getParent to find the root, instead of getOwnerDocument.  Otherwise<a name="line.550"></a>
+<FONT color="green">551</FONT>          // DOM2DTM#getHandleOfNode will be very unhappy.<a name="line.551"></a>
+<FONT color="green">552</FONT>          Node root = node;<a name="line.552"></a>
+<FONT color="green">553</FONT>          Node p = (root.getNodeType() == Node.ATTRIBUTE_NODE) ? ((org.w3c.dom.Attr)root).getOwnerElement() : root.getParentNode();<a name="line.553"></a>
+<FONT color="green">554</FONT>          for (; p != null; p = p.getParentNode())<a name="line.554"></a>
+<FONT color="green">555</FONT>          {<a name="line.555"></a>
+<FONT color="green">556</FONT>            root = p;<a name="line.556"></a>
+<FONT color="green">557</FONT>          }<a name="line.557"></a>
+<FONT color="green">558</FONT>    <a name="line.558"></a>
+<FONT color="green">559</FONT>          DOM2DTM dtm = (DOM2DTM) getDTM(new javax.xml.transform.dom.DOMSource(root),<a name="line.559"></a>
+<FONT color="green">560</FONT>                                                                                                                                                     false, null, true, true);<a name="line.560"></a>
+<FONT color="green">561</FONT>    <a name="line.561"></a>
+<FONT color="green">562</FONT>          int handle;<a name="line.562"></a>
+<FONT color="green">563</FONT>          <a name="line.563"></a>
+<FONT color="green">564</FONT>          if(node instanceof org.apache.xml.dtm.ref.dom2dtm.DOM2DTMdefaultNamespaceDeclarationNode)<a name="line.564"></a>
+<FONT color="green">565</FONT>          {<a name="line.565"></a>
+<FONT color="green">566</FONT>                                    // Can't return the same node since it's unique to a specific DTM, <a name="line.566"></a>
+<FONT color="green">567</FONT>                                    // but can return the equivalent node -- find the corresponding <a name="line.567"></a>
+<FONT color="green">568</FONT>                                    // Document Element, then ask it for the xml: namespace decl.<a name="line.568"></a>
+<FONT color="green">569</FONT>                                    handle=dtm.getHandleOfNode(((org.w3c.dom.Attr)node).getOwnerElement());<a name="line.569"></a>
+<FONT color="green">570</FONT>                                    handle=dtm.getAttributeNode(handle,node.getNamespaceURI(),node.getLocalName());<a name="line.570"></a>
+<FONT color="green">571</FONT>          }<a name="line.571"></a>
+<FONT color="green">572</FONT>          else<a name="line.572"></a>
+<FONT color="green">573</FONT>                                    handle = ((DOM2DTM)dtm).getHandleOfNode(node);<a name="line.573"></a>
+<FONT color="green">574</FONT>    <a name="line.574"></a>
+<FONT color="green">575</FONT>          if(DTM.NULL == handle)<a name="line.575"></a>
+<FONT color="green">576</FONT>            throw new RuntimeException(XMLMessages.createXMLMessage(XMLErrorResources.ER_COULD_NOT_RESOLVE_NODE, null)); //"Could not resolve the node to a handle!");<a name="line.576"></a>
+<FONT color="green">577</FONT>    <a name="line.577"></a>
+<FONT color="green">578</FONT>          return handle;<a name="line.578"></a>
+<FONT color="green">579</FONT>        }<a name="line.579"></a>
+<FONT color="green">580</FONT>      }<a name="line.580"></a>
+<FONT color="green">581</FONT>    <a name="line.581"></a>
+<FONT color="green">582</FONT>      /**<a name="line.582"></a>
+<FONT color="green">583</FONT>       * This method returns the SAX2 parser to use with the InputSource<a name="line.583"></a>
+<FONT color="green">584</FONT>       * obtained from this URI.<a name="line.584"></a>
+<FONT color="green">585</FONT>       * It may return null if any SAX2-conformant XML parser can be used,<a name="line.585"></a>
+<FONT color="green">586</FONT>       * or if getInputSource() will also return null. The parser must<a name="line.586"></a>
+<FONT color="green">587</FONT>       * be free for use (i.e., not currently in use for another parse().<a name="line.587"></a>
+<FONT color="green">588</FONT>       * After use of the parser is completed, the releaseXMLReader(XMLReader)<a name="line.588"></a>
+<FONT color="green">589</FONT>       * must be called.<a name="line.589"></a>
+<FONT color="green">590</FONT>       *<a name="line.590"></a>
+<FONT color="green">591</FONT>       * @param inputSource The value returned from the URIResolver.<a name="line.591"></a>
+<FONT color="green">592</FONT>       * @return  a SAX2 XMLReader to use to resolve the inputSource argument.<a name="line.592"></a>
+<FONT color="green">593</FONT>       *<a name="line.593"></a>
+<FONT color="green">594</FONT>       * @return non-null XMLReader reference ready to parse.<a name="line.594"></a>
+<FONT color="green">595</FONT>       */<a name="line.595"></a>
+<FONT color="green">596</FONT>      synchronized public XMLReader getXMLReader(Source inputSource)<a name="line.596"></a>
+<FONT color="green">597</FONT>      {<a name="line.597"></a>
+<FONT color="green">598</FONT>    <a name="line.598"></a>
+<FONT color="green">599</FONT>        try<a name="line.599"></a>
+<FONT color="green">600</FONT>        {<a name="line.600"></a>
+<FONT color="green">601</FONT>          XMLReader reader = (inputSource instanceof SAXSource)<a name="line.601"></a>
+<FONT color="green">602</FONT>                             ? ((SAXSource) inputSource).getXMLReader() : null;<a name="line.602"></a>
+<FONT color="green">603</FONT>    <a name="line.603"></a>
+<FONT color="green">604</FONT>          // If user did not supply a reader, ask for one from the reader manager<a name="line.604"></a>
+<FONT color="green">605</FONT>          if (null == reader) {<a name="line.605"></a>
+<FONT color="green">606</FONT>            if (m_readerManager == null) {<a name="line.606"></a>
+<FONT color="green">607</FONT>                m_readerManager = XMLReaderManager.getInstance();<a name="line.607"></a>
+<FONT color="green">608</FONT>            }<a name="line.608"></a>
+<FONT color="green">609</FONT>    <a name="line.609"></a>
+<FONT color="green">610</FONT>            reader = m_readerManager.getXMLReader();<a name="line.610"></a>
+<FONT color="green">611</FONT>          }<a name="line.611"></a>
+<FONT color="green">612</FONT>    <a name="line.612"></a>
+<FONT color="green">613</FONT>          return reader;<a name="line.613"></a>
+<FONT color="green">614</FONT>    <a name="line.614"></a>
+<FONT color="green">615</FONT>        } catch (SAXException se) {<a name="line.615"></a>
+<FONT color="green">616</FONT>          throw new DTMException(se.getMessage(), se);<a name="line.616"></a>
+<FONT color="green">617</FONT>        }<a name="line.617"></a>
+<FONT color="green">618</FONT>      }<a name="line.618"></a>
+<FONT color="green">619</FONT>    <a name="line.619"></a>
+<FONT color="green">620</FONT>      /**<a name="line.620"></a>
+<FONT color="green">621</FONT>       * Indicates that the XMLReader object is no longer in use for the transform.<a name="line.621"></a>
+<FONT color="green">622</FONT>       *<a name="line.622"></a>
+<FONT color="green">623</FONT>       * Note that the getXMLReader method may return an XMLReader that was<a name="line.623"></a>
+<FONT color="green">624</FONT>       * specified on the SAXSource object by the application code.  Such a<a name="line.624"></a>
+<FONT color="green">625</FONT>       * reader should still be passed to releaseXMLReader, but the reader manager<a name="line.625"></a>
+<FONT color="green">626</FONT>       * will only re-use XMLReaders that it created.<a name="line.626"></a>
+<FONT color="green">627</FONT>       *<a name="line.627"></a>
+<FONT color="green">628</FONT>       * @param reader The XMLReader to be released.<a name="line.628"></a>
+<FONT color="green">629</FONT>       */<a name="line.629"></a>
+<FONT color="green">630</FONT>      synchronized public void releaseXMLReader(XMLReader reader) {<a name="line.630"></a>
+<FONT color="green">631</FONT>        if (m_readerManager != null) {<a name="line.631"></a>
+<FONT color="green">632</FONT>          m_readerManager.releaseXMLReader(reader);<a name="line.632"></a>
+<FONT color="green">633</FONT>        }<a name="line.633"></a>
+<FONT color="green">634</FONT>      }<a name="line.634"></a>
+<FONT color="green">635</FONT>    <a name="line.635"></a>
+<FONT color="green">636</FONT>      /**<a name="line.636"></a>
+<FONT color="green">637</FONT>       * Return the DTM object containing a representation of this node.<a name="line.637"></a>
+<FONT color="green">638</FONT>       *<a name="line.638"></a>
+<FONT color="green">639</FONT>       * @param nodeHandle DTM Handle indicating which node to retrieve<a name="line.639"></a>
+<FONT color="green">640</FONT>       *<a name="line.640"></a>
+<FONT color="green">641</FONT>       * @return a reference to the DTM object containing this node.<a name="line.641"></a>
+<FONT color="green">642</FONT>       */<a name="line.642"></a>
+<FONT color="green">643</FONT>      synchronized public DTM getDTM(int nodeHandle)<a name="line.643"></a>
+<FONT color="green">644</FONT>      {<a name="line.644"></a>
+<FONT color="green">645</FONT>        try<a name="line.645"></a>
+<FONT color="green">646</FONT>        {<a name="line.646"></a>
+<FONT color="green">647</FONT>          // Performance critical function.<a name="line.647"></a>
+<FONT color="green">648</FONT>          return m_dtms[nodeHandle &gt;&gt;&gt; IDENT_DTM_NODE_BITS];<a name="line.648"></a>
+<FONT color="green">649</FONT>        }<a name="line.649"></a>
+<FONT color="green">650</FONT>        catch(java.lang.ArrayIndexOutOfBoundsException e)<a name="line.650"></a>
+<FONT color="green">651</FONT>        {<a name="line.651"></a>
+<FONT color="green">652</FONT>          if(nodeHandle==DTM.NULL)<a name="line.652"></a>
+<FONT color="green">653</FONT>                                    return null;            // Accept as a special case.<a name="line.653"></a>
+<FONT color="green">654</FONT>          else<a name="line.654"></a>
+<FONT color="green">655</FONT>                                    throw e;                // Programming error; want to know about it.<a name="line.655"></a>
+<FONT color="green">656</FONT>        }    <a name="line.656"></a>
+<FONT color="green">657</FONT>      }<a name="line.657"></a>
+<FONT color="green">658</FONT>    <a name="line.658"></a>
+<FONT color="green">659</FONT>      /**<a name="line.659"></a>
+<FONT color="green">660</FONT>       * Given a DTM, find the ID number in the DTM tables which addresses<a name="line.660"></a>
+<FONT color="green">661</FONT>       * the start of the document. If overflow addressing is in use, other<a name="line.661"></a>
+<FONT color="green">662</FONT>       * DTM IDs may also be assigned to this DTM.<a name="line.662"></a>
+<FONT color="green">663</FONT>       *<a name="line.663"></a>
+<FONT color="green">664</FONT>       * @param dtm The DTM which (hopefully) contains this node.<a name="line.664"></a>
+<FONT color="green">665</FONT>       *<a name="line.665"></a>
+<FONT color="green">666</FONT>       * @return The DTM ID (as the high bits of a NodeHandle, not as our<a name="line.666"></a>
+<FONT color="green">667</FONT>       * internal index), or -1 if the DTM doesn't belong to this manager.<a name="line.667"></a>
+<FONT color="green">668</FONT>       */<a name="line.668"></a>
+<FONT color="green">669</FONT>      synchronized public int getDTMIdentity(DTM dtm)<a name="line.669"></a>
+<FONT color="green">670</FONT>      {<a name="line.670"></a>
+<FONT color="green">671</FONT>            // Shortcut using DTMDefaultBase's extension hooks<a name="line.671"></a>
+<FONT color="green">672</FONT>            // %REVIEW% Should the lookup be part of the basic DTM API?<a name="line.672"></a>
+<FONT color="green">673</FONT>            if(dtm instanceof DTMDefaultBase)<a name="line.673"></a>
+<FONT color="green">674</FONT>            {<a name="line.674"></a>
+<FONT color="green">675</FONT>                    DTMDefaultBase dtmdb=(DTMDefaultBase)dtm;<a name="line.675"></a>
+<FONT color="green">676</FONT>                    if(dtmdb.getManager()==this)<a name="line.676"></a>
+<FONT color="green">677</FONT>                            return dtmdb.getDTMIDs().elementAt(0);<a name="line.677"></a>
+<FONT color="green">678</FONT>                    else<a name="line.678"></a>
+<FONT color="green">679</FONT>                            return -1;<a name="line.679"></a>
+<FONT color="green">680</FONT>            }<a name="line.680"></a>
+<FONT color="green">681</FONT>                                    <a name="line.681"></a>
+<FONT color="green">682</FONT>        int n = m_dtms.length;<a name="line.682"></a>
+<FONT color="green">683</FONT>    <a name="line.683"></a>
+<FONT color="green">684</FONT>        for (int i = 0; i &lt; n; i++)<a name="line.684"></a>
+<FONT color="green">685</FONT>        {<a name="line.685"></a>
+<FONT color="green">686</FONT>          DTM tdtm = m_dtms[i];<a name="line.686"></a>
+<FONT color="green">687</FONT>    <a name="line.687"></a>
+<FONT color="green">688</FONT>          if (tdtm == dtm &amp;&amp; m_dtm_offsets[i]==0)<a name="line.688"></a>
+<FONT color="green">689</FONT>            return i &lt;&lt; IDENT_DTM_NODE_BITS;<a name="line.689"></a>
+<FONT color="green">690</FONT>        }<a name="line.690"></a>
+<FONT color="green">691</FONT>    <a name="line.691"></a>
+<FONT color="green">692</FONT>        return -1;<a name="line.692"></a>
+<FONT color="green">693</FONT>      }<a name="line.693"></a>
+<FONT color="green">694</FONT>    <a name="line.694"></a>
+<FONT color="green">695</FONT>      /**<a name="line.695"></a>
+<FONT color="green">696</FONT>       * Release the DTMManager's reference(s) to a DTM, making it unmanaged.<a name="line.696"></a>
+<FONT color="green">697</FONT>       * This is typically done as part of returning the DTM to the heap after<a name="line.697"></a>
+<FONT color="green">698</FONT>       * we're done with it.<a name="line.698"></a>
+<FONT color="green">699</FONT>       *<a name="line.699"></a>
+<FONT color="green">700</FONT>       * @param dtm the DTM to be released.<a name="line.700"></a>
+<FONT color="green">701</FONT>       * <a name="line.701"></a>
+<FONT color="green">702</FONT>       * @param shouldHardDelete If false, this call is a suggestion rather than an<a name="line.702"></a>
+<FONT color="green">703</FONT>       * order, and we may not actually release the DTM. This is intended to <a name="line.703"></a>
+<FONT color="green">704</FONT>       * support intelligent caching of documents... which is not implemented<a name="line.704"></a>
+<FONT color="green">705</FONT>       * in this version of the DTM manager.<a name="line.705"></a>
+<FONT color="green">706</FONT>       *<a name="line.706"></a>
+<FONT color="green">707</FONT>       * @return true if the DTM was released, false if shouldHardDelete was set<a name="line.707"></a>
+<FONT color="green">708</FONT>       * and we decided not to.<a name="line.708"></a>
+<FONT color="green">709</FONT>       */<a name="line.709"></a>
+<FONT color="green">710</FONT>      synchronized public boolean release(DTM dtm, boolean shouldHardDelete)<a name="line.710"></a>
+<FONT color="green">711</FONT>      {<a name="line.711"></a>
+<FONT color="green">712</FONT>        if(DEBUG)<a name="line.712"></a>
+<FONT color="green">713</FONT>        {<a name="line.713"></a>
+<FONT color="green">714</FONT>          System.out.println("Releasing "+<a name="line.714"></a>
+<FONT color="green">715</FONT>                             (shouldHardDelete ? "HARD" : "soft")+<a name="line.715"></a>
+<FONT color="green">716</FONT>                             " dtm="+<a name="line.716"></a>
+<FONT color="green">717</FONT>                             // Following shouldn't need a nodeHandle, but does...<a name="line.717"></a>
+<FONT color="green">718</FONT>                             // and doesn't seem to report the intended value<a name="line.718"></a>
+<FONT color="green">719</FONT>                             dtm.getDocumentBaseURI()<a name="line.719"></a>
+<FONT color="green">720</FONT>                             );<a name="line.720"></a>
+<FONT color="green">721</FONT>        }<a name="line.721"></a>
+<FONT color="green">722</FONT>    <a name="line.722"></a>
+<FONT color="green">723</FONT>        if (dtm instanceof SAX2DTM)<a name="line.723"></a>
+<FONT color="green">724</FONT>        {<a name="line.724"></a>
+<FONT color="green">725</FONT>          ((SAX2DTM) dtm).clearCoRoutine();<a name="line.725"></a>
+<FONT color="green">726</FONT>        }<a name="line.726"></a>
+<FONT color="green">727</FONT>    <a name="line.727"></a>
+<FONT color="green">728</FONT>                    // Multiple DTM IDs may be assigned to a single DTM. <a name="line.728"></a>
+<FONT color="green">729</FONT>                    // The Right Answer is to ask which (if it supports<a name="line.729"></a>
+<FONT color="green">730</FONT>                    // extension, the DTM will need a list anyway). The <a name="line.730"></a>
+<FONT color="green">731</FONT>                    // Wrong Answer, applied if the DTM can't help us,<a name="line.731"></a>
+<FONT color="green">732</FONT>                    // is to linearly search them all; this may be very<a name="line.732"></a>
+<FONT color="green">733</FONT>                    // painful.<a name="line.733"></a>
+<FONT color="green">734</FONT>                    //<a name="line.734"></a>
+<FONT color="green">735</FONT>                    // %REVIEW% Should the lookup move up into the basic DTM API?<a name="line.735"></a>
+<FONT color="green">736</FONT>                    if(dtm instanceof DTMDefaultBase)<a name="line.736"></a>
+<FONT color="green">737</FONT>                    {<a name="line.737"></a>
+<FONT color="green">738</FONT>                            org.apache.xml.utils.SuballocatedIntVector ids=((DTMDefaultBase)dtm).getDTMIDs();<a name="line.738"></a>
+<FONT color="green">739</FONT>                            for(int i=ids.size()-1;i&gt;=0;--i)<a name="line.739"></a>
+<FONT color="green">740</FONT>                                    m_dtms[ids.elementAt(i)&gt;&gt;&gt;DTMManager.IDENT_DTM_NODE_BITS]=null;<a name="line.740"></a>
+<FONT color="green">741</FONT>                    }<a name="line.741"></a>
+<FONT color="green">742</FONT>                    else<a name="line.742"></a>
+<FONT color="green">743</FONT>                    {<a name="line.743"></a>
+<FONT color="green">744</FONT>                            int i = getDTMIdentity(dtm);<a name="line.744"></a>
+<FONT color="green">745</FONT>                        if (i &gt;= 0)<a name="line.745"></a>
+<FONT color="green">746</FONT>                            {<a name="line.746"></a>
+<FONT color="green">747</FONT>                                    m_dtms[i &gt;&gt;&gt; DTMManager.IDENT_DTM_NODE_BITS] = null;<a name="line.747"></a>
+<FONT color="green">748</FONT>                            }<a name="line.748"></a>
+<FONT color="green">749</FONT>                    }<a name="line.749"></a>
+<FONT color="green">750</FONT>    <a name="line.750"></a>
+<FONT color="green">751</FONT>        dtm.documentRelease();<a name="line.751"></a>
+<FONT color="green">752</FONT>        return true;<a name="line.752"></a>
+<FONT color="green">753</FONT>      }<a name="line.753"></a>
+<FONT color="green">754</FONT>    <a name="line.754"></a>
+<FONT color="green">755</FONT>      /**<a name="line.755"></a>
+<FONT color="green">756</FONT>       * Method createDocumentFragment<a name="line.756"></a>
+<FONT color="green">757</FONT>       *<a name="line.757"></a>
+<FONT color="green">758</FONT>       *<a name="line.758"></a>
+<FONT color="green">759</FONT>       * NEEDSDOC (createDocumentFragment) @return<a name="line.759"></a>
+<FONT color="green">760</FONT>       */<a name="line.760"></a>
+<FONT color="green">761</FONT>      synchronized public DTM createDocumentFragment()<a name="line.761"></a>
+<FONT color="green">762</FONT>      {<a name="line.762"></a>
+<FONT color="green">763</FONT>    <a name="line.763"></a>
+<FONT color="green">764</FONT>        try<a name="line.764"></a>
+<FONT color="green">765</FONT>        {<a name="line.765"></a>
+<FONT color="green">766</FONT>          DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();<a name="line.766"></a>
+<FONT color="green">767</FONT>    <a name="line.767"></a>
+<FONT color="green">768</FONT>          dbf.setNamespaceAware(true);<a name="line.768"></a>
+<FONT color="green">769</FONT>    <a name="line.769"></a>
+<FONT color="green">770</FONT>          DocumentBuilder db = dbf.newDocumentBuilder();<a name="line.770"></a>
+<FONT color="green">771</FONT>          Document doc = db.newDocument();<a name="line.771"></a>
+<FONT color="green">772</FONT>          Node df = doc.createDocumentFragment();<a name="line.772"></a>
+<FONT color="green">773</FONT>    <a name="line.773"></a>
+<FONT color="green">774</FONT>          return getDTM(new DOMSource(df), true, null, false, false);<a name="line.774"></a>
+<FONT color="green">775</FONT>        }<a name="line.775"></a>
+<FONT color="green">776</FONT>        catch (Exception e)<a name="line.776"></a>
+<FONT color="green">777</FONT>        {<a name="line.777"></a>
+<FONT color="green">778</FONT>          throw new DTMException(e);<a name="line.778"></a>
+<FONT color="green">779</FONT>        }<a name="line.779"></a>
+<FONT color="green">780</FONT>      }<a name="line.780"></a>
+<FONT color="green">781</FONT>    <a name="line.781"></a>
+<FONT color="green">782</FONT>      /**<a name="line.782"></a>
+<FONT color="green">783</FONT>       * NEEDSDOC Method createDTMIterator<a name="line.783"></a>
+<FONT color="green">784</FONT>       *<a name="line.784"></a>
+<FONT color="green">785</FONT>       *<a name="line.785"></a>
+<FONT color="green">786</FONT>       * NEEDSDOC @param whatToShow<a name="line.786"></a>
+<FONT color="green">787</FONT>       * NEEDSDOC @param filter<a name="line.787"></a>
+<FONT color="green">788</FONT>       * NEEDSDOC @param entityReferenceExpansion<a name="line.788"></a>
+<FONT color="green">789</FONT>       *<a name="line.789"></a>
+<FONT color="green">790</FONT>       * NEEDSDOC (createDTMIterator) @return<a name="line.790"></a>
+<FONT color="green">791</FONT>       */<a name="line.791"></a>
+<FONT color="green">792</FONT>      synchronized public DTMIterator createDTMIterator(int whatToShow, DTMFilter filter,<a name="line.792"></a>
+<FONT color="green">793</FONT>                                           boolean entityReferenceExpansion)<a name="line.793"></a>
+<FONT color="green">794</FONT>      {<a name="line.794"></a>
+<FONT color="green">795</FONT>    <a name="line.795"></a>
+<FONT color="green">796</FONT>        /** @todo: implement this org.apache.xml.dtm.DTMManager abstract method */<a name="line.796"></a>
+<FONT color="green">797</FONT>        return null;<a name="line.797"></a>
+<FONT color="green">798</FONT>      }<a name="line.798"></a>
+<FONT color="green">799</FONT>    <a name="line.799"></a>
+<FONT color="green">800</FONT>      /**<a name="line.800"></a>
+<FONT color="green">801</FONT>       * NEEDSDOC Method createDTMIterator<a name="line.801"></a>
+<FONT color="green">802</FONT>       *<a name="line.802"></a>
+<FONT color="green">803</FONT>       *<a name="line.803"></a>
+<FONT color="green">804</FONT>       * NEEDSDOC @param xpathString<a name="line.804"></a>
+<FONT color="green">805</FONT>       * NEEDSDOC @param presolver<a name="line.805"></a>
+<FONT color="green">806</FONT>       *<a name="line.806"></a>
+<FONT color="green">807</FONT>       * NEEDSDOC (createDTMIterator) @return<a name="line.807"></a>
+<FONT color="green">808</FONT>       */<a name="line.808"></a>
+<FONT color="green">809</FONT>      synchronized public DTMIterator createDTMIterator(String xpathString,<a name="line.809"></a>
+<FONT color="green">810</FONT>                                           PrefixResolver presolver)<a name="line.810"></a>
+<FONT color="green">811</FONT>      {<a name="line.811"></a>
+<FONT color="green">812</FONT>    <a name="line.812"></a>
+<FONT color="green">813</FONT>        /** @todo: implement this org.apache.xml.dtm.DTMManager abstract method */<a name="line.813"></a>
+<FONT color="green">814</FONT>        return null;<a name="line.814"></a>
+<FONT color="green">815</FONT>      }<a name="line.815"></a>
+<FONT color="green">816</FONT>    <a name="line.816"></a>
+<FONT color="green">817</FONT>      /**<a name="line.817"></a>
+<FONT color="green">818</FONT>       * NEEDSDOC Method createDTMIterator<a name="line.818"></a>
+<FONT color="green">819</FONT>       *<a name="line.819"></a>
+<FONT color="green">820</FONT>       *<a name="line.820"></a>
+<FONT color="green">821</FONT>       * NEEDSDOC @param node<a name="line.821"></a>
+<FONT color="green">822</FONT>       *<a name="line.822"></a>
+<FONT color="green">823</FONT>       * NEEDSDOC (createDTMIterator) @return<a name="line.823"></a>
+<FONT color="green">824</FONT>       */<a name="line.824"></a>
+<FONT color="green">825</FONT>      synchronized public DTMIterator createDTMIterator(int node)<a name="line.825"></a>
+<FONT color="green">826</FONT>      {<a name="line.826"></a>
+<FONT color="green">827</FONT>    <a name="line.827"></a>
+<FONT color="green">828</FONT>        /** @todo: implement this org.apache.xml.dtm.DTMManager abstract method */<a name="line.828"></a>
+<FONT color="green">829</FONT>        return null;<a name="line.829"></a>
+<FONT color="green">830</FONT>      }<a name="line.830"></a>
+<FONT color="green">831</FONT>    <a name="line.831"></a>
+<FONT color="green">832</FONT>      /**<a name="line.832"></a>
+<FONT color="green">833</FONT>       * NEEDSDOC Method createDTMIterator<a name="line.833"></a>
+<FONT color="green">834</FONT>       *<a name="line.834"></a>
+<FONT color="green">835</FONT>       *<a name="line.835"></a>
+<FONT color="green">836</FONT>       * NEEDSDOC @param xpathCompiler<a name="line.836"></a>
+<FONT color="green">837</FONT>       * NEEDSDOC @param pos<a name="line.837"></a>
+<FONT color="green">838</FONT>       *<a name="line.838"></a>
+<FONT color="green">839</FONT>       * NEEDSDOC (createDTMIterator) @return<a name="line.839"></a>
+<FONT color="green">840</FONT>       */<a name="line.840"></a>
+<FONT color="green">841</FONT>      synchronized public DTMIterator createDTMIterator(Object xpathCompiler, int pos)<a name="line.841"></a>
+<FONT color="green">842</FONT>      {<a name="line.842"></a>
+<FONT color="green">843</FONT>    <a name="line.843"></a>
+<FONT color="green">844</FONT>        /** @todo: implement this org.apache.xml.dtm.DTMManager abstract method */<a name="line.844"></a>
+<FONT color="green">845</FONT>        return null;<a name="line.845"></a>
+<FONT color="green">846</FONT>      }<a name="line.846"></a>
+<FONT color="green">847</FONT>    <a name="line.847"></a>
+<FONT color="green">848</FONT>      /**<a name="line.848"></a>
+<FONT color="green">849</FONT>       * return the expanded name table.<a name="line.849"></a>
+<FONT color="green">850</FONT>       *<a name="line.850"></a>
+<FONT color="green">851</FONT>       * NEEDSDOC @param dtm<a name="line.851"></a>
+<FONT color="green">852</FONT>       *<a name="line.852"></a>
+<FONT color="green">853</FONT>       * NEEDSDOC ($objectName$) @return<a name="line.853"></a>
+<FONT color="green">854</FONT>       */<a name="line.854"></a>
+<FONT color="green">855</FONT>      public ExpandedNameTable getExpandedNameTable(DTM dtm)<a name="line.855"></a>
+<FONT color="green">856</FONT>      {<a name="line.856"></a>
+<FONT color="green">857</FONT>        return m_expandedNameTable;<a name="line.857"></a>
+<FONT color="green">858</FONT>      }<a name="line.858"></a>
+<FONT color="green">859</FONT>    }<a name="line.859"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

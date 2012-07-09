@@ -1,0 +1,1765 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: SerializerBase.java 471981 2006-11-07 04:28:00Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    package org.apache.xml.serializer;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    import java.io.IOException;<a name="line.23"></a>
+<FONT color="green">024</FONT>    import java.util.HashMap;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import java.util.Set;<a name="line.25"></a>
+<FONT color="green">026</FONT>    <a name="line.26"></a>
+<FONT color="green">027</FONT>    import javax.xml.transform.OutputKeys;<a name="line.27"></a>
+<FONT color="green">028</FONT>    import javax.xml.transform.SourceLocator;<a name="line.28"></a>
+<FONT color="green">029</FONT>    import javax.xml.transform.Transformer;<a name="line.29"></a>
+<FONT color="green">030</FONT>    <a name="line.30"></a>
+<FONT color="green">031</FONT>    import org.apache.xml.serializer.utils.MsgKey;<a name="line.31"></a>
+<FONT color="green">032</FONT>    import org.apache.xml.serializer.utils.Utils;<a name="line.32"></a>
+<FONT color="green">033</FONT>    import org.xml.sax.Attributes;<a name="line.33"></a>
+<FONT color="green">034</FONT>    import org.xml.sax.ContentHandler;<a name="line.34"></a>
+<FONT color="green">035</FONT>    import org.xml.sax.Locator;<a name="line.35"></a>
+<FONT color="green">036</FONT>    import org.xml.sax.SAXException;<a name="line.36"></a>
+<FONT color="green">037</FONT>    import org.xml.sax.SAXParseException;<a name="line.37"></a>
+<FONT color="green">038</FONT>    <a name="line.38"></a>
+<FONT color="green">039</FONT>    <a name="line.39"></a>
+<FONT color="green">040</FONT>    /**<a name="line.40"></a>
+<FONT color="green">041</FONT>     * This class acts as a base class for the XML "serializers"<a name="line.41"></a>
+<FONT color="green">042</FONT>     * and the stream serializers.<a name="line.42"></a>
+<FONT color="green">043</FONT>     * It contains a number of common fields and methods.<a name="line.43"></a>
+<FONT color="green">044</FONT>     * <a name="line.44"></a>
+<FONT color="green">045</FONT>     * @xsl.usage internal<a name="line.45"></a>
+<FONT color="green">046</FONT>     */<a name="line.46"></a>
+<FONT color="green">047</FONT>    public abstract class SerializerBase<a name="line.47"></a>
+<FONT color="green">048</FONT>        implements SerializationHandler, SerializerConstants<a name="line.48"></a>
+<FONT color="green">049</FONT>    {<a name="line.49"></a>
+<FONT color="green">050</FONT>        SerializerBase() {<a name="line.50"></a>
+<FONT color="green">051</FONT>            return;<a name="line.51"></a>
+<FONT color="green">052</FONT>        }<a name="line.52"></a>
+<FONT color="green">053</FONT>        <a name="line.53"></a>
+<FONT color="green">054</FONT>        /**<a name="line.54"></a>
+<FONT color="green">055</FONT>         * The name of the package that this class is in.<a name="line.55"></a>
+<FONT color="green">056</FONT>         * &lt;p&gt;<a name="line.56"></a>
+<FONT color="green">057</FONT>         * Not a public API.<a name="line.57"></a>
+<FONT color="green">058</FONT>         */<a name="line.58"></a>
+<FONT color="green">059</FONT>        public static final String PKG_NAME;<a name="line.59"></a>
+<FONT color="green">060</FONT>    <a name="line.60"></a>
+<FONT color="green">061</FONT>        /**<a name="line.61"></a>
+<FONT color="green">062</FONT>         * The same as the name of the package that this class is in<a name="line.62"></a>
+<FONT color="green">063</FONT>         * except that '.' are replaced with '/'.<a name="line.63"></a>
+<FONT color="green">064</FONT>         * &lt;p&gt;<a name="line.64"></a>
+<FONT color="green">065</FONT>         * Not a public API.<a name="line.65"></a>
+<FONT color="green">066</FONT>         */<a name="line.66"></a>
+<FONT color="green">067</FONT>        public static final String PKG_PATH;<a name="line.67"></a>
+<FONT color="green">068</FONT>    <a name="line.68"></a>
+<FONT color="green">069</FONT>        static {<a name="line.69"></a>
+<FONT color="green">070</FONT>            String fullyQualifiedName = SerializerBase.class.getName();<a name="line.70"></a>
+<FONT color="green">071</FONT>            int lastDot = fullyQualifiedName.lastIndexOf('.');<a name="line.71"></a>
+<FONT color="green">072</FONT>            if (lastDot &lt; 0) {<a name="line.72"></a>
+<FONT color="green">073</FONT>                PKG_NAME = "";<a name="line.73"></a>
+<FONT color="green">074</FONT>            } else {<a name="line.74"></a>
+<FONT color="green">075</FONT>                PKG_NAME = fullyQualifiedName.substring(0, lastDot);<a name="line.75"></a>
+<FONT color="green">076</FONT>            }<a name="line.76"></a>
+<FONT color="green">077</FONT>    <a name="line.77"></a>
+<FONT color="green">078</FONT>            StringBuffer sb = new StringBuffer();<a name="line.78"></a>
+<FONT color="green">079</FONT>            for (int i = 0; i &lt; PKG_NAME.length(); i++) {<a name="line.79"></a>
+<FONT color="green">080</FONT>                char ch = PKG_NAME.charAt(i);<a name="line.80"></a>
+<FONT color="green">081</FONT>                if (ch == '.')<a name="line.81"></a>
+<FONT color="green">082</FONT>                    sb.append('/');<a name="line.82"></a>
+<FONT color="green">083</FONT>                else<a name="line.83"></a>
+<FONT color="green">084</FONT>                    sb.append(ch);<a name="line.84"></a>
+<FONT color="green">085</FONT>            }<a name="line.85"></a>
+<FONT color="green">086</FONT>            PKG_PATH = sb.toString();<a name="line.86"></a>
+<FONT color="green">087</FONT>        }<a name="line.87"></a>
+<FONT color="green">088</FONT>    <a name="line.88"></a>
+<FONT color="green">089</FONT>        <a name="line.89"></a>
+<FONT color="green">090</FONT>    <a name="line.90"></a>
+<FONT color="green">091</FONT>        /**<a name="line.91"></a>
+<FONT color="green">092</FONT>         * To fire off the end element trace event<a name="line.92"></a>
+<FONT color="green">093</FONT>         * @param name Name of element<a name="line.93"></a>
+<FONT color="green">094</FONT>         */<a name="line.94"></a>
+<FONT color="green">095</FONT>        protected void fireEndElem(String name)<a name="line.95"></a>
+<FONT color="green">096</FONT>            throws org.xml.sax.SAXException<a name="line.96"></a>
+<FONT color="green">097</FONT>        {<a name="line.97"></a>
+<FONT color="green">098</FONT>            if (m_tracer != null)<a name="line.98"></a>
+<FONT color="green">099</FONT>            {<a name="line.99"></a>
+<FONT color="green">100</FONT>                flushMyWriter();<a name="line.100"></a>
+<FONT color="green">101</FONT>                m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_ENDELEMENT,name, (Attributes)null);<a name="line.101"></a>
+<FONT color="green">102</FONT>            }                               <a name="line.102"></a>
+<FONT color="green">103</FONT>        }<a name="line.103"></a>
+<FONT color="green">104</FONT>    <a name="line.104"></a>
+<FONT color="green">105</FONT>        /**<a name="line.105"></a>
+<FONT color="green">106</FONT>         * Report the characters trace event<a name="line.106"></a>
+<FONT color="green">107</FONT>         * @param chars  content of characters<a name="line.107"></a>
+<FONT color="green">108</FONT>         * @param start  starting index of characters to output<a name="line.108"></a>
+<FONT color="green">109</FONT>         * @param length  number of characters to output<a name="line.109"></a>
+<FONT color="green">110</FONT>         */<a name="line.110"></a>
+<FONT color="green">111</FONT>        protected void fireCharEvent(char[] chars, int start, int length)<a name="line.111"></a>
+<FONT color="green">112</FONT>            throws org.xml.sax.SAXException<a name="line.112"></a>
+<FONT color="green">113</FONT>        {<a name="line.113"></a>
+<FONT color="green">114</FONT>            if (m_tracer != null)<a name="line.114"></a>
+<FONT color="green">115</FONT>            {<a name="line.115"></a>
+<FONT color="green">116</FONT>                flushMyWriter();<a name="line.116"></a>
+<FONT color="green">117</FONT>                m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_CHARACTERS, chars, start,length);<a name="line.117"></a>
+<FONT color="green">118</FONT>            }                               <a name="line.118"></a>
+<FONT color="green">119</FONT>        }<a name="line.119"></a>
+<FONT color="green">120</FONT>    <a name="line.120"></a>
+<FONT color="green">121</FONT>        /**<a name="line.121"></a>
+<FONT color="green">122</FONT>         * true if we still need to call startDocumentInternal() <a name="line.122"></a>
+<FONT color="green">123</FONT>             */<a name="line.123"></a>
+<FONT color="green">124</FONT>        protected boolean m_needToCallStartDocument = true; <a name="line.124"></a>
+<FONT color="green">125</FONT>    <a name="line.125"></a>
+<FONT color="green">126</FONT>        /** True if a trailing "]]&gt;" still needs to be written to be<a name="line.126"></a>
+<FONT color="green">127</FONT>         * written out. Used to merge adjacent CDATA sections<a name="line.127"></a>
+<FONT color="green">128</FONT>         */<a name="line.128"></a>
+<FONT color="green">129</FONT>        protected boolean m_cdataTagOpen = false;<a name="line.129"></a>
+<FONT color="green">130</FONT>    <a name="line.130"></a>
+<FONT color="green">131</FONT>        /**<a name="line.131"></a>
+<FONT color="green">132</FONT>         * All the attributes of the current element, collected from<a name="line.132"></a>
+<FONT color="green">133</FONT>         * startPrefixMapping() calls, or addAddtribute() calls, or <a name="line.133"></a>
+<FONT color="green">134</FONT>         * from the SAX attributes in a startElement() call.<a name="line.134"></a>
+<FONT color="green">135</FONT>         */<a name="line.135"></a>
+<FONT color="green">136</FONT>        protected AttributesImplSerializer m_attributes = new AttributesImplSerializer();<a name="line.136"></a>
+<FONT color="green">137</FONT>    <a name="line.137"></a>
+<FONT color="green">138</FONT>        /**<a name="line.138"></a>
+<FONT color="green">139</FONT>         * Tells if we're in an EntityRef event.<a name="line.139"></a>
+<FONT color="green">140</FONT>         */<a name="line.140"></a>
+<FONT color="green">141</FONT>        protected boolean m_inEntityRef = false;<a name="line.141"></a>
+<FONT color="green">142</FONT>    <a name="line.142"></a>
+<FONT color="green">143</FONT>        /** This flag is set while receiving events from the external DTD */<a name="line.143"></a>
+<FONT color="green">144</FONT>        protected boolean m_inExternalDTD = false;<a name="line.144"></a>
+<FONT color="green">145</FONT>    <a name="line.145"></a>
+<FONT color="green">146</FONT>        /**<a name="line.146"></a>
+<FONT color="green">147</FONT>         * The System ID for the doc type.<a name="line.147"></a>
+<FONT color="green">148</FONT>         */<a name="line.148"></a>
+<FONT color="green">149</FONT>        protected String m_doctypeSystem;<a name="line.149"></a>
+<FONT color="green">150</FONT>    <a name="line.150"></a>
+<FONT color="green">151</FONT>        /**<a name="line.151"></a>
+<FONT color="green">152</FONT>         * The public ID for the doc type.<a name="line.152"></a>
+<FONT color="green">153</FONT>         */<a name="line.153"></a>
+<FONT color="green">154</FONT>        protected String m_doctypePublic;<a name="line.154"></a>
+<FONT color="green">155</FONT>    <a name="line.155"></a>
+<FONT color="green">156</FONT>        /**<a name="line.156"></a>
+<FONT color="green">157</FONT>         * Flag to tell that we need to add the doctype decl, which we can't do<a name="line.157"></a>
+<FONT color="green">158</FONT>         * until the first element is encountered.<a name="line.158"></a>
+<FONT color="green">159</FONT>         */<a name="line.159"></a>
+<FONT color="green">160</FONT>        boolean m_needToOutputDocTypeDecl = true;<a name="line.160"></a>
+<FONT color="green">161</FONT>    <a name="line.161"></a>
+<FONT color="green">162</FONT>        /**<a name="line.162"></a>
+<FONT color="green">163</FONT>         * Tells if we should write the XML declaration.<a name="line.163"></a>
+<FONT color="green">164</FONT>         */<a name="line.164"></a>
+<FONT color="green">165</FONT>        protected boolean m_shouldNotWriteXMLHeader = false;<a name="line.165"></a>
+<FONT color="green">166</FONT>    <a name="line.166"></a>
+<FONT color="green">167</FONT>        /**<a name="line.167"></a>
+<FONT color="green">168</FONT>         * The standalone value for the doctype.<a name="line.168"></a>
+<FONT color="green">169</FONT>         */<a name="line.169"></a>
+<FONT color="green">170</FONT>        private String m_standalone;<a name="line.170"></a>
+<FONT color="green">171</FONT>    <a name="line.171"></a>
+<FONT color="green">172</FONT>        /**<a name="line.172"></a>
+<FONT color="green">173</FONT>         * True if standalone was specified.<a name="line.173"></a>
+<FONT color="green">174</FONT>         */<a name="line.174"></a>
+<FONT color="green">175</FONT>        protected boolean m_standaloneWasSpecified = false;<a name="line.175"></a>
+<FONT color="green">176</FONT>    <a name="line.176"></a>
+<FONT color="green">177</FONT>        /**<a name="line.177"></a>
+<FONT color="green">178</FONT>         * Flag to tell if indenting (pretty-printing) is on.<a name="line.178"></a>
+<FONT color="green">179</FONT>         */<a name="line.179"></a>
+<FONT color="green">180</FONT>        protected boolean m_doIndent = false;<a name="line.180"></a>
+<FONT color="green">181</FONT>        /**<a name="line.181"></a>
+<FONT color="green">182</FONT>         * Amount to indent.<a name="line.182"></a>
+<FONT color="green">183</FONT>         */<a name="line.183"></a>
+<FONT color="green">184</FONT>        protected int m_indentAmount = 0;<a name="line.184"></a>
+<FONT color="green">185</FONT>    <a name="line.185"></a>
+<FONT color="green">186</FONT>        /**<a name="line.186"></a>
+<FONT color="green">187</FONT>         * Tells the XML version, for writing out to the XML decl.<a name="line.187"></a>
+<FONT color="green">188</FONT>         */<a name="line.188"></a>
+<FONT color="green">189</FONT>        protected String m_version = null;<a name="line.189"></a>
+<FONT color="green">190</FONT>    <a name="line.190"></a>
+<FONT color="green">191</FONT>        /**<a name="line.191"></a>
+<FONT color="green">192</FONT>         * The mediatype.  Not used right now.<a name="line.192"></a>
+<FONT color="green">193</FONT>         */<a name="line.193"></a>
+<FONT color="green">194</FONT>        protected String m_mediatype;<a name="line.194"></a>
+<FONT color="green">195</FONT>    <a name="line.195"></a>
+<FONT color="green">196</FONT>        /**<a name="line.196"></a>
+<FONT color="green">197</FONT>         * The transformer that was around when this output handler was created (if<a name="line.197"></a>
+<FONT color="green">198</FONT>         * any).<a name="line.198"></a>
+<FONT color="green">199</FONT>         */<a name="line.199"></a>
+<FONT color="green">200</FONT>        private Transformer m_transformer;<a name="line.200"></a>
+<FONT color="green">201</FONT>    <a name="line.201"></a>
+<FONT color="green">202</FONT>        /**<a name="line.202"></a>
+<FONT color="green">203</FONT>         * Namespace support, that keeps track of currently defined <a name="line.203"></a>
+<FONT color="green">204</FONT>         * prefix/uri mappings. As processed elements come and go, so do<a name="line.204"></a>
+<FONT color="green">205</FONT>         * the associated mappings for that element.<a name="line.205"></a>
+<FONT color="green">206</FONT>         */<a name="line.206"></a>
+<FONT color="green">207</FONT>        protected NamespaceMappings m_prefixMap;<a name="line.207"></a>
+<FONT color="green">208</FONT>        <a name="line.208"></a>
+<FONT color="green">209</FONT>        /**<a name="line.209"></a>
+<FONT color="green">210</FONT>         * Handle for firing generate events.  This interface may be implemented<a name="line.210"></a>
+<FONT color="green">211</FONT>         * by the referenced transformer object.<a name="line.211"></a>
+<FONT color="green">212</FONT>         */<a name="line.212"></a>
+<FONT color="green">213</FONT>        protected SerializerTrace m_tracer;<a name="line.213"></a>
+<FONT color="green">214</FONT>        <a name="line.214"></a>
+<FONT color="green">215</FONT>        protected SourceLocator m_sourceLocator;<a name="line.215"></a>
+<FONT color="green">216</FONT>        <a name="line.216"></a>
+<FONT color="green">217</FONT>    <a name="line.217"></a>
+<FONT color="green">218</FONT>        /**<a name="line.218"></a>
+<FONT color="green">219</FONT>         * The writer to send output to. This field is only used in the ToStream<a name="line.219"></a>
+<FONT color="green">220</FONT>         * serializers, but exists here just so that the fireStartDoc() and<a name="line.220"></a>
+<FONT color="green">221</FONT>         * other fire... methods can flush this writer when tracing.<a name="line.221"></a>
+<FONT color="green">222</FONT>         */<a name="line.222"></a>
+<FONT color="green">223</FONT>        protected java.io.Writer m_writer = null;<a name="line.223"></a>
+<FONT color="green">224</FONT>        <a name="line.224"></a>
+<FONT color="green">225</FONT>        /**<a name="line.225"></a>
+<FONT color="green">226</FONT>         * A reference to "stack frame" corresponding to<a name="line.226"></a>
+<FONT color="green">227</FONT>         * the current element. Such a frame is pushed at a startElement()<a name="line.227"></a>
+<FONT color="green">228</FONT>         * and popped at an endElement(). This frame contains information about<a name="line.228"></a>
+<FONT color="green">229</FONT>         * the element, such as its namespace URI. <a name="line.229"></a>
+<FONT color="green">230</FONT>         */<a name="line.230"></a>
+<FONT color="green">231</FONT>        protected ElemContext m_elemContext = new ElemContext();<a name="line.231"></a>
+<FONT color="green">232</FONT>        <a name="line.232"></a>
+<FONT color="green">233</FONT>        /**<a name="line.233"></a>
+<FONT color="green">234</FONT>         * A utility buffer for converting Strings passed to<a name="line.234"></a>
+<FONT color="green">235</FONT>         * character() methods to character arrays.<a name="line.235"></a>
+<FONT color="green">236</FONT>         * Reusing this buffer means not creating a new character array<a name="line.236"></a>
+<FONT color="green">237</FONT>         * everytime and it runs faster.<a name="line.237"></a>
+<FONT color="green">238</FONT>         */<a name="line.238"></a>
+<FONT color="green">239</FONT>        protected char[] m_charsBuff = new char[60];<a name="line.239"></a>
+<FONT color="green">240</FONT>        <a name="line.240"></a>
+<FONT color="green">241</FONT>        /**<a name="line.241"></a>
+<FONT color="green">242</FONT>         * A utility buffer for converting Strings passed to<a name="line.242"></a>
+<FONT color="green">243</FONT>         * attribute methods to character arrays.<a name="line.243"></a>
+<FONT color="green">244</FONT>         * Reusing this buffer means not creating a new character array<a name="line.244"></a>
+<FONT color="green">245</FONT>         * everytime and it runs faster.<a name="line.245"></a>
+<FONT color="green">246</FONT>         */<a name="line.246"></a>
+<FONT color="green">247</FONT>        protected char[] m_attrBuff = new char[30];    <a name="line.247"></a>
+<FONT color="green">248</FONT>    <a name="line.248"></a>
+<FONT color="green">249</FONT>        /**<a name="line.249"></a>
+<FONT color="green">250</FONT>         * Receive notification of a comment.<a name="line.250"></a>
+<FONT color="green">251</FONT>         * <a name="line.251"></a>
+<FONT color="green">252</FONT>         * @see ExtendedLexicalHandler#comment(String)<a name="line.252"></a>
+<FONT color="green">253</FONT>         */<a name="line.253"></a>
+<FONT color="green">254</FONT>        public void comment(String data) throws SAXException<a name="line.254"></a>
+<FONT color="green">255</FONT>        {<a name="line.255"></a>
+<FONT color="green">256</FONT>            m_docIsEmpty = false;<a name="line.256"></a>
+<FONT color="green">257</FONT>            <a name="line.257"></a>
+<FONT color="green">258</FONT>            final int length = data.length();<a name="line.258"></a>
+<FONT color="green">259</FONT>            if (length &gt; m_charsBuff.length)<a name="line.259"></a>
+<FONT color="green">260</FONT>            {<a name="line.260"></a>
+<FONT color="green">261</FONT>                m_charsBuff = new char[length * 2 + 1];<a name="line.261"></a>
+<FONT color="green">262</FONT>            }<a name="line.262"></a>
+<FONT color="green">263</FONT>            data.getChars(0, length, m_charsBuff, 0);<a name="line.263"></a>
+<FONT color="green">264</FONT>            comment(m_charsBuff, 0, length);<a name="line.264"></a>
+<FONT color="green">265</FONT>        }<a name="line.265"></a>
+<FONT color="green">266</FONT>    <a name="line.266"></a>
+<FONT color="green">267</FONT>        /**<a name="line.267"></a>
+<FONT color="green">268</FONT>         * If at runtime, when the qname of the attribute is<a name="line.268"></a>
+<FONT color="green">269</FONT>         * known, another prefix is specified for the attribute, then we can<a name="line.269"></a>
+<FONT color="green">270</FONT>         * patch or hack the name with this method. For<a name="line.270"></a>
+<FONT color="green">271</FONT>         * a qname of the form "ns?:otherprefix:name", this function patches the<a name="line.271"></a>
+<FONT color="green">272</FONT>         * qname by simply ignoring "otherprefix".<a name="line.272"></a>
+<FONT color="green">273</FONT>         * TODO: This method is a HACK! We do not have access to the<a name="line.273"></a>
+<FONT color="green">274</FONT>         * XML file, it sometimes generates a NS prefix of the form "ns?" for<a name="line.274"></a>
+<FONT color="green">275</FONT>         * an attribute.<a name="line.275"></a>
+<FONT color="green">276</FONT>         */<a name="line.276"></a>
+<FONT color="green">277</FONT>        protected String patchName(String qname)<a name="line.277"></a>
+<FONT color="green">278</FONT>        {<a name="line.278"></a>
+<FONT color="green">279</FONT>    <a name="line.279"></a>
+<FONT color="green">280</FONT>            <a name="line.280"></a>
+<FONT color="green">281</FONT>            final int lastColon = qname.lastIndexOf(':');<a name="line.281"></a>
+<FONT color="green">282</FONT>    <a name="line.282"></a>
+<FONT color="green">283</FONT>            if (lastColon &gt; 0) {<a name="line.283"></a>
+<FONT color="green">284</FONT>                final int firstColon = qname.indexOf(':');<a name="line.284"></a>
+<FONT color="green">285</FONT>                final String prefix = qname.substring(0, firstColon);<a name="line.285"></a>
+<FONT color="green">286</FONT>                final String localName = qname.substring(lastColon + 1);<a name="line.286"></a>
+<FONT color="green">287</FONT>    <a name="line.287"></a>
+<FONT color="green">288</FONT>            // If uri is "" then ignore prefix<a name="line.288"></a>
+<FONT color="green">289</FONT>                final String uri = m_prefixMap.lookupNamespace(prefix);<a name="line.289"></a>
+<FONT color="green">290</FONT>                if (uri != null &amp;&amp; uri.length() == 0) {<a name="line.290"></a>
+<FONT color="green">291</FONT>                    return localName;<a name="line.291"></a>
+<FONT color="green">292</FONT>                }<a name="line.292"></a>
+<FONT color="green">293</FONT>                else if (firstColon != lastColon) {<a name="line.293"></a>
+<FONT color="green">294</FONT>                    return prefix + ':' + localName;<a name="line.294"></a>
+<FONT color="green">295</FONT>                }<a name="line.295"></a>
+<FONT color="green">296</FONT>            }<a name="line.296"></a>
+<FONT color="green">297</FONT>            return qname;        <a name="line.297"></a>
+<FONT color="green">298</FONT>        }<a name="line.298"></a>
+<FONT color="green">299</FONT>    <a name="line.299"></a>
+<FONT color="green">300</FONT>        /**<a name="line.300"></a>
+<FONT color="green">301</FONT>         * Returns the local name of a qualified name. If the name has no prefix,<a name="line.301"></a>
+<FONT color="green">302</FONT>         * then it works as the identity (SAX2).<a name="line.302"></a>
+<FONT color="green">303</FONT>         * @param qname the qualified name <a name="line.303"></a>
+<FONT color="green">304</FONT>         * @return the name, but excluding any prefix and colon.<a name="line.304"></a>
+<FONT color="green">305</FONT>         */<a name="line.305"></a>
+<FONT color="green">306</FONT>        protected static String getLocalName(String qname)<a name="line.306"></a>
+<FONT color="green">307</FONT>        {<a name="line.307"></a>
+<FONT color="green">308</FONT>            final int col = qname.lastIndexOf(':');<a name="line.308"></a>
+<FONT color="green">309</FONT>            return (col &gt; 0) ? qname.substring(col + 1) : qname;<a name="line.309"></a>
+<FONT color="green">310</FONT>        }<a name="line.310"></a>
+<FONT color="green">311</FONT>    <a name="line.311"></a>
+<FONT color="green">312</FONT>        /**<a name="line.312"></a>
+<FONT color="green">313</FONT>         * Receive an object for locating the origin of SAX document events.<a name="line.313"></a>
+<FONT color="green">314</FONT>         *<a name="line.314"></a>
+<FONT color="green">315</FONT>         * @param locator An object that can return the location of any SAX document<a name="line.315"></a>
+<FONT color="green">316</FONT>         * event.<a name="line.316"></a>
+<FONT color="green">317</FONT>         * <a name="line.317"></a>
+<FONT color="green">318</FONT>         * Receive an object for locating the origin of SAX document events.<a name="line.318"></a>
+<FONT color="green">319</FONT>         *<a name="line.319"></a>
+<FONT color="green">320</FONT>         * &lt;p&gt;SAX parsers are strongly encouraged (though not absolutely<a name="line.320"></a>
+<FONT color="green">321</FONT>         * required) to supply a locator: if it does so, it must supply<a name="line.321"></a>
+<FONT color="green">322</FONT>         * the locator to the application by invoking this method before<a name="line.322"></a>
+<FONT color="green">323</FONT>         * invoking any of the other methods in the DocumentHandler<a name="line.323"></a>
+<FONT color="green">324</FONT>         * interface.&lt;/p&gt;<a name="line.324"></a>
+<FONT color="green">325</FONT>         *<a name="line.325"></a>
+<FONT color="green">326</FONT>         * &lt;p&gt;The locator allows the application to determine the end<a name="line.326"></a>
+<FONT color="green">327</FONT>         * position of any document-related event, even if the parser is<a name="line.327"></a>
+<FONT color="green">328</FONT>         * not reporting an error.  Typically, the application will<a name="line.328"></a>
+<FONT color="green">329</FONT>         * use this information for reporting its own errors (such as<a name="line.329"></a>
+<FONT color="green">330</FONT>         * character content that does not match an application's<a name="line.330"></a>
+<FONT color="green">331</FONT>         * business rules).  The information returned by the locator<a name="line.331"></a>
+<FONT color="green">332</FONT>         * is probably not sufficient for use with a search engine.&lt;/p&gt;<a name="line.332"></a>
+<FONT color="green">333</FONT>         *<a name="line.333"></a>
+<FONT color="green">334</FONT>         * &lt;p&gt;Note that the locator will return correct information only<a name="line.334"></a>
+<FONT color="green">335</FONT>         * during the invocation of the events in this interface.  The<a name="line.335"></a>
+<FONT color="green">336</FONT>         * application should not attempt to use it at any other time.&lt;/p&gt;<a name="line.336"></a>
+<FONT color="green">337</FONT>         */<a name="line.337"></a>
+<FONT color="green">338</FONT>        public void setDocumentLocator(Locator locator)<a name="line.338"></a>
+<FONT color="green">339</FONT>        {<a name="line.339"></a>
+<FONT color="green">340</FONT>            return;<a name="line.340"></a>
+<FONT color="green">341</FONT>    <a name="line.341"></a>
+<FONT color="green">342</FONT>            // I don't do anything with this yet.<a name="line.342"></a>
+<FONT color="green">343</FONT>        }<a name="line.343"></a>
+<FONT color="green">344</FONT>    <a name="line.344"></a>
+<FONT color="green">345</FONT>        /**<a name="line.345"></a>
+<FONT color="green">346</FONT>         * Adds the given attribute to the set of collected attributes , but only if<a name="line.346"></a>
+<FONT color="green">347</FONT>         * there is a currently open element.<a name="line.347"></a>
+<FONT color="green">348</FONT>         * <a name="line.348"></a>
+<FONT color="green">349</FONT>         * An element is currently open if a startElement() notification has<a name="line.349"></a>
+<FONT color="green">350</FONT>         * occured but the start of the element has not yet been written to the<a name="line.350"></a>
+<FONT color="green">351</FONT>         * output.  In the stream case this means that we have not yet been forced<a name="line.351"></a>
+<FONT color="green">352</FONT>         * to close the elements opening tag by another notification, such as a<a name="line.352"></a>
+<FONT color="green">353</FONT>         * character notification.<a name="line.353"></a>
+<FONT color="green">354</FONT>         * <a name="line.354"></a>
+<FONT color="green">355</FONT>         * @param uri the URI of the attribute<a name="line.355"></a>
+<FONT color="green">356</FONT>         * @param localName the local name of the attribute<a name="line.356"></a>
+<FONT color="green">357</FONT>         * @param rawName    the qualified name of the attribute<a name="line.357"></a>
+<FONT color="green">358</FONT>         * @param type the type of the attribute (probably CDATA)<a name="line.358"></a>
+<FONT color="green">359</FONT>         * @param value the value of the attribute<a name="line.359"></a>
+<FONT color="green">360</FONT>         * @param XSLAttribute true if this attribute is coming from an xsl:attriute element<a name="line.360"></a>
+<FONT color="green">361</FONT>         * @see ExtendedContentHandler#addAttribute(String, String, String, String, String)<a name="line.361"></a>
+<FONT color="green">362</FONT>         */<a name="line.362"></a>
+<FONT color="green">363</FONT>        public void addAttribute(<a name="line.363"></a>
+<FONT color="green">364</FONT>            String uri,<a name="line.364"></a>
+<FONT color="green">365</FONT>            String localName,<a name="line.365"></a>
+<FONT color="green">366</FONT>            String rawName,<a name="line.366"></a>
+<FONT color="green">367</FONT>            String type,<a name="line.367"></a>
+<FONT color="green">368</FONT>            String value,<a name="line.368"></a>
+<FONT color="green">369</FONT>            boolean XSLAttribute)<a name="line.369"></a>
+<FONT color="green">370</FONT>            throws SAXException<a name="line.370"></a>
+<FONT color="green">371</FONT>        {<a name="line.371"></a>
+<FONT color="green">372</FONT>            if (m_elemContext.m_startTagOpen)<a name="line.372"></a>
+<FONT color="green">373</FONT>            {<a name="line.373"></a>
+<FONT color="green">374</FONT>                addAttributeAlways(uri, localName, rawName, type, value, XSLAttribute);<a name="line.374"></a>
+<FONT color="green">375</FONT>            }<a name="line.375"></a>
+<FONT color="green">376</FONT>    <a name="line.376"></a>
+<FONT color="green">377</FONT>        }<a name="line.377"></a>
+<FONT color="green">378</FONT>        <a name="line.378"></a>
+<FONT color="green">379</FONT>        /**<a name="line.379"></a>
+<FONT color="green">380</FONT>         * Adds the given attribute to the set of attributes, even if there is<a name="line.380"></a>
+<FONT color="green">381</FONT>         * no currently open element. This is useful if a SAX startPrefixMapping()<a name="line.381"></a>
+<FONT color="green">382</FONT>         * should need to add an attribute before the element name is seen.<a name="line.382"></a>
+<FONT color="green">383</FONT>         * <a name="line.383"></a>
+<FONT color="green">384</FONT>         * @param uri the URI of the attribute<a name="line.384"></a>
+<FONT color="green">385</FONT>         * @param localName the local name of the attribute<a name="line.385"></a>
+<FONT color="green">386</FONT>         * @param rawName   the qualified name of the attribute<a name="line.386"></a>
+<FONT color="green">387</FONT>         * @param type the type of the attribute (probably CDATA)<a name="line.387"></a>
+<FONT color="green">388</FONT>         * @param value the value of the attribute<a name="line.388"></a>
+<FONT color="green">389</FONT>         * @param XSLAttribute true if this attribute is coming from an xsl:attribute element<a name="line.389"></a>
+<FONT color="green">390</FONT>         * @return true if the attribute was added, <a name="line.390"></a>
+<FONT color="green">391</FONT>         * false if an existing value was replaced.<a name="line.391"></a>
+<FONT color="green">392</FONT>         */<a name="line.392"></a>
+<FONT color="green">393</FONT>        public boolean addAttributeAlways(<a name="line.393"></a>
+<FONT color="green">394</FONT>            String uri,<a name="line.394"></a>
+<FONT color="green">395</FONT>            String localName,<a name="line.395"></a>
+<FONT color="green">396</FONT>            String rawName,<a name="line.396"></a>
+<FONT color="green">397</FONT>            String type,<a name="line.397"></a>
+<FONT color="green">398</FONT>            String value,<a name="line.398"></a>
+<FONT color="green">399</FONT>            boolean XSLAttribute)<a name="line.399"></a>
+<FONT color="green">400</FONT>        {<a name="line.400"></a>
+<FONT color="green">401</FONT>            boolean was_added;<a name="line.401"></a>
+<FONT color="green">402</FONT>    //            final int index =<a name="line.402"></a>
+<FONT color="green">403</FONT>    //                (localName == null || uri == null) ?<a name="line.403"></a>
+<FONT color="green">404</FONT>    //                m_attributes.getIndex(rawName):m_attributes.getIndex(uri, localName);        <a name="line.404"></a>
+<FONT color="green">405</FONT>                int index;<a name="line.405"></a>
+<FONT color="green">406</FONT>    //            if (localName == null || uri == null){<a name="line.406"></a>
+<FONT color="green">407</FONT>    //                index = m_attributes.getIndex(rawName);<a name="line.407"></a>
+<FONT color="green">408</FONT>    //            }<a name="line.408"></a>
+<FONT color="green">409</FONT>    //            else {<a name="line.409"></a>
+<FONT color="green">410</FONT>    //                index = m_attributes.getIndex(uri, localName);<a name="line.410"></a>
+<FONT color="green">411</FONT>    //            }<a name="line.411"></a>
+<FONT color="green">412</FONT>                if (localName == null || uri == null || uri.length() == 0)<a name="line.412"></a>
+<FONT color="green">413</FONT>                    index = m_attributes.getIndex(rawName);<a name="line.413"></a>
+<FONT color="green">414</FONT>                else {<a name="line.414"></a>
+<FONT color="green">415</FONT>                    index = m_attributes.getIndex(uri,localName);<a name="line.415"></a>
+<FONT color="green">416</FONT>                }<a name="line.416"></a>
+<FONT color="green">417</FONT>                if (index &gt;= 0)<a name="line.417"></a>
+<FONT color="green">418</FONT>                {<a name="line.418"></a>
+<FONT color="green">419</FONT>                    /* We've seen the attribute before.<a name="line.419"></a>
+<FONT color="green">420</FONT>                     * We may have a null uri or localName, but all<a name="line.420"></a>
+<FONT color="green">421</FONT>                     * we really want to re-set is the value anyway.<a name="line.421"></a>
+<FONT color="green">422</FONT>                     */<a name="line.422"></a>
+<FONT color="green">423</FONT>                    m_attributes.setValue(index,value);<a name="line.423"></a>
+<FONT color="green">424</FONT>                    was_added = false;<a name="line.424"></a>
+<FONT color="green">425</FONT>                }<a name="line.425"></a>
+<FONT color="green">426</FONT>                else<a name="line.426"></a>
+<FONT color="green">427</FONT>                {<a name="line.427"></a>
+<FONT color="green">428</FONT>                    // the attribute doesn't exist yet, create it<a name="line.428"></a>
+<FONT color="green">429</FONT>                    m_attributes.addAttribute(uri, localName, rawName, type, value);<a name="line.429"></a>
+<FONT color="green">430</FONT>                    was_added = true;<a name="line.430"></a>
+<FONT color="green">431</FONT>                }<a name="line.431"></a>
+<FONT color="green">432</FONT>                return was_added;<a name="line.432"></a>
+<FONT color="green">433</FONT>            <a name="line.433"></a>
+<FONT color="green">434</FONT>        }<a name="line.434"></a>
+<FONT color="green">435</FONT>      <a name="line.435"></a>
+<FONT color="green">436</FONT>    <a name="line.436"></a>
+<FONT color="green">437</FONT>        /**<a name="line.437"></a>
+<FONT color="green">438</FONT>         *  Adds  the given attribute to the set of collected attributes, <a name="line.438"></a>
+<FONT color="green">439</FONT>         * but only if there is a currently open element.<a name="line.439"></a>
+<FONT color="green">440</FONT>         *<a name="line.440"></a>
+<FONT color="green">441</FONT>         * @param name the attribute's qualified name<a name="line.441"></a>
+<FONT color="green">442</FONT>         * @param value the value of the attribute<a name="line.442"></a>
+<FONT color="green">443</FONT>         */<a name="line.443"></a>
+<FONT color="green">444</FONT>        public void addAttribute(String name, final String value)<a name="line.444"></a>
+<FONT color="green">445</FONT>        {<a name="line.445"></a>
+<FONT color="green">446</FONT>            if (m_elemContext.m_startTagOpen)<a name="line.446"></a>
+<FONT color="green">447</FONT>            {<a name="line.447"></a>
+<FONT color="green">448</FONT>                final String patchedName = patchName(name);<a name="line.448"></a>
+<FONT color="green">449</FONT>                final String localName = getLocalName(patchedName);<a name="line.449"></a>
+<FONT color="green">450</FONT>                final String uri = getNamespaceURI(patchedName, false);<a name="line.450"></a>
+<FONT color="green">451</FONT>    <a name="line.451"></a>
+<FONT color="green">452</FONT>                addAttributeAlways(uri,localName, patchedName, "CDATA", value, false);<a name="line.452"></a>
+<FONT color="green">453</FONT>             }<a name="line.453"></a>
+<FONT color="green">454</FONT>        }    <a name="line.454"></a>
+<FONT color="green">455</FONT>    <a name="line.455"></a>
+<FONT color="green">456</FONT>        /**<a name="line.456"></a>
+<FONT color="green">457</FONT>         * Adds the given xsl:attribute to the set of collected attributes, <a name="line.457"></a>
+<FONT color="green">458</FONT>         * but only if there is a currently open element.<a name="line.458"></a>
+<FONT color="green">459</FONT>         *<a name="line.459"></a>
+<FONT color="green">460</FONT>         * @param name the attribute's qualified name (prefix:localName)<a name="line.460"></a>
+<FONT color="green">461</FONT>         * @param value the value of the attribute<a name="line.461"></a>
+<FONT color="green">462</FONT>         * @param uri the URI that the prefix of the name points to<a name="line.462"></a>
+<FONT color="green">463</FONT>         */<a name="line.463"></a>
+<FONT color="green">464</FONT>        public void addXSLAttribute(String name, final String value, final String uri)<a name="line.464"></a>
+<FONT color="green">465</FONT>        {<a name="line.465"></a>
+<FONT color="green">466</FONT>            if (m_elemContext.m_startTagOpen)<a name="line.466"></a>
+<FONT color="green">467</FONT>            {<a name="line.467"></a>
+<FONT color="green">468</FONT>                final String patchedName = patchName(name);<a name="line.468"></a>
+<FONT color="green">469</FONT>                final String localName = getLocalName(patchedName);<a name="line.469"></a>
+<FONT color="green">470</FONT>    <a name="line.470"></a>
+<FONT color="green">471</FONT>                addAttributeAlways(uri,localName, patchedName, "CDATA", value, true);<a name="line.471"></a>
+<FONT color="green">472</FONT>             }<a name="line.472"></a>
+<FONT color="green">473</FONT>        } <a name="line.473"></a>
+<FONT color="green">474</FONT>    <a name="line.474"></a>
+<FONT color="green">475</FONT>        /**<a name="line.475"></a>
+<FONT color="green">476</FONT>         * Add the given attributes to the currently collected ones. These<a name="line.476"></a>
+<FONT color="green">477</FONT>         * attributes are always added, regardless of whether on not an element<a name="line.477"></a>
+<FONT color="green">478</FONT>         * is currently open.<a name="line.478"></a>
+<FONT color="green">479</FONT>         * @param atts List of attributes to add to this list<a name="line.479"></a>
+<FONT color="green">480</FONT>         */<a name="line.480"></a>
+<FONT color="green">481</FONT>        public void addAttributes(Attributes atts) throws SAXException<a name="line.481"></a>
+<FONT color="green">482</FONT>        {<a name="line.482"></a>
+<FONT color="green">483</FONT>    <a name="line.483"></a>
+<FONT color="green">484</FONT>            int nAtts = atts.getLength();<a name="line.484"></a>
+<FONT color="green">485</FONT>    <a name="line.485"></a>
+<FONT color="green">486</FONT>            for (int i = 0; i &lt; nAtts; i++)<a name="line.486"></a>
+<FONT color="green">487</FONT>            {<a name="line.487"></a>
+<FONT color="green">488</FONT>                String uri = atts.getURI(i);<a name="line.488"></a>
+<FONT color="green">489</FONT>    <a name="line.489"></a>
+<FONT color="green">490</FONT>                if (null == uri)<a name="line.490"></a>
+<FONT color="green">491</FONT>                    uri = "";<a name="line.491"></a>
+<FONT color="green">492</FONT>    <a name="line.492"></a>
+<FONT color="green">493</FONT>                addAttributeAlways(<a name="line.493"></a>
+<FONT color="green">494</FONT>                    uri,<a name="line.494"></a>
+<FONT color="green">495</FONT>                    atts.getLocalName(i),<a name="line.495"></a>
+<FONT color="green">496</FONT>                    atts.getQName(i),<a name="line.496"></a>
+<FONT color="green">497</FONT>                    atts.getType(i),<a name="line.497"></a>
+<FONT color="green">498</FONT>                    atts.getValue(i),<a name="line.498"></a>
+<FONT color="green">499</FONT>                    false);<a name="line.499"></a>
+<FONT color="green">500</FONT>    <a name="line.500"></a>
+<FONT color="green">501</FONT>            }<a name="line.501"></a>
+<FONT color="green">502</FONT>        }<a name="line.502"></a>
+<FONT color="green">503</FONT>    <a name="line.503"></a>
+<FONT color="green">504</FONT>        /**<a name="line.504"></a>
+<FONT color="green">505</FONT>         * Return a {@link ContentHandler} interface into this serializer.<a name="line.505"></a>
+<FONT color="green">506</FONT>         * If the serializer does not support the {@link ContentHandler}<a name="line.506"></a>
+<FONT color="green">507</FONT>         * interface, it should return null.<a name="line.507"></a>
+<FONT color="green">508</FONT>         *<a name="line.508"></a>
+<FONT color="green">509</FONT>         * @return A {@link ContentHandler} interface into this serializer,<a name="line.509"></a>
+<FONT color="green">510</FONT>         *  or null if the serializer is not SAX 2 capable<a name="line.510"></a>
+<FONT color="green">511</FONT>         * @throws IOException An I/O exception occured<a name="line.511"></a>
+<FONT color="green">512</FONT>         */<a name="line.512"></a>
+<FONT color="green">513</FONT>        public ContentHandler asContentHandler() throws IOException<a name="line.513"></a>
+<FONT color="green">514</FONT>        {<a name="line.514"></a>
+<FONT color="green">515</FONT>            return this;<a name="line.515"></a>
+<FONT color="green">516</FONT>        }<a name="line.516"></a>
+<FONT color="green">517</FONT>    <a name="line.517"></a>
+<FONT color="green">518</FONT>        /**<a name="line.518"></a>
+<FONT color="green">519</FONT>         * Report the end of an entity.<a name="line.519"></a>
+<FONT color="green">520</FONT>         *<a name="line.520"></a>
+<FONT color="green">521</FONT>         * @param name The name of the entity that is ending.<a name="line.521"></a>
+<FONT color="green">522</FONT>         * @throws org.xml.sax.SAXException The application may raise an exception.<a name="line.522"></a>
+<FONT color="green">523</FONT>         * @see #startEntity<a name="line.523"></a>
+<FONT color="green">524</FONT>         */<a name="line.524"></a>
+<FONT color="green">525</FONT>        public void endEntity(String name) throws org.xml.sax.SAXException<a name="line.525"></a>
+<FONT color="green">526</FONT>        {<a name="line.526"></a>
+<FONT color="green">527</FONT>            if (name.equals("[dtd]"))<a name="line.527"></a>
+<FONT color="green">528</FONT>                m_inExternalDTD = false;<a name="line.528"></a>
+<FONT color="green">529</FONT>            m_inEntityRef = false;<a name="line.529"></a>
+<FONT color="green">530</FONT>    <a name="line.530"></a>
+<FONT color="green">531</FONT>            if (m_tracer != null)<a name="line.531"></a>
+<FONT color="green">532</FONT>                this.fireEndEntity(name);        <a name="line.532"></a>
+<FONT color="green">533</FONT>        }<a name="line.533"></a>
+<FONT color="green">534</FONT>    <a name="line.534"></a>
+<FONT color="green">535</FONT>        /**<a name="line.535"></a>
+<FONT color="green">536</FONT>         * Flush and close the underlying java.io.Writer. This method applies to<a name="line.536"></a>
+<FONT color="green">537</FONT>         * ToStream serializers, not ToSAXHandler serializers.<a name="line.537"></a>
+<FONT color="green">538</FONT>         * @see ToStream<a name="line.538"></a>
+<FONT color="green">539</FONT>         */<a name="line.539"></a>
+<FONT color="green">540</FONT>        public void close()<a name="line.540"></a>
+<FONT color="green">541</FONT>        {<a name="line.541"></a>
+<FONT color="green">542</FONT>            // do nothing (base behavior)<a name="line.542"></a>
+<FONT color="green">543</FONT>        }<a name="line.543"></a>
+<FONT color="green">544</FONT>    <a name="line.544"></a>
+<FONT color="green">545</FONT>        /**<a name="line.545"></a>
+<FONT color="green">546</FONT>         * Initialize global variables<a name="line.546"></a>
+<FONT color="green">547</FONT>         */<a name="line.547"></a>
+<FONT color="green">548</FONT>        protected void initCDATA()<a name="line.548"></a>
+<FONT color="green">549</FONT>        {<a name="line.549"></a>
+<FONT color="green">550</FONT>            // CDATA stack<a name="line.550"></a>
+<FONT color="green">551</FONT>            //        _cdataStack = new Stack();<a name="line.551"></a>
+<FONT color="green">552</FONT>            //        _cdataStack.push(new Integer(-1)); // push dummy value<a name="line.552"></a>
+<FONT color="green">553</FONT>        }<a name="line.553"></a>
+<FONT color="green">554</FONT>    <a name="line.554"></a>
+<FONT color="green">555</FONT>        /**<a name="line.555"></a>
+<FONT color="green">556</FONT>         * Returns the character encoding to be used in the output document.<a name="line.556"></a>
+<FONT color="green">557</FONT>         * @return the character encoding to be used in the output document.<a name="line.557"></a>
+<FONT color="green">558</FONT>         */<a name="line.558"></a>
+<FONT color="green">559</FONT>        public String getEncoding()<a name="line.559"></a>
+<FONT color="green">560</FONT>        {<a name="line.560"></a>
+<FONT color="green">561</FONT>            return getOutputProperty(OutputKeys.ENCODING);<a name="line.561"></a>
+<FONT color="green">562</FONT>        }<a name="line.562"></a>
+<FONT color="green">563</FONT>    <a name="line.563"></a>
+<FONT color="green">564</FONT>       /**<a name="line.564"></a>
+<FONT color="green">565</FONT>         * Sets the character encoding coming from the xsl:output encoding stylesheet attribute.<a name="line.565"></a>
+<FONT color="green">566</FONT>         * @param m_encoding the character encoding<a name="line.566"></a>
+<FONT color="green">567</FONT>         */<a name="line.567"></a>
+<FONT color="green">568</FONT>        public void setEncoding(String encoding)<a name="line.568"></a>
+<FONT color="green">569</FONT>        {<a name="line.569"></a>
+<FONT color="green">570</FONT>            setOutputProperty(OutputKeys.ENCODING,encoding);<a name="line.570"></a>
+<FONT color="green">571</FONT>        }<a name="line.571"></a>
+<FONT color="green">572</FONT>    <a name="line.572"></a>
+<FONT color="green">573</FONT>        /**<a name="line.573"></a>
+<FONT color="green">574</FONT>         * Sets the value coming from the xsl:output omit-xml-declaration stylesheet attribute<a name="line.574"></a>
+<FONT color="green">575</FONT>         * @param b true if the XML declaration is to be omitted from the output<a name="line.575"></a>
+<FONT color="green">576</FONT>         * document.<a name="line.576"></a>
+<FONT color="green">577</FONT>         */<a name="line.577"></a>
+<FONT color="green">578</FONT>        public void setOmitXMLDeclaration(boolean b)<a name="line.578"></a>
+<FONT color="green">579</FONT>        {<a name="line.579"></a>
+<FONT color="green">580</FONT>            String val = b ? "yes":"no";<a name="line.580"></a>
+<FONT color="green">581</FONT>            setOutputProperty(OutputKeys.OMIT_XML_DECLARATION,val);<a name="line.581"></a>
+<FONT color="green">582</FONT>        }<a name="line.582"></a>
+<FONT color="green">583</FONT>    <a name="line.583"></a>
+<FONT color="green">584</FONT>    <a name="line.584"></a>
+<FONT color="green">585</FONT>        /**<a name="line.585"></a>
+<FONT color="green">586</FONT>         * @return true if the XML declaration is to be omitted from the output<a name="line.586"></a>
+<FONT color="green">587</FONT>         * document.<a name="line.587"></a>
+<FONT color="green">588</FONT>         */<a name="line.588"></a>
+<FONT color="green">589</FONT>        public boolean getOmitXMLDeclaration()<a name="line.589"></a>
+<FONT color="green">590</FONT>        {<a name="line.590"></a>
+<FONT color="green">591</FONT>            return m_shouldNotWriteXMLHeader;<a name="line.591"></a>
+<FONT color="green">592</FONT>        }<a name="line.592"></a>
+<FONT color="green">593</FONT>    <a name="line.593"></a>
+<FONT color="green">594</FONT>        /**<a name="line.594"></a>
+<FONT color="green">595</FONT>         * Returns the previously set value of the value to be used as the public<a name="line.595"></a>
+<FONT color="green">596</FONT>         * identifier in the document type declaration (DTD).<a name="line.596"></a>
+<FONT color="green">597</FONT>         * <a name="line.597"></a>
+<FONT color="green">598</FONT>         *@return the public identifier to be used in the DOCTYPE declaration in the<a name="line.598"></a>
+<FONT color="green">599</FONT>         * output document.<a name="line.599"></a>
+<FONT color="green">600</FONT>         */    <a name="line.600"></a>
+<FONT color="green">601</FONT>        public String getDoctypePublic()<a name="line.601"></a>
+<FONT color="green">602</FONT>        {<a name="line.602"></a>
+<FONT color="green">603</FONT>            return m_doctypePublic;<a name="line.603"></a>
+<FONT color="green">604</FONT>        }<a name="line.604"></a>
+<FONT color="green">605</FONT>    <a name="line.605"></a>
+<FONT color="green">606</FONT>        /** Set the value coming from the xsl:output doctype-public stylesheet attribute.<a name="line.606"></a>
+<FONT color="green">607</FONT>          * @param doctypePublic the public identifier to be used in the DOCTYPE<a name="line.607"></a>
+<FONT color="green">608</FONT>          * declaration in the output document.<a name="line.608"></a>
+<FONT color="green">609</FONT>          */<a name="line.609"></a>
+<FONT color="green">610</FONT>        public void setDoctypePublic(String doctypePublic)<a name="line.610"></a>
+<FONT color="green">611</FONT>        {<a name="line.611"></a>
+<FONT color="green">612</FONT>            setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctypePublic);<a name="line.612"></a>
+<FONT color="green">613</FONT>        }<a name="line.613"></a>
+<FONT color="green">614</FONT>    <a name="line.614"></a>
+<FONT color="green">615</FONT>    <a name="line.615"></a>
+<FONT color="green">616</FONT>        /**<a name="line.616"></a>
+<FONT color="green">617</FONT>         * Returns the previously set value of the value to be used<a name="line.617"></a>
+<FONT color="green">618</FONT>         * as the system identifier in the document type declaration (DTD).<a name="line.618"></a>
+<FONT color="green">619</FONT>             * @return the system identifier to be used in the DOCTYPE declaration in<a name="line.619"></a>
+<FONT color="green">620</FONT>             * the output document.<a name="line.620"></a>
+<FONT color="green">621</FONT>         *<a name="line.621"></a>
+<FONT color="green">622</FONT>         */    <a name="line.622"></a>
+<FONT color="green">623</FONT>        public String getDoctypeSystem()<a name="line.623"></a>
+<FONT color="green">624</FONT>        {<a name="line.624"></a>
+<FONT color="green">625</FONT>            return m_doctypeSystem;<a name="line.625"></a>
+<FONT color="green">626</FONT>        }<a name="line.626"></a>
+<FONT color="green">627</FONT>    <a name="line.627"></a>
+<FONT color="green">628</FONT>        /** Set the value coming from the xsl:output doctype-system stylesheet attribute.<a name="line.628"></a>
+<FONT color="green">629</FONT>          * @param doctypeSystem the system identifier to be used in the DOCTYPE<a name="line.629"></a>
+<FONT color="green">630</FONT>          * declaration in the output document.<a name="line.630"></a>
+<FONT color="green">631</FONT>          */<a name="line.631"></a>
+<FONT color="green">632</FONT>        public void setDoctypeSystem(String doctypeSystem)<a name="line.632"></a>
+<FONT color="green">633</FONT>        {<a name="line.633"></a>
+<FONT color="green">634</FONT>            setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctypeSystem);<a name="line.634"></a>
+<FONT color="green">635</FONT>        }<a name="line.635"></a>
+<FONT color="green">636</FONT>    <a name="line.636"></a>
+<FONT color="green">637</FONT>        /** Set the value coming from the xsl:output doctype-public and doctype-system stylesheet properties<a name="line.637"></a>
+<FONT color="green">638</FONT>         * @param doctypeSystem the system identifier to be used in the DOCTYPE<a name="line.638"></a>
+<FONT color="green">639</FONT>         * declaration in the output document.<a name="line.639"></a>
+<FONT color="green">640</FONT>         * @param doctypePublic the public identifier to be used in the DOCTYPE<a name="line.640"></a>
+<FONT color="green">641</FONT>         * declaration in the output document.<a name="line.641"></a>
+<FONT color="green">642</FONT>         */<a name="line.642"></a>
+<FONT color="green">643</FONT>        public void setDoctype(String doctypeSystem, String doctypePublic)<a name="line.643"></a>
+<FONT color="green">644</FONT>        {<a name="line.644"></a>
+<FONT color="green">645</FONT>            setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctypeSystem);<a name="line.645"></a>
+<FONT color="green">646</FONT>            setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctypePublic);<a name="line.646"></a>
+<FONT color="green">647</FONT>        }<a name="line.647"></a>
+<FONT color="green">648</FONT>    <a name="line.648"></a>
+<FONT color="green">649</FONT>        /**<a name="line.649"></a>
+<FONT color="green">650</FONT>         * Sets the value coming from the xsl:output standalone stylesheet attribute.<a name="line.650"></a>
+<FONT color="green">651</FONT>         * @param standalone a value of "yes" indicates that the<a name="line.651"></a>
+<FONT color="green">652</FONT>         * &lt;code&gt;standalone&lt;/code&gt; delaration is to be included in the output<a name="line.652"></a>
+<FONT color="green">653</FONT>         * document. This method remembers if the value was explicitly set using<a name="line.653"></a>
+<FONT color="green">654</FONT>         * this method, verses if the value is the default value.<a name="line.654"></a>
+<FONT color="green">655</FONT>         */<a name="line.655"></a>
+<FONT color="green">656</FONT>        public void setStandalone(String standalone)<a name="line.656"></a>
+<FONT color="green">657</FONT>        {<a name="line.657"></a>
+<FONT color="green">658</FONT>            setOutputProperty(OutputKeys.STANDALONE, standalone);<a name="line.658"></a>
+<FONT color="green">659</FONT>        }<a name="line.659"></a>
+<FONT color="green">660</FONT>        /**<a name="line.660"></a>
+<FONT color="green">661</FONT>         * Sets the XSL standalone attribute, but does not remember if this is a<a name="line.661"></a>
+<FONT color="green">662</FONT>         * default or explicite setting.<a name="line.662"></a>
+<FONT color="green">663</FONT>         * @param standalone "yes" | "no"<a name="line.663"></a>
+<FONT color="green">664</FONT>         */    <a name="line.664"></a>
+<FONT color="green">665</FONT>        protected void setStandaloneInternal(String standalone)<a name="line.665"></a>
+<FONT color="green">666</FONT>        {<a name="line.666"></a>
+<FONT color="green">667</FONT>            if ("yes".equals(standalone))<a name="line.667"></a>
+<FONT color="green">668</FONT>                m_standalone = "yes";<a name="line.668"></a>
+<FONT color="green">669</FONT>            else<a name="line.669"></a>
+<FONT color="green">670</FONT>                m_standalone = "no";<a name="line.670"></a>
+<FONT color="green">671</FONT>            <a name="line.671"></a>
+<FONT color="green">672</FONT>        }<a name="line.672"></a>
+<FONT color="green">673</FONT>    <a name="line.673"></a>
+<FONT color="green">674</FONT>        /**<a name="line.674"></a>
+<FONT color="green">675</FONT>         * Gets the XSL standalone attribute<a name="line.675"></a>
+<FONT color="green">676</FONT>         * @return a value of "yes" if the &lt;code&gt;standalone&lt;/code&gt; delaration is to<a name="line.676"></a>
+<FONT color="green">677</FONT>         * be included in the output document.<a name="line.677"></a>
+<FONT color="green">678</FONT>         *  @see XSLOutputAttributes#getStandalone()<a name="line.678"></a>
+<FONT color="green">679</FONT>         */<a name="line.679"></a>
+<FONT color="green">680</FONT>        public String getStandalone()<a name="line.680"></a>
+<FONT color="green">681</FONT>        {<a name="line.681"></a>
+<FONT color="green">682</FONT>            return m_standalone;<a name="line.682"></a>
+<FONT color="green">683</FONT>        }<a name="line.683"></a>
+<FONT color="green">684</FONT>    <a name="line.684"></a>
+<FONT color="green">685</FONT>        /**<a name="line.685"></a>
+<FONT color="green">686</FONT>         * @return true if the output document should be indented to visually<a name="line.686"></a>
+<FONT color="green">687</FONT>         * indicate its structure.<a name="line.687"></a>
+<FONT color="green">688</FONT>         */<a name="line.688"></a>
+<FONT color="green">689</FONT>        public boolean getIndent()<a name="line.689"></a>
+<FONT color="green">690</FONT>        {<a name="line.690"></a>
+<FONT color="green">691</FONT>            return m_doIndent;<a name="line.691"></a>
+<FONT color="green">692</FONT>        }<a name="line.692"></a>
+<FONT color="green">693</FONT>        /**<a name="line.693"></a>
+<FONT color="green">694</FONT>         * Gets the mediatype the media-type or MIME type associated with the output<a name="line.694"></a>
+<FONT color="green">695</FONT>         * document.<a name="line.695"></a>
+<FONT color="green">696</FONT>         * @return the mediatype the media-type or MIME type associated with the<a name="line.696"></a>
+<FONT color="green">697</FONT>         * output document.<a name="line.697"></a>
+<FONT color="green">698</FONT>         */<a name="line.698"></a>
+<FONT color="green">699</FONT>        public String getMediaType()<a name="line.699"></a>
+<FONT color="green">700</FONT>        {<a name="line.700"></a>
+<FONT color="green">701</FONT>            return m_mediatype;<a name="line.701"></a>
+<FONT color="green">702</FONT>        }<a name="line.702"></a>
+<FONT color="green">703</FONT>    <a name="line.703"></a>
+<FONT color="green">704</FONT>        /**<a name="line.704"></a>
+<FONT color="green">705</FONT>         * Gets the version of the output format.<a name="line.705"></a>
+<FONT color="green">706</FONT>         * @return the version of the output format.<a name="line.706"></a>
+<FONT color="green">707</FONT>         */<a name="line.707"></a>
+<FONT color="green">708</FONT>        public String getVersion()<a name="line.708"></a>
+<FONT color="green">709</FONT>        {<a name="line.709"></a>
+<FONT color="green">710</FONT>            return m_version;<a name="line.710"></a>
+<FONT color="green">711</FONT>        }<a name="line.711"></a>
+<FONT color="green">712</FONT>    <a name="line.712"></a>
+<FONT color="green">713</FONT>        /**<a name="line.713"></a>
+<FONT color="green">714</FONT>         * Sets the value coming from the xsl:output version attribute.<a name="line.714"></a>
+<FONT color="green">715</FONT>         * @param version the version of the output format.<a name="line.715"></a>
+<FONT color="green">716</FONT>         * @see SerializationHandler#setVersion(String)<a name="line.716"></a>
+<FONT color="green">717</FONT>         */<a name="line.717"></a>
+<FONT color="green">718</FONT>        public void setVersion(String version)<a name="line.718"></a>
+<FONT color="green">719</FONT>        {<a name="line.719"></a>
+<FONT color="green">720</FONT>            setOutputProperty(OutputKeys.VERSION, version);<a name="line.720"></a>
+<FONT color="green">721</FONT>        }<a name="line.721"></a>
+<FONT color="green">722</FONT>    <a name="line.722"></a>
+<FONT color="green">723</FONT>        /**<a name="line.723"></a>
+<FONT color="green">724</FONT>         * Sets the value coming from the xsl:output media-type stylesheet attribute.<a name="line.724"></a>
+<FONT color="green">725</FONT>         * @param mediaType the non-null media-type or MIME type associated with the<a name="line.725"></a>
+<FONT color="green">726</FONT>         * output document.<a name="line.726"></a>
+<FONT color="green">727</FONT>         * @see javax.xml.transform.OutputKeys#MEDIA_TYPE<a name="line.727"></a>
+<FONT color="green">728</FONT>         * @see SerializationHandler#setMediaType(String)<a name="line.728"></a>
+<FONT color="green">729</FONT>         */<a name="line.729"></a>
+<FONT color="green">730</FONT>        public void setMediaType(String mediaType)<a name="line.730"></a>
+<FONT color="green">731</FONT>        {<a name="line.731"></a>
+<FONT color="green">732</FONT>            setOutputProperty(OutputKeys.MEDIA_TYPE,mediaType);<a name="line.732"></a>
+<FONT color="green">733</FONT>        }<a name="line.733"></a>
+<FONT color="green">734</FONT>    <a name="line.734"></a>
+<FONT color="green">735</FONT>        /**<a name="line.735"></a>
+<FONT color="green">736</FONT>         * @return the number of spaces to indent for each indentation level.<a name="line.736"></a>
+<FONT color="green">737</FONT>         */<a name="line.737"></a>
+<FONT color="green">738</FONT>        public int getIndentAmount()<a name="line.738"></a>
+<FONT color="green">739</FONT>        {<a name="line.739"></a>
+<FONT color="green">740</FONT>            return m_indentAmount;<a name="line.740"></a>
+<FONT color="green">741</FONT>        }<a name="line.741"></a>
+<FONT color="green">742</FONT>    <a name="line.742"></a>
+<FONT color="green">743</FONT>        /**<a name="line.743"></a>
+<FONT color="green">744</FONT>         * Sets the indentation amount.<a name="line.744"></a>
+<FONT color="green">745</FONT>         * @param m_indentAmount The m_indentAmount to set<a name="line.745"></a>
+<FONT color="green">746</FONT>         */<a name="line.746"></a>
+<FONT color="green">747</FONT>        public void setIndentAmount(int m_indentAmount)<a name="line.747"></a>
+<FONT color="green">748</FONT>        {<a name="line.748"></a>
+<FONT color="green">749</FONT>            this.m_indentAmount = m_indentAmount;<a name="line.749"></a>
+<FONT color="green">750</FONT>        }<a name="line.750"></a>
+<FONT color="green">751</FONT>    <a name="line.751"></a>
+<FONT color="green">752</FONT>        /**<a name="line.752"></a>
+<FONT color="green">753</FONT>         * Sets the value coming from the xsl:output indent stylesheet<a name="line.753"></a>
+<FONT color="green">754</FONT>         * attribute.<a name="line.754"></a>
+<FONT color="green">755</FONT>         * @param doIndent true if the output document should be indented to<a name="line.755"></a>
+<FONT color="green">756</FONT>         * visually indicate its structure.<a name="line.756"></a>
+<FONT color="green">757</FONT>         * @see XSLOutputAttributes#setIndent(boolean)<a name="line.757"></a>
+<FONT color="green">758</FONT>         */<a name="line.758"></a>
+<FONT color="green">759</FONT>        public void setIndent(boolean doIndent)<a name="line.759"></a>
+<FONT color="green">760</FONT>        {<a name="line.760"></a>
+<FONT color="green">761</FONT>            String val = doIndent ? "yes":"no";<a name="line.761"></a>
+<FONT color="green">762</FONT>            setOutputProperty(OutputKeys.INDENT,val);<a name="line.762"></a>
+<FONT color="green">763</FONT>        }<a name="line.763"></a>
+<FONT color="green">764</FONT>    <a name="line.764"></a>
+<FONT color="green">765</FONT>        /**<a name="line.765"></a>
+<FONT color="green">766</FONT>         * This method is used when a prefix/uri namespace mapping<a name="line.766"></a>
+<FONT color="green">767</FONT>         * is indicated after the element was started with a <a name="line.767"></a>
+<FONT color="green">768</FONT>         * startElement() and before and endElement().<a name="line.768"></a>
+<FONT color="green">769</FONT>         * startPrefixMapping(prefix,uri) would be used before the<a name="line.769"></a>
+<FONT color="green">770</FONT>         * startElement() call.<a name="line.770"></a>
+<FONT color="green">771</FONT>         * @param uri the URI of the namespace<a name="line.771"></a>
+<FONT color="green">772</FONT>         * @param prefix the prefix associated with the given URI.<a name="line.772"></a>
+<FONT color="green">773</FONT>         * <a name="line.773"></a>
+<FONT color="green">774</FONT>         * @see ExtendedContentHandler#namespaceAfterStartElement(String, String)<a name="line.774"></a>
+<FONT color="green">775</FONT>         */<a name="line.775"></a>
+<FONT color="green">776</FONT>        public void namespaceAfterStartElement(String uri, String prefix)<a name="line.776"></a>
+<FONT color="green">777</FONT>            throws SAXException<a name="line.777"></a>
+<FONT color="green">778</FONT>        {<a name="line.778"></a>
+<FONT color="green">779</FONT>            // default behavior is to do nothing<a name="line.779"></a>
+<FONT color="green">780</FONT>        }<a name="line.780"></a>
+<FONT color="green">781</FONT>    <a name="line.781"></a>
+<FONT color="green">782</FONT>        /**<a name="line.782"></a>
+<FONT color="green">783</FONT>         * Return a {@link DOMSerializer} interface into this serializer. If the<a name="line.783"></a>
+<FONT color="green">784</FONT>         * serializer does not support the {@link DOMSerializer} interface, it should<a name="line.784"></a>
+<FONT color="green">785</FONT>         * return null.<a name="line.785"></a>
+<FONT color="green">786</FONT>         *<a name="line.786"></a>
+<FONT color="green">787</FONT>         * @return A {@link DOMSerializer} interface into this serializer,  or null<a name="line.787"></a>
+<FONT color="green">788</FONT>         * if the serializer is not DOM capable<a name="line.788"></a>
+<FONT color="green">789</FONT>         * @throws IOException An I/O exception occured<a name="line.789"></a>
+<FONT color="green">790</FONT>         * @see Serializer#asDOMSerializer()<a name="line.790"></a>
+<FONT color="green">791</FONT>         */<a name="line.791"></a>
+<FONT color="green">792</FONT>        public DOMSerializer asDOMSerializer() throws IOException<a name="line.792"></a>
+<FONT color="green">793</FONT>        { <a name="line.793"></a>
+<FONT color="green">794</FONT>            return this;<a name="line.794"></a>
+<FONT color="green">795</FONT>        }<a name="line.795"></a>
+<FONT color="green">796</FONT>    <a name="line.796"></a>
+<FONT color="green">797</FONT>        /**<a name="line.797"></a>
+<FONT color="green">798</FONT>         * Tell if two strings are equal, without worry if the first string is null.<a name="line.798"></a>
+<FONT color="green">799</FONT>         *<a name="line.799"></a>
+<FONT color="green">800</FONT>         * @param p String reference, which may be null.<a name="line.800"></a>
+<FONT color="green">801</FONT>         * @param t String reference, which may be null.<a name="line.801"></a>
+<FONT color="green">802</FONT>         *<a name="line.802"></a>
+<FONT color="green">803</FONT>         * @return true if strings are equal.<a name="line.803"></a>
+<FONT color="green">804</FONT>         */<a name="line.804"></a>
+<FONT color="green">805</FONT>        private static final boolean subPartMatch(String p, String t)<a name="line.805"></a>
+<FONT color="green">806</FONT>        {<a name="line.806"></a>
+<FONT color="green">807</FONT>            return (p == t) || ((null != p) &amp;&amp; (p.equals(t)));<a name="line.807"></a>
+<FONT color="green">808</FONT>        }<a name="line.808"></a>
+<FONT color="green">809</FONT>    <a name="line.809"></a>
+<FONT color="green">810</FONT>        /**<a name="line.810"></a>
+<FONT color="green">811</FONT>         * Returns the local name of a qualified name. <a name="line.811"></a>
+<FONT color="green">812</FONT>         * If the name has no prefix,<a name="line.812"></a>
+<FONT color="green">813</FONT>         * then it works as the identity (SAX2). <a name="line.813"></a>
+<FONT color="green">814</FONT>         * <a name="line.814"></a>
+<FONT color="green">815</FONT>         * @param qname a qualified name<a name="line.815"></a>
+<FONT color="green">816</FONT>         * @return returns the prefix of the qualified name,<a name="line.816"></a>
+<FONT color="green">817</FONT>         * or null if there is no prefix.<a name="line.817"></a>
+<FONT color="green">818</FONT>         */<a name="line.818"></a>
+<FONT color="green">819</FONT>        protected static final String getPrefixPart(String qname)<a name="line.819"></a>
+<FONT color="green">820</FONT>        {<a name="line.820"></a>
+<FONT color="green">821</FONT>            final int col = qname.indexOf(':');<a name="line.821"></a>
+<FONT color="green">822</FONT>            return (col &gt; 0) ? qname.substring(0, col) : null;<a name="line.822"></a>
+<FONT color="green">823</FONT>            //return (col &gt; 0) ? qname.substring(0,col) : "";<a name="line.823"></a>
+<FONT color="green">824</FONT>        }<a name="line.824"></a>
+<FONT color="green">825</FONT>    <a name="line.825"></a>
+<FONT color="green">826</FONT>        /**<a name="line.826"></a>
+<FONT color="green">827</FONT>         * Some users of the serializer may need the current namespace mappings<a name="line.827"></a>
+<FONT color="green">828</FONT>         * @return the current namespace mappings (prefix/uri)<a name="line.828"></a>
+<FONT color="green">829</FONT>         * @see ExtendedContentHandler#getNamespaceMappings()<a name="line.829"></a>
+<FONT color="green">830</FONT>         */<a name="line.830"></a>
+<FONT color="green">831</FONT>        public NamespaceMappings getNamespaceMappings()<a name="line.831"></a>
+<FONT color="green">832</FONT>        {<a name="line.832"></a>
+<FONT color="green">833</FONT>            return m_prefixMap;<a name="line.833"></a>
+<FONT color="green">834</FONT>        }<a name="line.834"></a>
+<FONT color="green">835</FONT>    <a name="line.835"></a>
+<FONT color="green">836</FONT>        /**<a name="line.836"></a>
+<FONT color="green">837</FONT>         * Returns the prefix currently pointing to the given URI (if any).<a name="line.837"></a>
+<FONT color="green">838</FONT>         * @param namespaceURI the uri of the namespace in question<a name="line.838"></a>
+<FONT color="green">839</FONT>         * @return a prefix pointing to the given URI (if any).<a name="line.839"></a>
+<FONT color="green">840</FONT>         * @see ExtendedContentHandler#getPrefix(String)<a name="line.840"></a>
+<FONT color="green">841</FONT>         */<a name="line.841"></a>
+<FONT color="green">842</FONT>        public String getPrefix(String namespaceURI)<a name="line.842"></a>
+<FONT color="green">843</FONT>        {<a name="line.843"></a>
+<FONT color="green">844</FONT>            String prefix = m_prefixMap.lookupPrefix(namespaceURI);<a name="line.844"></a>
+<FONT color="green">845</FONT>            return prefix;<a name="line.845"></a>
+<FONT color="green">846</FONT>        }<a name="line.846"></a>
+<FONT color="green">847</FONT>    <a name="line.847"></a>
+<FONT color="green">848</FONT>        /**<a name="line.848"></a>
+<FONT color="green">849</FONT>         * Returns the URI of an element or attribute. Note that default namespaces<a name="line.849"></a>
+<FONT color="green">850</FONT>         * do not apply directly to attributes.<a name="line.850"></a>
+<FONT color="green">851</FONT>         * @param qname a qualified name<a name="line.851"></a>
+<FONT color="green">852</FONT>         * @param isElement true if the qualified name is the name of <a name="line.852"></a>
+<FONT color="green">853</FONT>         * an element.<a name="line.853"></a>
+<FONT color="green">854</FONT>         * @return returns the namespace URI associated with the qualified name.<a name="line.854"></a>
+<FONT color="green">855</FONT>         */<a name="line.855"></a>
+<FONT color="green">856</FONT>        public String getNamespaceURI(String qname, boolean isElement)<a name="line.856"></a>
+<FONT color="green">857</FONT>        {<a name="line.857"></a>
+<FONT color="green">858</FONT>            String uri = EMPTYSTRING;<a name="line.858"></a>
+<FONT color="green">859</FONT>            int col = qname.lastIndexOf(':');<a name="line.859"></a>
+<FONT color="green">860</FONT>            final String prefix = (col &gt; 0) ? qname.substring(0, col) : EMPTYSTRING;<a name="line.860"></a>
+<FONT color="green">861</FONT>    <a name="line.861"></a>
+<FONT color="green">862</FONT>            if (!EMPTYSTRING.equals(prefix) || isElement)<a name="line.862"></a>
+<FONT color="green">863</FONT>            {<a name="line.863"></a>
+<FONT color="green">864</FONT>                if (m_prefixMap != null)<a name="line.864"></a>
+<FONT color="green">865</FONT>                {<a name="line.865"></a>
+<FONT color="green">866</FONT>                    uri = m_prefixMap.lookupNamespace(prefix);<a name="line.866"></a>
+<FONT color="green">867</FONT>                    if (uri == null &amp;&amp; !prefix.equals(XMLNS_PREFIX))<a name="line.867"></a>
+<FONT color="green">868</FONT>                    {<a name="line.868"></a>
+<FONT color="green">869</FONT>                        throw new RuntimeException(<a name="line.869"></a>
+<FONT color="green">870</FONT>                            Utils.messages.createMessage(<a name="line.870"></a>
+<FONT color="green">871</FONT>                                MsgKey.ER_NAMESPACE_PREFIX,<a name="line.871"></a>
+<FONT color="green">872</FONT>                                new Object[] { qname.substring(0, col) }  ));<a name="line.872"></a>
+<FONT color="green">873</FONT>                    }<a name="line.873"></a>
+<FONT color="green">874</FONT>                }<a name="line.874"></a>
+<FONT color="green">875</FONT>            }<a name="line.875"></a>
+<FONT color="green">876</FONT>            return uri;<a name="line.876"></a>
+<FONT color="green">877</FONT>        }<a name="line.877"></a>
+<FONT color="green">878</FONT>    <a name="line.878"></a>
+<FONT color="green">879</FONT>        /**<a name="line.879"></a>
+<FONT color="green">880</FONT>         * Returns the URI of prefix (if any)<a name="line.880"></a>
+<FONT color="green">881</FONT>         * <a name="line.881"></a>
+<FONT color="green">882</FONT>             * @param prefix the prefix whose URI is searched for<a name="line.882"></a>
+<FONT color="green">883</FONT>         * @return the namespace URI currently associated with the<a name="line.883"></a>
+<FONT color="green">884</FONT>         * prefix, null if the prefix is undefined.<a name="line.884"></a>
+<FONT color="green">885</FONT>         */<a name="line.885"></a>
+<FONT color="green">886</FONT>        public String getNamespaceURIFromPrefix(String prefix)<a name="line.886"></a>
+<FONT color="green">887</FONT>        {<a name="line.887"></a>
+<FONT color="green">888</FONT>            String uri = null;<a name="line.888"></a>
+<FONT color="green">889</FONT>            if (m_prefixMap != null)<a name="line.889"></a>
+<FONT color="green">890</FONT>                uri = m_prefixMap.lookupNamespace(prefix);<a name="line.890"></a>
+<FONT color="green">891</FONT>            return uri;<a name="line.891"></a>
+<FONT color="green">892</FONT>        }<a name="line.892"></a>
+<FONT color="green">893</FONT>    <a name="line.893"></a>
+<FONT color="green">894</FONT>        /**<a name="line.894"></a>
+<FONT color="green">895</FONT>         * Entity reference event.<a name="line.895"></a>
+<FONT color="green">896</FONT>         *<a name="line.896"></a>
+<FONT color="green">897</FONT>         * @param name Name of entity<a name="line.897"></a>
+<FONT color="green">898</FONT>         *<a name="line.898"></a>
+<FONT color="green">899</FONT>         * @throws org.xml.sax.SAXException<a name="line.899"></a>
+<FONT color="green">900</FONT>         */<a name="line.900"></a>
+<FONT color="green">901</FONT>        public void entityReference(String name) throws org.xml.sax.SAXException<a name="line.901"></a>
+<FONT color="green">902</FONT>        {<a name="line.902"></a>
+<FONT color="green">903</FONT>    <a name="line.903"></a>
+<FONT color="green">904</FONT>            flushPending();<a name="line.904"></a>
+<FONT color="green">905</FONT>    <a name="line.905"></a>
+<FONT color="green">906</FONT>            startEntity(name);<a name="line.906"></a>
+<FONT color="green">907</FONT>            endEntity(name);<a name="line.907"></a>
+<FONT color="green">908</FONT>    <a name="line.908"></a>
+<FONT color="green">909</FONT>            if (m_tracer != null)<a name="line.909"></a>
+<FONT color="green">910</FONT>                        fireEntityReference(name);<a name="line.910"></a>
+<FONT color="green">911</FONT>        }<a name="line.911"></a>
+<FONT color="green">912</FONT>    <a name="line.912"></a>
+<FONT color="green">913</FONT>        /**<a name="line.913"></a>
+<FONT color="green">914</FONT>         * Sets the transformer associated with this serializer<a name="line.914"></a>
+<FONT color="green">915</FONT>         * @param t the transformer associated with this serializer.<a name="line.915"></a>
+<FONT color="green">916</FONT>         * @see SerializationHandler#setTransformer(Transformer)<a name="line.916"></a>
+<FONT color="green">917</FONT>         */<a name="line.917"></a>
+<FONT color="green">918</FONT>        public void setTransformer(Transformer t)<a name="line.918"></a>
+<FONT color="green">919</FONT>        {<a name="line.919"></a>
+<FONT color="green">920</FONT>            m_transformer = t;<a name="line.920"></a>
+<FONT color="green">921</FONT>            <a name="line.921"></a>
+<FONT color="green">922</FONT>            // If this transformer object implements the SerializerTrace interface<a name="line.922"></a>
+<FONT color="green">923</FONT>            // then assign m_tracer to the transformer object so it can be used<a name="line.923"></a>
+<FONT color="green">924</FONT>            // to fire trace events.<a name="line.924"></a>
+<FONT color="green">925</FONT>            if ((m_transformer instanceof SerializerTrace) &amp;&amp;<a name="line.925"></a>
+<FONT color="green">926</FONT>                (((SerializerTrace) m_transformer).hasTraceListeners())) {<a name="line.926"></a>
+<FONT color="green">927</FONT>               m_tracer = (SerializerTrace) m_transformer;<a name="line.927"></a>
+<FONT color="green">928</FONT>            } else {<a name="line.928"></a>
+<FONT color="green">929</FONT>               m_tracer = null;<a name="line.929"></a>
+<FONT color="green">930</FONT>            }<a name="line.930"></a>
+<FONT color="green">931</FONT>        }<a name="line.931"></a>
+<FONT color="green">932</FONT>        /**<a name="line.932"></a>
+<FONT color="green">933</FONT>         * Gets the transformer associated with this serializer<a name="line.933"></a>
+<FONT color="green">934</FONT>         * @return returns the transformer associated with this serializer.<a name="line.934"></a>
+<FONT color="green">935</FONT>         * @see SerializationHandler#getTransformer()<a name="line.935"></a>
+<FONT color="green">936</FONT>         */<a name="line.936"></a>
+<FONT color="green">937</FONT>        public Transformer getTransformer()<a name="line.937"></a>
+<FONT color="green">938</FONT>        {<a name="line.938"></a>
+<FONT color="green">939</FONT>            return m_transformer;<a name="line.939"></a>
+<FONT color="green">940</FONT>        }<a name="line.940"></a>
+<FONT color="green">941</FONT>        <a name="line.941"></a>
+<FONT color="green">942</FONT>        /**<a name="line.942"></a>
+<FONT color="green">943</FONT>         * This method gets the nodes value as a String and uses that String as if<a name="line.943"></a>
+<FONT color="green">944</FONT>         * it were an input character notification.<a name="line.944"></a>
+<FONT color="green">945</FONT>         * @param node the Node to serialize<a name="line.945"></a>
+<FONT color="green">946</FONT>         * @throws org.xml.sax.SAXException<a name="line.946"></a>
+<FONT color="green">947</FONT>         */<a name="line.947"></a>
+<FONT color="green">948</FONT>        public void characters(org.w3c.dom.Node node)<a name="line.948"></a>
+<FONT color="green">949</FONT>            throws org.xml.sax.SAXException<a name="line.949"></a>
+<FONT color="green">950</FONT>        {<a name="line.950"></a>
+<FONT color="green">951</FONT>            flushPending();<a name="line.951"></a>
+<FONT color="green">952</FONT>            String data = node.getNodeValue();<a name="line.952"></a>
+<FONT color="green">953</FONT>            if (data != null)<a name="line.953"></a>
+<FONT color="green">954</FONT>            {<a name="line.954"></a>
+<FONT color="green">955</FONT>                final int length = data.length();<a name="line.955"></a>
+<FONT color="green">956</FONT>                if (length &gt; m_charsBuff.length)<a name="line.956"></a>
+<FONT color="green">957</FONT>                {<a name="line.957"></a>
+<FONT color="green">958</FONT>                    m_charsBuff = new char[length * 2 + 1];<a name="line.958"></a>
+<FONT color="green">959</FONT>                }<a name="line.959"></a>
+<FONT color="green">960</FONT>                data.getChars(0, length, m_charsBuff, 0);<a name="line.960"></a>
+<FONT color="green">961</FONT>                characters(m_charsBuff, 0, length);<a name="line.961"></a>
+<FONT color="green">962</FONT>            }<a name="line.962"></a>
+<FONT color="green">963</FONT>        }<a name="line.963"></a>
+<FONT color="green">964</FONT>        <a name="line.964"></a>
+<FONT color="green">965</FONT>    <a name="line.965"></a>
+<FONT color="green">966</FONT>        /**<a name="line.966"></a>
+<FONT color="green">967</FONT>         * @see org.xml.sax.ErrorHandler#error(SAXParseException)<a name="line.967"></a>
+<FONT color="green">968</FONT>         */<a name="line.968"></a>
+<FONT color="green">969</FONT>        public void error(SAXParseException exc) throws SAXException {<a name="line.969"></a>
+<FONT color="green">970</FONT>        }<a name="line.970"></a>
+<FONT color="green">971</FONT>    <a name="line.971"></a>
+<FONT color="green">972</FONT>        /**<a name="line.972"></a>
+<FONT color="green">973</FONT>         * @see org.xml.sax.ErrorHandler#fatalError(SAXParseException)<a name="line.973"></a>
+<FONT color="green">974</FONT>         */<a name="line.974"></a>
+<FONT color="green">975</FONT>        public void fatalError(SAXParseException exc) throws SAXException {<a name="line.975"></a>
+<FONT color="green">976</FONT>            <a name="line.976"></a>
+<FONT color="green">977</FONT>          m_elemContext.m_startTagOpen = false;<a name="line.977"></a>
+<FONT color="green">978</FONT>    <a name="line.978"></a>
+<FONT color="green">979</FONT>        }<a name="line.979"></a>
+<FONT color="green">980</FONT>    <a name="line.980"></a>
+<FONT color="green">981</FONT>        /**<a name="line.981"></a>
+<FONT color="green">982</FONT>         * @see org.xml.sax.ErrorHandler#warning(SAXParseException)<a name="line.982"></a>
+<FONT color="green">983</FONT>         */<a name="line.983"></a>
+<FONT color="green">984</FONT>        public void warning(SAXParseException exc) throws SAXException <a name="line.984"></a>
+<FONT color="green">985</FONT>        {<a name="line.985"></a>
+<FONT color="green">986</FONT>        }<a name="line.986"></a>
+<FONT color="green">987</FONT>    <a name="line.987"></a>
+<FONT color="green">988</FONT>        /**<a name="line.988"></a>
+<FONT color="green">989</FONT>         * To fire off start entity trace event<a name="line.989"></a>
+<FONT color="green">990</FONT>         * @param name Name of entity<a name="line.990"></a>
+<FONT color="green">991</FONT>         */<a name="line.991"></a>
+<FONT color="green">992</FONT>        protected void fireStartEntity(String name)<a name="line.992"></a>
+<FONT color="green">993</FONT>            throws org.xml.sax.SAXException<a name="line.993"></a>
+<FONT color="green">994</FONT>        {        <a name="line.994"></a>
+<FONT color="green">995</FONT>            if (m_tracer != null)<a name="line.995"></a>
+<FONT color="green">996</FONT>            {<a name="line.996"></a>
+<FONT color="green">997</FONT>                flushMyWriter();<a name="line.997"></a>
+<FONT color="green">998</FONT>                m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_ENTITYREF, name);<a name="line.998"></a>
+<FONT color="green">999</FONT>            }                               <a name="line.999"></a>
+<FONT color="green">1000</FONT>        }<a name="line.1000"></a>
+<FONT color="green">1001</FONT>    <a name="line.1001"></a>
+<FONT color="green">1002</FONT>        /**<a name="line.1002"></a>
+<FONT color="green">1003</FONT>         * Report the characters event<a name="line.1003"></a>
+<FONT color="green">1004</FONT>         * @param chars  content of characters<a name="line.1004"></a>
+<FONT color="green">1005</FONT>         * @param start  starting index of characters to output<a name="line.1005"></a>
+<FONT color="green">1006</FONT>         * @param length  number of characters to output<a name="line.1006"></a>
+<FONT color="green">1007</FONT>         */<a name="line.1007"></a>
+<FONT color="green">1008</FONT>    //    protected void fireCharEvent(char[] chars, int start, int length)<a name="line.1008"></a>
+<FONT color="green">1009</FONT>    //        throws org.xml.sax.SAXException<a name="line.1009"></a>
+<FONT color="green">1010</FONT>    //    {<a name="line.1010"></a>
+<FONT color="green">1011</FONT>    //        if (m_tracer != null)<a name="line.1011"></a>
+<FONT color="green">1012</FONT>    //            m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_CHARACTERS, chars, start,length);                                    <a name="line.1012"></a>
+<FONT color="green">1013</FONT>    //    }<a name="line.1013"></a>
+<FONT color="green">1014</FONT>    //        <a name="line.1014"></a>
+<FONT color="green">1015</FONT>    <a name="line.1015"></a>
+<FONT color="green">1016</FONT>        /**<a name="line.1016"></a>
+<FONT color="green">1017</FONT>         * This method is only used internally when flushing the writer from the<a name="line.1017"></a>
+<FONT color="green">1018</FONT>         * various fire...() trace events.  Due to the writer being wrapped with <a name="line.1018"></a>
+<FONT color="green">1019</FONT>         * SerializerTraceWriter it may cause the flush of these trace events:<a name="line.1019"></a>
+<FONT color="green">1020</FONT>         * EVENTTYPE_OUTPUT_PSEUDO_CHARACTERS <a name="line.1020"></a>
+<FONT color="green">1021</FONT>         * EVENTTYPE_OUTPUT_CHARACTERS<a name="line.1021"></a>
+<FONT color="green">1022</FONT>         * which trace the output written to the output stream.<a name="line.1022"></a>
+<FONT color="green">1023</FONT>         * <a name="line.1023"></a>
+<FONT color="green">1024</FONT>         */<a name="line.1024"></a>
+<FONT color="green">1025</FONT>        private void flushMyWriter()<a name="line.1025"></a>
+<FONT color="green">1026</FONT>        {<a name="line.1026"></a>
+<FONT color="green">1027</FONT>            if (m_writer != null)<a name="line.1027"></a>
+<FONT color="green">1028</FONT>            {<a name="line.1028"></a>
+<FONT color="green">1029</FONT>                try<a name="line.1029"></a>
+<FONT color="green">1030</FONT>                {<a name="line.1030"></a>
+<FONT color="green">1031</FONT>                    m_writer.flush();<a name="line.1031"></a>
+<FONT color="green">1032</FONT>                }<a name="line.1032"></a>
+<FONT color="green">1033</FONT>                catch(IOException ioe)<a name="line.1033"></a>
+<FONT color="green">1034</FONT>                {<a name="line.1034"></a>
+<FONT color="green">1035</FONT>                <a name="line.1035"></a>
+<FONT color="green">1036</FONT>                }<a name="line.1036"></a>
+<FONT color="green">1037</FONT>            }<a name="line.1037"></a>
+<FONT color="green">1038</FONT>        }<a name="line.1038"></a>
+<FONT color="green">1039</FONT>        /**<a name="line.1039"></a>
+<FONT color="green">1040</FONT>         * Report the CDATA trace event<a name="line.1040"></a>
+<FONT color="green">1041</FONT>         * @param chars  content of CDATA<a name="line.1041"></a>
+<FONT color="green">1042</FONT>         * @param start  starting index of characters to output<a name="line.1042"></a>
+<FONT color="green">1043</FONT>         * @param length  number of characters to output<a name="line.1043"></a>
+<FONT color="green">1044</FONT>         */<a name="line.1044"></a>
+<FONT color="green">1045</FONT>        protected void fireCDATAEvent(char[] chars, int start, int length)<a name="line.1045"></a>
+<FONT color="green">1046</FONT>            throws org.xml.sax.SAXException<a name="line.1046"></a>
+<FONT color="green">1047</FONT>        {<a name="line.1047"></a>
+<FONT color="green">1048</FONT>                    if (m_tracer != null)<a name="line.1048"></a>
+<FONT color="green">1049</FONT>            {<a name="line.1049"></a>
+<FONT color="green">1050</FONT>                flushMyWriter();<a name="line.1050"></a>
+<FONT color="green">1051</FONT>                            m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_CDATA, chars, start,length);<a name="line.1051"></a>
+<FONT color="green">1052</FONT>            }                               <a name="line.1052"></a>
+<FONT color="green">1053</FONT>        }<a name="line.1053"></a>
+<FONT color="green">1054</FONT>    <a name="line.1054"></a>
+<FONT color="green">1055</FONT>        /**<a name="line.1055"></a>
+<FONT color="green">1056</FONT>         * Report the comment trace event<a name="line.1056"></a>
+<FONT color="green">1057</FONT>         * @param chars  content of comment<a name="line.1057"></a>
+<FONT color="green">1058</FONT>         * @param start  starting index of comment to output<a name="line.1058"></a>
+<FONT color="green">1059</FONT>         * @param length  number of characters to output<a name="line.1059"></a>
+<FONT color="green">1060</FONT>         */<a name="line.1060"></a>
+<FONT color="green">1061</FONT>        protected void fireCommentEvent(char[] chars, int start, int length)<a name="line.1061"></a>
+<FONT color="green">1062</FONT>            throws org.xml.sax.SAXException<a name="line.1062"></a>
+<FONT color="green">1063</FONT>        {<a name="line.1063"></a>
+<FONT color="green">1064</FONT>                    if (m_tracer != null)<a name="line.1064"></a>
+<FONT color="green">1065</FONT>            {<a name="line.1065"></a>
+<FONT color="green">1066</FONT>                flushMyWriter();<a name="line.1066"></a>
+<FONT color="green">1067</FONT>                            m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_COMMENT, new String(chars, start, length));<a name="line.1067"></a>
+<FONT color="green">1068</FONT>            }                               <a name="line.1068"></a>
+<FONT color="green">1069</FONT>        }<a name="line.1069"></a>
+<FONT color="green">1070</FONT>    <a name="line.1070"></a>
+<FONT color="green">1071</FONT>    <a name="line.1071"></a>
+<FONT color="green">1072</FONT>        /**<a name="line.1072"></a>
+<FONT color="green">1073</FONT>         * To fire off end entity trace event<a name="line.1073"></a>
+<FONT color="green">1074</FONT>         * @param name Name of entity<a name="line.1074"></a>
+<FONT color="green">1075</FONT>         */<a name="line.1075"></a>
+<FONT color="green">1076</FONT>        public void fireEndEntity(String name)<a name="line.1076"></a>
+<FONT color="green">1077</FONT>            throws org.xml.sax.SAXException<a name="line.1077"></a>
+<FONT color="green">1078</FONT>        {<a name="line.1078"></a>
+<FONT color="green">1079</FONT>            if (m_tracer != null)<a name="line.1079"></a>
+<FONT color="green">1080</FONT>                flushMyWriter();<a name="line.1080"></a>
+<FONT color="green">1081</FONT>            // we do not need to handle this.<a name="line.1081"></a>
+<FONT color="green">1082</FONT>        }    <a name="line.1082"></a>
+<FONT color="green">1083</FONT>    <a name="line.1083"></a>
+<FONT color="green">1084</FONT>        /**<a name="line.1084"></a>
+<FONT color="green">1085</FONT>         * To fire off start document trace  event<a name="line.1085"></a>
+<FONT color="green">1086</FONT>         */<a name="line.1086"></a>
+<FONT color="green">1087</FONT>         protected void fireStartDoc()<a name="line.1087"></a>
+<FONT color="green">1088</FONT>            throws org.xml.sax.SAXException<a name="line.1088"></a>
+<FONT color="green">1089</FONT>        {<a name="line.1089"></a>
+<FONT color="green">1090</FONT>            if (m_tracer != null)<a name="line.1090"></a>
+<FONT color="green">1091</FONT>            {<a name="line.1091"></a>
+<FONT color="green">1092</FONT>                flushMyWriter();<a name="line.1092"></a>
+<FONT color="green">1093</FONT>                m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_STARTDOCUMENT);<a name="line.1093"></a>
+<FONT color="green">1094</FONT>            }           <a name="line.1094"></a>
+<FONT color="green">1095</FONT>        }    <a name="line.1095"></a>
+<FONT color="green">1096</FONT>    <a name="line.1096"></a>
+<FONT color="green">1097</FONT>    <a name="line.1097"></a>
+<FONT color="green">1098</FONT>        /**<a name="line.1098"></a>
+<FONT color="green">1099</FONT>         * To fire off end document trace event<a name="line.1099"></a>
+<FONT color="green">1100</FONT>         */<a name="line.1100"></a>
+<FONT color="green">1101</FONT>        protected void fireEndDoc()<a name="line.1101"></a>
+<FONT color="green">1102</FONT>            throws org.xml.sax.SAXException<a name="line.1102"></a>
+<FONT color="green">1103</FONT>        {<a name="line.1103"></a>
+<FONT color="green">1104</FONT>            if (m_tracer != null)<a name="line.1104"></a>
+<FONT color="green">1105</FONT>            {<a name="line.1105"></a>
+<FONT color="green">1106</FONT>                flushMyWriter();<a name="line.1106"></a>
+<FONT color="green">1107</FONT>                m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_ENDDOCUMENT);<a name="line.1107"></a>
+<FONT color="green">1108</FONT>            }                       <a name="line.1108"></a>
+<FONT color="green">1109</FONT>        }    <a name="line.1109"></a>
+<FONT color="green">1110</FONT>        <a name="line.1110"></a>
+<FONT color="green">1111</FONT>        /**<a name="line.1111"></a>
+<FONT color="green">1112</FONT>         * Report the start element trace event. This trace method needs to be<a name="line.1112"></a>
+<FONT color="green">1113</FONT>         * called just before the attributes are cleared.<a name="line.1113"></a>
+<FONT color="green">1114</FONT>         * <a name="line.1114"></a>
+<FONT color="green">1115</FONT>         * @param elemName the qualified name of the element<a name="line.1115"></a>
+<FONT color="green">1116</FONT>         * <a name="line.1116"></a>
+<FONT color="green">1117</FONT>         */<a name="line.1117"></a>
+<FONT color="green">1118</FONT>        protected void fireStartElem(String elemName)<a name="line.1118"></a>
+<FONT color="green">1119</FONT>            throws org.xml.sax.SAXException<a name="line.1119"></a>
+<FONT color="green">1120</FONT>        {        <a name="line.1120"></a>
+<FONT color="green">1121</FONT>            if (m_tracer != null)<a name="line.1121"></a>
+<FONT color="green">1122</FONT>            {<a name="line.1122"></a>
+<FONT color="green">1123</FONT>                flushMyWriter();<a name="line.1123"></a>
+<FONT color="green">1124</FONT>                m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_STARTELEMENT,<a name="line.1124"></a>
+<FONT color="green">1125</FONT>                    elemName, m_attributes);         <a name="line.1125"></a>
+<FONT color="green">1126</FONT>            }               <a name="line.1126"></a>
+<FONT color="green">1127</FONT>        }    <a name="line.1127"></a>
+<FONT color="green">1128</FONT>    <a name="line.1128"></a>
+<FONT color="green">1129</FONT>    <a name="line.1129"></a>
+<FONT color="green">1130</FONT>        /**<a name="line.1130"></a>
+<FONT color="green">1131</FONT>         * To fire off the end element event<a name="line.1131"></a>
+<FONT color="green">1132</FONT>         * @param name Name of element<a name="line.1132"></a>
+<FONT color="green">1133</FONT>         */<a name="line.1133"></a>
+<FONT color="green">1134</FONT>    //    protected void fireEndElem(String name)<a name="line.1134"></a>
+<FONT color="green">1135</FONT>    //        throws org.xml.sax.SAXException<a name="line.1135"></a>
+<FONT color="green">1136</FONT>    //    {<a name="line.1136"></a>
+<FONT color="green">1137</FONT>    //        if (m_tracer != null)<a name="line.1137"></a>
+<FONT color="green">1138</FONT>    //            m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_ENDELEMENT,name, (Attributes)null);                                  <a name="line.1138"></a>
+<FONT color="green">1139</FONT>    //    }    <a name="line.1139"></a>
+<FONT color="green">1140</FONT>    <a name="line.1140"></a>
+<FONT color="green">1141</FONT>    <a name="line.1141"></a>
+<FONT color="green">1142</FONT>        /**<a name="line.1142"></a>
+<FONT color="green">1143</FONT>         * To fire off the PI trace event<a name="line.1143"></a>
+<FONT color="green">1144</FONT>         * @param name Name of PI<a name="line.1144"></a>
+<FONT color="green">1145</FONT>         */<a name="line.1145"></a>
+<FONT color="green">1146</FONT>        protected void fireEscapingEvent(String name, String data)<a name="line.1146"></a>
+<FONT color="green">1147</FONT>            throws org.xml.sax.SAXException<a name="line.1147"></a>
+<FONT color="green">1148</FONT>        {<a name="line.1148"></a>
+<FONT color="green">1149</FONT>    <a name="line.1149"></a>
+<FONT color="green">1150</FONT>            if (m_tracer != null)<a name="line.1150"></a>
+<FONT color="green">1151</FONT>            {<a name="line.1151"></a>
+<FONT color="green">1152</FONT>                flushMyWriter();<a name="line.1152"></a>
+<FONT color="green">1153</FONT>                m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_PI,name, data);<a name="line.1153"></a>
+<FONT color="green">1154</FONT>            }                               <a name="line.1154"></a>
+<FONT color="green">1155</FONT>        }    <a name="line.1155"></a>
+<FONT color="green">1156</FONT>    <a name="line.1156"></a>
+<FONT color="green">1157</FONT>    <a name="line.1157"></a>
+<FONT color="green">1158</FONT>        /**<a name="line.1158"></a>
+<FONT color="green">1159</FONT>         * To fire off the entity reference trace event<a name="line.1159"></a>
+<FONT color="green">1160</FONT>         * @param name Name of entity reference<a name="line.1160"></a>
+<FONT color="green">1161</FONT>         */<a name="line.1161"></a>
+<FONT color="green">1162</FONT>        protected void fireEntityReference(String name)<a name="line.1162"></a>
+<FONT color="green">1163</FONT>            throws org.xml.sax.SAXException<a name="line.1163"></a>
+<FONT color="green">1164</FONT>        {<a name="line.1164"></a>
+<FONT color="green">1165</FONT>            if (m_tracer != null)<a name="line.1165"></a>
+<FONT color="green">1166</FONT>            {<a name="line.1166"></a>
+<FONT color="green">1167</FONT>                flushMyWriter();<a name="line.1167"></a>
+<FONT color="green">1168</FONT>                m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_ENTITYREF,name, (Attributes)null);<a name="line.1168"></a>
+<FONT color="green">1169</FONT>            }                               <a name="line.1169"></a>
+<FONT color="green">1170</FONT>        }    <a name="line.1170"></a>
+<FONT color="green">1171</FONT>    <a name="line.1171"></a>
+<FONT color="green">1172</FONT>        /**<a name="line.1172"></a>
+<FONT color="green">1173</FONT>         * Receive notification of the beginning of a document.<a name="line.1173"></a>
+<FONT color="green">1174</FONT>         * This method is never a self generated call, <a name="line.1174"></a>
+<FONT color="green">1175</FONT>         * but only called externally.<a name="line.1175"></a>
+<FONT color="green">1176</FONT>         *<a name="line.1176"></a>
+<FONT color="green">1177</FONT>         * &lt;p&gt;The SAX parser will invoke this method only once, before any<a name="line.1177"></a>
+<FONT color="green">1178</FONT>         * other methods in this interface or in DTDHandler (except for<a name="line.1178"></a>
+<FONT color="green">1179</FONT>         * setDocumentLocator).&lt;/p&gt;<a name="line.1179"></a>
+<FONT color="green">1180</FONT>         *<a name="line.1180"></a>
+<FONT color="green">1181</FONT>         * @throws org.xml.sax.SAXException Any SAX exception, possibly<a name="line.1181"></a>
+<FONT color="green">1182</FONT>         *            wrapping another exception.<a name="line.1182"></a>
+<FONT color="green">1183</FONT>         *<a name="line.1183"></a>
+<FONT color="green">1184</FONT>         * @throws org.xml.sax.SAXException<a name="line.1184"></a>
+<FONT color="green">1185</FONT>         */<a name="line.1185"></a>
+<FONT color="green">1186</FONT>        public void startDocument() throws org.xml.sax.SAXException<a name="line.1186"></a>
+<FONT color="green">1187</FONT>        {<a name="line.1187"></a>
+<FONT color="green">1188</FONT>    <a name="line.1188"></a>
+<FONT color="green">1189</FONT>            // if we do get called with startDocument(), handle it right away       <a name="line.1189"></a>
+<FONT color="green">1190</FONT>            startDocumentInternal();<a name="line.1190"></a>
+<FONT color="green">1191</FONT>            m_needToCallStartDocument = false;<a name="line.1191"></a>
+<FONT color="green">1192</FONT>            return;<a name="line.1192"></a>
+<FONT color="green">1193</FONT>        }   <a name="line.1193"></a>
+<FONT color="green">1194</FONT>        <a name="line.1194"></a>
+<FONT color="green">1195</FONT>        /**<a name="line.1195"></a>
+<FONT color="green">1196</FONT>         * This method handles what needs to be done at a startDocument() call,<a name="line.1196"></a>
+<FONT color="green">1197</FONT>         * whether from an external caller, or internally called in the <a name="line.1197"></a>
+<FONT color="green">1198</FONT>         * serializer.  For historical reasons the serializer is flexible to<a name="line.1198"></a>
+<FONT color="green">1199</FONT>         * startDocument() not always being called.<a name="line.1199"></a>
+<FONT color="green">1200</FONT>         * Even if no external call is<a name="line.1200"></a>
+<FONT color="green">1201</FONT>         * made into startDocument() this method will always be called as a self<a name="line.1201"></a>
+<FONT color="green">1202</FONT>         * generated internal startDocument, it handles what needs to be done at a<a name="line.1202"></a>
+<FONT color="green">1203</FONT>         * startDocument() call.<a name="line.1203"></a>
+<FONT color="green">1204</FONT>         * <a name="line.1204"></a>
+<FONT color="green">1205</FONT>         * This method exists just to make sure that startDocument() is only ever<a name="line.1205"></a>
+<FONT color="green">1206</FONT>         * called from an external caller, which in principle is just a matter of<a name="line.1206"></a>
+<FONT color="green">1207</FONT>         * style.<a name="line.1207"></a>
+<FONT color="green">1208</FONT>         * <a name="line.1208"></a>
+<FONT color="green">1209</FONT>         * @throws SAXException<a name="line.1209"></a>
+<FONT color="green">1210</FONT>         */<a name="line.1210"></a>
+<FONT color="green">1211</FONT>        protected void startDocumentInternal() throws org.xml.sax.SAXException<a name="line.1211"></a>
+<FONT color="green">1212</FONT>        {<a name="line.1212"></a>
+<FONT color="green">1213</FONT>            if (m_tracer != null)<a name="line.1213"></a>
+<FONT color="green">1214</FONT>                this.fireStartDoc();<a name="line.1214"></a>
+<FONT color="green">1215</FONT>        } <a name="line.1215"></a>
+<FONT color="green">1216</FONT>        /**<a name="line.1216"></a>
+<FONT color="green">1217</FONT>         * This method is used to set the source locator, which might be used to<a name="line.1217"></a>
+<FONT color="green">1218</FONT>         * generated an error message.<a name="line.1218"></a>
+<FONT color="green">1219</FONT>         * @param locator the source locator<a name="line.1219"></a>
+<FONT color="green">1220</FONT>         *<a name="line.1220"></a>
+<FONT color="green">1221</FONT>         * @see ExtendedContentHandler#setSourceLocator(javax.xml.transform.SourceLocator)<a name="line.1221"></a>
+<FONT color="green">1222</FONT>         */<a name="line.1222"></a>
+<FONT color="green">1223</FONT>        public void setSourceLocator(SourceLocator locator)<a name="line.1223"></a>
+<FONT color="green">1224</FONT>        {<a name="line.1224"></a>
+<FONT color="green">1225</FONT>            m_sourceLocator = locator;    <a name="line.1225"></a>
+<FONT color="green">1226</FONT>        }<a name="line.1226"></a>
+<FONT color="green">1227</FONT>    <a name="line.1227"></a>
+<FONT color="green">1228</FONT>        <a name="line.1228"></a>
+<FONT color="green">1229</FONT>        /** <a name="line.1229"></a>
+<FONT color="green">1230</FONT>         * Used only by TransformerSnapshotImpl to restore the serialization <a name="line.1230"></a>
+<FONT color="green">1231</FONT>         * to a previous state. <a name="line.1231"></a>
+<FONT color="green">1232</FONT>         * <a name="line.1232"></a>
+<FONT color="green">1233</FONT>         * @param mappings NamespaceMappings<a name="line.1233"></a>
+<FONT color="green">1234</FONT>         */<a name="line.1234"></a>
+<FONT color="green">1235</FONT>        public void setNamespaceMappings(NamespaceMappings mappings) {<a name="line.1235"></a>
+<FONT color="green">1236</FONT>            m_prefixMap = mappings;<a name="line.1236"></a>
+<FONT color="green">1237</FONT>        }<a name="line.1237"></a>
+<FONT color="green">1238</FONT>        <a name="line.1238"></a>
+<FONT color="green">1239</FONT>        public boolean reset()<a name="line.1239"></a>
+<FONT color="green">1240</FONT>        {<a name="line.1240"></a>
+<FONT color="green">1241</FONT>            resetSerializerBase();<a name="line.1241"></a>
+<FONT color="green">1242</FONT>            return true;<a name="line.1242"></a>
+<FONT color="green">1243</FONT>        }<a name="line.1243"></a>
+<FONT color="green">1244</FONT>        <a name="line.1244"></a>
+<FONT color="green">1245</FONT>        /**<a name="line.1245"></a>
+<FONT color="green">1246</FONT>         * Reset all of the fields owned by SerializerBase<a name="line.1246"></a>
+<FONT color="green">1247</FONT>         *<a name="line.1247"></a>
+<FONT color="green">1248</FONT>         */<a name="line.1248"></a>
+<FONT color="green">1249</FONT>        private void resetSerializerBase()<a name="line.1249"></a>
+<FONT color="green">1250</FONT>        {<a name="line.1250"></a>
+<FONT color="green">1251</FONT>            this.m_attributes.clear();<a name="line.1251"></a>
+<FONT color="green">1252</FONT>            this.m_CdataElems = null;<a name="line.1252"></a>
+<FONT color="green">1253</FONT>            this.m_cdataTagOpen = false;<a name="line.1253"></a>
+<FONT color="green">1254</FONT>            this.m_docIsEmpty = true;<a name="line.1254"></a>
+<FONT color="green">1255</FONT>            this.m_doctypePublic = null;<a name="line.1255"></a>
+<FONT color="green">1256</FONT>            this.m_doctypeSystem = null;<a name="line.1256"></a>
+<FONT color="green">1257</FONT>            this.m_doIndent = false;<a name="line.1257"></a>
+<FONT color="green">1258</FONT>            this.m_elemContext = new ElemContext();<a name="line.1258"></a>
+<FONT color="green">1259</FONT>            this.m_indentAmount = 0;<a name="line.1259"></a>
+<FONT color="green">1260</FONT>            this.m_inEntityRef = false;<a name="line.1260"></a>
+<FONT color="green">1261</FONT>            this.m_inExternalDTD = false;<a name="line.1261"></a>
+<FONT color="green">1262</FONT>            this.m_mediatype = null;<a name="line.1262"></a>
+<FONT color="green">1263</FONT>            this.m_needToCallStartDocument = true;<a name="line.1263"></a>
+<FONT color="green">1264</FONT>            this.m_needToOutputDocTypeDecl = false;<a name="line.1264"></a>
+<FONT color="green">1265</FONT>            if (m_OutputProps != null)<a name="line.1265"></a>
+<FONT color="green">1266</FONT>                this.m_OutputProps.clear();<a name="line.1266"></a>
+<FONT color="green">1267</FONT>            if (m_OutputPropsDefault != null)<a name="line.1267"></a>
+<FONT color="green">1268</FONT>                this.m_OutputPropsDefault.clear();<a name="line.1268"></a>
+<FONT color="green">1269</FONT>            if (this.m_prefixMap != null)<a name="line.1269"></a>
+<FONT color="green">1270</FONT>                this.m_prefixMap.reset();<a name="line.1270"></a>
+<FONT color="green">1271</FONT>            this.m_shouldNotWriteXMLHeader = false;<a name="line.1271"></a>
+<FONT color="green">1272</FONT>            this.m_sourceLocator = null;<a name="line.1272"></a>
+<FONT color="green">1273</FONT>            this.m_standalone = null;<a name="line.1273"></a>
+<FONT color="green">1274</FONT>            this.m_standaloneWasSpecified = false;<a name="line.1274"></a>
+<FONT color="green">1275</FONT>            this.m_StringOfCDATASections = null;<a name="line.1275"></a>
+<FONT color="green">1276</FONT>            this.m_tracer = null;<a name="line.1276"></a>
+<FONT color="green">1277</FONT>            this.m_transformer = null;<a name="line.1277"></a>
+<FONT color="green">1278</FONT>            this.m_version = null;<a name="line.1278"></a>
+<FONT color="green">1279</FONT>            // don't set writer to null, so that it might be re-used<a name="line.1279"></a>
+<FONT color="green">1280</FONT>            //this.m_writer = null;<a name="line.1280"></a>
+<FONT color="green">1281</FONT>        }<a name="line.1281"></a>
+<FONT color="green">1282</FONT>        <a name="line.1282"></a>
+<FONT color="green">1283</FONT>        /**<a name="line.1283"></a>
+<FONT color="green">1284</FONT>         * Returns true if the serializer is used for temporary output rather than<a name="line.1284"></a>
+<FONT color="green">1285</FONT>         * final output.<a name="line.1285"></a>
+<FONT color="green">1286</FONT>         * <a name="line.1286"></a>
+<FONT color="green">1287</FONT>         * This concept is made clear in the XSLT 2.0 draft.<a name="line.1287"></a>
+<FONT color="green">1288</FONT>         */<a name="line.1288"></a>
+<FONT color="green">1289</FONT>        final boolean inTemporaryOutputState() <a name="line.1289"></a>
+<FONT color="green">1290</FONT>        {<a name="line.1290"></a>
+<FONT color="green">1291</FONT>            /* This is a hack. We should really be letting the serializer know<a name="line.1291"></a>
+<FONT color="green">1292</FONT>             * that it is in temporary output state with an explicit call, but<a name="line.1292"></a>
+<FONT color="green">1293</FONT>             * from a pragmatic point of view (for now anyways) having no output<a name="line.1293"></a>
+<FONT color="green">1294</FONT>             * encoding at all, not even the default UTF-8 indicates that the serializer<a name="line.1294"></a>
+<FONT color="green">1295</FONT>             * is being used for temporary RTF.<a name="line.1295"></a>
+<FONT color="green">1296</FONT>             */ <a name="line.1296"></a>
+<FONT color="green">1297</FONT>            return (getEncoding() == null);<a name="line.1297"></a>
+<FONT color="green">1298</FONT>            <a name="line.1298"></a>
+<FONT color="green">1299</FONT>        }<a name="line.1299"></a>
+<FONT color="green">1300</FONT>        <a name="line.1300"></a>
+<FONT color="green">1301</FONT>        /**<a name="line.1301"></a>
+<FONT color="green">1302</FONT>         * This method adds an attribute the the current element,<a name="line.1302"></a>
+<FONT color="green">1303</FONT>         * but should not be used for an xsl:attribute child.<a name="line.1303"></a>
+<FONT color="green">1304</FONT>         * @see ExtendedContentHandler#addAttribute(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)<a name="line.1304"></a>
+<FONT color="green">1305</FONT>         */<a name="line.1305"></a>
+<FONT color="green">1306</FONT>        public void addAttribute(String uri, String localName, String rawName, String type, String value) throws SAXException <a name="line.1306"></a>
+<FONT color="green">1307</FONT>        {<a name="line.1307"></a>
+<FONT color="green">1308</FONT>            if (m_elemContext.m_startTagOpen)<a name="line.1308"></a>
+<FONT color="green">1309</FONT>            {<a name="line.1309"></a>
+<FONT color="green">1310</FONT>                addAttributeAlways(uri, localName, rawName, type, value, false);<a name="line.1310"></a>
+<FONT color="green">1311</FONT>            }<a name="line.1311"></a>
+<FONT color="green">1312</FONT>        }<a name="line.1312"></a>
+<FONT color="green">1313</FONT>        <a name="line.1313"></a>
+<FONT color="green">1314</FONT>        /**<a name="line.1314"></a>
+<FONT color="green">1315</FONT>         * @see org.xml.sax.DTDHandler#notationDecl(java.lang.String, java.lang.String, java.lang.String)<a name="line.1315"></a>
+<FONT color="green">1316</FONT>         */<a name="line.1316"></a>
+<FONT color="green">1317</FONT>        public void notationDecl(String arg0, String arg1, String arg2)<a name="line.1317"></a>
+<FONT color="green">1318</FONT>            throws SAXException {<a name="line.1318"></a>
+<FONT color="green">1319</FONT>            // This method just provides a definition to satisfy the interface<a name="line.1319"></a>
+<FONT color="green">1320</FONT>            // A particular sub-class of SerializerBase provides the implementation (if desired)        <a name="line.1320"></a>
+<FONT color="green">1321</FONT>        }<a name="line.1321"></a>
+<FONT color="green">1322</FONT>    <a name="line.1322"></a>
+<FONT color="green">1323</FONT>        /**<a name="line.1323"></a>
+<FONT color="green">1324</FONT>         * @see org.xml.sax.DTDHandler#unparsedEntityDecl(java.lang.String, java.lang.String, java.lang.String, java.lang.String)<a name="line.1324"></a>
+<FONT color="green">1325</FONT>         */<a name="line.1325"></a>
+<FONT color="green">1326</FONT>        public void unparsedEntityDecl(<a name="line.1326"></a>
+<FONT color="green">1327</FONT>            String arg0,<a name="line.1327"></a>
+<FONT color="green">1328</FONT>            String arg1,<a name="line.1328"></a>
+<FONT color="green">1329</FONT>            String arg2,<a name="line.1329"></a>
+<FONT color="green">1330</FONT>            String arg3)<a name="line.1330"></a>
+<FONT color="green">1331</FONT>            throws SAXException {<a name="line.1331"></a>
+<FONT color="green">1332</FONT>            // This method just provides a definition to satisfy the interface<a name="line.1332"></a>
+<FONT color="green">1333</FONT>            // A particular sub-class of SerializerBase provides the implementation (if desired)        <a name="line.1333"></a>
+<FONT color="green">1334</FONT>        }<a name="line.1334"></a>
+<FONT color="green">1335</FONT>    <a name="line.1335"></a>
+<FONT color="green">1336</FONT>        /**<a name="line.1336"></a>
+<FONT color="green">1337</FONT>         * If set to false the serializer does not expand DTD entities,<a name="line.1337"></a>
+<FONT color="green">1338</FONT>         * but leaves them as is, the default value is true.<a name="line.1338"></a>
+<FONT color="green">1339</FONT>         */<a name="line.1339"></a>
+<FONT color="green">1340</FONT>        public void setDTDEntityExpansion(boolean expand) {<a name="line.1340"></a>
+<FONT color="green">1341</FONT>            // This method just provides a definition to satisfy the interface<a name="line.1341"></a>
+<FONT color="green">1342</FONT>            // A particular sub-class of SerializerBase provides the implementation (if desired)        <a name="line.1342"></a>
+<FONT color="green">1343</FONT>        }<a name="line.1343"></a>
+<FONT color="green">1344</FONT>     <a name="line.1344"></a>
+<FONT color="green">1345</FONT>    <a name="line.1345"></a>
+<FONT color="green">1346</FONT>        /** <a name="line.1346"></a>
+<FONT color="green">1347</FONT>         * The CDATA section names stored in a whitespace separateed list with<a name="line.1347"></a>
+<FONT color="green">1348</FONT>         * each element being a word of the form "{uri}localName" This list<a name="line.1348"></a>
+<FONT color="green">1349</FONT>         * comes from the cdata-section-elements attribute.<a name="line.1349"></a>
+<FONT color="green">1350</FONT>         * <a name="line.1350"></a>
+<FONT color="green">1351</FONT>         * This field replaces m_cdataSectionElements Vector.<a name="line.1351"></a>
+<FONT color="green">1352</FONT>         */<a name="line.1352"></a>
+<FONT color="green">1353</FONT>        protected String m_StringOfCDATASections = null; <a name="line.1353"></a>
+<FONT color="green">1354</FONT>        <a name="line.1354"></a>
+<FONT color="green">1355</FONT>        boolean m_docIsEmpty = true;<a name="line.1355"></a>
+<FONT color="green">1356</FONT>        void initCdataElems(String s)<a name="line.1356"></a>
+<FONT color="green">1357</FONT>        {<a name="line.1357"></a>
+<FONT color="green">1358</FONT>            if (s != null)<a name="line.1358"></a>
+<FONT color="green">1359</FONT>            {            <a name="line.1359"></a>
+<FONT color="green">1360</FONT>                int max = s.length();<a name="line.1360"></a>
+<FONT color="green">1361</FONT>    <a name="line.1361"></a>
+<FONT color="green">1362</FONT>                // true if we are in the middle of a pair of curly braces that delimit a URI<a name="line.1362"></a>
+<FONT color="green">1363</FONT>                boolean inCurly = false;<a name="line.1363"></a>
+<FONT color="green">1364</FONT>    <a name="line.1364"></a>
+<FONT color="green">1365</FONT>                // true if we found a URI but haven't yet processed the local name <a name="line.1365"></a>
+<FONT color="green">1366</FONT>                boolean foundURI = false;<a name="line.1366"></a>
+<FONT color="green">1367</FONT>    <a name="line.1367"></a>
+<FONT color="green">1368</FONT>                StringBuffer buf = new StringBuffer();<a name="line.1368"></a>
+<FONT color="green">1369</FONT>                String uri = null;<a name="line.1369"></a>
+<FONT color="green">1370</FONT>                String localName = null;<a name="line.1370"></a>
+<FONT color="green">1371</FONT>    <a name="line.1371"></a>
+<FONT color="green">1372</FONT>                // parse through string, breaking on whitespaces.  I do this instead<a name="line.1372"></a>
+<FONT color="green">1373</FONT>                // of a tokenizer so I can track whitespace inside of curly brackets,<a name="line.1373"></a>
+<FONT color="green">1374</FONT>                // which theoretically shouldn't happen if they contain legal URLs.<a name="line.1374"></a>
+<FONT color="green">1375</FONT>    <a name="line.1375"></a>
+<FONT color="green">1376</FONT>    <a name="line.1376"></a>
+<FONT color="green">1377</FONT>                for (int i = 0; i &lt; max; i++)<a name="line.1377"></a>
+<FONT color="green">1378</FONT>                {<a name="line.1378"></a>
+<FONT color="green">1379</FONT>    <a name="line.1379"></a>
+<FONT color="green">1380</FONT>                    char c = s.charAt(i);<a name="line.1380"></a>
+<FONT color="green">1381</FONT>    <a name="line.1381"></a>
+<FONT color="green">1382</FONT>                    if (Character.isWhitespace(c))<a name="line.1382"></a>
+<FONT color="green">1383</FONT>                    {<a name="line.1383"></a>
+<FONT color="green">1384</FONT>                        if (!inCurly)<a name="line.1384"></a>
+<FONT color="green">1385</FONT>                        {<a name="line.1385"></a>
+<FONT color="green">1386</FONT>                            if (buf.length() &gt; 0)<a name="line.1386"></a>
+<FONT color="green">1387</FONT>                            {<a name="line.1387"></a>
+<FONT color="green">1388</FONT>                                localName = buf.toString();<a name="line.1388"></a>
+<FONT color="green">1389</FONT>                                if (!foundURI)<a name="line.1389"></a>
+<FONT color="green">1390</FONT>                                    uri = "";<a name="line.1390"></a>
+<FONT color="green">1391</FONT>                                addCDATAElement(uri,localName);<a name="line.1391"></a>
+<FONT color="green">1392</FONT>                                buf.setLength(0);<a name="line.1392"></a>
+<FONT color="green">1393</FONT>                                foundURI = false;<a name="line.1393"></a>
+<FONT color="green">1394</FONT>                            }<a name="line.1394"></a>
+<FONT color="green">1395</FONT>                            continue;<a name="line.1395"></a>
+<FONT color="green">1396</FONT>                        }<a name="line.1396"></a>
+<FONT color="green">1397</FONT>                        else<a name="line.1397"></a>
+<FONT color="green">1398</FONT>                            buf.append(c); // add whitespace to the URI<a name="line.1398"></a>
+<FONT color="green">1399</FONT>                    }<a name="line.1399"></a>
+<FONT color="green">1400</FONT>                    else if ('{' == c) // starting a URI<a name="line.1400"></a>
+<FONT color="green">1401</FONT>                        inCurly = true;<a name="line.1401"></a>
+<FONT color="green">1402</FONT>                    else if ('}' == c)<a name="line.1402"></a>
+<FONT color="green">1403</FONT>                    {<a name="line.1403"></a>
+<FONT color="green">1404</FONT>                        // we just ended a URI, add the URI to the vector<a name="line.1404"></a>
+<FONT color="green">1405</FONT>                        foundURI = true;<a name="line.1405"></a>
+<FONT color="green">1406</FONT>                        uri = buf.toString();<a name="line.1406"></a>
+<FONT color="green">1407</FONT>                        buf.setLength(0);<a name="line.1407"></a>
+<FONT color="green">1408</FONT>                        inCurly = false;<a name="line.1408"></a>
+<FONT color="green">1409</FONT>                    }<a name="line.1409"></a>
+<FONT color="green">1410</FONT>                    else<a name="line.1410"></a>
+<FONT color="green">1411</FONT>                    {<a name="line.1411"></a>
+<FONT color="green">1412</FONT>                        // append non-whitespace, non-curly to current URI or localName being gathered.                    <a name="line.1412"></a>
+<FONT color="green">1413</FONT>                        buf.append(c);<a name="line.1413"></a>
+<FONT color="green">1414</FONT>                    }<a name="line.1414"></a>
+<FONT color="green">1415</FONT>    <a name="line.1415"></a>
+<FONT color="green">1416</FONT>                }<a name="line.1416"></a>
+<FONT color="green">1417</FONT>    <a name="line.1417"></a>
+<FONT color="green">1418</FONT>                if (buf.length() &gt; 0)<a name="line.1418"></a>
+<FONT color="green">1419</FONT>                {<a name="line.1419"></a>
+<FONT color="green">1420</FONT>                    // We have one last localName to process.<a name="line.1420"></a>
+<FONT color="green">1421</FONT>                    localName = buf.toString();<a name="line.1421"></a>
+<FONT color="green">1422</FONT>                    if (!foundURI)<a name="line.1422"></a>
+<FONT color="green">1423</FONT>                        uri = "";<a name="line.1423"></a>
+<FONT color="green">1424</FONT>                    addCDATAElement(uri,localName);<a name="line.1424"></a>
+<FONT color="green">1425</FONT>                }<a name="line.1425"></a>
+<FONT color="green">1426</FONT>            }<a name="line.1426"></a>
+<FONT color="green">1427</FONT>        }<a name="line.1427"></a>
+<FONT color="green">1428</FONT>        protected java.util.Hashtable m_CdataElems = null;<a name="line.1428"></a>
+<FONT color="green">1429</FONT>        private void addCDATAElement(String uri, String localName) <a name="line.1429"></a>
+<FONT color="green">1430</FONT>        {<a name="line.1430"></a>
+<FONT color="green">1431</FONT>            if (m_CdataElems == null) {<a name="line.1431"></a>
+<FONT color="green">1432</FONT>                m_CdataElems = new java.util.Hashtable();<a name="line.1432"></a>
+<FONT color="green">1433</FONT>            }<a name="line.1433"></a>
+<FONT color="green">1434</FONT>            <a name="line.1434"></a>
+<FONT color="green">1435</FONT>            java.util.Hashtable h = (java.util.Hashtable) m_CdataElems.get(localName);<a name="line.1435"></a>
+<FONT color="green">1436</FONT>            if (h == null) {<a name="line.1436"></a>
+<FONT color="green">1437</FONT>                h = new java.util.Hashtable();<a name="line.1437"></a>
+<FONT color="green">1438</FONT>                m_CdataElems.put(localName,h);<a name="line.1438"></a>
+<FONT color="green">1439</FONT>            }<a name="line.1439"></a>
+<FONT color="green">1440</FONT>            h.put(uri,uri);<a name="line.1440"></a>
+<FONT color="green">1441</FONT>            <a name="line.1441"></a>
+<FONT color="green">1442</FONT>        }<a name="line.1442"></a>
+<FONT color="green">1443</FONT>        <a name="line.1443"></a>
+<FONT color="green">1444</FONT>        <a name="line.1444"></a>
+<FONT color="green">1445</FONT>        /**<a name="line.1445"></a>
+<FONT color="green">1446</FONT>         * Return true if nothing has been sent to this result tree yet.<a name="line.1446"></a>
+<FONT color="green">1447</FONT>         * &lt;p&gt;<a name="line.1447"></a>
+<FONT color="green">1448</FONT>         * This is not a public API.<a name="line.1448"></a>
+<FONT color="green">1449</FONT>         * <a name="line.1449"></a>
+<FONT color="green">1450</FONT>         * @xsl.usage internal<a name="line.1450"></a>
+<FONT color="green">1451</FONT>         */<a name="line.1451"></a>
+<FONT color="green">1452</FONT>        public boolean documentIsEmpty() {<a name="line.1452"></a>
+<FONT color="green">1453</FONT>            // If we haven't called startDocument() yet, then this document is empty<a name="line.1453"></a>
+<FONT color="green">1454</FONT>            return m_docIsEmpty &amp;&amp; (m_elemContext.m_currentElemDepth == 0);<a name="line.1454"></a>
+<FONT color="green">1455</FONT>        }    <a name="line.1455"></a>
+<FONT color="green">1456</FONT>        <a name="line.1456"></a>
+<FONT color="green">1457</FONT>        /**<a name="line.1457"></a>
+<FONT color="green">1458</FONT>         * Return true if the current element in m_elemContext<a name="line.1458"></a>
+<FONT color="green">1459</FONT>         * is a CDATA section.<a name="line.1459"></a>
+<FONT color="green">1460</FONT>         * CDATA sections are specified in the &lt;xsl:output&gt; attribute<a name="line.1460"></a>
+<FONT color="green">1461</FONT>         * cdata-section-names or in the JAXP equivalent property.<a name="line.1461"></a>
+<FONT color="green">1462</FONT>         * In any case the format of the value of such a property is:<a name="line.1462"></a>
+<FONT color="green">1463</FONT>         * &lt;pre&gt;<a name="line.1463"></a>
+<FONT color="green">1464</FONT>         * "{uri1}localName1 {uri2}localName2 . . . "<a name="line.1464"></a>
+<FONT color="green">1465</FONT>         * &lt;/pre&gt;<a name="line.1465"></a>
+<FONT color="green">1466</FONT>         * <a name="line.1466"></a>
+<FONT color="green">1467</FONT>         * &lt;p&gt;<a name="line.1467"></a>
+<FONT color="green">1468</FONT>         * This method is not a public API, but is only used internally by the serializer.<a name="line.1468"></a>
+<FONT color="green">1469</FONT>         */<a name="line.1469"></a>
+<FONT color="green">1470</FONT>        protected boolean isCdataSection()<a name="line.1470"></a>
+<FONT color="green">1471</FONT>        {<a name="line.1471"></a>
+<FONT color="green">1472</FONT>    <a name="line.1472"></a>
+<FONT color="green">1473</FONT>            boolean b = false;<a name="line.1473"></a>
+<FONT color="green">1474</FONT>    <a name="line.1474"></a>
+<FONT color="green">1475</FONT>            if (null != m_StringOfCDATASections)<a name="line.1475"></a>
+<FONT color="green">1476</FONT>            {<a name="line.1476"></a>
+<FONT color="green">1477</FONT>                if (m_elemContext.m_elementLocalName == null) <a name="line.1477"></a>
+<FONT color="green">1478</FONT>                {<a name="line.1478"></a>
+<FONT color="green">1479</FONT>                    String localName =  getLocalName(m_elemContext.m_elementName); <a name="line.1479"></a>
+<FONT color="green">1480</FONT>                    m_elemContext.m_elementLocalName = localName;                   <a name="line.1480"></a>
+<FONT color="green">1481</FONT>                }<a name="line.1481"></a>
+<FONT color="green">1482</FONT>                <a name="line.1482"></a>
+<FONT color="green">1483</FONT>                if ( m_elemContext.m_elementURI == null) {<a name="line.1483"></a>
+<FONT color="green">1484</FONT>                    <a name="line.1484"></a>
+<FONT color="green">1485</FONT>                    m_elemContext.m_elementURI = getElementURI();<a name="line.1485"></a>
+<FONT color="green">1486</FONT>                }<a name="line.1486"></a>
+<FONT color="green">1487</FONT>                else if ( m_elemContext.m_elementURI.length() == 0) {<a name="line.1487"></a>
+<FONT color="green">1488</FONT>                    if ( m_elemContext.m_elementName == null) {<a name="line.1488"></a>
+<FONT color="green">1489</FONT>                        m_elemContext.m_elementName = m_elemContext.m_elementLocalName;    <a name="line.1489"></a>
+<FONT color="green">1490</FONT>                        // leave URI as "", meaning in no namespace<a name="line.1490"></a>
+<FONT color="green">1491</FONT>                    }<a name="line.1491"></a>
+<FONT color="green">1492</FONT>                    else if (m_elemContext.m_elementLocalName.length() &lt; m_elemContext.m_elementName.length()){<a name="line.1492"></a>
+<FONT color="green">1493</FONT>                        // We were told the URI was "", yet the name has a prefix since the name is longer than the localname.<a name="line.1493"></a>
+<FONT color="green">1494</FONT>                        // So we will fix that incorrect information here.<a name="line.1494"></a>
+<FONT color="green">1495</FONT>                        m_elemContext.m_elementURI = getElementURI();  <a name="line.1495"></a>
+<FONT color="green">1496</FONT>                    }<a name="line.1496"></a>
+<FONT color="green">1497</FONT>                }<a name="line.1497"></a>
+<FONT color="green">1498</FONT>    <a name="line.1498"></a>
+<FONT color="green">1499</FONT>                java.util.Hashtable h = (java.util.Hashtable) m_CdataElems.get(m_elemContext.m_elementLocalName);<a name="line.1499"></a>
+<FONT color="green">1500</FONT>                if (h != null) <a name="line.1500"></a>
+<FONT color="green">1501</FONT>                {<a name="line.1501"></a>
+<FONT color="green">1502</FONT>                    Object obj = h.get(m_elemContext.m_elementURI);<a name="line.1502"></a>
+<FONT color="green">1503</FONT>                    if (obj != null)<a name="line.1503"></a>
+<FONT color="green">1504</FONT>                        b = true; <a name="line.1504"></a>
+<FONT color="green">1505</FONT>                }<a name="line.1505"></a>
+<FONT color="green">1506</FONT>    <a name="line.1506"></a>
+<FONT color="green">1507</FONT>            }<a name="line.1507"></a>
+<FONT color="green">1508</FONT>            return b;<a name="line.1508"></a>
+<FONT color="green">1509</FONT>        }<a name="line.1509"></a>
+<FONT color="green">1510</FONT>        <a name="line.1510"></a>
+<FONT color="green">1511</FONT>        /**<a name="line.1511"></a>
+<FONT color="green">1512</FONT>         * Before this call m_elementContext.m_elementURI is null,<a name="line.1512"></a>
+<FONT color="green">1513</FONT>         * which means it is not yet known. After this call it<a name="line.1513"></a>
+<FONT color="green">1514</FONT>         * is non-null, but possibly "" meaning that it is in the<a name="line.1514"></a>
+<FONT color="green">1515</FONT>         * default namespace.<a name="line.1515"></a>
+<FONT color="green">1516</FONT>         * <a name="line.1516"></a>
+<FONT color="green">1517</FONT>         * @return The URI of the element, never null, but possibly "".<a name="line.1517"></a>
+<FONT color="green">1518</FONT>         */<a name="line.1518"></a>
+<FONT color="green">1519</FONT>        private String getElementURI() {<a name="line.1519"></a>
+<FONT color="green">1520</FONT>            String uri = null;<a name="line.1520"></a>
+<FONT color="green">1521</FONT>            // At this point in processing we have received all the<a name="line.1521"></a>
+<FONT color="green">1522</FONT>            // namespace mappings<a name="line.1522"></a>
+<FONT color="green">1523</FONT>            // As we still don't know the elements namespace,<a name="line.1523"></a>
+<FONT color="green">1524</FONT>            // we now figure it out.<a name="line.1524"></a>
+<FONT color="green">1525</FONT>    <a name="line.1525"></a>
+<FONT color="green">1526</FONT>            String prefix = getPrefixPart(m_elemContext.m_elementName);<a name="line.1526"></a>
+<FONT color="green">1527</FONT>    <a name="line.1527"></a>
+<FONT color="green">1528</FONT>            if (prefix == null) {<a name="line.1528"></a>
+<FONT color="green">1529</FONT>                // no prefix so lookup the URI of the default namespace<a name="line.1529"></a>
+<FONT color="green">1530</FONT>                uri = m_prefixMap.lookupNamespace("");<a name="line.1530"></a>
+<FONT color="green">1531</FONT>            } else {<a name="line.1531"></a>
+<FONT color="green">1532</FONT>                uri = m_prefixMap.lookupNamespace(prefix);<a name="line.1532"></a>
+<FONT color="green">1533</FONT>            }<a name="line.1533"></a>
+<FONT color="green">1534</FONT>            if (uri == null) {<a name="line.1534"></a>
+<FONT color="green">1535</FONT>                // We didn't find the namespace for the<a name="line.1535"></a>
+<FONT color="green">1536</FONT>                // prefix ... ouch, that shouldn't happen.<a name="line.1536"></a>
+<FONT color="green">1537</FONT>                // This is a hack, we really don't know<a name="line.1537"></a>
+<FONT color="green">1538</FONT>                // the namespace<a name="line.1538"></a>
+<FONT color="green">1539</FONT>                uri = EMPTYSTRING;<a name="line.1539"></a>
+<FONT color="green">1540</FONT>            }<a name="line.1540"></a>
+<FONT color="green">1541</FONT>    <a name="line.1541"></a>
+<FONT color="green">1542</FONT>            return uri;<a name="line.1542"></a>
+<FONT color="green">1543</FONT>        }<a name="line.1543"></a>
+<FONT color="green">1544</FONT>        <a name="line.1544"></a>
+<FONT color="green">1545</FONT>    <a name="line.1545"></a>
+<FONT color="green">1546</FONT>        /**<a name="line.1546"></a>
+<FONT color="green">1547</FONT>         * Get the value of an output property,<a name="line.1547"></a>
+<FONT color="green">1548</FONT>         * the explicit value, if any, otherwise the<a name="line.1548"></a>
+<FONT color="green">1549</FONT>         * default value, if any, otherwise null.<a name="line.1549"></a>
+<FONT color="green">1550</FONT>         */<a name="line.1550"></a>
+<FONT color="green">1551</FONT>        public String getOutputProperty(String name) {<a name="line.1551"></a>
+<FONT color="green">1552</FONT>            String val = getOutputPropertyNonDefault(name);<a name="line.1552"></a>
+<FONT color="green">1553</FONT>            // If no explicit value, try to get the default value<a name="line.1553"></a>
+<FONT color="green">1554</FONT>            if (val == null)<a name="line.1554"></a>
+<FONT color="green">1555</FONT>                val = getOutputPropertyDefault(name);<a name="line.1555"></a>
+<FONT color="green">1556</FONT>            return val;<a name="line.1556"></a>
+<FONT color="green">1557</FONT>            <a name="line.1557"></a>
+<FONT color="green">1558</FONT>        }<a name="line.1558"></a>
+<FONT color="green">1559</FONT>        /**<a name="line.1559"></a>
+<FONT color="green">1560</FONT>         * Get the value of an output property, <a name="line.1560"></a>
+<FONT color="green">1561</FONT>         * not the default value. If there is a default<a name="line.1561"></a>
+<FONT color="green">1562</FONT>         * value, but no non-default value this method<a name="line.1562"></a>
+<FONT color="green">1563</FONT>         * will return null.<a name="line.1563"></a>
+<FONT color="green">1564</FONT>         * &lt;p&gt;<a name="line.1564"></a>
+<FONT color="green">1565</FONT>         * <a name="line.1565"></a>
+<FONT color="green">1566</FONT>         */<a name="line.1566"></a>
+<FONT color="green">1567</FONT>        public String getOutputPropertyNonDefault(String name )<a name="line.1567"></a>
+<FONT color="green">1568</FONT>        {<a name="line.1568"></a>
+<FONT color="green">1569</FONT>            return getProp(name,false);<a name="line.1569"></a>
+<FONT color="green">1570</FONT>        }<a name="line.1570"></a>
+<FONT color="green">1571</FONT>    <a name="line.1571"></a>
+<FONT color="green">1572</FONT>        /**<a name="line.1572"></a>
+<FONT color="green">1573</FONT>         * Return a {@link DOM3Serializer} interface into this serializer. If the<a name="line.1573"></a>
+<FONT color="green">1574</FONT>         * serializer does not support the {@link DOM3Serializer} interface, it should<a name="line.1574"></a>
+<FONT color="green">1575</FONT>         * return null.<a name="line.1575"></a>
+<FONT color="green">1576</FONT>         *<a name="line.1576"></a>
+<FONT color="green">1577</FONT>         * @return A {@link DOM3Serializer} interface into this serializer,  or null<a name="line.1577"></a>
+<FONT color="green">1578</FONT>         * if the serializer is not DOM capable<a name="line.1578"></a>
+<FONT color="green">1579</FONT>         * @throws IOException An I/O exception occured<a name="line.1579"></a>
+<FONT color="green">1580</FONT>         * @see org.apache.xml.serializer.Serializer#asDOM3Serializer()<a name="line.1580"></a>
+<FONT color="green">1581</FONT>         */<a name="line.1581"></a>
+<FONT color="green">1582</FONT>        public Object asDOM3Serializer() throws IOException<a name="line.1582"></a>
+<FONT color="green">1583</FONT>        {<a name="line.1583"></a>
+<FONT color="green">1584</FONT>            return new org.apache.xml.serializer.dom3.DOM3SerializerImpl(this);<a name="line.1584"></a>
+<FONT color="green">1585</FONT>        }<a name="line.1585"></a>
+<FONT color="green">1586</FONT>        /**<a name="line.1586"></a>
+<FONT color="green">1587</FONT>         * Get the default value of an xsl:output property,<a name="line.1587"></a>
+<FONT color="green">1588</FONT>         * which would be null only if no default value exists<a name="line.1588"></a>
+<FONT color="green">1589</FONT>         * for the property.<a name="line.1589"></a>
+<FONT color="green">1590</FONT>         */<a name="line.1590"></a>
+<FONT color="green">1591</FONT>        public String getOutputPropertyDefault(String name) {<a name="line.1591"></a>
+<FONT color="green">1592</FONT>            return getProp(name, true);<a name="line.1592"></a>
+<FONT color="green">1593</FONT>        } <a name="line.1593"></a>
+<FONT color="green">1594</FONT>        <a name="line.1594"></a>
+<FONT color="green">1595</FONT>        /**<a name="line.1595"></a>
+<FONT color="green">1596</FONT>         * Set the value for the output property, typically from<a name="line.1596"></a>
+<FONT color="green">1597</FONT>         * an xsl:output element, but this does not change what<a name="line.1597"></a>
+<FONT color="green">1598</FONT>         * the default value is.<a name="line.1598"></a>
+<FONT color="green">1599</FONT>         */<a name="line.1599"></a>
+<FONT color="green">1600</FONT>        public void   setOutputProperty(String name, String val) {<a name="line.1600"></a>
+<FONT color="green">1601</FONT>            setProp(name,val,false);<a name="line.1601"></a>
+<FONT color="green">1602</FONT>            <a name="line.1602"></a>
+<FONT color="green">1603</FONT>        }<a name="line.1603"></a>
+<FONT color="green">1604</FONT>        <a name="line.1604"></a>
+<FONT color="green">1605</FONT>        /**<a name="line.1605"></a>
+<FONT color="green">1606</FONT>         * Set the default value for an output property, but this does<a name="line.1606"></a>
+<FONT color="green">1607</FONT>         * not impact any explicitly set value.<a name="line.1607"></a>
+<FONT color="green">1608</FONT>         */<a name="line.1608"></a>
+<FONT color="green">1609</FONT>        public void   setOutputPropertyDefault(String name, String val) {<a name="line.1609"></a>
+<FONT color="green">1610</FONT>            setProp(name,val,true);<a name="line.1610"></a>
+<FONT color="green">1611</FONT>            <a name="line.1611"></a>
+<FONT color="green">1612</FONT>        }<a name="line.1612"></a>
+<FONT color="green">1613</FONT>        <a name="line.1613"></a>
+<FONT color="green">1614</FONT>        /**<a name="line.1614"></a>
+<FONT color="green">1615</FONT>         * A mapping of keys to explicitly set values, for example if <a name="line.1615"></a>
+<FONT color="green">1616</FONT>         * and &lt;xsl:output/&gt; has an "encoding" attribute, this<a name="line.1616"></a>
+<FONT color="green">1617</FONT>         * map will have what that attribute maps to.<a name="line.1617"></a>
+<FONT color="green">1618</FONT>         */<a name="line.1618"></a>
+<FONT color="green">1619</FONT>        private HashMap m_OutputProps;<a name="line.1619"></a>
+<FONT color="green">1620</FONT>        /**<a name="line.1620"></a>
+<FONT color="green">1621</FONT>         * A mapping of keys to default values, for example if<a name="line.1621"></a>
+<FONT color="green">1622</FONT>         * the default value of the encoding is "UTF-8" then this<a name="line.1622"></a>
+<FONT color="green">1623</FONT>         * map will have that "encoding" maps to "UTF-8".<a name="line.1623"></a>
+<FONT color="green">1624</FONT>         */<a name="line.1624"></a>
+<FONT color="green">1625</FONT>        private HashMap m_OutputPropsDefault;<a name="line.1625"></a>
+<FONT color="green">1626</FONT>        <a name="line.1626"></a>
+<FONT color="green">1627</FONT>        Set getOutputPropDefaultKeys() {<a name="line.1627"></a>
+<FONT color="green">1628</FONT>            return m_OutputPropsDefault.keySet();<a name="line.1628"></a>
+<FONT color="green">1629</FONT>        }<a name="line.1629"></a>
+<FONT color="green">1630</FONT>        Set getOutputPropKeys() {<a name="line.1630"></a>
+<FONT color="green">1631</FONT>            return m_OutputProps.keySet();<a name="line.1631"></a>
+<FONT color="green">1632</FONT>        }<a name="line.1632"></a>
+<FONT color="green">1633</FONT>        <a name="line.1633"></a>
+<FONT color="green">1634</FONT>        private String getProp(String name, boolean defaultVal) {<a name="line.1634"></a>
+<FONT color="green">1635</FONT>            if (m_OutputProps == null) {<a name="line.1635"></a>
+<FONT color="green">1636</FONT>                m_OutputProps = new HashMap();<a name="line.1636"></a>
+<FONT color="green">1637</FONT>                m_OutputPropsDefault = new HashMap();<a name="line.1637"></a>
+<FONT color="green">1638</FONT>            }<a name="line.1638"></a>
+<FONT color="green">1639</FONT>            <a name="line.1639"></a>
+<FONT color="green">1640</FONT>            String val;<a name="line.1640"></a>
+<FONT color="green">1641</FONT>            if (defaultVal)<a name="line.1641"></a>
+<FONT color="green">1642</FONT>                val = (String) m_OutputPropsDefault.get(name);<a name="line.1642"></a>
+<FONT color="green">1643</FONT>            else<a name="line.1643"></a>
+<FONT color="green">1644</FONT>                val = (String) m_OutputProps.get(name);<a name="line.1644"></a>
+<FONT color="green">1645</FONT>            <a name="line.1645"></a>
+<FONT color="green">1646</FONT>            return val;<a name="line.1646"></a>
+<FONT color="green">1647</FONT>            <a name="line.1647"></a>
+<FONT color="green">1648</FONT>        }<a name="line.1648"></a>
+<FONT color="green">1649</FONT>        /**<a name="line.1649"></a>
+<FONT color="green">1650</FONT>         * <a name="line.1650"></a>
+<FONT color="green">1651</FONT>         * @param name The name of the property, e.g. "{http://myprop}indent-tabs" or "indent".<a name="line.1651"></a>
+<FONT color="green">1652</FONT>         * @param val The value of the property, e.g. "4"<a name="line.1652"></a>
+<FONT color="green">1653</FONT>         * @param defaultVal true if this is a default value being set for the property as <a name="line.1653"></a>
+<FONT color="green">1654</FONT>         * opposed to a user define on, set say explicitly in the stylesheet or via JAXP<a name="line.1654"></a>
+<FONT color="green">1655</FONT>         */<a name="line.1655"></a>
+<FONT color="green">1656</FONT>        void setProp(String name, String val, boolean defaultVal) {<a name="line.1656"></a>
+<FONT color="green">1657</FONT>            if (m_OutputProps == null) {<a name="line.1657"></a>
+<FONT color="green">1658</FONT>                m_OutputProps = new HashMap();<a name="line.1658"></a>
+<FONT color="green">1659</FONT>                m_OutputPropsDefault = new HashMap();<a name="line.1659"></a>
+<FONT color="green">1660</FONT>            }<a name="line.1660"></a>
+<FONT color="green">1661</FONT>            <a name="line.1661"></a>
+<FONT color="green">1662</FONT>            if (defaultVal)<a name="line.1662"></a>
+<FONT color="green">1663</FONT>                m_OutputPropsDefault.put(name,val);<a name="line.1663"></a>
+<FONT color="green">1664</FONT>            else {<a name="line.1664"></a>
+<FONT color="green">1665</FONT>                if (OutputKeys.CDATA_SECTION_ELEMENTS.equals(name) &amp;&amp; val != null) {<a name="line.1665"></a>
+<FONT color="green">1666</FONT>                    initCdataElems(val);<a name="line.1666"></a>
+<FONT color="green">1667</FONT>                    String oldVal = (String) m_OutputProps.get(name);<a name="line.1667"></a>
+<FONT color="green">1668</FONT>                    String newVal;<a name="line.1668"></a>
+<FONT color="green">1669</FONT>                    if (oldVal == null)<a name="line.1669"></a>
+<FONT color="green">1670</FONT>                        newVal = oldVal + ' ' + val;<a name="line.1670"></a>
+<FONT color="green">1671</FONT>                    else<a name="line.1671"></a>
+<FONT color="green">1672</FONT>                        newVal = val;<a name="line.1672"></a>
+<FONT color="green">1673</FONT>                    m_OutputProps.put(name,newVal);<a name="line.1673"></a>
+<FONT color="green">1674</FONT>                }<a name="line.1674"></a>
+<FONT color="green">1675</FONT>                else {<a name="line.1675"></a>
+<FONT color="green">1676</FONT>                    m_OutputProps.put(name,val);<a name="line.1676"></a>
+<FONT color="green">1677</FONT>                }<a name="line.1677"></a>
+<FONT color="green">1678</FONT>            }<a name="line.1678"></a>
+<FONT color="green">1679</FONT>            <a name="line.1679"></a>
+<FONT color="green">1680</FONT>    <a name="line.1680"></a>
+<FONT color="green">1681</FONT>        }<a name="line.1681"></a>
+<FONT color="green">1682</FONT>    <a name="line.1682"></a>
+<FONT color="green">1683</FONT>        /**<a name="line.1683"></a>
+<FONT color="green">1684</FONT>         * Get the first char of the local name<a name="line.1684"></a>
+<FONT color="green">1685</FONT>         * @param name Either a local name, or a local name<a name="line.1685"></a>
+<FONT color="green">1686</FONT>         * preceeded by a uri enclosed in curly braces.<a name="line.1686"></a>
+<FONT color="green">1687</FONT>         */<a name="line.1687"></a>
+<FONT color="green">1688</FONT>        static char getFirstCharLocName(String name) {<a name="line.1688"></a>
+<FONT color="green">1689</FONT>            final char first;<a name="line.1689"></a>
+<FONT color="green">1690</FONT>            int i = name.indexOf('}');<a name="line.1690"></a>
+<FONT color="green">1691</FONT>            if (i &lt; 0)<a name="line.1691"></a>
+<FONT color="green">1692</FONT>                first = name.charAt(0);<a name="line.1692"></a>
+<FONT color="green">1693</FONT>            else<a name="line.1693"></a>
+<FONT color="green">1694</FONT>                first = name.charAt(i+1);<a name="line.1694"></a>
+<FONT color="green">1695</FONT>            return first;<a name="line.1695"></a>
+<FONT color="green">1696</FONT>        }<a name="line.1696"></a>
+<FONT color="green">1697</FONT>    }<a name="line.1697"></a>
+<FONT color="green">1698</FONT>        <a name="line.1698"></a>
+<FONT color="green">1699</FONT>    <a name="line.1699"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

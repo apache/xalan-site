@@ -1,0 +1,415 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: ElemSort.java 468643 2006-10-28 06:56:03Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    package org.apache.xalan.templates;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    import org.apache.xalan.res.XSLTErrorResources;<a name="line.23"></a>
+<FONT color="green">024</FONT>    import org.apache.xpath.XPath;<a name="line.24"></a>
+<FONT color="green">025</FONT>    <a name="line.25"></a>
+<FONT color="green">026</FONT>    import org.w3c.dom.DOMException;<a name="line.26"></a>
+<FONT color="green">027</FONT>    import org.w3c.dom.Node;<a name="line.27"></a>
+<FONT color="green">028</FONT>    <a name="line.28"></a>
+<FONT color="green">029</FONT>    /**<a name="line.29"></a>
+<FONT color="green">030</FONT>     * Implement xsl:sort.<a name="line.30"></a>
+<FONT color="green">031</FONT>     * &lt;pre&gt;<a name="line.31"></a>
+<FONT color="green">032</FONT>     * &lt;!ELEMENT xsl:sort EMPTY&gt;<a name="line.32"></a>
+<FONT color="green">033</FONT>     * &lt;!ATTLIST xsl:sort<a name="line.33"></a>
+<FONT color="green">034</FONT>     *   select %expr; "."<a name="line.34"></a>
+<FONT color="green">035</FONT>     *   lang %avt; #IMPLIED<a name="line.35"></a>
+<FONT color="green">036</FONT>     *   data-type %avt; "text"<a name="line.36"></a>
+<FONT color="green">037</FONT>     *   order %avt; "ascending"<a name="line.37"></a>
+<FONT color="green">038</FONT>     *   case-order %avt; #IMPLIED<a name="line.38"></a>
+<FONT color="green">039</FONT>     * &gt;<a name="line.39"></a>
+<FONT color="green">040</FONT>     * &lt;!-- xsl:sort cannot occur after any other elements or<a name="line.40"></a>
+<FONT color="green">041</FONT>     * any non-whitespace character --&gt;<a name="line.41"></a>
+<FONT color="green">042</FONT>     * &lt;/pre&gt;<a name="line.42"></a>
+<FONT color="green">043</FONT>     * @see &lt;a href="http://www.w3.org/TR/xslt#sorting"&gt;sorting in XSLT Specification&lt;/a&gt;<a name="line.43"></a>
+<FONT color="green">044</FONT>     * @xsl.usage advanced<a name="line.44"></a>
+<FONT color="green">045</FONT>     */<a name="line.45"></a>
+<FONT color="green">046</FONT>    public class ElemSort extends ElemTemplateElement<a name="line.46"></a>
+<FONT color="green">047</FONT>    {<a name="line.47"></a>
+<FONT color="green">048</FONT>        static final long serialVersionUID = -4991510257335851938L;<a name="line.48"></a>
+<FONT color="green">049</FONT>    <a name="line.49"></a>
+<FONT color="green">050</FONT>      /**<a name="line.50"></a>
+<FONT color="green">051</FONT>       * xsl:sort has a select attribute whose value is an expression.<a name="line.51"></a>
+<FONT color="green">052</FONT>       * @serial<a name="line.52"></a>
+<FONT color="green">053</FONT>       */<a name="line.53"></a>
+<FONT color="green">054</FONT>      private XPath m_selectExpression = null;<a name="line.54"></a>
+<FONT color="green">055</FONT>    <a name="line.55"></a>
+<FONT color="green">056</FONT>      /**<a name="line.56"></a>
+<FONT color="green">057</FONT>       * Set the "select" attribute.<a name="line.57"></a>
+<FONT color="green">058</FONT>       * xsl:sort has a select attribute whose value is an expression.<a name="line.58"></a>
+<FONT color="green">059</FONT>       * For each node to be processed, the expression is evaluated<a name="line.59"></a>
+<FONT color="green">060</FONT>       * with that node as the current node and with the complete<a name="line.60"></a>
+<FONT color="green">061</FONT>       * list of nodes being processed in unsorted order as the current<a name="line.61"></a>
+<FONT color="green">062</FONT>       * node list. The resulting object is converted to a string as if<a name="line.62"></a>
+<FONT color="green">063</FONT>       * by a call to the string function; this string is used as the<a name="line.63"></a>
+<FONT color="green">064</FONT>       * sort key for that node. The default value of the select attribute<a name="line.64"></a>
+<FONT color="green">065</FONT>       * is ., which will cause the string-value of the current node to<a name="line.65"></a>
+<FONT color="green">066</FONT>       * be used as the sort key.<a name="line.66"></a>
+<FONT color="green">067</FONT>       *<a name="line.67"></a>
+<FONT color="green">068</FONT>       * @param v Value to set for the "select" attribute<a name="line.68"></a>
+<FONT color="green">069</FONT>       */<a name="line.69"></a>
+<FONT color="green">070</FONT>      public void setSelect(XPath v)<a name="line.70"></a>
+<FONT color="green">071</FONT>      {<a name="line.71"></a>
+<FONT color="green">072</FONT>    <a name="line.72"></a>
+<FONT color="green">073</FONT>        if (v.getPatternString().indexOf("{") &lt; 0)<a name="line.73"></a>
+<FONT color="green">074</FONT>          m_selectExpression = v;<a name="line.74"></a>
+<FONT color="green">075</FONT>        else<a name="line.75"></a>
+<FONT color="green">076</FONT>          error(XSLTErrorResources.ER_NO_CURLYBRACE, null);<a name="line.76"></a>
+<FONT color="green">077</FONT>      }<a name="line.77"></a>
+<FONT color="green">078</FONT>    <a name="line.78"></a>
+<FONT color="green">079</FONT>      /**<a name="line.79"></a>
+<FONT color="green">080</FONT>       * Get the "select" attribute.<a name="line.80"></a>
+<FONT color="green">081</FONT>       * xsl:sort has a select attribute whose value is an expression.<a name="line.81"></a>
+<FONT color="green">082</FONT>       * For each node to be processed, the expression is evaluated<a name="line.82"></a>
+<FONT color="green">083</FONT>       * with that node as the current node and with the complete<a name="line.83"></a>
+<FONT color="green">084</FONT>       * list of nodes being processed in unsorted order as the current<a name="line.84"></a>
+<FONT color="green">085</FONT>       * node list. The resulting object is converted to a string as if<a name="line.85"></a>
+<FONT color="green">086</FONT>       * by a call to the string function; this string is used as the<a name="line.86"></a>
+<FONT color="green">087</FONT>       * sort key for that node. The default value of the select attribute<a name="line.87"></a>
+<FONT color="green">088</FONT>       * is ., which will cause the string-value of the current node to<a name="line.88"></a>
+<FONT color="green">089</FONT>       * be used as the sort key.<a name="line.89"></a>
+<FONT color="green">090</FONT>       *<a name="line.90"></a>
+<FONT color="green">091</FONT>       * @return The value of the "select" attribute<a name="line.91"></a>
+<FONT color="green">092</FONT>       */<a name="line.92"></a>
+<FONT color="green">093</FONT>      public XPath getSelect()<a name="line.93"></a>
+<FONT color="green">094</FONT>      {<a name="line.94"></a>
+<FONT color="green">095</FONT>        return m_selectExpression;<a name="line.95"></a>
+<FONT color="green">096</FONT>      }<a name="line.96"></a>
+<FONT color="green">097</FONT>    <a name="line.97"></a>
+<FONT color="green">098</FONT>      /**<a name="line.98"></a>
+<FONT color="green">099</FONT>       * lang specifies the language of the sort keys.<a name="line.99"></a>
+<FONT color="green">100</FONT>       * @serial<a name="line.100"></a>
+<FONT color="green">101</FONT>       */<a name="line.101"></a>
+<FONT color="green">102</FONT>      private AVT m_lang_avt = null;<a name="line.102"></a>
+<FONT color="green">103</FONT>    <a name="line.103"></a>
+<FONT color="green">104</FONT>      /**<a name="line.104"></a>
+<FONT color="green">105</FONT>       * Set the "lang" attribute.<a name="line.105"></a>
+<FONT color="green">106</FONT>       * lang specifies the language of the sort keys; it has the same<a name="line.106"></a>
+<FONT color="green">107</FONT>       * range of values as xml:lang [XML]; if no lang value is<a name="line.107"></a>
+<FONT color="green">108</FONT>       * specified, the language should be determined from the system environment.<a name="line.108"></a>
+<FONT color="green">109</FONT>       *<a name="line.109"></a>
+<FONT color="green">110</FONT>       * @param v The value to set for the "lang" attribute<a name="line.110"></a>
+<FONT color="green">111</FONT>       */<a name="line.111"></a>
+<FONT color="green">112</FONT>      public void setLang(AVT v)<a name="line.112"></a>
+<FONT color="green">113</FONT>      {<a name="line.113"></a>
+<FONT color="green">114</FONT>        m_lang_avt = v;<a name="line.114"></a>
+<FONT color="green">115</FONT>      }<a name="line.115"></a>
+<FONT color="green">116</FONT>    <a name="line.116"></a>
+<FONT color="green">117</FONT>      /**<a name="line.117"></a>
+<FONT color="green">118</FONT>       * Get the "lang" attribute.<a name="line.118"></a>
+<FONT color="green">119</FONT>       * lang specifies the language of the sort keys; it has the same<a name="line.119"></a>
+<FONT color="green">120</FONT>       * range of values as xml:lang [XML]; if no lang value is<a name="line.120"></a>
+<FONT color="green">121</FONT>       * specified, the language should be determined from the system environment.<a name="line.121"></a>
+<FONT color="green">122</FONT>       *<a name="line.122"></a>
+<FONT color="green">123</FONT>       * @return The value of the "lang" attribute<a name="line.123"></a>
+<FONT color="green">124</FONT>       */<a name="line.124"></a>
+<FONT color="green">125</FONT>      public AVT getLang()<a name="line.125"></a>
+<FONT color="green">126</FONT>      {<a name="line.126"></a>
+<FONT color="green">127</FONT>        return m_lang_avt;<a name="line.127"></a>
+<FONT color="green">128</FONT>      }<a name="line.128"></a>
+<FONT color="green">129</FONT>    <a name="line.129"></a>
+<FONT color="green">130</FONT>      /**<a name="line.130"></a>
+<FONT color="green">131</FONT>       * data-type specifies the data type of the<a name="line.131"></a>
+<FONT color="green">132</FONT>       * strings to be sorted.<a name="line.132"></a>
+<FONT color="green">133</FONT>       * @serial<a name="line.133"></a>
+<FONT color="green">134</FONT>       */<a name="line.134"></a>
+<FONT color="green">135</FONT>      private AVT m_dataType_avt = null;<a name="line.135"></a>
+<FONT color="green">136</FONT>    <a name="line.136"></a>
+<FONT color="green">137</FONT>      /**<a name="line.137"></a>
+<FONT color="green">138</FONT>       * Set the "data-type" attribute.<a name="line.138"></a>
+<FONT color="green">139</FONT>       * &lt;code&gt;data-type&lt;/code&gt; specifies the data type of the<a name="line.139"></a>
+<FONT color="green">140</FONT>       * strings; the following values are allowed:<a name="line.140"></a>
+<FONT color="green">141</FONT>       * &lt;ul&gt;<a name="line.141"></a>
+<FONT color="green">142</FONT>       * &lt;li&gt;<a name="line.142"></a>
+<FONT color="green">143</FONT>       * &lt;code&gt;text&lt;/code&gt; specifies that the sort keys should be<a name="line.143"></a>
+<FONT color="green">144</FONT>       * sorted lexicographically in the culturally correct manner for the<a name="line.144"></a>
+<FONT color="green">145</FONT>       * language specified by &lt;code&gt;lang&lt;/code&gt;.<a name="line.145"></a>
+<FONT color="green">146</FONT>       * &lt;/li&gt;<a name="line.146"></a>
+<FONT color="green">147</FONT>       * &lt;li&gt;<a name="line.147"></a>
+<FONT color="green">148</FONT>       * &lt;code&gt;number&lt;/code&gt; specifies that the sort keys should be<a name="line.148"></a>
+<FONT color="green">149</FONT>       * converted to numbers and then sorted according to the numeric value;<a name="line.149"></a>
+<FONT color="green">150</FONT>       * the sort key is converted to a number as if by a call to the<a name="line.150"></a>
+<FONT color="green">151</FONT>       * &lt;b&gt;&lt;a href="http://www.w3.org/TR/xpath#function-number"&gt;number&lt;/a&gt;&lt;/b&gt; function; the &lt;code&gt;lang&lt;/code&gt;<a name="line.151"></a>
+<FONT color="green">152</FONT>       * attribute is ignored.<a name="line.152"></a>
+<FONT color="green">153</FONT>       * &lt;/li&gt;<a name="line.153"></a>
+<FONT color="green">154</FONT>       * &lt;li&gt;<a name="line.154"></a>
+<FONT color="green">155</FONT>       * A &lt;a href="http://www.w3.org/TR/REC-xml-names#NT-QName"&gt;QName&lt;/a&gt; with a prefix<a name="line.155"></a>
+<FONT color="green">156</FONT>       * is expanded into an &lt;a href="http://www.w3.org/TR/xpath#dt-expanded-name"&gt;expanded-name&lt;/a&gt; as described<a name="line.156"></a>
+<FONT color="green">157</FONT>       * in &lt;a href="#qname"&gt;[&lt;b&gt;2.4 Qualified Names&lt;/b&gt;]&lt;/a&gt;; the expanded-name identifies the data-type;<a name="line.157"></a>
+<FONT color="green">158</FONT>       * the behavior in this case is not specified by this document.<a name="line.158"></a>
+<FONT color="green">159</FONT>       * &lt;/li&gt;<a name="line.159"></a>
+<FONT color="green">160</FONT>       * &lt;/ul&gt;<a name="line.160"></a>
+<FONT color="green">161</FONT>       * &lt;p&gt;The default value is &lt;code&gt;text&lt;/code&gt;.&lt;/p&gt;<a name="line.161"></a>
+<FONT color="green">162</FONT>       * &lt;blockquote&gt;<a name="line.162"></a>
+<FONT color="green">163</FONT>       * &lt;b&gt;NOTE: &lt;/b&gt;The XSL Working Group plans that future versions of XSLT will<a name="line.163"></a>
+<FONT color="green">164</FONT>       * leverage XML Schemas to define further values for this<a name="line.164"></a>
+<FONT color="green">165</FONT>       * attribute.&lt;/blockquote&gt;<a name="line.165"></a>
+<FONT color="green">166</FONT>       *<a name="line.166"></a>
+<FONT color="green">167</FONT>       * @param v Value to set for the "data-type" attribute<a name="line.167"></a>
+<FONT color="green">168</FONT>       */<a name="line.168"></a>
+<FONT color="green">169</FONT>      public void setDataType(AVT v)<a name="line.169"></a>
+<FONT color="green">170</FONT>      {<a name="line.170"></a>
+<FONT color="green">171</FONT>        m_dataType_avt = v;<a name="line.171"></a>
+<FONT color="green">172</FONT>      }<a name="line.172"></a>
+<FONT color="green">173</FONT>    <a name="line.173"></a>
+<FONT color="green">174</FONT>      /**<a name="line.174"></a>
+<FONT color="green">175</FONT>       * Get the "data-type" attribute.<a name="line.175"></a>
+<FONT color="green">176</FONT>       * &lt;code&gt;data-type&lt;/code&gt; specifies the data type of the<a name="line.176"></a>
+<FONT color="green">177</FONT>       * strings; the following values are allowed:<a name="line.177"></a>
+<FONT color="green">178</FONT>       * &lt;ul&gt;<a name="line.178"></a>
+<FONT color="green">179</FONT>       * &lt;li&gt;<a name="line.179"></a>
+<FONT color="green">180</FONT>       * &lt;code&gt;text&lt;/code&gt; specifies that the sort keys should be<a name="line.180"></a>
+<FONT color="green">181</FONT>       * sorted lexicographically in the culturally correct manner for the<a name="line.181"></a>
+<FONT color="green">182</FONT>       * language specified by &lt;code&gt;lang&lt;/code&gt;.<a name="line.182"></a>
+<FONT color="green">183</FONT>       * &lt;/li&gt;<a name="line.183"></a>
+<FONT color="green">184</FONT>       * &lt;li&gt;<a name="line.184"></a>
+<FONT color="green">185</FONT>       * &lt;code&gt;number&lt;/code&gt; specifies that the sort keys should be<a name="line.185"></a>
+<FONT color="green">186</FONT>       * converted to numbers and then sorted according to the numeric value;<a name="line.186"></a>
+<FONT color="green">187</FONT>       * the sort key is converted to a number as if by a call to the<a name="line.187"></a>
+<FONT color="green">188</FONT>       * &lt;b&gt;&lt;a href="http://www.w3.org/TR/xpath#function-number"&gt;number&lt;/a&gt;&lt;/b&gt; function; the &lt;code&gt;lang&lt;/code&gt;<a name="line.188"></a>
+<FONT color="green">189</FONT>       * attribute is ignored.<a name="line.189"></a>
+<FONT color="green">190</FONT>       * &lt;/li&gt;<a name="line.190"></a>
+<FONT color="green">191</FONT>       * &lt;li&gt;<a name="line.191"></a>
+<FONT color="green">192</FONT>       * A &lt;a href="http://www.w3.org/TR/REC-xml-names#NT-QName"&gt;QName&lt;/a&gt; with a prefix<a name="line.192"></a>
+<FONT color="green">193</FONT>       * is expanded into an &lt;a href="http://www.w3.org/TR/xpath#dt-expanded-name"&gt;expanded-name&lt;/a&gt; as described<a name="line.193"></a>
+<FONT color="green">194</FONT>       * in &lt;a href="#qname"&gt;[&lt;b&gt;2.4 Qualified Names&lt;/b&gt;]&lt;/a&gt;; the expanded-name identifies the data-type;<a name="line.194"></a>
+<FONT color="green">195</FONT>       * the behavior in this case is not specified by this document.<a name="line.195"></a>
+<FONT color="green">196</FONT>       * &lt;/li&gt;<a name="line.196"></a>
+<FONT color="green">197</FONT>       * &lt;/ul&gt;<a name="line.197"></a>
+<FONT color="green">198</FONT>       * &lt;p&gt;The default value is &lt;code&gt;text&lt;/code&gt;.&lt;/p&gt;<a name="line.198"></a>
+<FONT color="green">199</FONT>       * &lt;blockquote&gt;<a name="line.199"></a>
+<FONT color="green">200</FONT>       * &lt;b&gt;NOTE: &lt;/b&gt;The XSL Working Group plans that future versions of XSLT will<a name="line.200"></a>
+<FONT color="green">201</FONT>       * leverage XML Schemas to define further values for this<a name="line.201"></a>
+<FONT color="green">202</FONT>       * attribute.&lt;/blockquote&gt;<a name="line.202"></a>
+<FONT color="green">203</FONT>       *<a name="line.203"></a>
+<FONT color="green">204</FONT>       * @return The value of the "data-type" attribute<a name="line.204"></a>
+<FONT color="green">205</FONT>       */<a name="line.205"></a>
+<FONT color="green">206</FONT>      public AVT getDataType()<a name="line.206"></a>
+<FONT color="green">207</FONT>      {<a name="line.207"></a>
+<FONT color="green">208</FONT>        return m_dataType_avt;<a name="line.208"></a>
+<FONT color="green">209</FONT>      }<a name="line.209"></a>
+<FONT color="green">210</FONT>    <a name="line.210"></a>
+<FONT color="green">211</FONT>      /**<a name="line.211"></a>
+<FONT color="green">212</FONT>       * order specifies whether the strings should be sorted in ascending<a name="line.212"></a>
+<FONT color="green">213</FONT>       * or descending order.<a name="line.213"></a>
+<FONT color="green">214</FONT>       * @serial<a name="line.214"></a>
+<FONT color="green">215</FONT>       */<a name="line.215"></a>
+<FONT color="green">216</FONT>      private AVT m_order_avt = null;<a name="line.216"></a>
+<FONT color="green">217</FONT>    <a name="line.217"></a>
+<FONT color="green">218</FONT>      /**<a name="line.218"></a>
+<FONT color="green">219</FONT>       * Set the "order" attribute.<a name="line.219"></a>
+<FONT color="green">220</FONT>       * order specifies whether the strings should be sorted in ascending<a name="line.220"></a>
+<FONT color="green">221</FONT>       * or descending order; ascending specifies ascending order; descending<a name="line.221"></a>
+<FONT color="green">222</FONT>       * specifies descending order; the default is ascending.<a name="line.222"></a>
+<FONT color="green">223</FONT>       *<a name="line.223"></a>
+<FONT color="green">224</FONT>       * @param v The value to set for the "order" attribute<a name="line.224"></a>
+<FONT color="green">225</FONT>       */<a name="line.225"></a>
+<FONT color="green">226</FONT>      public void setOrder(AVT v)<a name="line.226"></a>
+<FONT color="green">227</FONT>      {<a name="line.227"></a>
+<FONT color="green">228</FONT>        m_order_avt = v;<a name="line.228"></a>
+<FONT color="green">229</FONT>      }<a name="line.229"></a>
+<FONT color="green">230</FONT>    <a name="line.230"></a>
+<FONT color="green">231</FONT>      /**<a name="line.231"></a>
+<FONT color="green">232</FONT>       * Get the "order" attribute.<a name="line.232"></a>
+<FONT color="green">233</FONT>       * order specifies whether the strings should be sorted in ascending<a name="line.233"></a>
+<FONT color="green">234</FONT>       * or descending order; ascending specifies ascending order; descending<a name="line.234"></a>
+<FONT color="green">235</FONT>       * specifies descending order; the default is ascending.<a name="line.235"></a>
+<FONT color="green">236</FONT>       *<a name="line.236"></a>
+<FONT color="green">237</FONT>       * @return The value of the "order" attribute<a name="line.237"></a>
+<FONT color="green">238</FONT>       */<a name="line.238"></a>
+<FONT color="green">239</FONT>      public AVT getOrder()<a name="line.239"></a>
+<FONT color="green">240</FONT>      {<a name="line.240"></a>
+<FONT color="green">241</FONT>        return m_order_avt;<a name="line.241"></a>
+<FONT color="green">242</FONT>      }<a name="line.242"></a>
+<FONT color="green">243</FONT>    <a name="line.243"></a>
+<FONT color="green">244</FONT>      /**<a name="line.244"></a>
+<FONT color="green">245</FONT>       * case-order has the value upper-first or lower-first.<a name="line.245"></a>
+<FONT color="green">246</FONT>       * The default value is language dependent.<a name="line.246"></a>
+<FONT color="green">247</FONT>       * @serial<a name="line.247"></a>
+<FONT color="green">248</FONT>       */<a name="line.248"></a>
+<FONT color="green">249</FONT>      private AVT m_caseorder_avt = null;<a name="line.249"></a>
+<FONT color="green">250</FONT>    <a name="line.250"></a>
+<FONT color="green">251</FONT>      /**<a name="line.251"></a>
+<FONT color="green">252</FONT>       * Set the "case-order" attribute.<a name="line.252"></a>
+<FONT color="green">253</FONT>       * case-order has the value upper-first or lower-first; this applies<a name="line.253"></a>
+<FONT color="green">254</FONT>       * when data-type="text", and specifies that upper-case letters should<a name="line.254"></a>
+<FONT color="green">255</FONT>       * sort before lower-case letters or vice-versa respectively.<a name="line.255"></a>
+<FONT color="green">256</FONT>       * For example, if lang="en", then A a B b are sorted with<a name="line.256"></a>
+<FONT color="green">257</FONT>       * case-order="upper-first" and a A b B are sorted with case-order="lower-first".<a name="line.257"></a>
+<FONT color="green">258</FONT>       * The default value is language dependent.<a name="line.258"></a>
+<FONT color="green">259</FONT>       *<a name="line.259"></a>
+<FONT color="green">260</FONT>       * @param v The value to set for the "case-order" attribute<a name="line.260"></a>
+<FONT color="green">261</FONT>       * <a name="line.261"></a>
+<FONT color="green">262</FONT>       * @serial<a name="line.262"></a>
+<FONT color="green">263</FONT>       */<a name="line.263"></a>
+<FONT color="green">264</FONT>      public void setCaseOrder(AVT v)<a name="line.264"></a>
+<FONT color="green">265</FONT>      {<a name="line.265"></a>
+<FONT color="green">266</FONT>        m_caseorder_avt = v;<a name="line.266"></a>
+<FONT color="green">267</FONT>      }<a name="line.267"></a>
+<FONT color="green">268</FONT>    <a name="line.268"></a>
+<FONT color="green">269</FONT>      /**<a name="line.269"></a>
+<FONT color="green">270</FONT>       * Get the "case-order" attribute.<a name="line.270"></a>
+<FONT color="green">271</FONT>       * case-order has the value upper-first or lower-first; this applies<a name="line.271"></a>
+<FONT color="green">272</FONT>       * when data-type="text", and specifies that upper-case letters should<a name="line.272"></a>
+<FONT color="green">273</FONT>       * sort before lower-case letters or vice-versa respectively.<a name="line.273"></a>
+<FONT color="green">274</FONT>       * For example, if lang="en", then A a B b are sorted with<a name="line.274"></a>
+<FONT color="green">275</FONT>       * case-order="upper-first" and a A b B are sorted with case-order="lower-first".<a name="line.275"></a>
+<FONT color="green">276</FONT>       * The default value is language dependent.<a name="line.276"></a>
+<FONT color="green">277</FONT>       *<a name="line.277"></a>
+<FONT color="green">278</FONT>       * @return The value of the "case-order" attribute<a name="line.278"></a>
+<FONT color="green">279</FONT>       */<a name="line.279"></a>
+<FONT color="green">280</FONT>      public AVT getCaseOrder()<a name="line.280"></a>
+<FONT color="green">281</FONT>      {<a name="line.281"></a>
+<FONT color="green">282</FONT>        return m_caseorder_avt;<a name="line.282"></a>
+<FONT color="green">283</FONT>      }<a name="line.283"></a>
+<FONT color="green">284</FONT>    <a name="line.284"></a>
+<FONT color="green">285</FONT>      /**<a name="line.285"></a>
+<FONT color="green">286</FONT>       * Get an int constant identifying the type of element.<a name="line.286"></a>
+<FONT color="green">287</FONT>       * @see org.apache.xalan.templates.Constants<a name="line.287"></a>
+<FONT color="green">288</FONT>       *<a name="line.288"></a>
+<FONT color="green">289</FONT>       * @return The token ID of the element<a name="line.289"></a>
+<FONT color="green">290</FONT>       */<a name="line.290"></a>
+<FONT color="green">291</FONT>      public int getXSLToken()<a name="line.291"></a>
+<FONT color="green">292</FONT>      {<a name="line.292"></a>
+<FONT color="green">293</FONT>        return Constants.ELEMNAME_SORT;<a name="line.293"></a>
+<FONT color="green">294</FONT>      }<a name="line.294"></a>
+<FONT color="green">295</FONT>    <a name="line.295"></a>
+<FONT color="green">296</FONT>      /**<a name="line.296"></a>
+<FONT color="green">297</FONT>       * Return the node name.<a name="line.297"></a>
+<FONT color="green">298</FONT>       *<a name="line.298"></a>
+<FONT color="green">299</FONT>       * @return The element's name<a name="line.299"></a>
+<FONT color="green">300</FONT>       */<a name="line.300"></a>
+<FONT color="green">301</FONT>      public String getNodeName()<a name="line.301"></a>
+<FONT color="green">302</FONT>      {<a name="line.302"></a>
+<FONT color="green">303</FONT>        return Constants.ELEMNAME_SORT_STRING;<a name="line.303"></a>
+<FONT color="green">304</FONT>      }<a name="line.304"></a>
+<FONT color="green">305</FONT>    <a name="line.305"></a>
+<FONT color="green">306</FONT>      /**<a name="line.306"></a>
+<FONT color="green">307</FONT>       * Add a child to the child list.<a name="line.307"></a>
+<FONT color="green">308</FONT>       *<a name="line.308"></a>
+<FONT color="green">309</FONT>       * @param newChild Child to add to the child list<a name="line.309"></a>
+<FONT color="green">310</FONT>       *<a name="line.310"></a>
+<FONT color="green">311</FONT>       * @return Child just added to the child list<a name="line.311"></a>
+<FONT color="green">312</FONT>       *<a name="line.312"></a>
+<FONT color="green">313</FONT>       * @throws DOMException<a name="line.313"></a>
+<FONT color="green">314</FONT>       */<a name="line.314"></a>
+<FONT color="green">315</FONT>      public Node appendChild(Node newChild) throws DOMException<a name="line.315"></a>
+<FONT color="green">316</FONT>      {<a name="line.316"></a>
+<FONT color="green">317</FONT>    <a name="line.317"></a>
+<FONT color="green">318</FONT>        error(XSLTErrorResources.ER_CANNOT_ADD,<a name="line.318"></a>
+<FONT color="green">319</FONT>              new Object[]{ newChild.getNodeName(),<a name="line.319"></a>
+<FONT color="green">320</FONT>                            this.getNodeName() });  //"Can not add " +((ElemTemplateElement)newChild).m_elemName +<a name="line.320"></a>
+<FONT color="green">321</FONT>    <a name="line.321"></a>
+<FONT color="green">322</FONT>        //" to " + this.m_elemName);<a name="line.322"></a>
+<FONT color="green">323</FONT>        return null;<a name="line.323"></a>
+<FONT color="green">324</FONT>      }<a name="line.324"></a>
+<FONT color="green">325</FONT>      <a name="line.325"></a>
+<FONT color="green">326</FONT>      /**<a name="line.326"></a>
+<FONT color="green">327</FONT>       * This function is called after everything else has been<a name="line.327"></a>
+<FONT color="green">328</FONT>       * recomposed, and allows the template to set remaining<a name="line.328"></a>
+<FONT color="green">329</FONT>       * values that may be based on some other property that<a name="line.329"></a>
+<FONT color="green">330</FONT>       * depends on recomposition.<a name="line.330"></a>
+<FONT color="green">331</FONT>       */<a name="line.331"></a>
+<FONT color="green">332</FONT>      public void compose(StylesheetRoot sroot) <a name="line.332"></a>
+<FONT color="green">333</FONT>        throws javax.xml.transform.TransformerException<a name="line.333"></a>
+<FONT color="green">334</FONT>      {<a name="line.334"></a>
+<FONT color="green">335</FONT>        super.compose(sroot);<a name="line.335"></a>
+<FONT color="green">336</FONT>        StylesheetRoot.ComposeState cstate = sroot.getComposeState();<a name="line.336"></a>
+<FONT color="green">337</FONT>        java.util.Vector vnames = cstate.getVariableNames();<a name="line.337"></a>
+<FONT color="green">338</FONT>        if(null != m_caseorder_avt)<a name="line.338"></a>
+<FONT color="green">339</FONT>          m_caseorder_avt.fixupVariables(vnames, cstate.getGlobalsSize());<a name="line.339"></a>
+<FONT color="green">340</FONT>        if(null != m_dataType_avt)<a name="line.340"></a>
+<FONT color="green">341</FONT>          m_dataType_avt.fixupVariables(vnames, cstate.getGlobalsSize());<a name="line.341"></a>
+<FONT color="green">342</FONT>        if(null != m_lang_avt)<a name="line.342"></a>
+<FONT color="green">343</FONT>          m_lang_avt.fixupVariables(vnames, cstate.getGlobalsSize());<a name="line.343"></a>
+<FONT color="green">344</FONT>        if(null != m_order_avt)<a name="line.344"></a>
+<FONT color="green">345</FONT>          m_order_avt.fixupVariables(vnames, cstate.getGlobalsSize());<a name="line.345"></a>
+<FONT color="green">346</FONT>        if(null != m_selectExpression)<a name="line.346"></a>
+<FONT color="green">347</FONT>          m_selectExpression.fixupVariables(vnames, cstate.getGlobalsSize());<a name="line.347"></a>
+<FONT color="green">348</FONT>      }<a name="line.348"></a>
+<FONT color="green">349</FONT>    }<a name="line.349"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

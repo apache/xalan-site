@@ -1,0 +1,840 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: ToXMLSAXHandler.java 468654 2006-10-28 07:09:23Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>     package org.apache.xml.serializer;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    import java.io.IOException;<a name="line.23"></a>
+<FONT color="green">024</FONT>    import java.io.OutputStream;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import java.io.Writer;<a name="line.25"></a>
+<FONT color="green">026</FONT>    import java.util.Properties;<a name="line.26"></a>
+<FONT color="green">027</FONT>    <a name="line.27"></a>
+<FONT color="green">028</FONT>    import javax.xml.transform.Result;<a name="line.28"></a>
+<FONT color="green">029</FONT>    <a name="line.29"></a>
+<FONT color="green">030</FONT>    import org.w3c.dom.Node;<a name="line.30"></a>
+<FONT color="green">031</FONT>    import org.xml.sax.Attributes;<a name="line.31"></a>
+<FONT color="green">032</FONT>    import org.xml.sax.ContentHandler;<a name="line.32"></a>
+<FONT color="green">033</FONT>    import org.xml.sax.Locator;<a name="line.33"></a>
+<FONT color="green">034</FONT>    import org.xml.sax.SAXException;<a name="line.34"></a>
+<FONT color="green">035</FONT>    import org.xml.sax.ext.LexicalHandler;<a name="line.35"></a>
+<FONT color="green">036</FONT>    <a name="line.36"></a>
+<FONT color="green">037</FONT>    /**<a name="line.37"></a>
+<FONT color="green">038</FONT>     * This class receives notification of SAX-like events, and with gathered<a name="line.38"></a>
+<FONT color="green">039</FONT>     * information over these calls it will invoke the equivalent SAX methods<a name="line.39"></a>
+<FONT color="green">040</FONT>     * on a handler, the ultimate xsl:output method is known to be "xml".<a name="line.40"></a>
+<FONT color="green">041</FONT>     * <a name="line.41"></a>
+<FONT color="green">042</FONT>     * This class is not a public API.<a name="line.42"></a>
+<FONT color="green">043</FONT>     * @xsl.usage internal<a name="line.43"></a>
+<FONT color="green">044</FONT>     */<a name="line.44"></a>
+<FONT color="green">045</FONT>    public final class ToXMLSAXHandler extends ToSAXHandler<a name="line.45"></a>
+<FONT color="green">046</FONT>    {<a name="line.46"></a>
+<FONT color="green">047</FONT>    <a name="line.47"></a>
+<FONT color="green">048</FONT>        /**<a name="line.48"></a>
+<FONT color="green">049</FONT>         * Keeps track of whether output escaping is currently enabled<a name="line.49"></a>
+<FONT color="green">050</FONT>         */<a name="line.50"></a>
+<FONT color="green">051</FONT>        protected boolean m_escapeSetting = true;<a name="line.51"></a>
+<FONT color="green">052</FONT>    <a name="line.52"></a>
+<FONT color="green">053</FONT>        public ToXMLSAXHandler()<a name="line.53"></a>
+<FONT color="green">054</FONT>        {<a name="line.54"></a>
+<FONT color="green">055</FONT>            // default constructor (need to set content handler ASAP !)<a name="line.55"></a>
+<FONT color="green">056</FONT>            m_prefixMap = new NamespaceMappings();<a name="line.56"></a>
+<FONT color="green">057</FONT>            initCDATA();<a name="line.57"></a>
+<FONT color="green">058</FONT>        }<a name="line.58"></a>
+<FONT color="green">059</FONT>    <a name="line.59"></a>
+<FONT color="green">060</FONT>        /**<a name="line.60"></a>
+<FONT color="green">061</FONT>         * @see Serializer#getOutputFormat()<a name="line.61"></a>
+<FONT color="green">062</FONT>         */<a name="line.62"></a>
+<FONT color="green">063</FONT>        public Properties getOutputFormat()<a name="line.63"></a>
+<FONT color="green">064</FONT>        {<a name="line.64"></a>
+<FONT color="green">065</FONT>            return null;<a name="line.65"></a>
+<FONT color="green">066</FONT>        }<a name="line.66"></a>
+<FONT color="green">067</FONT>    <a name="line.67"></a>
+<FONT color="green">068</FONT>        /**<a name="line.68"></a>
+<FONT color="green">069</FONT>         * @see Serializer#getOutputStream()<a name="line.69"></a>
+<FONT color="green">070</FONT>         */<a name="line.70"></a>
+<FONT color="green">071</FONT>        public OutputStream getOutputStream()<a name="line.71"></a>
+<FONT color="green">072</FONT>        {<a name="line.72"></a>
+<FONT color="green">073</FONT>            return null;<a name="line.73"></a>
+<FONT color="green">074</FONT>        }<a name="line.74"></a>
+<FONT color="green">075</FONT>    <a name="line.75"></a>
+<FONT color="green">076</FONT>        /**<a name="line.76"></a>
+<FONT color="green">077</FONT>         * @see Serializer#getWriter()<a name="line.77"></a>
+<FONT color="green">078</FONT>         */<a name="line.78"></a>
+<FONT color="green">079</FONT>        public Writer getWriter()<a name="line.79"></a>
+<FONT color="green">080</FONT>        {<a name="line.80"></a>
+<FONT color="green">081</FONT>            return null;<a name="line.81"></a>
+<FONT color="green">082</FONT>        }<a name="line.82"></a>
+<FONT color="green">083</FONT>    <a name="line.83"></a>
+<FONT color="green">084</FONT>        /**<a name="line.84"></a>
+<FONT color="green">085</FONT>         * Do nothing for SAX.<a name="line.85"></a>
+<FONT color="green">086</FONT>         */<a name="line.86"></a>
+<FONT color="green">087</FONT>        public void indent(int n) throws SAXException<a name="line.87"></a>
+<FONT color="green">088</FONT>        {<a name="line.88"></a>
+<FONT color="green">089</FONT>        }<a name="line.89"></a>
+<FONT color="green">090</FONT>    <a name="line.90"></a>
+<FONT color="green">091</FONT>    <a name="line.91"></a>
+<FONT color="green">092</FONT>        /**<a name="line.92"></a>
+<FONT color="green">093</FONT>         * @see DOMSerializer#serialize(Node)<a name="line.93"></a>
+<FONT color="green">094</FONT>         */<a name="line.94"></a>
+<FONT color="green">095</FONT>        public void serialize(Node node) throws IOException<a name="line.95"></a>
+<FONT color="green">096</FONT>        {<a name="line.96"></a>
+<FONT color="green">097</FONT>        }<a name="line.97"></a>
+<FONT color="green">098</FONT>    <a name="line.98"></a>
+<FONT color="green">099</FONT>        /**<a name="line.99"></a>
+<FONT color="green">100</FONT>         * @see SerializationHandler#setEscaping(boolean)<a name="line.100"></a>
+<FONT color="green">101</FONT>         */<a name="line.101"></a>
+<FONT color="green">102</FONT>        public boolean setEscaping(boolean escape) throws SAXException<a name="line.102"></a>
+<FONT color="green">103</FONT>        {<a name="line.103"></a>
+<FONT color="green">104</FONT>            boolean oldEscapeSetting = m_escapeSetting;<a name="line.104"></a>
+<FONT color="green">105</FONT>            m_escapeSetting = escape;<a name="line.105"></a>
+<FONT color="green">106</FONT>    <a name="line.106"></a>
+<FONT color="green">107</FONT>            if (escape) {<a name="line.107"></a>
+<FONT color="green">108</FONT>                processingInstruction(Result.PI_ENABLE_OUTPUT_ESCAPING, "");<a name="line.108"></a>
+<FONT color="green">109</FONT>            } else {<a name="line.109"></a>
+<FONT color="green">110</FONT>                processingInstruction(Result.PI_DISABLE_OUTPUT_ESCAPING, "");<a name="line.110"></a>
+<FONT color="green">111</FONT>            }<a name="line.111"></a>
+<FONT color="green">112</FONT>    <a name="line.112"></a>
+<FONT color="green">113</FONT>            return oldEscapeSetting;<a name="line.113"></a>
+<FONT color="green">114</FONT>        }<a name="line.114"></a>
+<FONT color="green">115</FONT>    <a name="line.115"></a>
+<FONT color="green">116</FONT>        /**<a name="line.116"></a>
+<FONT color="green">117</FONT>         * @see Serializer#setOutputFormat(Properties)<a name="line.117"></a>
+<FONT color="green">118</FONT>         */<a name="line.118"></a>
+<FONT color="green">119</FONT>        public void setOutputFormat(Properties format)<a name="line.119"></a>
+<FONT color="green">120</FONT>        {<a name="line.120"></a>
+<FONT color="green">121</FONT>        }<a name="line.121"></a>
+<FONT color="green">122</FONT>    <a name="line.122"></a>
+<FONT color="green">123</FONT>        /**<a name="line.123"></a>
+<FONT color="green">124</FONT>         * @see Serializer#setOutputStream(OutputStream)<a name="line.124"></a>
+<FONT color="green">125</FONT>         */<a name="line.125"></a>
+<FONT color="green">126</FONT>        public void setOutputStream(OutputStream output)<a name="line.126"></a>
+<FONT color="green">127</FONT>        {<a name="line.127"></a>
+<FONT color="green">128</FONT>        }<a name="line.128"></a>
+<FONT color="green">129</FONT>    <a name="line.129"></a>
+<FONT color="green">130</FONT>        /**<a name="line.130"></a>
+<FONT color="green">131</FONT>         * @see Serializer#setWriter(Writer)<a name="line.131"></a>
+<FONT color="green">132</FONT>         */<a name="line.132"></a>
+<FONT color="green">133</FONT>        public void setWriter(Writer writer)<a name="line.133"></a>
+<FONT color="green">134</FONT>        {<a name="line.134"></a>
+<FONT color="green">135</FONT>        }<a name="line.135"></a>
+<FONT color="green">136</FONT>    <a name="line.136"></a>
+<FONT color="green">137</FONT>        /**<a name="line.137"></a>
+<FONT color="green">138</FONT>         * @see org.xml.sax.ext.DeclHandler#attributeDecl(String, String, String, String, String)<a name="line.138"></a>
+<FONT color="green">139</FONT>         */<a name="line.139"></a>
+<FONT color="green">140</FONT>        public void attributeDecl(<a name="line.140"></a>
+<FONT color="green">141</FONT>            String arg0,<a name="line.141"></a>
+<FONT color="green">142</FONT>            String arg1,<a name="line.142"></a>
+<FONT color="green">143</FONT>            String arg2,<a name="line.143"></a>
+<FONT color="green">144</FONT>            String arg3,<a name="line.144"></a>
+<FONT color="green">145</FONT>            String arg4)<a name="line.145"></a>
+<FONT color="green">146</FONT>            throws SAXException<a name="line.146"></a>
+<FONT color="green">147</FONT>        {<a name="line.147"></a>
+<FONT color="green">148</FONT>        }<a name="line.148"></a>
+<FONT color="green">149</FONT>    <a name="line.149"></a>
+<FONT color="green">150</FONT>        /**<a name="line.150"></a>
+<FONT color="green">151</FONT>         * @see org.xml.sax.ext.DeclHandler#elementDecl(String, String)<a name="line.151"></a>
+<FONT color="green">152</FONT>         */<a name="line.152"></a>
+<FONT color="green">153</FONT>        public void elementDecl(String arg0, String arg1) throws SAXException<a name="line.153"></a>
+<FONT color="green">154</FONT>        {<a name="line.154"></a>
+<FONT color="green">155</FONT>        }<a name="line.155"></a>
+<FONT color="green">156</FONT>    <a name="line.156"></a>
+<FONT color="green">157</FONT>        /**<a name="line.157"></a>
+<FONT color="green">158</FONT>         * @see org.xml.sax.ext.DeclHandler#externalEntityDecl(String, String, String)<a name="line.158"></a>
+<FONT color="green">159</FONT>         */<a name="line.159"></a>
+<FONT color="green">160</FONT>        public void externalEntityDecl(String arg0, String arg1, String arg2)<a name="line.160"></a>
+<FONT color="green">161</FONT>            throws SAXException<a name="line.161"></a>
+<FONT color="green">162</FONT>        {<a name="line.162"></a>
+<FONT color="green">163</FONT>        }<a name="line.163"></a>
+<FONT color="green">164</FONT>    <a name="line.164"></a>
+<FONT color="green">165</FONT>        /**<a name="line.165"></a>
+<FONT color="green">166</FONT>         * @see org.xml.sax.ext.DeclHandler#internalEntityDecl(String, String)<a name="line.166"></a>
+<FONT color="green">167</FONT>         */<a name="line.167"></a>
+<FONT color="green">168</FONT>        public void internalEntityDecl(String arg0, String arg1)<a name="line.168"></a>
+<FONT color="green">169</FONT>            throws SAXException<a name="line.169"></a>
+<FONT color="green">170</FONT>        {<a name="line.170"></a>
+<FONT color="green">171</FONT>        }<a name="line.171"></a>
+<FONT color="green">172</FONT>    <a name="line.172"></a>
+<FONT color="green">173</FONT>        /**<a name="line.173"></a>
+<FONT color="green">174</FONT>         * Receives notification of the end of the document.<a name="line.174"></a>
+<FONT color="green">175</FONT>         * @see org.xml.sax.ContentHandler#endDocument()<a name="line.175"></a>
+<FONT color="green">176</FONT>         */<a name="line.176"></a>
+<FONT color="green">177</FONT>        public void endDocument() throws SAXException<a name="line.177"></a>
+<FONT color="green">178</FONT>        {<a name="line.178"></a>
+<FONT color="green">179</FONT>    <a name="line.179"></a>
+<FONT color="green">180</FONT>            flushPending();<a name="line.180"></a>
+<FONT color="green">181</FONT>    <a name="line.181"></a>
+<FONT color="green">182</FONT>            // Close output document<a name="line.182"></a>
+<FONT color="green">183</FONT>            m_saxHandler.endDocument();<a name="line.183"></a>
+<FONT color="green">184</FONT>    <a name="line.184"></a>
+<FONT color="green">185</FONT>            if (m_tracer != null)<a name="line.185"></a>
+<FONT color="green">186</FONT>                super.fireEndDoc();<a name="line.186"></a>
+<FONT color="green">187</FONT>        }<a name="line.187"></a>
+<FONT color="green">188</FONT>    <a name="line.188"></a>
+<FONT color="green">189</FONT>        /**<a name="line.189"></a>
+<FONT color="green">190</FONT>         * This method is called when all the data needed for a call to the<a name="line.190"></a>
+<FONT color="green">191</FONT>         * SAX handler's startElement() method has been gathered.<a name="line.191"></a>
+<FONT color="green">192</FONT>         */<a name="line.192"></a>
+<FONT color="green">193</FONT>        protected void closeStartTag() throws SAXException<a name="line.193"></a>
+<FONT color="green">194</FONT>        {<a name="line.194"></a>
+<FONT color="green">195</FONT>    <a name="line.195"></a>
+<FONT color="green">196</FONT>            m_elemContext.m_startTagOpen = false;<a name="line.196"></a>
+<FONT color="green">197</FONT>    <a name="line.197"></a>
+<FONT color="green">198</FONT>            final String localName = getLocalName(m_elemContext.m_elementName);<a name="line.198"></a>
+<FONT color="green">199</FONT>            final String uri = getNamespaceURI(m_elemContext.m_elementName, true);<a name="line.199"></a>
+<FONT color="green">200</FONT>    <a name="line.200"></a>
+<FONT color="green">201</FONT>            // Now is time to send the startElement event<a name="line.201"></a>
+<FONT color="green">202</FONT>            if (m_needToCallStartDocument)<a name="line.202"></a>
+<FONT color="green">203</FONT>            {<a name="line.203"></a>
+<FONT color="green">204</FONT>                startDocumentInternal();<a name="line.204"></a>
+<FONT color="green">205</FONT>            }<a name="line.205"></a>
+<FONT color="green">206</FONT>            m_saxHandler.startElement(uri, localName, m_elemContext.m_elementName, m_attributes);<a name="line.206"></a>
+<FONT color="green">207</FONT>            // we've sent the official SAX attributes on their way,<a name="line.207"></a>
+<FONT color="green">208</FONT>            // now we don't need them anymore.<a name="line.208"></a>
+<FONT color="green">209</FONT>            m_attributes.clear();<a name="line.209"></a>
+<FONT color="green">210</FONT>    <a name="line.210"></a>
+<FONT color="green">211</FONT>            if(m_state != null)<a name="line.211"></a>
+<FONT color="green">212</FONT>              m_state.setCurrentNode(null);<a name="line.212"></a>
+<FONT color="green">213</FONT>        }<a name="line.213"></a>
+<FONT color="green">214</FONT>    <a name="line.214"></a>
+<FONT color="green">215</FONT>        /**<a name="line.215"></a>
+<FONT color="green">216</FONT>         * Closes ane open cdata tag, and<a name="line.216"></a>
+<FONT color="green">217</FONT>         * unlike the this.endCDATA() method (from the LexicalHandler) interface,<a name="line.217"></a>
+<FONT color="green">218</FONT>         * this "internal" method will send the endCDATA() call to the wrapped<a name="line.218"></a>
+<FONT color="green">219</FONT>         * handler.<a name="line.219"></a>
+<FONT color="green">220</FONT>         * <a name="line.220"></a>
+<FONT color="green">221</FONT>         */<a name="line.221"></a>
+<FONT color="green">222</FONT>        public void closeCDATA() throws SAXException<a name="line.222"></a>
+<FONT color="green">223</FONT>        {<a name="line.223"></a>
+<FONT color="green">224</FONT>    <a name="line.224"></a>
+<FONT color="green">225</FONT>            // Output closing bracket - "]]&gt;"<a name="line.225"></a>
+<FONT color="green">226</FONT>            if (m_lexHandler != null &amp;&amp; m_cdataTagOpen) {<a name="line.226"></a>
+<FONT color="green">227</FONT>                m_lexHandler.endCDATA();<a name="line.227"></a>
+<FONT color="green">228</FONT>            }<a name="line.228"></a>
+<FONT color="green">229</FONT>            <a name="line.229"></a>
+<FONT color="green">230</FONT>    <a name="line.230"></a>
+<FONT color="green">231</FONT>            // There are no longer any calls made to <a name="line.231"></a>
+<FONT color="green">232</FONT>            // m_lexHandler.startCDATA() without a balancing call to<a name="line.232"></a>
+<FONT color="green">233</FONT>            // m_lexHandler.endCDATA()<a name="line.233"></a>
+<FONT color="green">234</FONT>            // so we set m_cdataTagOpen to false to remember this.<a name="line.234"></a>
+<FONT color="green">235</FONT>            m_cdataTagOpen = false;        <a name="line.235"></a>
+<FONT color="green">236</FONT>        }<a name="line.236"></a>
+<FONT color="green">237</FONT>    <a name="line.237"></a>
+<FONT color="green">238</FONT>        /**<a name="line.238"></a>
+<FONT color="green">239</FONT>         * @see org.xml.sax.ContentHandler#endElement(String, String, String)<a name="line.239"></a>
+<FONT color="green">240</FONT>         */<a name="line.240"></a>
+<FONT color="green">241</FONT>        public void endElement(String namespaceURI, String localName, String qName)<a name="line.241"></a>
+<FONT color="green">242</FONT>            throws SAXException<a name="line.242"></a>
+<FONT color="green">243</FONT>        {<a name="line.243"></a>
+<FONT color="green">244</FONT>            // Close any open elements etc.<a name="line.244"></a>
+<FONT color="green">245</FONT>            flushPending();<a name="line.245"></a>
+<FONT color="green">246</FONT>            <a name="line.246"></a>
+<FONT color="green">247</FONT>            if (namespaceURI == null)<a name="line.247"></a>
+<FONT color="green">248</FONT>            {<a name="line.248"></a>
+<FONT color="green">249</FONT>                if (m_elemContext.m_elementURI != null)<a name="line.249"></a>
+<FONT color="green">250</FONT>                    namespaceURI = m_elemContext.m_elementURI;<a name="line.250"></a>
+<FONT color="green">251</FONT>                else<a name="line.251"></a>
+<FONT color="green">252</FONT>                    namespaceURI = getNamespaceURI(qName, true);<a name="line.252"></a>
+<FONT color="green">253</FONT>            }<a name="line.253"></a>
+<FONT color="green">254</FONT>            <a name="line.254"></a>
+<FONT color="green">255</FONT>            if (localName == null)<a name="line.255"></a>
+<FONT color="green">256</FONT>            {<a name="line.256"></a>
+<FONT color="green">257</FONT>                if (m_elemContext.m_elementLocalName != null)<a name="line.257"></a>
+<FONT color="green">258</FONT>                    localName = m_elemContext.m_elementLocalName;<a name="line.258"></a>
+<FONT color="green">259</FONT>                else<a name="line.259"></a>
+<FONT color="green">260</FONT>                    localName = getLocalName(qName);<a name="line.260"></a>
+<FONT color="green">261</FONT>            }<a name="line.261"></a>
+<FONT color="green">262</FONT>    <a name="line.262"></a>
+<FONT color="green">263</FONT>            m_saxHandler.endElement(namespaceURI, localName, qName);<a name="line.263"></a>
+<FONT color="green">264</FONT>    <a name="line.264"></a>
+<FONT color="green">265</FONT>            if (m_tracer != null)<a name="line.265"></a>
+<FONT color="green">266</FONT>                super.fireEndElem(qName);       <a name="line.266"></a>
+<FONT color="green">267</FONT>    <a name="line.267"></a>
+<FONT color="green">268</FONT>            /* Pop all namespaces at the current element depth.<a name="line.268"></a>
+<FONT color="green">269</FONT>             * We are not waiting for official endPrefixMapping() calls.<a name="line.269"></a>
+<FONT color="green">270</FONT>             */<a name="line.270"></a>
+<FONT color="green">271</FONT>            m_prefixMap.popNamespaces(m_elemContext.m_currentElemDepth,<a name="line.271"></a>
+<FONT color="green">272</FONT>                m_saxHandler);<a name="line.272"></a>
+<FONT color="green">273</FONT>            m_elemContext = m_elemContext.m_prev;<a name="line.273"></a>
+<FONT color="green">274</FONT>        }<a name="line.274"></a>
+<FONT color="green">275</FONT>    <a name="line.275"></a>
+<FONT color="green">276</FONT>        /**<a name="line.276"></a>
+<FONT color="green">277</FONT>         * @see org.xml.sax.ContentHandler#endPrefixMapping(String)<a name="line.277"></a>
+<FONT color="green">278</FONT>         */<a name="line.278"></a>
+<FONT color="green">279</FONT>        public void endPrefixMapping(String prefix) throws SAXException<a name="line.279"></a>
+<FONT color="green">280</FONT>        {<a name="line.280"></a>
+<FONT color="green">281</FONT>            /* poping all prefix mappings should have been done<a name="line.281"></a>
+<FONT color="green">282</FONT>             * in endElement() already<a name="line.282"></a>
+<FONT color="green">283</FONT>             */<a name="line.283"></a>
+<FONT color="green">284</FONT>             return;<a name="line.284"></a>
+<FONT color="green">285</FONT>        }<a name="line.285"></a>
+<FONT color="green">286</FONT>    <a name="line.286"></a>
+<FONT color="green">287</FONT>        /**<a name="line.287"></a>
+<FONT color="green">288</FONT>         * @see org.xml.sax.ContentHandler#ignorableWhitespace(char[], int, int)<a name="line.288"></a>
+<FONT color="green">289</FONT>         */<a name="line.289"></a>
+<FONT color="green">290</FONT>        public void ignorableWhitespace(char[] arg0, int arg1, int arg2)<a name="line.290"></a>
+<FONT color="green">291</FONT>            throws SAXException<a name="line.291"></a>
+<FONT color="green">292</FONT>        {<a name="line.292"></a>
+<FONT color="green">293</FONT>            m_saxHandler.ignorableWhitespace(arg0,arg1,arg2);<a name="line.293"></a>
+<FONT color="green">294</FONT>        }<a name="line.294"></a>
+<FONT color="green">295</FONT>    <a name="line.295"></a>
+<FONT color="green">296</FONT>        /**<a name="line.296"></a>
+<FONT color="green">297</FONT>         * @see org.xml.sax.ContentHandler#setDocumentLocator(Locator)<a name="line.297"></a>
+<FONT color="green">298</FONT>         */<a name="line.298"></a>
+<FONT color="green">299</FONT>        public void setDocumentLocator(Locator arg0)<a name="line.299"></a>
+<FONT color="green">300</FONT>        {<a name="line.300"></a>
+<FONT color="green">301</FONT>            m_saxHandler.setDocumentLocator(arg0);<a name="line.301"></a>
+<FONT color="green">302</FONT>        }<a name="line.302"></a>
+<FONT color="green">303</FONT>    <a name="line.303"></a>
+<FONT color="green">304</FONT>        /**<a name="line.304"></a>
+<FONT color="green">305</FONT>         * @see org.xml.sax.ContentHandler#skippedEntity(String)<a name="line.305"></a>
+<FONT color="green">306</FONT>         */<a name="line.306"></a>
+<FONT color="green">307</FONT>        public void skippedEntity(String arg0) throws SAXException<a name="line.307"></a>
+<FONT color="green">308</FONT>        {<a name="line.308"></a>
+<FONT color="green">309</FONT>            m_saxHandler.skippedEntity(arg0);<a name="line.309"></a>
+<FONT color="green">310</FONT>        }<a name="line.310"></a>
+<FONT color="green">311</FONT>    <a name="line.311"></a>
+<FONT color="green">312</FONT>        /**<a name="line.312"></a>
+<FONT color="green">313</FONT>         * @see org.xml.sax.ContentHandler#startPrefixMapping(String, String)<a name="line.313"></a>
+<FONT color="green">314</FONT>         * @param prefix The prefix that maps to the URI<a name="line.314"></a>
+<FONT color="green">315</FONT>         * @param uri The URI for the namespace<a name="line.315"></a>
+<FONT color="green">316</FONT>         */<a name="line.316"></a>
+<FONT color="green">317</FONT>        public void startPrefixMapping(String prefix, String uri)<a name="line.317"></a>
+<FONT color="green">318</FONT>            throws SAXException<a name="line.318"></a>
+<FONT color="green">319</FONT>        {<a name="line.319"></a>
+<FONT color="green">320</FONT>           startPrefixMapping(prefix, uri, true);<a name="line.320"></a>
+<FONT color="green">321</FONT>        }<a name="line.321"></a>
+<FONT color="green">322</FONT>    <a name="line.322"></a>
+<FONT color="green">323</FONT>        /**<a name="line.323"></a>
+<FONT color="green">324</FONT>         * Remember the prefix/uri mapping at the current nested element depth.<a name="line.324"></a>
+<FONT color="green">325</FONT>         *<a name="line.325"></a>
+<FONT color="green">326</FONT>         * @see org.xml.sax.ContentHandler#startPrefixMapping(String, String)<a name="line.326"></a>
+<FONT color="green">327</FONT>         * @param prefix The prefix that maps to the URI<a name="line.327"></a>
+<FONT color="green">328</FONT>         * @param uri The URI for the namespace<a name="line.328"></a>
+<FONT color="green">329</FONT>         * @param shouldFlush a flag indicating if the mapping applies to the<a name="line.329"></a>
+<FONT color="green">330</FONT>         * current element or an up coming child (not used).<a name="line.330"></a>
+<FONT color="green">331</FONT>         */<a name="line.331"></a>
+<FONT color="green">332</FONT>    <a name="line.332"></a>
+<FONT color="green">333</FONT>        public boolean startPrefixMapping(<a name="line.333"></a>
+<FONT color="green">334</FONT>            String prefix,<a name="line.334"></a>
+<FONT color="green">335</FONT>            String uri,<a name="line.335"></a>
+<FONT color="green">336</FONT>            boolean shouldFlush)<a name="line.336"></a>
+<FONT color="green">337</FONT>            throws org.xml.sax.SAXException<a name="line.337"></a>
+<FONT color="green">338</FONT>        {<a name="line.338"></a>
+<FONT color="green">339</FONT>    <a name="line.339"></a>
+<FONT color="green">340</FONT>            /* Remember the mapping, and at what depth it was declared<a name="line.340"></a>
+<FONT color="green">341</FONT>             * This is one greater than the current depth because these<a name="line.341"></a>
+<FONT color="green">342</FONT>             * mappings will apply to the next depth. This is in<a name="line.342"></a>
+<FONT color="green">343</FONT>             * consideration that startElement() will soon be called<a name="line.343"></a>
+<FONT color="green">344</FONT>             */<a name="line.344"></a>
+<FONT color="green">345</FONT>    <a name="line.345"></a>
+<FONT color="green">346</FONT>            boolean pushed;<a name="line.346"></a>
+<FONT color="green">347</FONT>            int pushDepth;<a name="line.347"></a>
+<FONT color="green">348</FONT>            if (shouldFlush)<a name="line.348"></a>
+<FONT color="green">349</FONT>            {<a name="line.349"></a>
+<FONT color="green">350</FONT>                flushPending();<a name="line.350"></a>
+<FONT color="green">351</FONT>                // the prefix mapping applies to the child element (one deeper)<a name="line.351"></a>
+<FONT color="green">352</FONT>                pushDepth = m_elemContext.m_currentElemDepth + 1;<a name="line.352"></a>
+<FONT color="green">353</FONT>            }<a name="line.353"></a>
+<FONT color="green">354</FONT>            else<a name="line.354"></a>
+<FONT color="green">355</FONT>            {<a name="line.355"></a>
+<FONT color="green">356</FONT>                // the prefix mapping applies to the current element<a name="line.356"></a>
+<FONT color="green">357</FONT>                pushDepth = m_elemContext.m_currentElemDepth;<a name="line.357"></a>
+<FONT color="green">358</FONT>            }<a name="line.358"></a>
+<FONT color="green">359</FONT>            pushed = m_prefixMap.pushNamespace(prefix, uri, pushDepth);<a name="line.359"></a>
+<FONT color="green">360</FONT>    <a name="line.360"></a>
+<FONT color="green">361</FONT>            if (pushed)<a name="line.361"></a>
+<FONT color="green">362</FONT>            {<a name="line.362"></a>
+<FONT color="green">363</FONT>                m_saxHandler.startPrefixMapping(prefix,uri);<a name="line.363"></a>
+<FONT color="green">364</FONT>                <a name="line.364"></a>
+<FONT color="green">365</FONT>                if (getShouldOutputNSAttr()) <a name="line.365"></a>
+<FONT color="green">366</FONT>                {<a name="line.366"></a>
+<FONT color="green">367</FONT>    <a name="line.367"></a>
+<FONT color="green">368</FONT>                          /* I don't know if we really needto do this. The<a name="line.368"></a>
+<FONT color="green">369</FONT>                           * callers of this object should have injected both<a name="line.369"></a>
+<FONT color="green">370</FONT>                           * startPrefixMapping and the attributes.  We are<a name="line.370"></a>
+<FONT color="green">371</FONT>                           * just covering our butt here.<a name="line.371"></a>
+<FONT color="green">372</FONT>                           */<a name="line.372"></a>
+<FONT color="green">373</FONT>                          String name;<a name="line.373"></a>
+<FONT color="green">374</FONT>                        if (EMPTYSTRING.equals(prefix))<a name="line.374"></a>
+<FONT color="green">375</FONT>                        {<a name="line.375"></a>
+<FONT color="green">376</FONT>                            name = "xmlns";<a name="line.376"></a>
+<FONT color="green">377</FONT>                            addAttributeAlways(XMLNS_URI, name, name,"CDATA",uri, false);<a name="line.377"></a>
+<FONT color="green">378</FONT>                        }<a name="line.378"></a>
+<FONT color="green">379</FONT>                        else <a name="line.379"></a>
+<FONT color="green">380</FONT>                    {<a name="line.380"></a>
+<FONT color="green">381</FONT>                            if (!EMPTYSTRING.equals(uri)) // hack for attribset16 test<a name="line.381"></a>
+<FONT color="green">382</FONT>                            {                             // that maps ns1 prefix to "" URI <a name="line.382"></a>
+<FONT color="green">383</FONT>                                name = "xmlns:" + prefix;<a name="line.383"></a>
+<FONT color="green">384</FONT>            <a name="line.384"></a>
+<FONT color="green">385</FONT>                                /* for something like xmlns:abc="w3.pretend.org"<a name="line.385"></a>
+<FONT color="green">386</FONT>                                         *  the uri is the value, that is why we pass it in the<a name="line.386"></a>
+<FONT color="green">387</FONT>                                         * value, or 5th slot of addAttributeAlways()<a name="line.387"></a>
+<FONT color="green">388</FONT>                                       */<a name="line.388"></a>
+<FONT color="green">389</FONT>                                addAttributeAlways(XMLNS_URI, prefix, name,"CDATA",uri, false );<a name="line.389"></a>
+<FONT color="green">390</FONT>                            }<a name="line.390"></a>
+<FONT color="green">391</FONT>                        }<a name="line.391"></a>
+<FONT color="green">392</FONT>                }<a name="line.392"></a>
+<FONT color="green">393</FONT>            }<a name="line.393"></a>
+<FONT color="green">394</FONT>            return pushed;<a name="line.394"></a>
+<FONT color="green">395</FONT>        }<a name="line.395"></a>
+<FONT color="green">396</FONT>            <a name="line.396"></a>
+<FONT color="green">397</FONT>    <a name="line.397"></a>
+<FONT color="green">398</FONT>        /**<a name="line.398"></a>
+<FONT color="green">399</FONT>         * @see org.xml.sax.ext.LexicalHandler#comment(char[], int, int)<a name="line.399"></a>
+<FONT color="green">400</FONT>         */<a name="line.400"></a>
+<FONT color="green">401</FONT>        public void comment(char[] arg0, int arg1, int arg2) throws SAXException<a name="line.401"></a>
+<FONT color="green">402</FONT>        {<a name="line.402"></a>
+<FONT color="green">403</FONT>            flushPending();<a name="line.403"></a>
+<FONT color="green">404</FONT>            if (m_lexHandler != null)<a name="line.404"></a>
+<FONT color="green">405</FONT>                m_lexHandler.comment(arg0, arg1, arg2);<a name="line.405"></a>
+<FONT color="green">406</FONT>                <a name="line.406"></a>
+<FONT color="green">407</FONT>            if (m_tracer != null)            <a name="line.407"></a>
+<FONT color="green">408</FONT>                super.fireCommentEvent(arg0, arg1, arg2);<a name="line.408"></a>
+<FONT color="green">409</FONT>        }<a name="line.409"></a>
+<FONT color="green">410</FONT>    <a name="line.410"></a>
+<FONT color="green">411</FONT>        /**<a name="line.411"></a>
+<FONT color="green">412</FONT>         * @see org.xml.sax.ext.LexicalHandler#endCDATA()<a name="line.412"></a>
+<FONT color="green">413</FONT>         */<a name="line.413"></a>
+<FONT color="green">414</FONT>        public void endCDATA() throws SAXException<a name="line.414"></a>
+<FONT color="green">415</FONT>        {<a name="line.415"></a>
+<FONT color="green">416</FONT>            /* Normally we would do somthing with this but we ignore it.<a name="line.416"></a>
+<FONT color="green">417</FONT>             * The neccessary call to m_lexHandler.endCDATA() will be made<a name="line.417"></a>
+<FONT color="green">418</FONT>             * in flushPending().<a name="line.418"></a>
+<FONT color="green">419</FONT>             * <a name="line.419"></a>
+<FONT color="green">420</FONT>             * This is so that if we get calls like these:<a name="line.420"></a>
+<FONT color="green">421</FONT>             *   this.startCDATA();<a name="line.421"></a>
+<FONT color="green">422</FONT>             *   this.characters(chars1, off1, len1);<a name="line.422"></a>
+<FONT color="green">423</FONT>             *   this.endCDATA();<a name="line.423"></a>
+<FONT color="green">424</FONT>             *   this.startCDATA();<a name="line.424"></a>
+<FONT color="green">425</FONT>             *   this.characters(chars2, off2, len2);<a name="line.425"></a>
+<FONT color="green">426</FONT>             *   this.endCDATA();<a name="line.426"></a>
+<FONT color="green">427</FONT>             * <a name="line.427"></a>
+<FONT color="green">428</FONT>             * that we will only make these calls to the wrapped handlers:<a name="line.428"></a>
+<FONT color="green">429</FONT>             * <a name="line.429"></a>
+<FONT color="green">430</FONT>             *   m_lexHandler.startCDATA();<a name="line.430"></a>
+<FONT color="green">431</FONT>             *   m_saxHandler.characters(chars1, off1, len1);<a name="line.431"></a>
+<FONT color="green">432</FONT>             *   m_saxHandler.characters(chars1, off2, len2);<a name="line.432"></a>
+<FONT color="green">433</FONT>             *   m_lexHandler.endCDATA();<a name="line.433"></a>
+<FONT color="green">434</FONT>             * <a name="line.434"></a>
+<FONT color="green">435</FONT>             * We will merge adjacent CDATA blocks.<a name="line.435"></a>
+<FONT color="green">436</FONT>             */ <a name="line.436"></a>
+<FONT color="green">437</FONT>        }<a name="line.437"></a>
+<FONT color="green">438</FONT>    <a name="line.438"></a>
+<FONT color="green">439</FONT>        /**<a name="line.439"></a>
+<FONT color="green">440</FONT>         * @see org.xml.sax.ext.LexicalHandler#endDTD()<a name="line.440"></a>
+<FONT color="green">441</FONT>         */<a name="line.441"></a>
+<FONT color="green">442</FONT>        public void endDTD() throws SAXException<a name="line.442"></a>
+<FONT color="green">443</FONT>        {<a name="line.443"></a>
+<FONT color="green">444</FONT>            if (m_lexHandler != null)<a name="line.444"></a>
+<FONT color="green">445</FONT>                m_lexHandler.endDTD();<a name="line.445"></a>
+<FONT color="green">446</FONT>        }<a name="line.446"></a>
+<FONT color="green">447</FONT>    <a name="line.447"></a>
+<FONT color="green">448</FONT>        /**<a name="line.448"></a>
+<FONT color="green">449</FONT>         * @see org.xml.sax.ext.LexicalHandler#startEntity(String)<a name="line.449"></a>
+<FONT color="green">450</FONT>         */<a name="line.450"></a>
+<FONT color="green">451</FONT>        public void startEntity(String arg0) throws SAXException<a name="line.451"></a>
+<FONT color="green">452</FONT>        {<a name="line.452"></a>
+<FONT color="green">453</FONT>            if (m_lexHandler != null)<a name="line.453"></a>
+<FONT color="green">454</FONT>                m_lexHandler.startEntity(arg0);<a name="line.454"></a>
+<FONT color="green">455</FONT>        }<a name="line.455"></a>
+<FONT color="green">456</FONT>    <a name="line.456"></a>
+<FONT color="green">457</FONT>        /**<a name="line.457"></a>
+<FONT color="green">458</FONT>         * @see ExtendedContentHandler#characters(String)<a name="line.458"></a>
+<FONT color="green">459</FONT>         */<a name="line.459"></a>
+<FONT color="green">460</FONT>        public void characters(String chars) throws SAXException<a name="line.460"></a>
+<FONT color="green">461</FONT>        {<a name="line.461"></a>
+<FONT color="green">462</FONT>            final int length = chars.length();<a name="line.462"></a>
+<FONT color="green">463</FONT>            if (length &gt; m_charsBuff.length)<a name="line.463"></a>
+<FONT color="green">464</FONT>            {<a name="line.464"></a>
+<FONT color="green">465</FONT>                m_charsBuff = new char[length*2 + 1];<a name="line.465"></a>
+<FONT color="green">466</FONT>            }<a name="line.466"></a>
+<FONT color="green">467</FONT>            chars.getChars(0, length, m_charsBuff, 0);<a name="line.467"></a>
+<FONT color="green">468</FONT>            this.characters(m_charsBuff, 0, length); <a name="line.468"></a>
+<FONT color="green">469</FONT>        }<a name="line.469"></a>
+<FONT color="green">470</FONT>    <a name="line.470"></a>
+<FONT color="green">471</FONT>        public ToXMLSAXHandler(ContentHandler handler, String encoding)<a name="line.471"></a>
+<FONT color="green">472</FONT>        {<a name="line.472"></a>
+<FONT color="green">473</FONT>            super(handler, encoding);<a name="line.473"></a>
+<FONT color="green">474</FONT>    <a name="line.474"></a>
+<FONT color="green">475</FONT>            initCDATA();<a name="line.475"></a>
+<FONT color="green">476</FONT>            // initNamespaces();<a name="line.476"></a>
+<FONT color="green">477</FONT>            m_prefixMap = new NamespaceMappings();<a name="line.477"></a>
+<FONT color="green">478</FONT>        }<a name="line.478"></a>
+<FONT color="green">479</FONT>    <a name="line.479"></a>
+<FONT color="green">480</FONT>        public ToXMLSAXHandler(<a name="line.480"></a>
+<FONT color="green">481</FONT>            ContentHandler handler,<a name="line.481"></a>
+<FONT color="green">482</FONT>            LexicalHandler lex,<a name="line.482"></a>
+<FONT color="green">483</FONT>            String encoding)<a name="line.483"></a>
+<FONT color="green">484</FONT>        {<a name="line.484"></a>
+<FONT color="green">485</FONT>            super(handler, lex, encoding);<a name="line.485"></a>
+<FONT color="green">486</FONT>    <a name="line.486"></a>
+<FONT color="green">487</FONT>            initCDATA();<a name="line.487"></a>
+<FONT color="green">488</FONT>            //      initNamespaces();<a name="line.488"></a>
+<FONT color="green">489</FONT>            m_prefixMap = new NamespaceMappings();<a name="line.489"></a>
+<FONT color="green">490</FONT>        }<a name="line.490"></a>
+<FONT color="green">491</FONT>    <a name="line.491"></a>
+<FONT color="green">492</FONT>        /**<a name="line.492"></a>
+<FONT color="green">493</FONT>         * Start an element in the output document. This might be an XML element<a name="line.493"></a>
+<FONT color="green">494</FONT>         * (&lt;elem&gt;data&lt;/elem&gt; type) or a CDATA section.<a name="line.494"></a>
+<FONT color="green">495</FONT>         */<a name="line.495"></a>
+<FONT color="green">496</FONT>        public void startElement(<a name="line.496"></a>
+<FONT color="green">497</FONT>        String elementNamespaceURI,<a name="line.497"></a>
+<FONT color="green">498</FONT>        String elementLocalName,<a name="line.498"></a>
+<FONT color="green">499</FONT>        String elementName) throws SAXException<a name="line.499"></a>
+<FONT color="green">500</FONT>        {<a name="line.500"></a>
+<FONT color="green">501</FONT>            startElement(<a name="line.501"></a>
+<FONT color="green">502</FONT>                elementNamespaceURI,elementLocalName,elementName, null);<a name="line.502"></a>
+<FONT color="green">503</FONT>    <a name="line.503"></a>
+<FONT color="green">504</FONT>    <a name="line.504"></a>
+<FONT color="green">505</FONT>        }<a name="line.505"></a>
+<FONT color="green">506</FONT>        public void startElement(String elementName) throws SAXException<a name="line.506"></a>
+<FONT color="green">507</FONT>        {<a name="line.507"></a>
+<FONT color="green">508</FONT>            startElement(null, null, elementName, null);<a name="line.508"></a>
+<FONT color="green">509</FONT>        }<a name="line.509"></a>
+<FONT color="green">510</FONT>    <a name="line.510"></a>
+<FONT color="green">511</FONT>    <a name="line.511"></a>
+<FONT color="green">512</FONT>        public void characters(char[] ch, int off, int len) throws SAXException<a name="line.512"></a>
+<FONT color="green">513</FONT>        {<a name="line.513"></a>
+<FONT color="green">514</FONT>            // We do the first two things in flushPending() but we don't<a name="line.514"></a>
+<FONT color="green">515</FONT>            // close any open CDATA calls.        <a name="line.515"></a>
+<FONT color="green">516</FONT>            if (m_needToCallStartDocument)<a name="line.516"></a>
+<FONT color="green">517</FONT>            {<a name="line.517"></a>
+<FONT color="green">518</FONT>                startDocumentInternal();<a name="line.518"></a>
+<FONT color="green">519</FONT>                m_needToCallStartDocument = false;<a name="line.519"></a>
+<FONT color="green">520</FONT>            }<a name="line.520"></a>
+<FONT color="green">521</FONT>    <a name="line.521"></a>
+<FONT color="green">522</FONT>            if (m_elemContext.m_startTagOpen)<a name="line.522"></a>
+<FONT color="green">523</FONT>            {<a name="line.523"></a>
+<FONT color="green">524</FONT>                closeStartTag();<a name="line.524"></a>
+<FONT color="green">525</FONT>                m_elemContext.m_startTagOpen = false;<a name="line.525"></a>
+<FONT color="green">526</FONT>            }<a name="line.526"></a>
+<FONT color="green">527</FONT>    <a name="line.527"></a>
+<FONT color="green">528</FONT>            if (m_elemContext.m_isCdataSection &amp;&amp; !m_cdataTagOpen<a name="line.528"></a>
+<FONT color="green">529</FONT>            &amp;&amp; m_lexHandler != null) <a name="line.529"></a>
+<FONT color="green">530</FONT>            {<a name="line.530"></a>
+<FONT color="green">531</FONT>                m_lexHandler.startCDATA();<a name="line.531"></a>
+<FONT color="green">532</FONT>                // We have made a call to m_lexHandler.startCDATA() with<a name="line.532"></a>
+<FONT color="green">533</FONT>                // no balancing call to m_lexHandler.endCDATA()<a name="line.533"></a>
+<FONT color="green">534</FONT>                // so we set m_cdataTagOpen true to remember this.<a name="line.534"></a>
+<FONT color="green">535</FONT>                m_cdataTagOpen = true;<a name="line.535"></a>
+<FONT color="green">536</FONT>            }<a name="line.536"></a>
+<FONT color="green">537</FONT>            <a name="line.537"></a>
+<FONT color="green">538</FONT>            /* If there are any occurances of "]]&gt;" in the character data<a name="line.538"></a>
+<FONT color="green">539</FONT>             * let m_saxHandler worry about it, we've already warned them with<a name="line.539"></a>
+<FONT color="green">540</FONT>             * the previous call of m_lexHandler.startCDATA();<a name="line.540"></a>
+<FONT color="green">541</FONT>             */ <a name="line.541"></a>
+<FONT color="green">542</FONT>            m_saxHandler.characters(ch, off, len);<a name="line.542"></a>
+<FONT color="green">543</FONT>    <a name="line.543"></a>
+<FONT color="green">544</FONT>            // time to generate characters event<a name="line.544"></a>
+<FONT color="green">545</FONT>            if (m_tracer != null)<a name="line.545"></a>
+<FONT color="green">546</FONT>                fireCharEvent(ch, off, len);<a name="line.546"></a>
+<FONT color="green">547</FONT>        }<a name="line.547"></a>
+<FONT color="green">548</FONT>        <a name="line.548"></a>
+<FONT color="green">549</FONT>    <a name="line.549"></a>
+<FONT color="green">550</FONT>        /**<a name="line.550"></a>
+<FONT color="green">551</FONT>         * @see ExtendedContentHandler#endElement(String)<a name="line.551"></a>
+<FONT color="green">552</FONT>         */<a name="line.552"></a>
+<FONT color="green">553</FONT>        public void endElement(String elemName) throws SAXException<a name="line.553"></a>
+<FONT color="green">554</FONT>        {<a name="line.554"></a>
+<FONT color="green">555</FONT>            endElement(null, null, elemName);<a name="line.555"></a>
+<FONT color="green">556</FONT>        }    <a name="line.556"></a>
+<FONT color="green">557</FONT>    <a name="line.557"></a>
+<FONT color="green">558</FONT>    <a name="line.558"></a>
+<FONT color="green">559</FONT>        /**<a name="line.559"></a>
+<FONT color="green">560</FONT>         * Send a namespace declaration in the output document. The namespace<a name="line.560"></a>
+<FONT color="green">561</FONT>         * declaration will not be include if the namespace is already in scope<a name="line.561"></a>
+<FONT color="green">562</FONT>         * with the same prefix.<a name="line.562"></a>
+<FONT color="green">563</FONT>         */<a name="line.563"></a>
+<FONT color="green">564</FONT>        public void namespaceAfterStartElement(<a name="line.564"></a>
+<FONT color="green">565</FONT>            final String prefix,<a name="line.565"></a>
+<FONT color="green">566</FONT>            final String uri)<a name="line.566"></a>
+<FONT color="green">567</FONT>            throws SAXException<a name="line.567"></a>
+<FONT color="green">568</FONT>        {<a name="line.568"></a>
+<FONT color="green">569</FONT>            startPrefixMapping(prefix,uri,false);<a name="line.569"></a>
+<FONT color="green">570</FONT>        }<a name="line.570"></a>
+<FONT color="green">571</FONT>    <a name="line.571"></a>
+<FONT color="green">572</FONT>        /**<a name="line.572"></a>
+<FONT color="green">573</FONT>         *<a name="line.573"></a>
+<FONT color="green">574</FONT>         * @see org.xml.sax.ContentHandler#processingInstruction(String, String)<a name="line.574"></a>
+<FONT color="green">575</FONT>         * Send a processing instruction to the output document<a name="line.575"></a>
+<FONT color="green">576</FONT>         */<a name="line.576"></a>
+<FONT color="green">577</FONT>        public void processingInstruction(String target, String data)<a name="line.577"></a>
+<FONT color="green">578</FONT>            throws SAXException<a name="line.578"></a>
+<FONT color="green">579</FONT>        {<a name="line.579"></a>
+<FONT color="green">580</FONT>            flushPending();<a name="line.580"></a>
+<FONT color="green">581</FONT>    <a name="line.581"></a>
+<FONT color="green">582</FONT>            // Pass the processing instruction to the SAX handler<a name="line.582"></a>
+<FONT color="green">583</FONT>            m_saxHandler.processingInstruction(target, data);<a name="line.583"></a>
+<FONT color="green">584</FONT>    <a name="line.584"></a>
+<FONT color="green">585</FONT>            // we don't want to leave serializer to fire off this event,<a name="line.585"></a>
+<FONT color="green">586</FONT>            // so do it here.<a name="line.586"></a>
+<FONT color="green">587</FONT>            if (m_tracer != null)<a name="line.587"></a>
+<FONT color="green">588</FONT>                super.fireEscapingEvent(target, data);<a name="line.588"></a>
+<FONT color="green">589</FONT>        }<a name="line.589"></a>
+<FONT color="green">590</FONT>    <a name="line.590"></a>
+<FONT color="green">591</FONT>        /**<a name="line.591"></a>
+<FONT color="green">592</FONT>         * Undeclare the namespace that is currently pointed to by a given<a name="line.592"></a>
+<FONT color="green">593</FONT>         * prefix. Inform SAX handler if prefix was previously mapped.<a name="line.593"></a>
+<FONT color="green">594</FONT>         */<a name="line.594"></a>
+<FONT color="green">595</FONT>        protected boolean popNamespace(String prefix)<a name="line.595"></a>
+<FONT color="green">596</FONT>        {<a name="line.596"></a>
+<FONT color="green">597</FONT>            try<a name="line.597"></a>
+<FONT color="green">598</FONT>            {<a name="line.598"></a>
+<FONT color="green">599</FONT>                if (m_prefixMap.popNamespace(prefix))<a name="line.599"></a>
+<FONT color="green">600</FONT>                {<a name="line.600"></a>
+<FONT color="green">601</FONT>                    m_saxHandler.endPrefixMapping(prefix);<a name="line.601"></a>
+<FONT color="green">602</FONT>                    return true;<a name="line.602"></a>
+<FONT color="green">603</FONT>                }<a name="line.603"></a>
+<FONT color="green">604</FONT>            }<a name="line.604"></a>
+<FONT color="green">605</FONT>            catch (SAXException e)<a name="line.605"></a>
+<FONT color="green">606</FONT>            {<a name="line.606"></a>
+<FONT color="green">607</FONT>                // falls through<a name="line.607"></a>
+<FONT color="green">608</FONT>            }<a name="line.608"></a>
+<FONT color="green">609</FONT>            return false;<a name="line.609"></a>
+<FONT color="green">610</FONT>        }<a name="line.610"></a>
+<FONT color="green">611</FONT>    <a name="line.611"></a>
+<FONT color="green">612</FONT>        public void startCDATA() throws SAXException<a name="line.612"></a>
+<FONT color="green">613</FONT>        {<a name="line.613"></a>
+<FONT color="green">614</FONT>            /* m_cdataTagOpen can only be true here if we have ignored the<a name="line.614"></a>
+<FONT color="green">615</FONT>             * previous call to this.endCDATA() and the previous call <a name="line.615"></a>
+<FONT color="green">616</FONT>             * this.startCDATA() before that is still "open". In this way<a name="line.616"></a>
+<FONT color="green">617</FONT>             * we merge adjacent CDATA. If anything else happened after the <a name="line.617"></a>
+<FONT color="green">618</FONT>             * ignored call to this.endCDATA() and this call then a call to <a name="line.618"></a>
+<FONT color="green">619</FONT>             * flushPending() would have been made which would have<a name="line.619"></a>
+<FONT color="green">620</FONT>             * closed the CDATA and set m_cdataTagOpen to false.<a name="line.620"></a>
+<FONT color="green">621</FONT>             */<a name="line.621"></a>
+<FONT color="green">622</FONT>            if (!m_cdataTagOpen ) <a name="line.622"></a>
+<FONT color="green">623</FONT>            {<a name="line.623"></a>
+<FONT color="green">624</FONT>                flushPending();<a name="line.624"></a>
+<FONT color="green">625</FONT>                if (m_lexHandler != null) {<a name="line.625"></a>
+<FONT color="green">626</FONT>                    m_lexHandler.startCDATA();<a name="line.626"></a>
+<FONT color="green">627</FONT>    <a name="line.627"></a>
+<FONT color="green">628</FONT>                    // We have made a call to m_lexHandler.startCDATA() with<a name="line.628"></a>
+<FONT color="green">629</FONT>                    // no balancing call to m_lexHandler.endCDATA()<a name="line.629"></a>
+<FONT color="green">630</FONT>                    // so we set m_cdataTagOpen true to remember this.                <a name="line.630"></a>
+<FONT color="green">631</FONT>                    m_cdataTagOpen = true;     <a name="line.631"></a>
+<FONT color="green">632</FONT>                }              <a name="line.632"></a>
+<FONT color="green">633</FONT>            }        <a name="line.633"></a>
+<FONT color="green">634</FONT>        }<a name="line.634"></a>
+<FONT color="green">635</FONT>    <a name="line.635"></a>
+<FONT color="green">636</FONT>        /**<a name="line.636"></a>
+<FONT color="green">637</FONT>         * @see org.xml.sax.ContentHandler#startElement(String, String, String, Attributes)<a name="line.637"></a>
+<FONT color="green">638</FONT>         */<a name="line.638"></a>
+<FONT color="green">639</FONT>        public void startElement(<a name="line.639"></a>
+<FONT color="green">640</FONT>        String namespaceURI,<a name="line.640"></a>
+<FONT color="green">641</FONT>        String localName,<a name="line.641"></a>
+<FONT color="green">642</FONT>        String name,<a name="line.642"></a>
+<FONT color="green">643</FONT>        Attributes atts)<a name="line.643"></a>
+<FONT color="green">644</FONT>            throws SAXException<a name="line.644"></a>
+<FONT color="green">645</FONT>        {<a name="line.645"></a>
+<FONT color="green">646</FONT>            flushPending();<a name="line.646"></a>
+<FONT color="green">647</FONT>            super.startElement(namespaceURI, localName, name, atts);<a name="line.647"></a>
+<FONT color="green">648</FONT>    <a name="line.648"></a>
+<FONT color="green">649</FONT>            // Handle document type declaration (for first element only)<a name="line.649"></a>
+<FONT color="green">650</FONT>             if (m_needToOutputDocTypeDecl)<a name="line.650"></a>
+<FONT color="green">651</FONT>             {<a name="line.651"></a>
+<FONT color="green">652</FONT>                 String doctypeSystem = getDoctypeSystem();<a name="line.652"></a>
+<FONT color="green">653</FONT>                 if (doctypeSystem != null &amp;&amp; m_lexHandler != null)<a name="line.653"></a>
+<FONT color="green">654</FONT>                 {<a name="line.654"></a>
+<FONT color="green">655</FONT>                     String doctypePublic = getDoctypePublic();<a name="line.655"></a>
+<FONT color="green">656</FONT>                     if (doctypeSystem != null)<a name="line.656"></a>
+<FONT color="green">657</FONT>                         m_lexHandler.startDTD(<a name="line.657"></a>
+<FONT color="green">658</FONT>                             name,<a name="line.658"></a>
+<FONT color="green">659</FONT>                             doctypePublic,<a name="line.659"></a>
+<FONT color="green">660</FONT>                             doctypeSystem);<a name="line.660"></a>
+<FONT color="green">661</FONT>                 }<a name="line.661"></a>
+<FONT color="green">662</FONT>                 m_needToOutputDocTypeDecl = false;<a name="line.662"></a>
+<FONT color="green">663</FONT>             }<a name="line.663"></a>
+<FONT color="green">664</FONT>            m_elemContext = m_elemContext.push(namespaceURI, localName, name);<a name="line.664"></a>
+<FONT color="green">665</FONT>    <a name="line.665"></a>
+<FONT color="green">666</FONT>            // ensurePrefixIsDeclared depends on the current depth, so<a name="line.666"></a>
+<FONT color="green">667</FONT>            // the previous increment is necessary where it is.<a name="line.667"></a>
+<FONT color="green">668</FONT>            if (namespaceURI != null)<a name="line.668"></a>
+<FONT color="green">669</FONT>                ensurePrefixIsDeclared(namespaceURI, name);<a name="line.669"></a>
+<FONT color="green">670</FONT>    <a name="line.670"></a>
+<FONT color="green">671</FONT>            // add the attributes to the collected ones<a name="line.671"></a>
+<FONT color="green">672</FONT>            if (atts != null)<a name="line.672"></a>
+<FONT color="green">673</FONT>                addAttributes(atts);<a name="line.673"></a>
+<FONT color="green">674</FONT>    <a name="line.674"></a>
+<FONT color="green">675</FONT>             <a name="line.675"></a>
+<FONT color="green">676</FONT>            // do we really need this CDATA section state?<a name="line.676"></a>
+<FONT color="green">677</FONT>            m_elemContext.m_isCdataSection = isCdataSection();<a name="line.677"></a>
+<FONT color="green">678</FONT>       <a name="line.678"></a>
+<FONT color="green">679</FONT>        }<a name="line.679"></a>
+<FONT color="green">680</FONT>     <a name="line.680"></a>
+<FONT color="green">681</FONT>        private void ensurePrefixIsDeclared(String ns, String rawName)<a name="line.681"></a>
+<FONT color="green">682</FONT>            throws org.xml.sax.SAXException<a name="line.682"></a>
+<FONT color="green">683</FONT>        {<a name="line.683"></a>
+<FONT color="green">684</FONT>    <a name="line.684"></a>
+<FONT color="green">685</FONT>            if (ns != null &amp;&amp; ns.length() &gt; 0)<a name="line.685"></a>
+<FONT color="green">686</FONT>            {<a name="line.686"></a>
+<FONT color="green">687</FONT>                int index;<a name="line.687"></a>
+<FONT color="green">688</FONT>                final boolean no_prefix = ((index = rawName.indexOf(":")) &lt; 0);<a name="line.688"></a>
+<FONT color="green">689</FONT>                String prefix = (no_prefix) ? "" : rawName.substring(0, index);<a name="line.689"></a>
+<FONT color="green">690</FONT>    <a name="line.690"></a>
+<FONT color="green">691</FONT>    <a name="line.691"></a>
+<FONT color="green">692</FONT>                if (null != prefix)<a name="line.692"></a>
+<FONT color="green">693</FONT>                {<a name="line.693"></a>
+<FONT color="green">694</FONT>                    String foundURI = m_prefixMap.lookupNamespace(prefix);<a name="line.694"></a>
+<FONT color="green">695</FONT>    <a name="line.695"></a>
+<FONT color="green">696</FONT>                    if ((null == foundURI) || !foundURI.equals(ns))<a name="line.696"></a>
+<FONT color="green">697</FONT>                    {<a name="line.697"></a>
+<FONT color="green">698</FONT>                        this.startPrefixMapping(prefix, ns, false);<a name="line.698"></a>
+<FONT color="green">699</FONT>    <a name="line.699"></a>
+<FONT color="green">700</FONT>                        if (getShouldOutputNSAttr()) {<a name="line.700"></a>
+<FONT color="green">701</FONT>                            // Bugzilla1133: Generate attribute as well as namespace event.<a name="line.701"></a>
+<FONT color="green">702</FONT>                            // SAX does expect both.<a name="line.702"></a>
+<FONT color="green">703</FONT>                            this.addAttributeAlways(<a name="line.703"></a>
+<FONT color="green">704</FONT>                                "http://www.w3.org/2000/xmlns/",<a name="line.704"></a>
+<FONT color="green">705</FONT>                                no_prefix ? "xmlns" : prefix,  // local name<a name="line.705"></a>
+<FONT color="green">706</FONT>                                no_prefix ? "xmlns" : ("xmlns:"+ prefix), // qname<a name="line.706"></a>
+<FONT color="green">707</FONT>                                "CDATA",<a name="line.707"></a>
+<FONT color="green">708</FONT>                                ns,<a name="line.708"></a>
+<FONT color="green">709</FONT>                                false);<a name="line.709"></a>
+<FONT color="green">710</FONT>                        }<a name="line.710"></a>
+<FONT color="green">711</FONT>                    }<a name="line.711"></a>
+<FONT color="green">712</FONT>    <a name="line.712"></a>
+<FONT color="green">713</FONT>                }<a name="line.713"></a>
+<FONT color="green">714</FONT>            }<a name="line.714"></a>
+<FONT color="green">715</FONT>        }<a name="line.715"></a>
+<FONT color="green">716</FONT>        /**<a name="line.716"></a>
+<FONT color="green">717</FONT>         * Adds the given attribute to the set of attributes, and also makes sure<a name="line.717"></a>
+<FONT color="green">718</FONT>         * that the needed prefix/uri mapping is declared, but only if there is a<a name="line.718"></a>
+<FONT color="green">719</FONT>         * currently open element.<a name="line.719"></a>
+<FONT color="green">720</FONT>         * <a name="line.720"></a>
+<FONT color="green">721</FONT>         * @param uri the URI of the attribute<a name="line.721"></a>
+<FONT color="green">722</FONT>         * @param localName the local name of the attribute<a name="line.722"></a>
+<FONT color="green">723</FONT>         * @param rawName    the qualified name of the attribute<a name="line.723"></a>
+<FONT color="green">724</FONT>         * @param type the type of the attribute (probably CDATA)<a name="line.724"></a>
+<FONT color="green">725</FONT>         * @param value the value of the attribute<a name="line.725"></a>
+<FONT color="green">726</FONT>         * @param XSLAttribute true if this attribute is coming from an xsl:attribute element<a name="line.726"></a>
+<FONT color="green">727</FONT>         * @see ExtendedContentHandler#addAttribute(String, String, String, String, String)<a name="line.727"></a>
+<FONT color="green">728</FONT>         */<a name="line.728"></a>
+<FONT color="green">729</FONT>        public void addAttribute(<a name="line.729"></a>
+<FONT color="green">730</FONT>            String uri,<a name="line.730"></a>
+<FONT color="green">731</FONT>            String localName,<a name="line.731"></a>
+<FONT color="green">732</FONT>            String rawName,<a name="line.732"></a>
+<FONT color="green">733</FONT>            String type,<a name="line.733"></a>
+<FONT color="green">734</FONT>            String value,<a name="line.734"></a>
+<FONT color="green">735</FONT>            boolean XSLAttribute)<a name="line.735"></a>
+<FONT color="green">736</FONT>            throws SAXException<a name="line.736"></a>
+<FONT color="green">737</FONT>        {      <a name="line.737"></a>
+<FONT color="green">738</FONT>            if (m_elemContext.m_startTagOpen)<a name="line.738"></a>
+<FONT color="green">739</FONT>            {<a name="line.739"></a>
+<FONT color="green">740</FONT>                ensurePrefixIsDeclared(uri, rawName);<a name="line.740"></a>
+<FONT color="green">741</FONT>                addAttributeAlways(uri, localName, rawName, type, value, false);<a name="line.741"></a>
+<FONT color="green">742</FONT>            }<a name="line.742"></a>
+<FONT color="green">743</FONT>    <a name="line.743"></a>
+<FONT color="green">744</FONT>        } <a name="line.744"></a>
+<FONT color="green">745</FONT>           <a name="line.745"></a>
+<FONT color="green">746</FONT>        /**<a name="line.746"></a>
+<FONT color="green">747</FONT>         * Try's to reset the super class and reset this class for <a name="line.747"></a>
+<FONT color="green">748</FONT>         * re-use, so that you don't need to create a new serializer <a name="line.748"></a>
+<FONT color="green">749</FONT>         * (mostly for performance reasons).<a name="line.749"></a>
+<FONT color="green">750</FONT>         * <a name="line.750"></a>
+<FONT color="green">751</FONT>         * @return true if the class was successfuly reset.<a name="line.751"></a>
+<FONT color="green">752</FONT>         * @see Serializer#reset()<a name="line.752"></a>
+<FONT color="green">753</FONT>         */<a name="line.753"></a>
+<FONT color="green">754</FONT>        public boolean reset()<a name="line.754"></a>
+<FONT color="green">755</FONT>        {<a name="line.755"></a>
+<FONT color="green">756</FONT>            boolean wasReset = false;<a name="line.756"></a>
+<FONT color="green">757</FONT>            if (super.reset())<a name="line.757"></a>
+<FONT color="green">758</FONT>            {<a name="line.758"></a>
+<FONT color="green">759</FONT>                resetToXMLSAXHandler();<a name="line.759"></a>
+<FONT color="green">760</FONT>                wasReset = true;<a name="line.760"></a>
+<FONT color="green">761</FONT>            }<a name="line.761"></a>
+<FONT color="green">762</FONT>            return wasReset;<a name="line.762"></a>
+<FONT color="green">763</FONT>        }<a name="line.763"></a>
+<FONT color="green">764</FONT>        <a name="line.764"></a>
+<FONT color="green">765</FONT>        /**<a name="line.765"></a>
+<FONT color="green">766</FONT>         * Reset all of the fields owned by ToXMLSAXHandler class<a name="line.766"></a>
+<FONT color="green">767</FONT>         *<a name="line.767"></a>
+<FONT color="green">768</FONT>         */<a name="line.768"></a>
+<FONT color="green">769</FONT>        private void resetToXMLSAXHandler()<a name="line.769"></a>
+<FONT color="green">770</FONT>        {<a name="line.770"></a>
+<FONT color="green">771</FONT>            this.m_escapeSetting = true;<a name="line.771"></a>
+<FONT color="green">772</FONT>        }  <a name="line.772"></a>
+<FONT color="green">773</FONT>    <a name="line.773"></a>
+<FONT color="green">774</FONT>    }<a name="line.774"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

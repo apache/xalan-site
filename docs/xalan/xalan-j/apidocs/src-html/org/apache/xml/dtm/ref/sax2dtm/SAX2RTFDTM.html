@@ -1,0 +1,428 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: SAX2RTFDTM.java 468653 2006-10-28 07:07:05Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    package org.apache.xml.dtm.ref.sax2dtm;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    import javax.xml.transform.Source;<a name="line.23"></a>
+<FONT color="green">024</FONT>    <a name="line.24"></a>
+<FONT color="green">025</FONT>    import org.apache.xml.dtm.DTM;<a name="line.25"></a>
+<FONT color="green">026</FONT>    import org.apache.xml.dtm.DTMManager;<a name="line.26"></a>
+<FONT color="green">027</FONT>    import org.apache.xml.dtm.DTMWSFilter;<a name="line.27"></a>
+<FONT color="green">028</FONT>    import org.apache.xml.utils.IntStack;<a name="line.28"></a>
+<FONT color="green">029</FONT>    import org.apache.xml.utils.IntVector;<a name="line.29"></a>
+<FONT color="green">030</FONT>    import org.apache.xml.utils.StringVector;<a name="line.30"></a>
+<FONT color="green">031</FONT>    import org.apache.xml.utils.XMLStringFactory;<a name="line.31"></a>
+<FONT color="green">032</FONT>    <a name="line.32"></a>
+<FONT color="green">033</FONT>    import org.xml.sax.SAXException;<a name="line.33"></a>
+<FONT color="green">034</FONT>    <a name="line.34"></a>
+<FONT color="green">035</FONT>    /**<a name="line.35"></a>
+<FONT color="green">036</FONT>     * This is a subclass of SAX2DTM which has been modified to meet the needs of<a name="line.36"></a>
+<FONT color="green">037</FONT>     * Result Tree Frameworks (RTFs). The differences are:<a name="line.37"></a>
+<FONT color="green">038</FONT>     *<a name="line.38"></a>
+<FONT color="green">039</FONT>     * 1) Multiple XML trees may be appended to the single DTM. This means<a name="line.39"></a>
+<FONT color="green">040</FONT>     * that the root node of each document is _not_ node 0. Some code has<a name="line.40"></a>
+<FONT color="green">041</FONT>     * had to be deoptimized to support this mode of operation, and an<a name="line.41"></a>
+<FONT color="green">042</FONT>     * explicit mechanism for obtaining the Node Handle of the root node<a name="line.42"></a>
+<FONT color="green">043</FONT>     * has been provided.<a name="line.43"></a>
+<FONT color="green">044</FONT>     *<a name="line.44"></a>
+<FONT color="green">045</FONT>     * 2) A stack of these documents is maintained, allowing us to "tail-prune" the<a name="line.45"></a>
+<FONT color="green">046</FONT>     * most recently added trees off the end of the DTM as stylesheet elements <a name="line.46"></a>
+<FONT color="green">047</FONT>     * (and thus variable contexts) are exited.<a name="line.47"></a>
+<FONT color="green">048</FONT>     *<a name="line.48"></a>
+<FONT color="green">049</FONT>     * PLEASE NOTE that this class may be _heavily_ dependent upon the<a name="line.49"></a>
+<FONT color="green">050</FONT>     * internals of the SAX2DTM superclass, and must be maintained in<a name="line.50"></a>
+<FONT color="green">051</FONT>     * parallel with that code.  Arguably, they should be conditionals<a name="line.51"></a>
+<FONT color="green">052</FONT>     * within a single class... but they have deen separated for<a name="line.52"></a>
+<FONT color="green">053</FONT>     * performance reasons. (In fact, one could even argue about which is<a name="line.53"></a>
+<FONT color="green">054</FONT>     * the superclass and which is the subclass; the current arrangement<a name="line.54"></a>
+<FONT color="green">055</FONT>     * is as much about preserving stability of existing code during<a name="line.55"></a>
+<FONT color="green">056</FONT>     * development as anything else.)<a name="line.56"></a>
+<FONT color="green">057</FONT>     * <a name="line.57"></a>
+<FONT color="green">058</FONT>     * %REVIEW% In fact, since the differences are so minor, I think it<a name="line.58"></a>
+<FONT color="green">059</FONT>     * may be possible/practical to fold them back into the base<a name="line.59"></a>
+<FONT color="green">060</FONT>     * SAX2DTM. Consider that as a future code-size optimization.<a name="line.60"></a>
+<FONT color="green">061</FONT>     * */<a name="line.61"></a>
+<FONT color="green">062</FONT>    public class SAX2RTFDTM extends SAX2DTM<a name="line.62"></a>
+<FONT color="green">063</FONT>    {<a name="line.63"></a>
+<FONT color="green">064</FONT>      /** Set true to monitor SAX events and similar diagnostic info. */<a name="line.64"></a>
+<FONT color="green">065</FONT>      private static final boolean DEBUG = false;<a name="line.65"></a>
+<FONT color="green">066</FONT>      <a name="line.66"></a>
+<FONT color="green">067</FONT>      /** Most recently started Document, or null if the DTM is empty.  */<a name="line.67"></a>
+<FONT color="green">068</FONT>      private int m_currentDocumentNode=NULL;<a name="line.68"></a>
+<FONT color="green">069</FONT>      <a name="line.69"></a>
+<FONT color="green">070</FONT>      /** Tail-pruning mark: Number of nodes in use */<a name="line.70"></a>
+<FONT color="green">071</FONT>      IntStack mark_size=new IntStack();<a name="line.71"></a>
+<FONT color="green">072</FONT>      /** Tail-pruning mark: Number of data items in use */<a name="line.72"></a>
+<FONT color="green">073</FONT>      IntStack mark_data_size=new IntStack();<a name="line.73"></a>
+<FONT color="green">074</FONT>      /** Tail-pruning mark: Number of size-of-data fields in use */<a name="line.74"></a>
+<FONT color="green">075</FONT>      IntStack mark_char_size=new IntStack();<a name="line.75"></a>
+<FONT color="green">076</FONT>      /** Tail-pruning mark: Number of dataOrQName slots in use */<a name="line.76"></a>
+<FONT color="green">077</FONT>      IntStack mark_doq_size=new IntStack();<a name="line.77"></a>
+<FONT color="green">078</FONT>      /** Tail-pruning mark: Number of namespace declaration sets in use<a name="line.78"></a>
+<FONT color="green">079</FONT>       * %REVIEW% I don't think number of NS sets is ever different from number<a name="line.79"></a>
+<FONT color="green">080</FONT>       * of NS elements. We can probabably reduce these to a single stack and save<a name="line.80"></a>
+<FONT color="green">081</FONT>       * some storage.<a name="line.81"></a>
+<FONT color="green">082</FONT>       * */<a name="line.82"></a>
+<FONT color="green">083</FONT>      IntStack mark_nsdeclset_size=new IntStack();<a name="line.83"></a>
+<FONT color="green">084</FONT>      /** Tail-pruning mark: Number of naespace declaration elements in use<a name="line.84"></a>
+<FONT color="green">085</FONT>       * %REVIEW% I don't think number of NS sets is ever different from number<a name="line.85"></a>
+<FONT color="green">086</FONT>       * of NS elements. We can probabably reduce these to a single stack and save<a name="line.86"></a>
+<FONT color="green">087</FONT>       * some storage.<a name="line.87"></a>
+<FONT color="green">088</FONT>       */<a name="line.88"></a>
+<FONT color="green">089</FONT>      IntStack mark_nsdeclelem_size=new IntStack();<a name="line.89"></a>
+<FONT color="green">090</FONT>    <a name="line.90"></a>
+<FONT color="green">091</FONT>      /**<a name="line.91"></a>
+<FONT color="green">092</FONT>       * Tail-pruning mark:  initial number of nodes in use<a name="line.92"></a>
+<FONT color="green">093</FONT>       */<a name="line.93"></a>
+<FONT color="green">094</FONT>      int m_emptyNodeCount;<a name="line.94"></a>
+<FONT color="green">095</FONT>    <a name="line.95"></a>
+<FONT color="green">096</FONT>      /**<a name="line.96"></a>
+<FONT color="green">097</FONT>       * Tail-pruning mark:  initial number of namespace declaration sets<a name="line.97"></a>
+<FONT color="green">098</FONT>       */<a name="line.98"></a>
+<FONT color="green">099</FONT>      int m_emptyNSDeclSetCount;<a name="line.99"></a>
+<FONT color="green">100</FONT>    <a name="line.100"></a>
+<FONT color="green">101</FONT>      /**<a name="line.101"></a>
+<FONT color="green">102</FONT>       * Tail-pruning mark:  initial number of namespace declaration elements<a name="line.102"></a>
+<FONT color="green">103</FONT>       */<a name="line.103"></a>
+<FONT color="green">104</FONT>      int m_emptyNSDeclSetElemsCount;<a name="line.104"></a>
+<FONT color="green">105</FONT>    <a name="line.105"></a>
+<FONT color="green">106</FONT>      /**<a name="line.106"></a>
+<FONT color="green">107</FONT>       * Tail-pruning mark:  initial number of data items in use<a name="line.107"></a>
+<FONT color="green">108</FONT>       */<a name="line.108"></a>
+<FONT color="green">109</FONT>      int m_emptyDataCount;<a name="line.109"></a>
+<FONT color="green">110</FONT>    <a name="line.110"></a>
+<FONT color="green">111</FONT>      /**<a name="line.111"></a>
+<FONT color="green">112</FONT>       * Tail-pruning mark:  initial number of characters in use<a name="line.112"></a>
+<FONT color="green">113</FONT>       */<a name="line.113"></a>
+<FONT color="green">114</FONT>      int m_emptyCharsCount;<a name="line.114"></a>
+<FONT color="green">115</FONT>    <a name="line.115"></a>
+<FONT color="green">116</FONT>      /**<a name="line.116"></a>
+<FONT color="green">117</FONT>       * Tail-pruning mark:  default initial number of dataOrQName slots in use<a name="line.117"></a>
+<FONT color="green">118</FONT>       */<a name="line.118"></a>
+<FONT color="green">119</FONT>      int m_emptyDataQNCount;<a name="line.119"></a>
+<FONT color="green">120</FONT>      <a name="line.120"></a>
+<FONT color="green">121</FONT>      public SAX2RTFDTM(DTMManager mgr, Source source, int dtmIdentity,<a name="line.121"></a>
+<FONT color="green">122</FONT>                     DTMWSFilter whiteSpaceFilter,<a name="line.122"></a>
+<FONT color="green">123</FONT>                     XMLStringFactory xstringfactory,<a name="line.123"></a>
+<FONT color="green">124</FONT>                     boolean doIndexing)<a name="line.124"></a>
+<FONT color="green">125</FONT>      {<a name="line.125"></a>
+<FONT color="green">126</FONT>        super(mgr, source, dtmIdentity, whiteSpaceFilter, <a name="line.126"></a>
+<FONT color="green">127</FONT>              xstringfactory, doIndexing);<a name="line.127"></a>
+<FONT color="green">128</FONT>              <a name="line.128"></a>
+<FONT color="green">129</FONT>        // NEVER track source locators for RTFs; they aren't meaningful. I think.<a name="line.129"></a>
+<FONT color="green">130</FONT>        // (If we did track them, we'd need to tail-prune these too.)<a name="line.130"></a>
+<FONT color="green">131</FONT>        //org.apache.xalan.processor.TransformerFactoryImpl.m_source_location;<a name="line.131"></a>
+<FONT color="green">132</FONT>        m_useSourceLocationProperty=false;<a name="line.132"></a>
+<FONT color="green">133</FONT>        m_sourceSystemId = (m_useSourceLocationProperty) ? new StringVector()<a name="line.133"></a>
+<FONT color="green">134</FONT>                                                         : null;<a name="line.134"></a>
+<FONT color="green">135</FONT>        m_sourceLine = (m_useSourceLocationProperty) ? new IntVector() : null;<a name="line.135"></a>
+<FONT color="green">136</FONT>        m_sourceColumn = (m_useSourceLocationProperty) ? new IntVector() : null;<a name="line.136"></a>
+<FONT color="green">137</FONT>    <a name="line.137"></a>
+<FONT color="green">138</FONT>        // Record initial sizes of fields that are pushed and restored<a name="line.138"></a>
+<FONT color="green">139</FONT>        // for RTF tail-pruning.  More entries can be popped than pushed, so<a name="line.139"></a>
+<FONT color="green">140</FONT>        // we need this to mark the primordial state of the DTM.<a name="line.140"></a>
+<FONT color="green">141</FONT>        m_emptyNodeCount = m_size;<a name="line.141"></a>
+<FONT color="green">142</FONT>        m_emptyNSDeclSetCount = (m_namespaceDeclSets == null)<a name="line.142"></a>
+<FONT color="green">143</FONT>                                     ? 0 : m_namespaceDeclSets.size();<a name="line.143"></a>
+<FONT color="green">144</FONT>        m_emptyNSDeclSetElemsCount = (m_namespaceDeclSetElements == null)<a name="line.144"></a>
+<FONT color="green">145</FONT>                                          ? 0 : m_namespaceDeclSetElements.size();<a name="line.145"></a>
+<FONT color="green">146</FONT>        m_emptyDataCount = m_data.size();<a name="line.146"></a>
+<FONT color="green">147</FONT>        m_emptyCharsCount = m_chars.size();<a name="line.147"></a>
+<FONT color="green">148</FONT>        m_emptyDataQNCount = m_dataOrQName.size();<a name="line.148"></a>
+<FONT color="green">149</FONT>      }<a name="line.149"></a>
+<FONT color="green">150</FONT>      <a name="line.150"></a>
+<FONT color="green">151</FONT>      /**<a name="line.151"></a>
+<FONT color="green">152</FONT>       * Given a DTM, find the owning document node. In the case of<a name="line.152"></a>
+<FONT color="green">153</FONT>       * SAX2RTFDTM, which may contain multiple documents, this returns<a name="line.153"></a>
+<FONT color="green">154</FONT>       * the &lt;b&gt;most recently started&lt;/b&gt; document, or null if the DTM is<a name="line.154"></a>
+<FONT color="green">155</FONT>       * empty or no document is currently under construction.<a name="line.155"></a>
+<FONT color="green">156</FONT>       *<a name="line.156"></a>
+<FONT color="green">157</FONT>       * %REVIEW% Should we continue to report the most recent after<a name="line.157"></a>
+<FONT color="green">158</FONT>       * construction has ended? I think not, given that it may have been<a name="line.158"></a>
+<FONT color="green">159</FONT>       * tail-pruned.<a name="line.159"></a>
+<FONT color="green">160</FONT>       *<a name="line.160"></a>
+<FONT color="green">161</FONT>       *  @return int Node handle of Document node, or null if this DTM does not<a name="line.161"></a>
+<FONT color="green">162</FONT>       *  contain an "active" document.<a name="line.162"></a>
+<FONT color="green">163</FONT>       * */<a name="line.163"></a>
+<FONT color="green">164</FONT>      public int getDocument()<a name="line.164"></a>
+<FONT color="green">165</FONT>      {<a name="line.165"></a>
+<FONT color="green">166</FONT>        return makeNodeHandle(m_currentDocumentNode);<a name="line.166"></a>
+<FONT color="green">167</FONT>      }<a name="line.167"></a>
+<FONT color="green">168</FONT>    <a name="line.168"></a>
+<FONT color="green">169</FONT>      /**<a name="line.169"></a>
+<FONT color="green">170</FONT>       * Given a node handle, find the owning document node, using DTM semantics<a name="line.170"></a>
+<FONT color="green">171</FONT>       * (Document owns itself) rather than DOM semantics (Document has no owner).<a name="line.171"></a>
+<FONT color="green">172</FONT>       *<a name="line.172"></a>
+<FONT color="green">173</FONT>       * (I'm counting on the fact that getOwnerDocument() is implemented on top<a name="line.173"></a>
+<FONT color="green">174</FONT>       * of this call, in the superclass, to avoid having to rewrite that one.<a name="line.174"></a>
+<FONT color="green">175</FONT>       * Be careful if that code changes!)<a name="line.175"></a>
+<FONT color="green">176</FONT>       *<a name="line.176"></a>
+<FONT color="green">177</FONT>       * @param nodeHandle the id of the node.<a name="line.177"></a>
+<FONT color="green">178</FONT>       * @return int Node handle of owning document<a name="line.178"></a>
+<FONT color="green">179</FONT>       */<a name="line.179"></a>
+<FONT color="green">180</FONT>      public int getDocumentRoot(int nodeHandle)<a name="line.180"></a>
+<FONT color="green">181</FONT>      {<a name="line.181"></a>
+<FONT color="green">182</FONT>        for (int id=makeNodeIdentity(nodeHandle); id!=NULL; id=_parent(id)) {<a name="line.182"></a>
+<FONT color="green">183</FONT>          if (_type(id)==DTM.DOCUMENT_NODE) {<a name="line.183"></a>
+<FONT color="green">184</FONT>            return makeNodeHandle(id);<a name="line.184"></a>
+<FONT color="green">185</FONT>          }<a name="line.185"></a>
+<FONT color="green">186</FONT>        }<a name="line.186"></a>
+<FONT color="green">187</FONT>    <a name="line.187"></a>
+<FONT color="green">188</FONT>        return DTM.NULL; // Safety net; should never happen<a name="line.188"></a>
+<FONT color="green">189</FONT>      }<a name="line.189"></a>
+<FONT color="green">190</FONT>      <a name="line.190"></a>
+<FONT color="green">191</FONT>      /**<a name="line.191"></a>
+<FONT color="green">192</FONT>       * Given a node identifier, find the owning document node.  Unlike the DOM,<a name="line.192"></a>
+<FONT color="green">193</FONT>       * this considers the owningDocument of a Document to be itself. Note that<a name="line.193"></a>
+<FONT color="green">194</FONT>       * in shared DTMs this may not be zero.<a name="line.194"></a>
+<FONT color="green">195</FONT>       *<a name="line.195"></a>
+<FONT color="green">196</FONT>       * @param nodeIdentifier the id of the starting node.<a name="line.196"></a>
+<FONT color="green">197</FONT>       * @return int Node identifier of the root of this DTM tree<a name="line.197"></a>
+<FONT color="green">198</FONT>       */<a name="line.198"></a>
+<FONT color="green">199</FONT>      protected int _documentRoot(int nodeIdentifier)<a name="line.199"></a>
+<FONT color="green">200</FONT>      {<a name="line.200"></a>
+<FONT color="green">201</FONT>        if(nodeIdentifier==NULL) return NULL;<a name="line.201"></a>
+<FONT color="green">202</FONT>    <a name="line.202"></a>
+<FONT color="green">203</FONT>        for (int parent=_parent(nodeIdentifier);<a name="line.203"></a>
+<FONT color="green">204</FONT>             parent!=NULL;<a name="line.204"></a>
+<FONT color="green">205</FONT>             nodeIdentifier=parent,parent=_parent(nodeIdentifier))<a name="line.205"></a>
+<FONT color="green">206</FONT>          ;<a name="line.206"></a>
+<FONT color="green">207</FONT>       <a name="line.207"></a>
+<FONT color="green">208</FONT>        return nodeIdentifier;<a name="line.208"></a>
+<FONT color="green">209</FONT>      }<a name="line.209"></a>
+<FONT color="green">210</FONT>    <a name="line.210"></a>
+<FONT color="green">211</FONT>      /**<a name="line.211"></a>
+<FONT color="green">212</FONT>       * Receive notification of the beginning of a new RTF document.<a name="line.212"></a>
+<FONT color="green">213</FONT>       *<a name="line.213"></a>
+<FONT color="green">214</FONT>       * %REVIEW% Y'know, this isn't all that much of a deoptimization. We<a name="line.214"></a>
+<FONT color="green">215</FONT>       * might want to consider folding the start/endDocument changes back<a name="line.215"></a>
+<FONT color="green">216</FONT>       * into the main SAX2DTM so we don't have to expose so many fields<a name="line.216"></a>
+<FONT color="green">217</FONT>       * (even as Protected) and carry the additional code.<a name="line.217"></a>
+<FONT color="green">218</FONT>       *<a name="line.218"></a>
+<FONT color="green">219</FONT>       * @throws SAXException Any SAX exception, possibly<a name="line.219"></a>
+<FONT color="green">220</FONT>       *            wrapping another exception.<a name="line.220"></a>
+<FONT color="green">221</FONT>       * @see org.xml.sax.ContentHandler#startDocument<a name="line.221"></a>
+<FONT color="green">222</FONT>       * */<a name="line.222"></a>
+<FONT color="green">223</FONT>      public void startDocument() throws SAXException<a name="line.223"></a>
+<FONT color="green">224</FONT>      {<a name="line.224"></a>
+<FONT color="green">225</FONT>        // Re-initialize the tree append process<a name="line.225"></a>
+<FONT color="green">226</FONT>        m_endDocumentOccured = false;<a name="line.226"></a>
+<FONT color="green">227</FONT>        m_prefixMappings = new java.util.Vector();<a name="line.227"></a>
+<FONT color="green">228</FONT>        m_contextIndexes = new IntStack();<a name="line.228"></a>
+<FONT color="green">229</FONT>        m_parents = new IntStack();<a name="line.229"></a>
+<FONT color="green">230</FONT>       <a name="line.230"></a>
+<FONT color="green">231</FONT>        m_currentDocumentNode=m_size;<a name="line.231"></a>
+<FONT color="green">232</FONT>        super.startDocument();<a name="line.232"></a>
+<FONT color="green">233</FONT>      }<a name="line.233"></a>
+<FONT color="green">234</FONT>     <a name="line.234"></a>
+<FONT color="green">235</FONT>      /**<a name="line.235"></a>
+<FONT color="green">236</FONT>       * Receive notification of the end of the document.<a name="line.236"></a>
+<FONT color="green">237</FONT>       *<a name="line.237"></a>
+<FONT color="green">238</FONT>       * %REVIEW% Y'know, this isn't all that much of a deoptimization. We<a name="line.238"></a>
+<FONT color="green">239</FONT>       * might want to consider folding the start/endDocument changes back<a name="line.239"></a>
+<FONT color="green">240</FONT>       * into the main SAX2DTM so we don't have to expose so many fields<a name="line.240"></a>
+<FONT color="green">241</FONT>       * (even as Protected).<a name="line.241"></a>
+<FONT color="green">242</FONT>       *<a name="line.242"></a>
+<FONT color="green">243</FONT>       * @throws SAXException Any SAX exception, possibly<a name="line.243"></a>
+<FONT color="green">244</FONT>       *            wrapping another exception.<a name="line.244"></a>
+<FONT color="green">245</FONT>       * @see org.xml.sax.ContentHandler#endDocument<a name="line.245"></a>
+<FONT color="green">246</FONT>       * */<a name="line.246"></a>
+<FONT color="green">247</FONT>      public void endDocument() throws SAXException<a name="line.247"></a>
+<FONT color="green">248</FONT>      {<a name="line.248"></a>
+<FONT color="green">249</FONT>        charactersFlush();<a name="line.249"></a>
+<FONT color="green">250</FONT>    <a name="line.250"></a>
+<FONT color="green">251</FONT>        m_nextsib.setElementAt(NULL,m_currentDocumentNode);<a name="line.251"></a>
+<FONT color="green">252</FONT>    <a name="line.252"></a>
+<FONT color="green">253</FONT>        if (m_firstch.elementAt(m_currentDocumentNode) == NOTPROCESSED)<a name="line.253"></a>
+<FONT color="green">254</FONT>          m_firstch.setElementAt(NULL,m_currentDocumentNode);<a name="line.254"></a>
+<FONT color="green">255</FONT>    <a name="line.255"></a>
+<FONT color="green">256</FONT>        if (DTM.NULL != m_previous)<a name="line.256"></a>
+<FONT color="green">257</FONT>          m_nextsib.setElementAt(DTM.NULL,m_previous);<a name="line.257"></a>
+<FONT color="green">258</FONT>    <a name="line.258"></a>
+<FONT color="green">259</FONT>        m_parents = null;<a name="line.259"></a>
+<FONT color="green">260</FONT>        m_prefixMappings = null;<a name="line.260"></a>
+<FONT color="green">261</FONT>        m_contextIndexes = null;<a name="line.261"></a>
+<FONT color="green">262</FONT>    <a name="line.262"></a>
+<FONT color="green">263</FONT>        m_currentDocumentNode= NULL; // no longer open<a name="line.263"></a>
+<FONT color="green">264</FONT>        m_endDocumentOccured = true;<a name="line.264"></a>
+<FONT color="green">265</FONT>      }<a name="line.265"></a>
+<FONT color="green">266</FONT>     <a name="line.266"></a>
+<FONT color="green">267</FONT>    <a name="line.267"></a>
+<FONT color="green">268</FONT>      /** "Tail-pruning" support for RTFs.<a name="line.268"></a>
+<FONT color="green">269</FONT>       *<a name="line.269"></a>
+<FONT color="green">270</FONT>       * This function pushes information about the current size of the<a name="line.270"></a>
+<FONT color="green">271</FONT>       * DTM's data structures onto a stack, for use by popRewindMark()<a name="line.271"></a>
+<FONT color="green">272</FONT>       * (which see).<a name="line.272"></a>
+<FONT color="green">273</FONT>       *<a name="line.273"></a>
+<FONT color="green">274</FONT>       * %REVIEW% I have no idea how to rewind m_elemIndexes. However,<a name="line.274"></a>
+<FONT color="green">275</FONT>       * RTFs will not be indexed, so I can simply panic if that case<a name="line.275"></a>
+<FONT color="green">276</FONT>       * arises. Hey, it works...<a name="line.276"></a>
+<FONT color="green">277</FONT>       * */<a name="line.277"></a>
+<FONT color="green">278</FONT>      public void pushRewindMark()<a name="line.278"></a>
+<FONT color="green">279</FONT>      {<a name="line.279"></a>
+<FONT color="green">280</FONT>        if(m_indexing || m_elemIndexes!=null)<a name="line.280"></a>
+<FONT color="green">281</FONT>          throw new java.lang.NullPointerException("Coding error; Don't try to mark/rewind an indexed DTM");<a name="line.281"></a>
+<FONT color="green">282</FONT>    <a name="line.282"></a>
+<FONT color="green">283</FONT>        // Values from DTMDefaultBase<a name="line.283"></a>
+<FONT color="green">284</FONT>        // %REVIEW% Can the namespace stack sizes ever differ? If not, save space!<a name="line.284"></a>
+<FONT color="green">285</FONT>        mark_size.push(m_size);<a name="line.285"></a>
+<FONT color="green">286</FONT>        mark_nsdeclset_size.push((m_namespaceDeclSets==null)<a name="line.286"></a>
+<FONT color="green">287</FONT>                                       ? 0<a name="line.287"></a>
+<FONT color="green">288</FONT>                                       : m_namespaceDeclSets.size());<a name="line.288"></a>
+<FONT color="green">289</FONT>        mark_nsdeclelem_size.push((m_namespaceDeclSetElements==null)<a name="line.289"></a>
+<FONT color="green">290</FONT>                                       ? 0<a name="line.290"></a>
+<FONT color="green">291</FONT>                                       : m_namespaceDeclSetElements.size());<a name="line.291"></a>
+<FONT color="green">292</FONT>       <a name="line.292"></a>
+<FONT color="green">293</FONT>        // Values from SAX2DTM<a name="line.293"></a>
+<FONT color="green">294</FONT>        mark_data_size.push(m_data.size());<a name="line.294"></a>
+<FONT color="green">295</FONT>        mark_char_size.push(m_chars.size());<a name="line.295"></a>
+<FONT color="green">296</FONT>        mark_doq_size.push(m_dataOrQName.size());<a name="line.296"></a>
+<FONT color="green">297</FONT>      }<a name="line.297"></a>
+<FONT color="green">298</FONT>     <a name="line.298"></a>
+<FONT color="green">299</FONT>      /** "Tail-pruning" support for RTFs.<a name="line.299"></a>
+<FONT color="green">300</FONT>       *<a name="line.300"></a>
+<FONT color="green">301</FONT>       * This function pops the information previously saved by<a name="line.301"></a>
+<FONT color="green">302</FONT>       * pushRewindMark (which see) and uses it to discard all nodes added<a name="line.302"></a>
+<FONT color="green">303</FONT>       * to the DTM after that time. We expect that this will allow us to<a name="line.303"></a>
+<FONT color="green">304</FONT>       * reuse storage more effectively.<a name="line.304"></a>
+<FONT color="green">305</FONT>       *<a name="line.305"></a>
+<FONT color="green">306</FONT>       * This is _not_ intended to be called while a document is still being<a name="line.306"></a>
+<FONT color="green">307</FONT>       * constructed -- only between endDocument and the next startDocument<a name="line.307"></a>
+<FONT color="green">308</FONT>       *<a name="line.308"></a>
+<FONT color="green">309</FONT>       * %REVIEW% WARNING: This is the first use of some of the truncation<a name="line.309"></a>
+<FONT color="green">310</FONT>       * methods.  If Xalan blows up after this is called, that's a likely<a name="line.310"></a>
+<FONT color="green">311</FONT>       * place to check.<a name="line.311"></a>
+<FONT color="green">312</FONT>       *<a name="line.312"></a>
+<FONT color="green">313</FONT>       * %REVIEW% Our original design for DTMs permitted them to share<a name="line.313"></a>
+<FONT color="green">314</FONT>       * string pools.  If there any risk that this might be happening, we<a name="line.314"></a>
+<FONT color="green">315</FONT>       * can _not_ rewind and recover the string storage. One solution<a name="line.315"></a>
+<FONT color="green">316</FONT>       * might to assert that DTMs used for RTFs Must Not take advantage<a name="line.316"></a>
+<FONT color="green">317</FONT>       * of that feature, but this seems excessively fragile. Another, much<a name="line.317"></a>
+<FONT color="green">318</FONT>       * less attractive, would be to just let them leak... Nah.<a name="line.318"></a>
+<FONT color="green">319</FONT>       *<a name="line.319"></a>
+<FONT color="green">320</FONT>       * @return true if and only if the pop completely emptied the<a name="line.320"></a>
+<FONT color="green">321</FONT>       * RTF. That response is used when determining how to unspool<a name="line.321"></a>
+<FONT color="green">322</FONT>       * RTF-started-while-RTF-open situations.<a name="line.322"></a>
+<FONT color="green">323</FONT>       * */<a name="line.323"></a>
+<FONT color="green">324</FONT>      public boolean popRewindMark()<a name="line.324"></a>
+<FONT color="green">325</FONT>      {<a name="line.325"></a>
+<FONT color="green">326</FONT>        boolean top=mark_size.empty();<a name="line.326"></a>
+<FONT color="green">327</FONT>       <a name="line.327"></a>
+<FONT color="green">328</FONT>        m_size=top ? m_emptyNodeCount : mark_size.pop();<a name="line.328"></a>
+<FONT color="green">329</FONT>        m_exptype.setSize(m_size);<a name="line.329"></a>
+<FONT color="green">330</FONT>        m_firstch.setSize(m_size);<a name="line.330"></a>
+<FONT color="green">331</FONT>        m_nextsib.setSize(m_size);<a name="line.331"></a>
+<FONT color="green">332</FONT>        m_prevsib.setSize(m_size);<a name="line.332"></a>
+<FONT color="green">333</FONT>        m_parent.setSize(m_size);<a name="line.333"></a>
+<FONT color="green">334</FONT>    <a name="line.334"></a>
+<FONT color="green">335</FONT>        m_elemIndexes=null;<a name="line.335"></a>
+<FONT color="green">336</FONT>    <a name="line.336"></a>
+<FONT color="green">337</FONT>        int ds= top ? m_emptyNSDeclSetCount : mark_nsdeclset_size.pop();<a name="line.337"></a>
+<FONT color="green">338</FONT>        if (m_namespaceDeclSets!=null) {<a name="line.338"></a>
+<FONT color="green">339</FONT>          m_namespaceDeclSets.setSize(ds);<a name="line.339"></a>
+<FONT color="green">340</FONT>        }<a name="line.340"></a>
+<FONT color="green">341</FONT>    <a name="line.341"></a>
+<FONT color="green">342</FONT>        int ds1= top ? m_emptyNSDeclSetElemsCount : mark_nsdeclelem_size.pop();<a name="line.342"></a>
+<FONT color="green">343</FONT>        if (m_namespaceDeclSetElements!=null) {<a name="line.343"></a>
+<FONT color="green">344</FONT>          m_namespaceDeclSetElements.setSize(ds1);<a name="line.344"></a>
+<FONT color="green">345</FONT>        }<a name="line.345"></a>
+<FONT color="green">346</FONT>     <a name="line.346"></a>
+<FONT color="green">347</FONT>        // Values from SAX2DTM - m_data always has a reserved entry<a name="line.347"></a>
+<FONT color="green">348</FONT>        m_data.setSize(top ? m_emptyDataCount : mark_data_size.pop());<a name="line.348"></a>
+<FONT color="green">349</FONT>        m_chars.setLength(top ? m_emptyCharsCount : mark_char_size.pop());<a name="line.349"></a>
+<FONT color="green">350</FONT>        m_dataOrQName.setSize(top ? m_emptyDataQNCount : mark_doq_size.pop());<a name="line.350"></a>
+<FONT color="green">351</FONT>    <a name="line.351"></a>
+<FONT color="green">352</FONT>        // Return true iff DTM now empty<a name="line.352"></a>
+<FONT color="green">353</FONT>        return m_size==0;<a name="line.353"></a>
+<FONT color="green">354</FONT>      }<a name="line.354"></a>
+<FONT color="green">355</FONT>     <a name="line.355"></a>
+<FONT color="green">356</FONT>      /** @return true if a DTM tree is currently under construction.<a name="line.356"></a>
+<FONT color="green">357</FONT>       * */<a name="line.357"></a>
+<FONT color="green">358</FONT>      public boolean isTreeIncomplete()<a name="line.358"></a>
+<FONT color="green">359</FONT>      {<a name="line.359"></a>
+<FONT color="green">360</FONT>        return !m_endDocumentOccured;<a name="line.360"></a>
+<FONT color="green">361</FONT>      }<a name="line.361"></a>
+<FONT color="green">362</FONT>    }<a name="line.362"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

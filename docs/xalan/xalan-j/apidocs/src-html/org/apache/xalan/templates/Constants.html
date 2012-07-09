@@ -1,0 +1,465 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: Constants.java 468643 2006-10-28 06:56:03Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    package org.apache.xalan.templates;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    <a name="line.23"></a>
+<FONT color="green">024</FONT>    /**<a name="line.24"></a>
+<FONT color="green">025</FONT>     * Primary constants used in the TransformerImpl classes.<a name="line.25"></a>
+<FONT color="green">026</FONT>     * @xsl.usage advanced<a name="line.26"></a>
+<FONT color="green">027</FONT>     */<a name="line.27"></a>
+<FONT color="green">028</FONT>    public class Constants extends org.apache.xml.utils.Constants<a name="line.28"></a>
+<FONT color="green">029</FONT>    {<a name="line.29"></a>
+<FONT color="green">030</FONT>    <a name="line.30"></a>
+<FONT color="green">031</FONT>      /**<a name="line.31"></a>
+<FONT color="green">032</FONT>       * IDs for XSL element types. These are associated<a name="line.32"></a>
+<FONT color="green">033</FONT>       * with the string literals in the TransformerImpl class.<a name="line.33"></a>
+<FONT color="green">034</FONT>       * Don't change the numbers. NOTE THAT THESE ARE NOT IN<a name="line.34"></a>
+<FONT color="green">035</FONT>       * ALPHABETICAL ORDER!<a name="line.35"></a>
+<FONT color="green">036</FONT>       * (It's a pity Java doesn't have a real Enumerated Mnemonic<a name="line.36"></a>
+<FONT color="green">037</FONT>       * datatype... or a C-like preprocessor in lieu thereof which<a name="line.37"></a>
+<FONT color="green">038</FONT>       * could be used to generate and maintain synch between these lists.)<a name="line.38"></a>
+<FONT color="green">039</FONT>       */<a name="line.39"></a>
+<FONT color="green">040</FONT>      public static final int ELEMNAME_UNDEFINED = -1, ELEMNAME_WITHPARAM = 2,<a name="line.40"></a>
+<FONT color="green">041</FONT>                              ELEMNAME_ADDATTRIBUTE = 4, ELEMNAME_ANCHOR = 22,<a name="line.41"></a>
+<FONT color="green">042</FONT>    <a name="line.42"></a>
+<FONT color="green">043</FONT>      //  ELEMNAME_ANCHOR_PATTERN = 23,<a name="line.43"></a>
+<FONT color="green">044</FONT>      ELEMNAME_APPLY_TEMPLATES = 50, ELEMNAME_USE = 34, ELEMNAME_CHILDREN = 6,<a name="line.44"></a>
+<FONT color="green">045</FONT>                                     ELEMNAME_CHOOSE = 37, ELEMNAME_COMMENT = 59,  // my own<a name="line.45"></a>
+<FONT color="green">046</FONT>                                     ELEMNAME_CONSTRUCT = 7,  // my own<a name="line.46"></a>
+<FONT color="green">047</FONT>                                     ELEMNAME_CONTENTS = 8, ELEMNAME_COPY = 9,<a name="line.47"></a>
+<FONT color="green">048</FONT>                                     ELEMNAME_COPY_OF = 74,<a name="line.48"></a>
+<FONT color="green">049</FONT>                                     ELEMNAME_DECIMALFORMAT = 83,<a name="line.49"></a>
+<FONT color="green">050</FONT>                                     ELEMNAME_DEFINEATTRIBUTESET = 40,<a name="line.50"></a>
+<FONT color="green">051</FONT>    <a name="line.51"></a>
+<FONT color="green">052</FONT>      //  ELEMNAME_DEFINECONSTANT = 29,<a name="line.52"></a>
+<FONT color="green">053</FONT>      //  ELEMNAME_DEFINEMACRO = 10,<a name="line.53"></a>
+<FONT color="green">054</FONT>      ELEMNAME_DEFINESCRIPT = 11, ELEMNAME_DISPLAYIF = 12,  // my own<a name="line.54"></a>
+<FONT color="green">055</FONT>                                  ELEMNAME_EMPTY = 14, ELEMNAME_EVAL = 15,<a name="line.55"></a>
+<FONT color="green">056</FONT>                                  ELEMNAME_EXPECTEDCHILDREN = 16,<a name="line.56"></a>
+<FONT color="green">057</FONT>                                  ELEMNAME_EXTENSION = 54,<a name="line.57"></a>
+<FONT color="green">058</FONT>                                  ELEMNAME_EXTENSIONHANDLER = 63,<a name="line.58"></a>
+<FONT color="green">059</FONT>                                  ELEMNAME_FOREACH = 28, ELEMNAME_KEY = 31,<a name="line.59"></a>
+<FONT color="green">060</FONT>                                  ELEMNAME_IF = 36, ELEMNAME_IMPORT = 26,<a name="line.60"></a>
+<FONT color="green">061</FONT>                                  ELEMNAME_INCLUDE = 27,<a name="line.61"></a>
+<FONT color="green">062</FONT>                                  ELEMNAME_CALLTEMPLATE = 17,<a name="line.62"></a>
+<FONT color="green">063</FONT>                                  ELEMNAME_PARAMVARIABLE = 41,<a name="line.63"></a>
+<FONT color="green">064</FONT>                                  ELEMNAME_NUMBER = 35, ELEMNAME_NSALIAS = 84,<a name="line.64"></a>
+<FONT color="green">065</FONT>                                  ELEMNAME_OTHERWISE = 39, ELEMNAME_PI = 58,<a name="line.65"></a>
+<FONT color="green">066</FONT>                                  ELEMNAME_PRESERVESPACE = 33,<a name="line.66"></a>
+<FONT color="green">067</FONT>                                  ELEMNAME_REMOVEATTRIBUTE = 5,<a name="line.67"></a>
+<FONT color="green">068</FONT>                                  ELEMNAME_TEMPLATE = 19, ELEMNAME_SORT = 64,<a name="line.68"></a>
+<FONT color="green">069</FONT>                                  ELEMNAME_STRIPSPACE = 32,<a name="line.69"></a>
+<FONT color="green">070</FONT>                                  ELEMNAME_STYLESHEET = 25, ELEMNAME_TEXT = 42,<a name="line.70"></a>
+<FONT color="green">071</FONT>                                  ELEMNAME_VALUEOF = 30, ELEMNAME_WHEN = 38,<a name="line.71"></a>
+<FONT color="green">072</FONT>    <a name="line.72"></a>
+<FONT color="green">073</FONT>      // Pattern by example support  <a name="line.73"></a>
+<FONT color="green">074</FONT>      ELEMNAME_ROOT = 44, ELEMNAME_ANY = 45, ELEMNAME_ELEMENT = 46,<a name="line.74"></a>
+<FONT color="green">075</FONT>                          ELEMNAME_TARGETELEMENT = 47, ELEMNAME_ATTRIBUTE = 48,<a name="line.75"></a>
+<FONT color="green">076</FONT>                          ELEMNAME_TARGETATTRIBUTE = 49, ELEMNAME_URL = 52,  // my own<a name="line.76"></a>
+<FONT color="green">077</FONT>                          ELEMNAME_CALL = 55,  // my own<a name="line.77"></a>
+<FONT color="green">078</FONT>    <a name="line.78"></a>
+<FONT color="green">079</FONT>      //  ELEMNAME_WITHPARAM = 56,<a name="line.79"></a>
+<FONT color="green">080</FONT>      ELEMNAME_FALLBACK = 57,  // my own<a name="line.80"></a>
+<FONT color="green">081</FONT>      ELEMNAME_TARGETPI = 60,  // my own<a name="line.81"></a>
+<FONT color="green">082</FONT>      ELEMNAME_TARGETCOMMENT = 61,  // my own<a name="line.82"></a>
+<FONT color="green">083</FONT>      ELEMNAME_TARGETTEXT = 62,  // my own<a name="line.83"></a>
+<FONT color="green">084</FONT>      ELEMNAME_CSSSTYLECONVERSION = 65,  // my own<a name="line.84"></a>
+<FONT color="green">085</FONT>      ELEMNAME_COUNTER = 66, ELEMNAME_COUNTERS = 67,<a name="line.85"></a>
+<FONT color="green">086</FONT>      ELEMNAME_COUNTERINCREMENT = 68, ELEMNAME_COUNTERRESET = 69,<a name="line.86"></a>
+<FONT color="green">087</FONT>      ELEMNAME_COUNTERSCOPE = 71, ELEMNAME_APPLY_IMPORTS = 72,<a name="line.87"></a>
+<FONT color="green">088</FONT>      ELEMNAME_VARIABLE = 73, ELEMNAME_MESSAGE = 75, ELEMNAME_LOCALE = 76,<a name="line.88"></a>
+<FONT color="green">089</FONT>      ELEMNAME_LITERALRESULT = 77, ELEMNAME_TEXTLITERALRESULT = 78,<a name="line.89"></a>
+<FONT color="green">090</FONT>      ELEMNAME_EXTENSIONCALL = 79, ELEMNAME_EXTENSIONDECL = 85,<a name="line.90"></a>
+<FONT color="green">091</FONT>      ELEMNAME_EXTENSIONSCRIPT = 86, ELEMNAME_OUTPUT = 80,<a name="line.91"></a>
+<FONT color="green">092</FONT>      ELEMNAME_COMPONENT = 81, ELEMNAME_SCRIPT = 82;<a name="line.92"></a>
+<FONT color="green">093</FONT>    <a name="line.93"></a>
+<FONT color="green">094</FONT>      // Next free number: 90 (88 and 89 used for EXSLT elements);<a name="line.94"></a>
+<FONT color="green">095</FONT>    <a name="line.95"></a>
+<FONT color="green">096</FONT>      /**<a name="line.96"></a>
+<FONT color="green">097</FONT>       * Literals for XSL element names.  Note that there are more<a name="line.97"></a>
+<FONT color="green">098</FONT>       * names than IDs, because some names map to the same ID.<a name="line.98"></a>
+<FONT color="green">099</FONT>       */<a name="line.99"></a>
+<FONT color="green">100</FONT>      public static final String       <a name="line.100"></a>
+<FONT color="green">101</FONT>              ELEMNAME_ANCHOR_STRING = "anchor",<a name="line.101"></a>
+<FONT color="green">102</FONT>          ELEMNAME_ANY_STRING = "any",  // pattern-by-example support<a name="line.102"></a>
+<FONT color="green">103</FONT>          ELEMNAME_APPLY_IMPORTS_STRING = "apply-imports",<a name="line.103"></a>
+<FONT color="green">104</FONT>          ELEMNAME_APPLY_TEMPLATES_STRING = "apply-templates",<a name="line.104"></a>
+<FONT color="green">105</FONT>          ELEMNAME_ARG_STRING = "arg",<a name="line.105"></a>
+<FONT color="green">106</FONT>          ELEMNAME_ATTRIBUTESET_STRING = "attribute-set",<a name="line.106"></a>
+<FONT color="green">107</FONT>          ELEMNAME_ATTRIBUTE_STRING = "attribute",  // pattern-by-example support<a name="line.107"></a>
+<FONT color="green">108</FONT>          ELEMNAME_CALLTEMPLATEARG_STRING = "invoke-arg",<a name="line.108"></a>
+<FONT color="green">109</FONT>          ELEMNAME_CALLTEMPLATE_STRING = "call-template",<a name="line.109"></a>
+<FONT color="green">110</FONT>          ELEMNAME_CALL_STRING = "call",<a name="line.110"></a>
+<FONT color="green">111</FONT>          ELEMNAME_CHILDREN_STRING = "children",<a name="line.111"></a>
+<FONT color="green">112</FONT>          ELEMNAME_CHOOSE_STRING = "choose",<a name="line.112"></a>
+<FONT color="green">113</FONT>          ELEMNAME_COMMENT_STRING = "comment",<a name="line.113"></a>
+<FONT color="green">114</FONT>          ELEMNAME_COMPONENT_STRING = "component",<a name="line.114"></a>
+<FONT color="green">115</FONT>          ELEMNAME_CONSTRUCT_STRING = "construct",  // my own<a name="line.115"></a>
+<FONT color="green">116</FONT>          ELEMNAME_CONTENTS_STRING = "contents", <a name="line.116"></a>
+<FONT color="green">117</FONT>          ELEMNAME_COPY_OF_STRING ="copy-of",<a name="line.117"></a>
+<FONT color="green">118</FONT>          ELEMNAME_COPY_STRING = "copy",<a name="line.118"></a>
+<FONT color="green">119</FONT>          ELEMNAME_COUNTERINCREMENT_STRING = "counter-increment",<a name="line.119"></a>
+<FONT color="green">120</FONT>          ELEMNAME_COUNTERRESET_STRING = "counter-reset",<a name="line.120"></a>
+<FONT color="green">121</FONT>          ELEMNAME_COUNTERSCOPE_STRING = "counter-scope",<a name="line.121"></a>
+<FONT color="green">122</FONT>          ELEMNAME_COUNTERS_STRING = "counters",<a name="line.122"></a>
+<FONT color="green">123</FONT>          ELEMNAME_COUNTER_STRING = "counter",<a name="line.123"></a>
+<FONT color="green">124</FONT>          ELEMNAME_CSSSTYLECONVERSION_STRING = "css-style-conversion",<a name="line.124"></a>
+<FONT color="green">125</FONT>          ELEMNAME_DECIMALFORMAT_STRING = "decimal-format",<a name="line.125"></a>
+<FONT color="green">126</FONT>          ELEMNAME_DISPLAYIF_STRING = "display-if",  // my own<a name="line.126"></a>
+<FONT color="green">127</FONT>          ELEMNAME_ELEMENT_STRING = "element",  // pattern-by-example support<a name="line.127"></a>
+<FONT color="green">128</FONT>          ELEMNAME_EMPTY_STRING = "empty",<a name="line.128"></a>
+<FONT color="green">129</FONT>          ELEMNAME_EVAL_STRING = "eval",<a name="line.129"></a>
+<FONT color="green">130</FONT>          ELEMNAME_EXPECTEDCHILDREN_STRING = "expectedchildren",<a name="line.130"></a>
+<FONT color="green">131</FONT>          ELEMNAME_EXTENSIONHANDLER_STRING = "code-dispatcher",<a name="line.131"></a>
+<FONT color="green">132</FONT>          ELEMNAME_EXTENSION_STRING = "functions",<a name="line.132"></a>
+<FONT color="green">133</FONT>          ELEMNAME_FALLBACK_STRING = "fallback",<a name="line.133"></a>
+<FONT color="green">134</FONT>          ELEMNAME_FOREACH_STRING = "for-each",<a name="line.134"></a>
+<FONT color="green">135</FONT>          ELEMNAME_IF_STRING = "if",<a name="line.135"></a>
+<FONT color="green">136</FONT>          ELEMNAME_IMPORT_STRING = "import",<a name="line.136"></a>
+<FONT color="green">137</FONT>          ELEMNAME_INCLUDE_STRING = "include",<a name="line.137"></a>
+<FONT color="green">138</FONT>          ELEMNAME_KEY_STRING = "key",<a name="line.138"></a>
+<FONT color="green">139</FONT>          ELEMNAME_LOCALE_STRING = "locale",<a name="line.139"></a>
+<FONT color="green">140</FONT>          ELEMNAME_MESSAGE_STRING = "message",<a name="line.140"></a>
+<FONT color="green">141</FONT>          ELEMNAME_NSALIAS_STRING = "namespace-alias",<a name="line.141"></a>
+<FONT color="green">142</FONT>          ELEMNAME_NUMBER_STRING = "number",<a name="line.142"></a>
+<FONT color="green">143</FONT>          ELEMNAME_OTHERWISE_STRING = "otherwise",<a name="line.143"></a>
+<FONT color="green">144</FONT>          ELEMNAME_OUTPUT_STRING = "output",<a name="line.144"></a>
+<FONT color="green">145</FONT>          ELEMNAME_PARAMVARIABLE_STRING = "param",<a name="line.145"></a>
+<FONT color="green">146</FONT>          ELEMNAME_PI_OLD_STRING = "pi",<a name="line.146"></a>
+<FONT color="green">147</FONT>          ELEMNAME_PI_STRING = "processing-instruction",<a name="line.147"></a>
+<FONT color="green">148</FONT>          ELEMNAME_PRESERVESPACE_STRING = "preserve-space",<a name="line.148"></a>
+<FONT color="green">149</FONT>          ELEMNAME_ROOT_STRING = "root",  // pattern-by-example support<a name="line.149"></a>
+<FONT color="green">150</FONT>          ELEMNAME_SCRIPT_STRING = "script",<a name="line.150"></a>
+<FONT color="green">151</FONT>          ELEMNAME_SORT_STRING = "sort",<a name="line.151"></a>
+<FONT color="green">152</FONT>          ELEMNAME_STRIPSPACE_STRING = "strip-space",<a name="line.152"></a>
+<FONT color="green">153</FONT>          ELEMNAME_STYLESHEET_STRING = "stylesheet",<a name="line.153"></a>
+<FONT color="green">154</FONT>          ELEMNAME_TARGETATTRIBUTE_STRING = "target-attribute",  // pattern-by-example support<a name="line.154"></a>
+<FONT color="green">155</FONT>          ELEMNAME_TARGETCOMMENT_STRING = "target-comment",<a name="line.155"></a>
+<FONT color="green">156</FONT>          ELEMNAME_TARGETELEMENT_STRING = "target-element",  // pattern-by-example support<a name="line.156"></a>
+<FONT color="green">157</FONT>          ELEMNAME_TARGETPI_STRING = "target-pi",<a name="line.157"></a>
+<FONT color="green">158</FONT>          ELEMNAME_TARGETTEXT_STRING = "target-text",<a name="line.158"></a>
+<FONT color="green">159</FONT>          ELEMNAME_TEMPLATE_STRING = "template",<a name="line.159"></a>
+<FONT color="green">160</FONT>          ELEMNAME_TEXT_STRING = "text",<a name="line.160"></a>
+<FONT color="green">161</FONT>          ELEMNAME_TRANSFORM_STRING = "transform",<a name="line.161"></a>
+<FONT color="green">162</FONT>          ELEMNAME_URL_STRING = "uri",  // pattern-by-example support<a name="line.162"></a>
+<FONT color="green">163</FONT>          ELEMNAME_USE_STRING = "use",<a name="line.163"></a>
+<FONT color="green">164</FONT>          ELEMNAME_VALUEOF_STRING = "value-of",<a name="line.164"></a>
+<FONT color="green">165</FONT>          ELEMNAME_VARIABLE_STRING = "variable",<a name="line.165"></a>
+<FONT color="green">166</FONT>          ELEMNAME_WHEN_STRING = "when",<a name="line.166"></a>
+<FONT color="green">167</FONT>          ELEMNAME_WITHPARAM_STRING = "with-param";<a name="line.167"></a>
+<FONT color="green">168</FONT>      <a name="line.168"></a>
+<FONT color="green">169</FONT>      /**<a name="line.169"></a>
+<FONT color="green">170</FONT>       * Literals for EXSLT function elements.<a name="line.170"></a>
+<FONT color="green">171</FONT>       */<a name="line.171"></a>
+<FONT color="green">172</FONT>      public static final String<a name="line.172"></a>
+<FONT color="green">173</FONT>        EXSLT_ELEMNAME_FUNCTION_STRING = "function",<a name="line.173"></a>
+<FONT color="green">174</FONT>        EXSLT_ELEMNAME_FUNCRESULT_STRING = "result";<a name="line.174"></a>
+<FONT color="green">175</FONT>      public static final int<a name="line.175"></a>
+<FONT color="green">176</FONT>        EXSLT_ELEMNAME_FUNCTION = 88,<a name="line.176"></a>
+<FONT color="green">177</FONT>        EXSLT_ELEMNAME_FUNCRESULT = 89;<a name="line.177"></a>
+<FONT color="green">178</FONT>      <a name="line.178"></a>
+<FONT color="green">179</FONT>      <a name="line.179"></a>
+<FONT color="green">180</FONT>      /**<a name="line.180"></a>
+<FONT color="green">181</FONT>       * Literals for XSL attribute names.  Note that there may be more<a name="line.181"></a>
+<FONT color="green">182</FONT>       * names than IDs, because some names may map to the same ID.<a name="line.182"></a>
+<FONT color="green">183</FONT>       */<a name="line.183"></a>
+<FONT color="green">184</FONT>      public static final String<a name="line.184"></a>
+<FONT color="green">185</FONT>              ATTRNAME_AMOUNT = "amount",<a name="line.185"></a>
+<FONT color="green">186</FONT>          ATTRNAME_ANCESTOR = "ancestor",<a name="line.186"></a>
+<FONT color="green">187</FONT>          ATTRNAME_ARCHIVE = "archive",<a name="line.187"></a>
+<FONT color="green">188</FONT>          ATTRNAME_ATTRIBUTE = "attribute",<a name="line.188"></a>
+<FONT color="green">189</FONT>          ATTRNAME_ATTRIBUTE_SET = "attribute-set",<a name="line.189"></a>
+<FONT color="green">190</FONT>          ATTRNAME_CASEORDER = "case-order",<a name="line.190"></a>
+<FONT color="green">191</FONT>          ATTRNAME_CLASS = "class",<a name="line.191"></a>
+<FONT color="green">192</FONT>          ATTRNAME_CLASSID = "classid",<a name="line.192"></a>
+<FONT color="green">193</FONT>          ATTRNAME_CODEBASE = "codebase",<a name="line.193"></a>
+<FONT color="green">194</FONT>          ATTRNAME_CODETYPE = "type",<a name="line.194"></a>
+<FONT color="green">195</FONT>          ATTRNAME_CONDITION = "condition",<a name="line.195"></a>
+<FONT color="green">196</FONT>          ATTRNAME_COPYTYPE = "copy-type",<a name="line.196"></a>
+<FONT color="green">197</FONT>          ATTRNAME_COUNT = "count",<a name="line.197"></a>
+<FONT color="green">198</FONT>          ATTRNAME_DATATYPE = "data-type",<a name="line.198"></a>
+<FONT color="green">199</FONT>          ATTRNAME_DECIMALSEPARATOR = "decimal-separator",<a name="line.199"></a>
+<FONT color="green">200</FONT>          ATTRNAME_DEFAULT = "default",<a name="line.200"></a>
+<FONT color="green">201</FONT>          ATTRNAME_DEFAULTSPACE = "default-space",<a name="line.201"></a>
+<FONT color="green">202</FONT>          ATTRNAME_DEPTH = "with-children",<a name="line.202"></a>
+<FONT color="green">203</FONT>          ATTRNAME_DIGIT = "digit",<a name="line.203"></a>
+<FONT color="green">204</FONT>          ATTRNAME_DIGITGROUPSEP = "digit-group-sep",<a name="line.204"></a>
+<FONT color="green">205</FONT>          ATTRNAME_DISABLE_OUTPUT_ESCAPING = "disable-output-escaping",<a name="line.205"></a>
+<FONT color="green">206</FONT>          ATTRNAME_ELEMENT = "element",<a name="line.206"></a>
+<FONT color="green">207</FONT>          ATTRNAME_ELEMENTS = "elements",<a name="line.207"></a>
+<FONT color="green">208</FONT>          ATTRNAME_EXCLUDE_RESULT_PREFIXES ="exclude-result-prefixes",<a name="line.208"></a>
+<FONT color="green">209</FONT>          ATTRNAME_EXPR = "expr",<a name="line.209"></a>
+<FONT color="green">210</FONT>          ATTRNAME_EXTENSIONELEMENTPREFIXES = "extension-element-prefixes",<a name="line.210"></a>
+<FONT color="green">211</FONT>          ATTRNAME_FORMAT = "format",<a name="line.211"></a>
+<FONT color="green">212</FONT>          ATTRNAME_FROM = "from",<a name="line.212"></a>
+<FONT color="green">213</FONT>          ATTRNAME_GROUPINGSEPARATOR = "grouping-separator",<a name="line.213"></a>
+<FONT color="green">214</FONT>          ATTRNAME_GROUPINGSIZE = "grouping-size",<a name="line.214"></a>
+<FONT color="green">215</FONT>          ATTRNAME_HREF = "href",<a name="line.215"></a>
+<FONT color="green">216</FONT>          ATTRNAME_ID = "id",<a name="line.216"></a>
+<FONT color="green">217</FONT>          ATTRNAME_IMPORTANCE = "importance",<a name="line.217"></a>
+<FONT color="green">218</FONT>          ATTRNAME_INDENTRESULT = "indent-result",<a name="line.218"></a>
+<FONT color="green">219</FONT>          ATTRNAME_INFINITY = "infinity",<a name="line.219"></a>
+<FONT color="green">220</FONT>          ATTRNAME_LANG = "lang",<a name="line.220"></a>
+<FONT color="green">221</FONT>          ATTRNAME_LETTERVALUE = "letter-value",<a name="line.221"></a>
+<FONT color="green">222</FONT>          ATTRNAME_LEVEL = "level",<a name="line.222"></a>
+<FONT color="green">223</FONT>          ATTRNAME_MATCH = "match",<a name="line.223"></a>
+<FONT color="green">224</FONT>          ATTRNAME_METHOD = "calls",<a name="line.224"></a>
+<FONT color="green">225</FONT>          ATTRNAME_MINUSSIGN = "minus-sign",<a name="line.225"></a>
+<FONT color="green">226</FONT>          ATTRNAME_MODE = "mode",<a name="line.226"></a>
+<FONT color="green">227</FONT>          ATTRNAME_NAME = "name",<a name="line.227"></a>
+<FONT color="green">228</FONT>          ATTRNAME_NAMESPACE = "namespace",<a name="line.228"></a>
+<FONT color="green">229</FONT>          ATTRNAME_NAN = "NaN",<a name="line.229"></a>
+<FONT color="green">230</FONT>          ATTRNAME_NDIGITSPERGROUP = "n-digits-per-group",<a name="line.230"></a>
+<FONT color="green">231</FONT>          ATTRNAME_NS = "ns",<a name="line.231"></a>
+<FONT color="green">232</FONT>          ATTRNAME_ONLY = "only",<a name="line.232"></a>
+<FONT color="green">233</FONT>          ATTRNAME_ORDER = "order",<a name="line.233"></a>
+<FONT color="green">234</FONT>          ATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS = "cdata-section-elements",<a name="line.234"></a>
+<FONT color="green">235</FONT>          ATTRNAME_OUTPUT_DOCTYPE_PUBLIC = "doctype-public",<a name="line.235"></a>
+<FONT color="green">236</FONT>          ATTRNAME_OUTPUT_DOCTYPE_SYSTEM = "doctype-system",<a name="line.236"></a>
+<FONT color="green">237</FONT>          ATTRNAME_OUTPUT_ENCODING = "encoding",<a name="line.237"></a>
+<FONT color="green">238</FONT>          ATTRNAME_OUTPUT_INDENT = "indent",<a name="line.238"></a>
+<FONT color="green">239</FONT>          ATTRNAME_OUTPUT_MEDIATYPE = "media-type",<a name="line.239"></a>
+<FONT color="green">240</FONT>          ATTRNAME_OUTPUT_METHOD = "method",  // qname, <a name="line.240"></a>
+<FONT color="green">241</FONT>          ATTRNAME_OUTPUT_OMITXMLDECL = "omit-xml-declaration",<a name="line.241"></a>
+<FONT color="green">242</FONT>          ATTRNAME_OUTPUT_STANDALONE = "standalone",<a name="line.242"></a>
+<FONT color="green">243</FONT>          ATTRNAME_OUTPUT_VERSION = "version",<a name="line.243"></a>
+<FONT color="green">244</FONT>          ATTRNAME_PATTERNSEPARATOR = "pattern-separator",<a name="line.244"></a>
+<FONT color="green">245</FONT>          ATTRNAME_PERCENT = "percent",<a name="line.245"></a>
+<FONT color="green">246</FONT>          ATTRNAME_PERMILLE = "per-mille",<a name="line.246"></a>
+<FONT color="green">247</FONT>          ATTRNAME_PRIORITY = "priority",<a name="line.247"></a>
+<FONT color="green">248</FONT>          ATTRNAME_REFID = "refID",<a name="line.248"></a>
+<FONT color="green">249</FONT>          ATTRNAME_RESULTNS = "result-ns",<a name="line.249"></a>
+<FONT color="green">250</FONT>          ATTRNAME_RESULT_PREFIX = "result-prefix",<a name="line.250"></a>
+<FONT color="green">251</FONT>          ATTRNAME_SELECT = "select",<a name="line.251"></a>
+<FONT color="green">252</FONT>          ATTRNAME_SEQUENCESRC = "sequence-src",<a name="line.252"></a>
+<FONT color="green">253</FONT>          ATTRNAME_STYLE = "style",<a name="line.253"></a>
+<FONT color="green">254</FONT>          ATTRNAME_STYLESHEET_PREFIX = "stylesheet-prefix",<a name="line.254"></a>
+<FONT color="green">255</FONT>          ATTRNAME_TERMINATE = "terminate",<a name="line.255"></a>
+<FONT color="green">256</FONT>          ATTRNAME_TEST = "test",<a name="line.256"></a>
+<FONT color="green">257</FONT>          ATTRNAME_TOSTRING = "to-string",<a name="line.257"></a>
+<FONT color="green">258</FONT>          ATTRNAME_TYPE = "type",<a name="line.258"></a>
+<FONT color="green">259</FONT>          ATTRNAME_USE = "use",<a name="line.259"></a>
+<FONT color="green">260</FONT>          ATTRNAME_USEATTRIBUTESETS = "use-attribute-sets",<a name="line.260"></a>
+<FONT color="green">261</FONT>          ATTRNAME_VALUE = "value",<a name="line.261"></a>
+<FONT color="green">262</FONT>          ATTRNAME_VERSION = "version",<a name="line.262"></a>
+<FONT color="green">263</FONT>          ATTRNAME_XMLNS = "xmlns:", // namespace declaration prefix -- NOT an attribute by itself<a name="line.263"></a>
+<FONT color="green">264</FONT>          ATTRNAME_XMLNSDEF = "xmlns", // default namespace<a name="line.264"></a>
+<FONT color="green">265</FONT>          ATTRNAME_XMLSPACE = "xml:space", <a name="line.265"></a>
+<FONT color="green">266</FONT>          ATTRNAME_ZERODIGIT = "zero-digit";<a name="line.266"></a>
+<FONT color="green">267</FONT>    <a name="line.267"></a>
+<FONT color="green">268</FONT>      /** IDs for XSL attribute types. These are associated<a name="line.268"></a>
+<FONT color="green">269</FONT>       * with the string literals in the TransformerImpl class.<a name="line.269"></a>
+<FONT color="green">270</FONT>       * Don't change the numbers. NOTE THAT THESE ARE NOT IN<a name="line.270"></a>
+<FONT color="green">271</FONT>       * ALPHABETICAL ORDER!<a name="line.271"></a>
+<FONT color="green">272</FONT>       */<a name="line.272"></a>
+<FONT color="green">273</FONT>      public static final int TATTRNAME_OUTPUT_METHOD = 1, TATTRNAME_AMOUNT = 2,<a name="line.273"></a>
+<FONT color="green">274</FONT>                              TATTRNAME_ANCESTOR = 3, TATTRNAME_ARCHIVE = 4,<a name="line.274"></a>
+<FONT color="green">275</FONT>                              TATTRNAME_ATTRIBUTE = 5,<a name="line.275"></a>
+<FONT color="green">276</FONT>                              TATTRNAME_ATTRIBUTE_SET = 6,<a name="line.276"></a>
+<FONT color="green">277</FONT>                              TATTRNAME_CASEORDER = 7, TATTRNAME_CLASS = 8,<a name="line.277"></a>
+<FONT color="green">278</FONT>                              TATTRNAME_CLASSID = 9, TATTRNAME_CODEBASE = 10,<a name="line.278"></a>
+<FONT color="green">279</FONT>                              TATTRNAME_CODETYPE = 11, TATTRNAME_CONDITION = 12,<a name="line.279"></a>
+<FONT color="green">280</FONT>                              TATTRNAME_COPYTYPE = 13, TATTRNAME_COUNT = 14,<a name="line.280"></a>
+<FONT color="green">281</FONT>                              TATTRNAME_DATATYPE = 15, TATTRNAME_DEFAULT = 16,<a name="line.281"></a>
+<FONT color="green">282</FONT>                              TATTRNAME_DEFAULTSPACE = 17, TATTRNAME_DEPTH = 18,<a name="line.282"></a>
+<FONT color="green">283</FONT>                              TATTRNAME_DIGITGROUPSEP = 19,<a name="line.283"></a>
+<FONT color="green">284</FONT>                              TATTRNAME_DISABLE_OUTPUT_ESCAPING = 20,<a name="line.284"></a>
+<FONT color="green">285</FONT>                              TATTRNAME_ELEMENT = 21, TATTRNAME_ELEMENTS = 22,<a name="line.285"></a>
+<FONT color="green">286</FONT>                              TATTRNAME_EXPR = 23,<a name="line.286"></a>
+<FONT color="green">287</FONT>                              TATTRNAME_EXTENSIONELEMENTPREFIXES = 24,<a name="line.287"></a>
+<FONT color="green">288</FONT>                              TATTRNAME_FORMAT = 25, TATTRNAME_FROM = 26,<a name="line.288"></a>
+<FONT color="green">289</FONT>                              TATTRNAME_GROUPINGSEPARATOR = 27,<a name="line.289"></a>
+<FONT color="green">290</FONT>                              TATTRNAME_GROUPINGSIZE = 28, TATTRNAME_HREF = 29,<a name="line.290"></a>
+<FONT color="green">291</FONT>                              TATTRNAME_ID = 30, TATTRNAME_IMPORTANCE = 31,<a name="line.291"></a>
+<FONT color="green">292</FONT>                              TATTRNAME_INDENTRESULT = 32, TATTRNAME_LANG = 33,<a name="line.292"></a>
+<FONT color="green">293</FONT>                              TATTRNAME_LETTERVALUE = 34, TATTRNAME_LEVEL = 35,<a name="line.293"></a>
+<FONT color="green">294</FONT>                              TATTRNAME_MATCH = 36, TATTRNAME_METHOD = 37,<a name="line.294"></a>
+<FONT color="green">295</FONT>                              TATTRNAME_MODE = 38, TATTRNAME_NAME = 39,<a name="line.295"></a>
+<FONT color="green">296</FONT>                              TATTRNAME_NAMESPACE = 40,<a name="line.296"></a>
+<FONT color="green">297</FONT>                              TATTRNAME_NDIGITSPERGROUP = 41, TATTRNAME_NS = 42,<a name="line.297"></a>
+<FONT color="green">298</FONT>                              TATTRNAME_ONLY = 43, TATTRNAME_ORDER = 44,<a name="line.298"></a>
+<FONT color="green">299</FONT>                              TATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS = 45,<a name="line.299"></a>
+<FONT color="green">300</FONT>                              TATTRNAME_OUTPUT_DOCTYPE_PUBLIC = 46,<a name="line.300"></a>
+<FONT color="green">301</FONT>                              TATTRNAME_OUTPUT_DOCTYPE_SYSTEM = 47,<a name="line.301"></a>
+<FONT color="green">302</FONT>                              TATTRNAME_OUTPUT_ENCODING = 48,<a name="line.302"></a>
+<FONT color="green">303</FONT>                              TATTRNAME_OUTPUT_INDENT = 49,<a name="line.303"></a>
+<FONT color="green">304</FONT>                              TATTRNAME_OUTPUT_MEDIATYPE = 50,<a name="line.304"></a>
+<FONT color="green">305</FONT>                              TATTRNAME_OUTPUT_STANDALONE = 51,<a name="line.305"></a>
+<FONT color="green">306</FONT>                              TATTRNAME_OUTPUT_VERSION = 52,<a name="line.306"></a>
+<FONT color="green">307</FONT>                              TATTRNAME_OUTPUT_OMITXMLDECL = 53,<a name="line.307"></a>
+<FONT color="green">308</FONT>                              TATTRNAME_PRIORITY = 54, TATTRNAME_REFID = 55,<a name="line.308"></a>
+<FONT color="green">309</FONT>                              TATTRNAME_RESULTNS = 56, TATTRNAME_SELECT = 57,<a name="line.309"></a>
+<FONT color="green">310</FONT>                              TATTRNAME_SEQUENCESRC = 58, TATTRNAME_STYLE = 59,<a name="line.310"></a>
+<FONT color="green">311</FONT>                              TATTRNAME_TEST = 60, TATTRNAME_TOSTRING = 61,<a name="line.311"></a>
+<FONT color="green">312</FONT>                              TATTRNAME_TYPE = 62, TATTRNAME_USE = 63,<a name="line.312"></a>
+<FONT color="green">313</FONT>                              TATTRNAME_USEATTRIBUTESETS = 64,<a name="line.313"></a>
+<FONT color="green">314</FONT>                              TATTRNAME_VALUE = 65, TATTRNAME_XMLNSDEF = 66,<a name="line.314"></a>
+<FONT color="green">315</FONT>                              TATTRNAME_XMLNS = 67, TATTRNAME_XMLSPACE = 68,<a name="line.315"></a>
+<FONT color="green">316</FONT>                              TATTRNAME_EXCLUDE_RESULT_PREFIXES = 69;<a name="line.316"></a>
+<FONT color="green">317</FONT>    <a name="line.317"></a>
+<FONT color="green">318</FONT>      /** Mnemonics for the possible values of the xsl:output element's<a name="line.318"></a>
+<FONT color="green">319</FONT>       * method= attribute:<a name="line.319"></a>
+<FONT color="green">320</FONT>       * &lt;ul&gt;<a name="line.320"></a>
+<FONT color="green">321</FONT>       * &lt;li&gt;ATTRVAL_OUTPUT_METHOD_XML = Use an XML formatter to<a name="line.321"></a>
+<FONT color="green">322</FONT>       * produce the output document (basic XSLT operation).&lt;/li&gt;<a name="line.322"></a>
+<FONT color="green">323</FONT>       * &lt;li&gt;ATTRVAL_OUTPUT_METHOD_HTML: Use an HTML formatter to<a name="line.323"></a>
+<FONT color="green">324</FONT>       * produce the output document. When generating HTML documents,<a name="line.324"></a>
+<FONT color="green">325</FONT>       * this may yield better results; it does things like escaping<a name="line.325"></a>
+<FONT color="green">326</FONT>       * characters in href attributes.&lt;/li&gt;<a name="line.326"></a>
+<FONT color="green">327</FONT>       * &lt;/li&gt;ATTRVAL_OUTPUT_METHOD_TEXT:  Use a Text formatter to<a name="line.327"></a>
+<FONT color="green">328</FONT>       * produce the output document. Generally the right choice if your<a name="line.328"></a>
+<FONT color="green">329</FONT>       * stylesheet wants to take over _all_ the details of formatting,<a name="line.329"></a>
+<FONT color="green">330</FONT>       * most often when producing something that isn't an XML or HTML<a name="line.330"></a>
+<FONT color="green">331</FONT>       * document.&lt;/li&gt;<a name="line.331"></a>
+<FONT color="green">332</FONT>       * &lt;/ul&gt; <a name="line.332"></a>
+<FONT color="green">333</FONT>       * */<a name="line.333"></a>
+<FONT color="green">334</FONT>      public static final String ATTRVAL_OUTPUT_METHOD_HTML = "html",<a name="line.334"></a>
+<FONT color="green">335</FONT>                                 ATTRVAL_OUTPUT_METHOD_XML = "xml",<a name="line.335"></a>
+<FONT color="green">336</FONT>                                 ATTRVAL_OUTPUT_METHOD_TEXT = "text";<a name="line.336"></a>
+<FONT color="green">337</FONT>    <a name="line.337"></a>
+<FONT color="green">338</FONT>      <a name="line.338"></a>
+<FONT color="green">339</FONT>      /* For space-att*/<a name="line.339"></a>
+<FONT color="green">340</FONT>      public static final int ATTRVAL_PRESERVE = 1, ATTRVAL_STRIP = 2;<a name="line.340"></a>
+<FONT color="green">341</FONT>    <a name="line.341"></a>
+<FONT color="green">342</FONT>      <a name="line.342"></a>
+<FONT color="green">343</FONT>      /** For indent-result          */<a name="line.343"></a>
+<FONT color="green">344</FONT>      public static final boolean ATTRVAL_YES = true, ATTRVAL_NO = false;<a name="line.344"></a>
+<FONT color="green">345</FONT>    <a name="line.345"></a>
+<FONT color="green">346</FONT>      <a name="line.346"></a>
+<FONT color="green">347</FONT>      /** For letter-value attribute (part of conversion attributes).          */<a name="line.347"></a>
+<FONT color="green">348</FONT>      public static final String ATTRVAL_ALPHABETIC = "alphabetic",<a name="line.348"></a>
+<FONT color="green">349</FONT>                                 ATTRVAL_OTHER = "other",<a name="line.349"></a>
+<FONT color="green">350</FONT>                                 ATTRVAL_TRADITIONAL = "traditional";<a name="line.350"></a>
+<FONT color="green">351</FONT>    <a name="line.351"></a>
+<FONT color="green">352</FONT>      <a name="line.352"></a>
+<FONT color="green">353</FONT>      /** For level attribute in xsl:number.          */<a name="line.353"></a>
+<FONT color="green">354</FONT>      public static final String ATTRVAL_SINGLE = "single",<a name="line.354"></a>
+<FONT color="green">355</FONT>                                 ATTRVAL_MULTI = "multiple", ATTRVAL_ANY = "any";<a name="line.355"></a>
+<FONT color="green">356</FONT>    <a name="line.356"></a>
+<FONT color="green">357</FONT>      <a name="line.357"></a>
+<FONT color="green">358</FONT>      /** For Stylesheet-prefix and result-prefix in xsl:namespace-alias          */<a name="line.358"></a>
+<FONT color="green">359</FONT>      public static final String ATTRVAL_DEFAULT_PREFIX = "#default";<a name="line.359"></a>
+<FONT color="green">360</FONT>    <a name="line.360"></a>
+<FONT color="green">361</FONT>     /** Integer equivalents for above        */<a name="line.361"></a>
+<FONT color="green">362</FONT>      public static final int NUMBERLETTER_ALPHABETIC = 1, NUMBERLETTER_TRADITIONAL = 2;<a name="line.362"></a>
+<FONT color="green">363</FONT>      <a name="line.363"></a>
+<FONT color="green">364</FONT>      /** Integer equivelents for above        */<a name="line.364"></a>
+<FONT color="green">365</FONT>      public static final int NUMBERLEVEL_SINGLE = 1, NUMBERLEVEL_MULTI = 2,<a name="line.365"></a>
+<FONT color="green">366</FONT>                              NUMBERLEVEL_ANY = 3, MAX_MULTI_COUNTING_DEPTH = 32;<a name="line.366"></a>
+<FONT color="green">367</FONT>    <a name="line.367"></a>
+<FONT color="green">368</FONT>      <a name="line.368"></a>
+<FONT color="green">369</FONT>      /** some stuff for my patterns-by-example         */<a name="line.369"></a>
+<FONT color="green">370</FONT>      public static final String ATTRVAL_THIS = ".", ATTRVAL_PARENT = "..",<a name="line.370"></a>
+<FONT color="green">371</FONT>                                 ATTRVAL_ANCESTOR = "ancestor", ATTRVAL_ID = "id";<a name="line.371"></a>
+<FONT color="green">372</FONT>    <a name="line.372"></a>
+<FONT color="green">373</FONT>      <a name="line.373"></a>
+<FONT color="green">374</FONT>      /** Stuff for sorting      */<a name="line.374"></a>
+<FONT color="green">375</FONT>      public static final String ATTRVAL_DATATYPE_TEXT = "text",<a name="line.375"></a>
+<FONT color="green">376</FONT>                                 ATTRVAL_DATATYPE_NUMBER = "number",<a name="line.376"></a>
+<FONT color="green">377</FONT>                                 ATTRVAL_ORDER_ASCENDING = "ascending",<a name="line.377"></a>
+<FONT color="green">378</FONT>                                 ATTRVAL_ORDER_DESCENDING = "descending",<a name="line.378"></a>
+<FONT color="green">379</FONT>                                 ATTRVAL_CASEORDER_UPPER = "upper-first",<a name="line.379"></a>
+<FONT color="green">380</FONT>                                 ATTRVAL_CASEORDER_LOWER = "lower-first";<a name="line.380"></a>
+<FONT color="green">381</FONT>    <a name="line.381"></a>
+<FONT color="green">382</FONT>     /** Integer equivelents for DATATYPE attribute */<a name="line.382"></a>
+<FONT color="green">383</FONT>      public static final int SORTDATATYPE_TEXT = 1, SORTDATATYPE_NUMBER = 2;<a name="line.383"></a>
+<FONT color="green">384</FONT>    <a name="line.384"></a>
+<FONT color="green">385</FONT>      /** Integer equivelents for ORDER attribute */<a name="line.385"></a>
+<FONT color="green">386</FONT>      public static final int SORTORDER_ASCENDING = 1, SORTORDER_DESCENDING = 2;<a name="line.386"></a>
+<FONT color="green">387</FONT>      <a name="line.387"></a>
+<FONT color="green">388</FONT>      /** Integer equivelents for CASE-ORDER attribute */<a name="line.388"></a>
+<FONT color="green">389</FONT>      public static final int SORTCASEORDER_UPPERFIRST = 1, SORTCASEORDER_LOWERFIRST = 2;<a name="line.389"></a>
+<FONT color="green">390</FONT>      <a name="line.390"></a>
+<FONT color="green">391</FONT>      /** some stuff for Decimal-format       */<a name="line.391"></a>
+<FONT color="green">392</FONT>      public static final String ATTRVAL_INFINITY = "Infinity",<a name="line.392"></a>
+<FONT color="green">393</FONT>                                 ATTRVAL_NAN = "NaN",<a name="line.393"></a>
+<FONT color="green">394</FONT>                                 DEFAULT_DECIMAL_FORMAT = "#default";<a name="line.394"></a>
+<FONT color="green">395</FONT>    <a name="line.395"></a>
+<FONT color="green">396</FONT>      <a name="line.396"></a>
+<FONT color="green">397</FONT>      /** temp dummy         */<a name="line.397"></a>
+<FONT color="green">398</FONT>      public static final String ATTRNAME_XXXX = "XXXX";<a name="line.398"></a>
+<FONT color="green">399</FONT>    }<a name="line.399"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

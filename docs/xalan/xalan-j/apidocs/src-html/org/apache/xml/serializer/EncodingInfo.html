@@ -1,0 +1,628 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: EncodingInfo.java 468654 2006-10-28 07:09:23Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    package org.apache.xml.serializer;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    <a name="line.23"></a>
+<FONT color="green">024</FONT>    /**<a name="line.24"></a>
+<FONT color="green">025</FONT>     * Holds information about a given encoding, which is the Java name for the<a name="line.25"></a>
+<FONT color="green">026</FONT>     * encoding, the equivalent ISO name.<a name="line.26"></a>
+<FONT color="green">027</FONT>     * &lt;p&gt;<a name="line.27"></a>
+<FONT color="green">028</FONT>     * An object of this type has two useful methods<a name="line.28"></a>
+<FONT color="green">029</FONT>     * &lt;pre&gt;<a name="line.29"></a>
+<FONT color="green">030</FONT>     * isInEncoding(char ch);<a name="line.30"></a>
+<FONT color="green">031</FONT>     * &lt;/pre&gt;<a name="line.31"></a>
+<FONT color="green">032</FONT>     * which can be called if the character is not the high one in<a name="line.32"></a>
+<FONT color="green">033</FONT>     * a surrogate pair and:<a name="line.33"></a>
+<FONT color="green">034</FONT>     * &lt;pre&gt;<a name="line.34"></a>
+<FONT color="green">035</FONT>     * isInEncoding(char high, char low);<a name="line.35"></a>
+<FONT color="green">036</FONT>     * &lt;/pre&gt;<a name="line.36"></a>
+<FONT color="green">037</FONT>     * which can be called if the two characters from a high/low surrogate pair.<a name="line.37"></a>
+<FONT color="green">038</FONT>     * &lt;p&gt;<a name="line.38"></a>
+<FONT color="green">039</FONT>     * An EncodingInfo object is a node in a binary search tree. Such a node<a name="line.39"></a>
+<FONT color="green">040</FONT>     * will answer if a character is in the encoding, and do so for a given<a name="line.40"></a>
+<FONT color="green">041</FONT>     * range of unicode values (&lt;code&gt;m_first&lt;/code&gt; to<a name="line.41"></a>
+<FONT color="green">042</FONT>     * &lt;code&gt;m_last&lt;/code&gt;). It will handle a certain range of values<a name="line.42"></a>
+<FONT color="green">043</FONT>     * explicitly (&lt;code&gt;m_explFirst&lt;/code&gt; to &lt;code&gt;m_explLast&lt;/code&gt;).<a name="line.43"></a>
+<FONT color="green">044</FONT>     * If the unicode point is before that explicit range, that is it<a name="line.44"></a>
+<FONT color="green">045</FONT>     * is in the range &lt;code&gt;m_first &lt;= value &lt; m_explFirst&lt;/code&gt;, then it will delegate to another EncodingInfo object for The root<a name="line.45"></a>
+<FONT color="green">046</FONT>     * of such a tree, m_before.  Likewise for values in the range <a name="line.46"></a>
+<FONT color="green">047</FONT>     * &lt;code&gt;m_explLast &lt; value &lt;= m_last&lt;/code&gt;, but delgating to &lt;code&gt;m_after&lt;/code&gt;<a name="line.47"></a>
+<FONT color="green">048</FONT>     * &lt;p&gt;<a name="line.48"></a>
+<FONT color="green">049</FONT>     * Actually figuring out if a code point is in the encoding is expensive. So the<a name="line.49"></a>
+<FONT color="green">050</FONT>     * purpose of this tree is to cache such determinations, and not to build the<a name="line.50"></a>
+<FONT color="green">051</FONT>     * entire tree of information at the start, but only build up as much of the <a name="line.51"></a>
+<FONT color="green">052</FONT>     * tree as is used during the transformation.<a name="line.52"></a>
+<FONT color="green">053</FONT>     * &lt;p&gt;<a name="line.53"></a>
+<FONT color="green">054</FONT>     * This Class is not a public API, and should only be used internally within<a name="line.54"></a>
+<FONT color="green">055</FONT>     * the serializer.<a name="line.55"></a>
+<FONT color="green">056</FONT>     * &lt;p&gt;<a name="line.56"></a>
+<FONT color="green">057</FONT>     * This class is not a public API.<a name="line.57"></a>
+<FONT color="green">058</FONT>     * @xsl.usage internal<a name="line.58"></a>
+<FONT color="green">059</FONT>     */<a name="line.59"></a>
+<FONT color="green">060</FONT>    public final class EncodingInfo extends Object<a name="line.60"></a>
+<FONT color="green">061</FONT>    {<a name="line.61"></a>
+<FONT color="green">062</FONT>    <a name="line.62"></a>
+<FONT color="green">063</FONT>        /**<a name="line.63"></a>
+<FONT color="green">064</FONT>         * Not all characters in an encoding are in on contiguous group,<a name="line.64"></a>
+<FONT color="green">065</FONT>         * however there is a lowest contiguous group starting at '\u0001'<a name="line.65"></a>
+<FONT color="green">066</FONT>         * and working up to m_highCharInContiguousGroup.<a name="line.66"></a>
+<FONT color="green">067</FONT>         * &lt;p&gt;<a name="line.67"></a>
+<FONT color="green">068</FONT>         * This is the char for which chars at or below this value are <a name="line.68"></a>
+<FONT color="green">069</FONT>         * definately in the encoding, although for chars<a name="line.69"></a>
+<FONT color="green">070</FONT>         * above this point they might be in the encoding.<a name="line.70"></a>
+<FONT color="green">071</FONT>         * This exists for performance, especially for ASCII characters<a name="line.71"></a>
+<FONT color="green">072</FONT>         * because for ASCII all chars in the range '\u0001' to '\u007F' <a name="line.72"></a>
+<FONT color="green">073</FONT>         * are in the encoding.<a name="line.73"></a>
+<FONT color="green">074</FONT>         * <a name="line.74"></a>
+<FONT color="green">075</FONT>         */<a name="line.75"></a>
+<FONT color="green">076</FONT>        private final char m_highCharInContiguousGroup;<a name="line.76"></a>
+<FONT color="green">077</FONT>    <a name="line.77"></a>
+<FONT color="green">078</FONT>        /**<a name="line.78"></a>
+<FONT color="green">079</FONT>         * The ISO encoding name.<a name="line.79"></a>
+<FONT color="green">080</FONT>         */<a name="line.80"></a>
+<FONT color="green">081</FONT>        final String name;<a name="line.81"></a>
+<FONT color="green">082</FONT>    <a name="line.82"></a>
+<FONT color="green">083</FONT>        /**<a name="line.83"></a>
+<FONT color="green">084</FONT>         * The name used by the Java convertor.<a name="line.84"></a>
+<FONT color="green">085</FONT>         */<a name="line.85"></a>
+<FONT color="green">086</FONT>        final String javaName;<a name="line.86"></a>
+<FONT color="green">087</FONT>        <a name="line.87"></a>
+<FONT color="green">088</FONT>        /**<a name="line.88"></a>
+<FONT color="green">089</FONT>         * A helper object that we can ask if a<a name="line.89"></a>
+<FONT color="green">090</FONT>         * single char, or a surrogate UTF-16 pair<a name="line.90"></a>
+<FONT color="green">091</FONT>         * of chars that form a single character,<a name="line.91"></a>
+<FONT color="green">092</FONT>         * is in this encoding.<a name="line.92"></a>
+<FONT color="green">093</FONT>         */<a name="line.93"></a>
+<FONT color="green">094</FONT>        private InEncoding m_encoding;<a name="line.94"></a>
+<FONT color="green">095</FONT>        <a name="line.95"></a>
+<FONT color="green">096</FONT>        /**<a name="line.96"></a>
+<FONT color="green">097</FONT>         * This is not a public API. It returns true if the<a name="line.97"></a>
+<FONT color="green">098</FONT>         * char in question is in the encoding.<a name="line.98"></a>
+<FONT color="green">099</FONT>         * @param ch the char in question.<a name="line.99"></a>
+<FONT color="green">100</FONT>         * &lt;p&gt;<a name="line.100"></a>
+<FONT color="green">101</FONT>         * This method is not a public API.<a name="line.101"></a>
+<FONT color="green">102</FONT>         * @xsl.usage internal<a name="line.102"></a>
+<FONT color="green">103</FONT>         */<a name="line.103"></a>
+<FONT color="green">104</FONT>        public boolean isInEncoding(char ch) {<a name="line.104"></a>
+<FONT color="green">105</FONT>            if (m_encoding == null) {<a name="line.105"></a>
+<FONT color="green">106</FONT>                m_encoding = new EncodingImpl();<a name="line.106"></a>
+<FONT color="green">107</FONT>                <a name="line.107"></a>
+<FONT color="green">108</FONT>                // One could put alternate logic in here to<a name="line.108"></a>
+<FONT color="green">109</FONT>                // instantiate another object that implements the<a name="line.109"></a>
+<FONT color="green">110</FONT>                // InEncoding interface. For example if the JRE is 1.4 or up<a name="line.110"></a>
+<FONT color="green">111</FONT>                // we could have an object that uses JRE 1.4 methods<a name="line.111"></a>
+<FONT color="green">112</FONT>            }<a name="line.112"></a>
+<FONT color="green">113</FONT>            return m_encoding.isInEncoding(ch); <a name="line.113"></a>
+<FONT color="green">114</FONT>        }<a name="line.114"></a>
+<FONT color="green">115</FONT>        <a name="line.115"></a>
+<FONT color="green">116</FONT>        /**<a name="line.116"></a>
+<FONT color="green">117</FONT>         * This is not a public API. It returns true if the<a name="line.117"></a>
+<FONT color="green">118</FONT>         * character formed by the high/low pair is in the encoding.<a name="line.118"></a>
+<FONT color="green">119</FONT>         * @param high a char that the a high char of a high/low surrogate pair.<a name="line.119"></a>
+<FONT color="green">120</FONT>         * @param low a char that is the low char of a high/low surrogate pair.<a name="line.120"></a>
+<FONT color="green">121</FONT>         * &lt;p&gt;<a name="line.121"></a>
+<FONT color="green">122</FONT>         * This method is not a public API.<a name="line.122"></a>
+<FONT color="green">123</FONT>         * @xsl.usage internal<a name="line.123"></a>
+<FONT color="green">124</FONT>         */<a name="line.124"></a>
+<FONT color="green">125</FONT>        public boolean isInEncoding(char high, char low) {<a name="line.125"></a>
+<FONT color="green">126</FONT>            if (m_encoding == null) {<a name="line.126"></a>
+<FONT color="green">127</FONT>                m_encoding = new EncodingImpl();<a name="line.127"></a>
+<FONT color="green">128</FONT>                <a name="line.128"></a>
+<FONT color="green">129</FONT>                // One could put alternate logic in here to<a name="line.129"></a>
+<FONT color="green">130</FONT>                // instantiate another object that implements the<a name="line.130"></a>
+<FONT color="green">131</FONT>                // InEncoding interface. For example if the JRE is 1.4 or up<a name="line.131"></a>
+<FONT color="green">132</FONT>                // we could have an object that uses JRE 1.4 methods<a name="line.132"></a>
+<FONT color="green">133</FONT>            }<a name="line.133"></a>
+<FONT color="green">134</FONT>            return m_encoding.isInEncoding(high, low); <a name="line.134"></a>
+<FONT color="green">135</FONT>        }<a name="line.135"></a>
+<FONT color="green">136</FONT>    <a name="line.136"></a>
+<FONT color="green">137</FONT>        /**<a name="line.137"></a>
+<FONT color="green">138</FONT>         * Create an EncodingInfo object based on the ISO name and Java name.<a name="line.138"></a>
+<FONT color="green">139</FONT>         * If both parameters are null any character will be considered to<a name="line.139"></a>
+<FONT color="green">140</FONT>         * be in the encoding. This is useful for when the serializer is in<a name="line.140"></a>
+<FONT color="green">141</FONT>         * temporary output state, and has no assciated encoding.<a name="line.141"></a>
+<FONT color="green">142</FONT>         *<a name="line.142"></a>
+<FONT color="green">143</FONT>         * @param name reference to the ISO name.<a name="line.143"></a>
+<FONT color="green">144</FONT>         * @param javaName reference to the Java encoding name.<a name="line.144"></a>
+<FONT color="green">145</FONT>         * @param highChar The char for which characters at or below this value are <a name="line.145"></a>
+<FONT color="green">146</FONT>         * definately in the<a name="line.146"></a>
+<FONT color="green">147</FONT>         * encoding, although for characters above this point they might be in the encoding.<a name="line.147"></a>
+<FONT color="green">148</FONT>         */<a name="line.148"></a>
+<FONT color="green">149</FONT>        public EncodingInfo(String name, String javaName, char highChar)<a name="line.149"></a>
+<FONT color="green">150</FONT>        {<a name="line.150"></a>
+<FONT color="green">151</FONT>    <a name="line.151"></a>
+<FONT color="green">152</FONT>            this.name = name;<a name="line.152"></a>
+<FONT color="green">153</FONT>            this.javaName = javaName;<a name="line.153"></a>
+<FONT color="green">154</FONT>            this.m_highCharInContiguousGroup = highChar;<a name="line.154"></a>
+<FONT color="green">155</FONT>        }<a name="line.155"></a>
+<FONT color="green">156</FONT>        <a name="line.156"></a>
+<FONT color="green">157</FONT>        <a name="line.157"></a>
+<FONT color="green">158</FONT>        <a name="line.158"></a>
+<FONT color="green">159</FONT>        /**<a name="line.159"></a>
+<FONT color="green">160</FONT>         * A simple interface to isolate the implementation.<a name="line.160"></a>
+<FONT color="green">161</FONT>         * We could also use some new JRE 1.4 methods in another implementation<a name="line.161"></a>
+<FONT color="green">162</FONT>         * provided we use reflection with them.<a name="line.162"></a>
+<FONT color="green">163</FONT>         * &lt;p&gt;<a name="line.163"></a>
+<FONT color="green">164</FONT>         * This interface is not a public API,<a name="line.164"></a>
+<FONT color="green">165</FONT>         * and should only be used internally within the serializer. <a name="line.165"></a>
+<FONT color="green">166</FONT>         * @xsl.usage internal<a name="line.166"></a>
+<FONT color="green">167</FONT>         */<a name="line.167"></a>
+<FONT color="green">168</FONT>        private interface InEncoding {<a name="line.168"></a>
+<FONT color="green">169</FONT>            /**<a name="line.169"></a>
+<FONT color="green">170</FONT>             * Returns true if the char is in the encoding<a name="line.170"></a>
+<FONT color="green">171</FONT>             */<a name="line.171"></a>
+<FONT color="green">172</FONT>            public boolean isInEncoding(char ch);<a name="line.172"></a>
+<FONT color="green">173</FONT>            /**<a name="line.173"></a>
+<FONT color="green">174</FONT>             * Returns true if the high/low surrogate pair forms<a name="line.174"></a>
+<FONT color="green">175</FONT>             * a character that is in the encoding.<a name="line.175"></a>
+<FONT color="green">176</FONT>             */<a name="line.176"></a>
+<FONT color="green">177</FONT>            public boolean isInEncoding(char high, char low);<a name="line.177"></a>
+<FONT color="green">178</FONT>        }<a name="line.178"></a>
+<FONT color="green">179</FONT>    <a name="line.179"></a>
+<FONT color="green">180</FONT>        /**<a name="line.180"></a>
+<FONT color="green">181</FONT>         * This class implements the <a name="line.181"></a>
+<FONT color="green">182</FONT>         */<a name="line.182"></a>
+<FONT color="green">183</FONT>        private class EncodingImpl implements InEncoding {<a name="line.183"></a>
+<FONT color="green">184</FONT>            <a name="line.184"></a>
+<FONT color="green">185</FONT>    <a name="line.185"></a>
+<FONT color="green">186</FONT>    <a name="line.186"></a>
+<FONT color="green">187</FONT>            public boolean isInEncoding(char ch1) {<a name="line.187"></a>
+<FONT color="green">188</FONT>                final boolean ret;<a name="line.188"></a>
+<FONT color="green">189</FONT>                int codePoint = Encodings.toCodePoint(ch1);<a name="line.189"></a>
+<FONT color="green">190</FONT>                if (codePoint &lt; m_explFirst) {<a name="line.190"></a>
+<FONT color="green">191</FONT>                    // The unicode value is before the range<a name="line.191"></a>
+<FONT color="green">192</FONT>                    // that we explictly manage, so we delegate the answer.<a name="line.192"></a>
+<FONT color="green">193</FONT>                    <a name="line.193"></a>
+<FONT color="green">194</FONT>                    // If we don't have an m_before object to delegate to, make one.<a name="line.194"></a>
+<FONT color="green">195</FONT>                    if (m_before == null)<a name="line.195"></a>
+<FONT color="green">196</FONT>                        m_before =<a name="line.196"></a>
+<FONT color="green">197</FONT>                            new EncodingImpl(<a name="line.197"></a>
+<FONT color="green">198</FONT>                                m_encoding,<a name="line.198"></a>
+<FONT color="green">199</FONT>                                m_first,<a name="line.199"></a>
+<FONT color="green">200</FONT>                                m_explFirst - 1,<a name="line.200"></a>
+<FONT color="green">201</FONT>                                codePoint);<a name="line.201"></a>
+<FONT color="green">202</FONT>                    ret = m_before.isInEncoding(ch1);<a name="line.202"></a>
+<FONT color="green">203</FONT>                } else if (m_explLast &lt; codePoint) {<a name="line.203"></a>
+<FONT color="green">204</FONT>                    // The unicode value is after the range<a name="line.204"></a>
+<FONT color="green">205</FONT>                    // that we explictly manage, so we delegate the answer.<a name="line.205"></a>
+<FONT color="green">206</FONT>                    <a name="line.206"></a>
+<FONT color="green">207</FONT>                    // If we don't have an m_after object to delegate to, make one.<a name="line.207"></a>
+<FONT color="green">208</FONT>                    if (m_after == null)<a name="line.208"></a>
+<FONT color="green">209</FONT>                        m_after =<a name="line.209"></a>
+<FONT color="green">210</FONT>                            new EncodingImpl(<a name="line.210"></a>
+<FONT color="green">211</FONT>                                m_encoding,<a name="line.211"></a>
+<FONT color="green">212</FONT>                                m_explLast + 1,<a name="line.212"></a>
+<FONT color="green">213</FONT>                                m_last,<a name="line.213"></a>
+<FONT color="green">214</FONT>                                codePoint);<a name="line.214"></a>
+<FONT color="green">215</FONT>                    ret = m_after.isInEncoding(ch1);<a name="line.215"></a>
+<FONT color="green">216</FONT>                } else {<a name="line.216"></a>
+<FONT color="green">217</FONT>                    // The unicode value is in the range we explitly handle<a name="line.217"></a>
+<FONT color="green">218</FONT>                    final int idx = codePoint - m_explFirst;<a name="line.218"></a>
+<FONT color="green">219</FONT>                    <a name="line.219"></a>
+<FONT color="green">220</FONT>                    // If we already know the answer, just return it.<a name="line.220"></a>
+<FONT color="green">221</FONT>                    if (m_alreadyKnown[idx])<a name="line.221"></a>
+<FONT color="green">222</FONT>                        ret = m_isInEncoding[idx];<a name="line.222"></a>
+<FONT color="green">223</FONT>                    else {<a name="line.223"></a>
+<FONT color="green">224</FONT>                        // We don't know the answer, so find out,<a name="line.224"></a>
+<FONT color="green">225</FONT>                        // which may be expensive, then cache the answer <a name="line.225"></a>
+<FONT color="green">226</FONT>                        ret = inEncoding(ch1, m_encoding);<a name="line.226"></a>
+<FONT color="green">227</FONT>                        m_alreadyKnown[idx] = true;<a name="line.227"></a>
+<FONT color="green">228</FONT>                        m_isInEncoding[idx] = ret;<a name="line.228"></a>
+<FONT color="green">229</FONT>                    }<a name="line.229"></a>
+<FONT color="green">230</FONT>                }<a name="line.230"></a>
+<FONT color="green">231</FONT>                return ret;<a name="line.231"></a>
+<FONT color="green">232</FONT>            }<a name="line.232"></a>
+<FONT color="green">233</FONT>    <a name="line.233"></a>
+<FONT color="green">234</FONT>            public boolean isInEncoding(char high, char low) {<a name="line.234"></a>
+<FONT color="green">235</FONT>                final boolean ret;<a name="line.235"></a>
+<FONT color="green">236</FONT>                int codePoint = Encodings.toCodePoint(high,low);<a name="line.236"></a>
+<FONT color="green">237</FONT>                if (codePoint &lt; m_explFirst) {<a name="line.237"></a>
+<FONT color="green">238</FONT>                    // The unicode value is before the range<a name="line.238"></a>
+<FONT color="green">239</FONT>                    // that we explictly manage, so we delegate the answer.<a name="line.239"></a>
+<FONT color="green">240</FONT>                    <a name="line.240"></a>
+<FONT color="green">241</FONT>                    // If we don't have an m_before object to delegate to, make one.<a name="line.241"></a>
+<FONT color="green">242</FONT>                    if (m_before == null)<a name="line.242"></a>
+<FONT color="green">243</FONT>                        m_before =<a name="line.243"></a>
+<FONT color="green">244</FONT>                            new EncodingImpl(<a name="line.244"></a>
+<FONT color="green">245</FONT>                                m_encoding,<a name="line.245"></a>
+<FONT color="green">246</FONT>                                m_first,<a name="line.246"></a>
+<FONT color="green">247</FONT>                                m_explFirst - 1,<a name="line.247"></a>
+<FONT color="green">248</FONT>                                codePoint);<a name="line.248"></a>
+<FONT color="green">249</FONT>                    ret = m_before.isInEncoding(high,low);<a name="line.249"></a>
+<FONT color="green">250</FONT>                } else if (m_explLast &lt; codePoint) {<a name="line.250"></a>
+<FONT color="green">251</FONT>                    // The unicode value is after the range<a name="line.251"></a>
+<FONT color="green">252</FONT>                    // that we explictly manage, so we delegate the answer.<a name="line.252"></a>
+<FONT color="green">253</FONT>                    <a name="line.253"></a>
+<FONT color="green">254</FONT>                    // If we don't have an m_after object to delegate to, make one.<a name="line.254"></a>
+<FONT color="green">255</FONT>                    if (m_after == null)<a name="line.255"></a>
+<FONT color="green">256</FONT>                        m_after =<a name="line.256"></a>
+<FONT color="green">257</FONT>                            new EncodingImpl(<a name="line.257"></a>
+<FONT color="green">258</FONT>                                m_encoding,<a name="line.258"></a>
+<FONT color="green">259</FONT>                                m_explLast + 1,<a name="line.259"></a>
+<FONT color="green">260</FONT>                                m_last,<a name="line.260"></a>
+<FONT color="green">261</FONT>                                codePoint);<a name="line.261"></a>
+<FONT color="green">262</FONT>                    ret = m_after.isInEncoding(high,low);<a name="line.262"></a>
+<FONT color="green">263</FONT>                } else {<a name="line.263"></a>
+<FONT color="green">264</FONT>                    // The unicode value is in the range we explitly handle<a name="line.264"></a>
+<FONT color="green">265</FONT>                    final int idx = codePoint - m_explFirst;<a name="line.265"></a>
+<FONT color="green">266</FONT>                    <a name="line.266"></a>
+<FONT color="green">267</FONT>                    // If we already know the answer, just return it.<a name="line.267"></a>
+<FONT color="green">268</FONT>                    if (m_alreadyKnown[idx])<a name="line.268"></a>
+<FONT color="green">269</FONT>                        ret = m_isInEncoding[idx];<a name="line.269"></a>
+<FONT color="green">270</FONT>                    else {<a name="line.270"></a>
+<FONT color="green">271</FONT>                        // We don't know the answer, so find out,<a name="line.271"></a>
+<FONT color="green">272</FONT>                        // which may be expensive, then cache the answer <a name="line.272"></a>
+<FONT color="green">273</FONT>                        ret = inEncoding(high, low, m_encoding);<a name="line.273"></a>
+<FONT color="green">274</FONT>                        m_alreadyKnown[idx] = true;<a name="line.274"></a>
+<FONT color="green">275</FONT>                        m_isInEncoding[idx] = ret;<a name="line.275"></a>
+<FONT color="green">276</FONT>                    }<a name="line.276"></a>
+<FONT color="green">277</FONT>                }<a name="line.277"></a>
+<FONT color="green">278</FONT>                return ret;<a name="line.278"></a>
+<FONT color="green">279</FONT>            }<a name="line.279"></a>
+<FONT color="green">280</FONT>    <a name="line.280"></a>
+<FONT color="green">281</FONT>            /**<a name="line.281"></a>
+<FONT color="green">282</FONT>             * The encoding.<a name="line.282"></a>
+<FONT color="green">283</FONT>             */<a name="line.283"></a>
+<FONT color="green">284</FONT>            final private String m_encoding;<a name="line.284"></a>
+<FONT color="green">285</FONT>            /**<a name="line.285"></a>
+<FONT color="green">286</FONT>             * m_first through m_last is the range of unicode<a name="line.286"></a>
+<FONT color="green">287</FONT>             * values that this object will return an answer on.<a name="line.287"></a>
+<FONT color="green">288</FONT>             * It may delegate to a similar object with a different<a name="line.288"></a>
+<FONT color="green">289</FONT>             * range<a name="line.289"></a>
+<FONT color="green">290</FONT>             */<a name="line.290"></a>
+<FONT color="green">291</FONT>            final private int m_first;<a name="line.291"></a>
+<FONT color="green">292</FONT>            <a name="line.292"></a>
+<FONT color="green">293</FONT>            /**<a name="line.293"></a>
+<FONT color="green">294</FONT>             * m_explFirst through m_explLast is the range of unicode<a name="line.294"></a>
+<FONT color="green">295</FONT>             * value that this object handles explicitly and does not<a name="line.295"></a>
+<FONT color="green">296</FONT>             * delegate to a similar object.<a name="line.296"></a>
+<FONT color="green">297</FONT>             */<a name="line.297"></a>
+<FONT color="green">298</FONT>            final private int m_explFirst;<a name="line.298"></a>
+<FONT color="green">299</FONT>            final private int m_explLast;<a name="line.299"></a>
+<FONT color="green">300</FONT>            final private int m_last;<a name="line.300"></a>
+<FONT color="green">301</FONT>    <a name="line.301"></a>
+<FONT color="green">302</FONT>            /**<a name="line.302"></a>
+<FONT color="green">303</FONT>             * The object, of the same type as this one,<a name="line.303"></a>
+<FONT color="green">304</FONT>             * that handles unicode values in a range before<a name="line.304"></a>
+<FONT color="green">305</FONT>             * the range explictly handled by this object, and<a name="line.305"></a>
+<FONT color="green">306</FONT>             * to which this object may delegate.<a name="line.306"></a>
+<FONT color="green">307</FONT>             */<a name="line.307"></a>
+<FONT color="green">308</FONT>            private InEncoding m_before;<a name="line.308"></a>
+<FONT color="green">309</FONT>            /**<a name="line.309"></a>
+<FONT color="green">310</FONT>             * The object, of the same type as this one,<a name="line.310"></a>
+<FONT color="green">311</FONT>             * that handles unicode values in a range after<a name="line.311"></a>
+<FONT color="green">312</FONT>             * the range explictly handled by this object, and<a name="line.312"></a>
+<FONT color="green">313</FONT>             * to which this object may delegate.<a name="line.313"></a>
+<FONT color="green">314</FONT>             */<a name="line.314"></a>
+<FONT color="green">315</FONT>            private InEncoding m_after;<a name="line.315"></a>
+<FONT color="green">316</FONT>            <a name="line.316"></a>
+<FONT color="green">317</FONT>            /**<a name="line.317"></a>
+<FONT color="green">318</FONT>             * The number of unicode values explicitly handled<a name="line.318"></a>
+<FONT color="green">319</FONT>             * by a single EncodingInfo object. This value is <a name="line.319"></a>
+<FONT color="green">320</FONT>             * tuneable, but is set to 128 because that covers the<a name="line.320"></a>
+<FONT color="green">321</FONT>             * entire low range of ASCII type chars within a single<a name="line.321"></a>
+<FONT color="green">322</FONT>             * object.<a name="line.322"></a>
+<FONT color="green">323</FONT>             */<a name="line.323"></a>
+<FONT color="green">324</FONT>            private static final int RANGE = 128;<a name="line.324"></a>
+<FONT color="green">325</FONT>    <a name="line.325"></a>
+<FONT color="green">326</FONT>            /**<a name="line.326"></a>
+<FONT color="green">327</FONT>             * A flag to record if we already know the answer<a name="line.327"></a>
+<FONT color="green">328</FONT>             * for the given unicode value.<a name="line.328"></a>
+<FONT color="green">329</FONT>             */<a name="line.329"></a>
+<FONT color="green">330</FONT>            final private boolean m_alreadyKnown[] = new boolean[RANGE];<a name="line.330"></a>
+<FONT color="green">331</FONT>            /**<a name="line.331"></a>
+<FONT color="green">332</FONT>             * A table holding the answer on whether the given unicode<a name="line.332"></a>
+<FONT color="green">333</FONT>             * value is in the encoding.<a name="line.333"></a>
+<FONT color="green">334</FONT>             */<a name="line.334"></a>
+<FONT color="green">335</FONT>            final private boolean m_isInEncoding[] = new boolean[RANGE];<a name="line.335"></a>
+<FONT color="green">336</FONT>            <a name="line.336"></a>
+<FONT color="green">337</FONT>            private EncodingImpl() {<a name="line.337"></a>
+<FONT color="green">338</FONT>                // This object will answer whether any unicode value<a name="line.338"></a>
+<FONT color="green">339</FONT>                // is in the encoding, it handles values 0 through Integer.MAX_VALUE<a name="line.339"></a>
+<FONT color="green">340</FONT>                this(javaName, 0, Integer.MAX_VALUE, (char) 0);<a name="line.340"></a>
+<FONT color="green">341</FONT>            }<a name="line.341"></a>
+<FONT color="green">342</FONT>    <a name="line.342"></a>
+<FONT color="green">343</FONT>            private EncodingImpl(String encoding, int first, int last, int codePoint) {<a name="line.343"></a>
+<FONT color="green">344</FONT>                // Set the range of unicode values that this object manages<a name="line.344"></a>
+<FONT color="green">345</FONT>                // either explicitly or implicitly.<a name="line.345"></a>
+<FONT color="green">346</FONT>                m_first = first;<a name="line.346"></a>
+<FONT color="green">347</FONT>                m_last = last;  <a name="line.347"></a>
+<FONT color="green">348</FONT>                          <a name="line.348"></a>
+<FONT color="green">349</FONT>                // Set the range of unicode values that this object <a name="line.349"></a>
+<FONT color="green">350</FONT>                // explicitly manages<a name="line.350"></a>
+<FONT color="green">351</FONT>                m_explFirst = codePoint;<a name="line.351"></a>
+<FONT color="green">352</FONT>                m_explLast = codePoint + (RANGE-1);  <a name="line.352"></a>
+<FONT color="green">353</FONT>                <a name="line.353"></a>
+<FONT color="green">354</FONT>                m_encoding = encoding;<a name="line.354"></a>
+<FONT color="green">355</FONT>                <a name="line.355"></a>
+<FONT color="green">356</FONT>                if (javaName != null)<a name="line.356"></a>
+<FONT color="green">357</FONT>                {<a name="line.357"></a>
+<FONT color="green">358</FONT>                    // Some optimization.<a name="line.358"></a>
+<FONT color="green">359</FONT>                    if (0 &lt;= m_explFirst &amp;&amp; m_explFirst &lt;= 127) {<a name="line.359"></a>
+<FONT color="green">360</FONT>                        // This particular EncodingImpl explicitly handles<a name="line.360"></a>
+<FONT color="green">361</FONT>                        // characters in the low range.<a name="line.361"></a>
+<FONT color="green">362</FONT>                        if ("UTF8".equals(javaName)<a name="line.362"></a>
+<FONT color="green">363</FONT>                            || "UTF-16".equals(javaName)<a name="line.363"></a>
+<FONT color="green">364</FONT>                            || "ASCII".equals(javaName)<a name="line.364"></a>
+<FONT color="green">365</FONT>                            || "US-ASCII".equals(javaName)<a name="line.365"></a>
+<FONT color="green">366</FONT>                            || "Unicode".equals(javaName)<a name="line.366"></a>
+<FONT color="green">367</FONT>                            || "UNICODE".equals(javaName)<a name="line.367"></a>
+<FONT color="green">368</FONT>                            || javaName.startsWith("ISO8859")) {<a name="line.368"></a>
+<FONT color="green">369</FONT>                            <a name="line.369"></a>
+<FONT color="green">370</FONT>                            // Not only does this EncodingImpl object explicitly<a name="line.370"></a>
+<FONT color="green">371</FONT>                            // handle chracters in the low range, it is<a name="line.371"></a>
+<FONT color="green">372</FONT>                            // also one that we know something about, without<a name="line.372"></a>
+<FONT color="green">373</FONT>                            // needing to call inEncoding(char ch, String encoding)<a name="line.373"></a>
+<FONT color="green">374</FONT>                            // for this low range<a name="line.374"></a>
+<FONT color="green">375</FONT>                            //<a name="line.375"></a>
+<FONT color="green">376</FONT>                            // By initializing the table ahead of time<a name="line.376"></a>
+<FONT color="green">377</FONT>                            // for these low values, we prevent the expensive<a name="line.377"></a>
+<FONT color="green">378</FONT>                            // inEncoding(char ch, String encoding)<a name="line.378"></a>
+<FONT color="green">379</FONT>                            // from being called, at least for these common<a name="line.379"></a>
+<FONT color="green">380</FONT>                            // encodings.<a name="line.380"></a>
+<FONT color="green">381</FONT>                            for (int unicode = 1; unicode &lt; 127; unicode++) {<a name="line.381"></a>
+<FONT color="green">382</FONT>                                final int idx = unicode - m_explFirst;<a name="line.382"></a>
+<FONT color="green">383</FONT>                                if (0 &lt;= idx &amp;&amp; idx &lt; RANGE) {<a name="line.383"></a>
+<FONT color="green">384</FONT>                                    m_alreadyKnown[idx] = true;<a name="line.384"></a>
+<FONT color="green">385</FONT>                                    m_isInEncoding[idx] = true;<a name="line.385"></a>
+<FONT color="green">386</FONT>                                }<a name="line.386"></a>
+<FONT color="green">387</FONT>                            }<a name="line.387"></a>
+<FONT color="green">388</FONT>                        }<a name="line.388"></a>
+<FONT color="green">389</FONT>                    }<a name="line.389"></a>
+<FONT color="green">390</FONT>    <a name="line.390"></a>
+<FONT color="green">391</FONT>                    /* A little bit more than optimization.<a name="line.391"></a>
+<FONT color="green">392</FONT>                     * <a name="line.392"></a>
+<FONT color="green">393</FONT>                     * We will say that any character is in the encoding if<a name="line.393"></a>
+<FONT color="green">394</FONT>                     * we don't have an encoding.<a name="line.394"></a>
+<FONT color="green">395</FONT>                     * This is meaningful when the serializer is being used<a name="line.395"></a>
+<FONT color="green">396</FONT>                     * in temporary output state, where we are not writing to<a name="line.396"></a>
+<FONT color="green">397</FONT>                     * the final output tree.  It is when writing to the<a name="line.397"></a>
+<FONT color="green">398</FONT>                     * final output tree that we need to worry about the output<a name="line.398"></a>
+<FONT color="green">399</FONT>                     * encoding<a name="line.399"></a>
+<FONT color="green">400</FONT>                     */<a name="line.400"></a>
+<FONT color="green">401</FONT>                    if (javaName == null) {<a name="line.401"></a>
+<FONT color="green">402</FONT>                        for (int idx = 0; idx &lt; m_alreadyKnown.length; idx++) {<a name="line.402"></a>
+<FONT color="green">403</FONT>                            m_alreadyKnown[idx] = true;<a name="line.403"></a>
+<FONT color="green">404</FONT>                            m_isInEncoding[idx] = true;<a name="line.404"></a>
+<FONT color="green">405</FONT>                        }<a name="line.405"></a>
+<FONT color="green">406</FONT>                    }<a name="line.406"></a>
+<FONT color="green">407</FONT>                }<a name="line.407"></a>
+<FONT color="green">408</FONT>            }<a name="line.408"></a>
+<FONT color="green">409</FONT>        }<a name="line.409"></a>
+<FONT color="green">410</FONT>    <a name="line.410"></a>
+<FONT color="green">411</FONT>        /**<a name="line.411"></a>
+<FONT color="green">412</FONT>         * This is heart of the code that determines if a given character<a name="line.412"></a>
+<FONT color="green">413</FONT>         * is in the given encoding. This method is probably expensive,<a name="line.413"></a>
+<FONT color="green">414</FONT>         * and the answer should be cached.<a name="line.414"></a>
+<FONT color="green">415</FONT>         * &lt;p&gt;<a name="line.415"></a>
+<FONT color="green">416</FONT>         * This method is not a public API,<a name="line.416"></a>
+<FONT color="green">417</FONT>         * and should only be used internally within the serializer.<a name="line.417"></a>
+<FONT color="green">418</FONT>         * @param ch the char in question, that is not a high char of<a name="line.418"></a>
+<FONT color="green">419</FONT>         * a high/low surrogate pair.<a name="line.419"></a>
+<FONT color="green">420</FONT>         * @param encoding the Java name of the enocding.<a name="line.420"></a>
+<FONT color="green">421</FONT>         * <a name="line.421"></a>
+<FONT color="green">422</FONT>         * @xsl.usage internal<a name="line.422"></a>
+<FONT color="green">423</FONT>         * <a name="line.423"></a>
+<FONT color="green">424</FONT>         */<a name="line.424"></a>
+<FONT color="green">425</FONT>        private static boolean inEncoding(char ch, String encoding) {<a name="line.425"></a>
+<FONT color="green">426</FONT>            boolean isInEncoding;<a name="line.426"></a>
+<FONT color="green">427</FONT>            try {<a name="line.427"></a>
+<FONT color="green">428</FONT>                char cArray[] = new char[1];<a name="line.428"></a>
+<FONT color="green">429</FONT>                cArray[0] = ch;<a name="line.429"></a>
+<FONT color="green">430</FONT>                // Construct a String from the char <a name="line.430"></a>
+<FONT color="green">431</FONT>                String s = new String(cArray);<a name="line.431"></a>
+<FONT color="green">432</FONT>                // Encode the String into a sequence of bytes <a name="line.432"></a>
+<FONT color="green">433</FONT>                // using the given, named charset. <a name="line.433"></a>
+<FONT color="green">434</FONT>                byte[] bArray = s.getBytes(encoding);<a name="line.434"></a>
+<FONT color="green">435</FONT>                isInEncoding = inEncoding(ch, bArray);<a name="line.435"></a>
+<FONT color="green">436</FONT>    <a name="line.436"></a>
+<FONT color="green">437</FONT>            } catch (Exception e) {<a name="line.437"></a>
+<FONT color="green">438</FONT>                isInEncoding = false;<a name="line.438"></a>
+<FONT color="green">439</FONT>                <a name="line.439"></a>
+<FONT color="green">440</FONT>                // If for some reason the encoding is null, e.g.<a name="line.440"></a>
+<FONT color="green">441</FONT>                // for a temporary result tree, we should just<a name="line.441"></a>
+<FONT color="green">442</FONT>                // say that every character is in the encoding.<a name="line.442"></a>
+<FONT color="green">443</FONT>                if (encoding == null)<a name="line.443"></a>
+<FONT color="green">444</FONT>                    isInEncoding = true;<a name="line.444"></a>
+<FONT color="green">445</FONT>            }<a name="line.445"></a>
+<FONT color="green">446</FONT>            return isInEncoding;<a name="line.446"></a>
+<FONT color="green">447</FONT>        }<a name="line.447"></a>
+<FONT color="green">448</FONT>        <a name="line.448"></a>
+<FONT color="green">449</FONT>        /**<a name="line.449"></a>
+<FONT color="green">450</FONT>         * This is heart of the code that determines if a given high/low<a name="line.450"></a>
+<FONT color="green">451</FONT>         * surrogate pair forms a character that is in the given encoding.<a name="line.451"></a>
+<FONT color="green">452</FONT>         * This method is probably expensive, and the answer should be cached. <a name="line.452"></a>
+<FONT color="green">453</FONT>         * &lt;p&gt;<a name="line.453"></a>
+<FONT color="green">454</FONT>         * This method is not a public API,<a name="line.454"></a>
+<FONT color="green">455</FONT>         * and should only be used internally within the serializer.<a name="line.455"></a>
+<FONT color="green">456</FONT>         * @param high the high char of<a name="line.456"></a>
+<FONT color="green">457</FONT>         * a high/low surrogate pair.<a name="line.457"></a>
+<FONT color="green">458</FONT>         * @param low the low char of a high/low surrogate pair.<a name="line.458"></a>
+<FONT color="green">459</FONT>         * @param encoding the Java name of the encoding.<a name="line.459"></a>
+<FONT color="green">460</FONT>         * <a name="line.460"></a>
+<FONT color="green">461</FONT>         * @xsl.usage internal<a name="line.461"></a>
+<FONT color="green">462</FONT>         * <a name="line.462"></a>
+<FONT color="green">463</FONT>         */ <a name="line.463"></a>
+<FONT color="green">464</FONT>        private static boolean inEncoding(char high, char low, String encoding) {<a name="line.464"></a>
+<FONT color="green">465</FONT>            boolean isInEncoding;<a name="line.465"></a>
+<FONT color="green">466</FONT>            try {<a name="line.466"></a>
+<FONT color="green">467</FONT>                char cArray[] = new char[2];<a name="line.467"></a>
+<FONT color="green">468</FONT>                cArray[0] = high;<a name="line.468"></a>
+<FONT color="green">469</FONT>                cArray[1] = low;<a name="line.469"></a>
+<FONT color="green">470</FONT>                // Construct a String from the char <a name="line.470"></a>
+<FONT color="green">471</FONT>                String s = new String(cArray);<a name="line.471"></a>
+<FONT color="green">472</FONT>                // Encode the String into a sequence of bytes <a name="line.472"></a>
+<FONT color="green">473</FONT>                // using the given, named charset. <a name="line.473"></a>
+<FONT color="green">474</FONT>                byte[] bArray = s.getBytes(encoding);<a name="line.474"></a>
+<FONT color="green">475</FONT>                isInEncoding = inEncoding(high,bArray);<a name="line.475"></a>
+<FONT color="green">476</FONT>            } catch (Exception e) {<a name="line.476"></a>
+<FONT color="green">477</FONT>                isInEncoding = false;<a name="line.477"></a>
+<FONT color="green">478</FONT>            }<a name="line.478"></a>
+<FONT color="green">479</FONT>            <a name="line.479"></a>
+<FONT color="green">480</FONT>            return isInEncoding;<a name="line.480"></a>
+<FONT color="green">481</FONT>        } <a name="line.481"></a>
+<FONT color="green">482</FONT>        <a name="line.482"></a>
+<FONT color="green">483</FONT>        /**<a name="line.483"></a>
+<FONT color="green">484</FONT>         * This method is the core of determining if character<a name="line.484"></a>
+<FONT color="green">485</FONT>         * is in the encoding. The method is not foolproof, because<a name="line.485"></a>
+<FONT color="green">486</FONT>         * s.getBytes(encoding) has specified behavior only if the<a name="line.486"></a>
+<FONT color="green">487</FONT>         * characters are in the specified encoding. However this<a name="line.487"></a>
+<FONT color="green">488</FONT>         * method tries it's best.<a name="line.488"></a>
+<FONT color="green">489</FONT>         * @param ch the char that was converted using getBytes, or<a name="line.489"></a>
+<FONT color="green">490</FONT>         * the first char of a high/low pair that was converted.<a name="line.490"></a>
+<FONT color="green">491</FONT>         * @param data the bytes written out by the call to s.getBytes(encoding);<a name="line.491"></a>
+<FONT color="green">492</FONT>         * @return true if the character is in the encoding.<a name="line.492"></a>
+<FONT color="green">493</FONT>         */<a name="line.493"></a>
+<FONT color="green">494</FONT>        private static boolean inEncoding(char ch, byte[] data) {<a name="line.494"></a>
+<FONT color="green">495</FONT>            final boolean isInEncoding;<a name="line.495"></a>
+<FONT color="green">496</FONT>            // If the string written out as data is not in the encoding,<a name="line.496"></a>
+<FONT color="green">497</FONT>            // the output is not specified according to the documentation<a name="line.497"></a>
+<FONT color="green">498</FONT>            // on the String.getBytes(encoding) method,<a name="line.498"></a>
+<FONT color="green">499</FONT>            // but we do our best here.        <a name="line.499"></a>
+<FONT color="green">500</FONT>            if (data==null || data.length == 0) {<a name="line.500"></a>
+<FONT color="green">501</FONT>                isInEncoding = false;<a name="line.501"></a>
+<FONT color="green">502</FONT>            }<a name="line.502"></a>
+<FONT color="green">503</FONT>            else {<a name="line.503"></a>
+<FONT color="green">504</FONT>                if (data[0] == 0)<a name="line.504"></a>
+<FONT color="green">505</FONT>                    isInEncoding = false;<a name="line.505"></a>
+<FONT color="green">506</FONT>                else if (data[0] == '?' &amp;&amp; ch != '?')<a name="line.506"></a>
+<FONT color="green">507</FONT>                    isInEncoding = false;<a name="line.507"></a>
+<FONT color="green">508</FONT>                /*<a name="line.508"></a>
+<FONT color="green">509</FONT>                 * else if (isJapanese) {<a name="line.509"></a>
+<FONT color="green">510</FONT>                 *   // isJapanese is really <a name="line.510"></a>
+<FONT color="green">511</FONT>                 *   //   (    "EUC-JP".equals(javaName) <a name="line.511"></a>
+<FONT color="green">512</FONT>                 *   //    ||  "EUC_JP".equals(javaName)<a name="line.512"></a>
+<FONT color="green">513</FONT>                 *  //     ||  "SJIS".equals(javaName)   )<a name="line.513"></a>
+<FONT color="green">514</FONT>                 * <a name="line.514"></a>
+<FONT color="green">515</FONT>                 *   // Work around some bugs in JRE for Japanese<a name="line.515"></a>
+<FONT color="green">516</FONT>                 *   if(data[0] == 0x21)<a name="line.516"></a>
+<FONT color="green">517</FONT>                 *     isInEncoding = false;<a name="line.517"></a>
+<FONT color="green">518</FONT>                 *   else if (ch == 0xA5)<a name="line.518"></a>
+<FONT color="green">519</FONT>                 *     isInEncoding = false;<a name="line.519"></a>
+<FONT color="green">520</FONT>                 *   else<a name="line.520"></a>
+<FONT color="green">521</FONT>                 *     isInEncoding = true;<a name="line.521"></a>
+<FONT color="green">522</FONT>                 * }<a name="line.522"></a>
+<FONT color="green">523</FONT>                 */ <a name="line.523"></a>
+<FONT color="green">524</FONT>                    <a name="line.524"></a>
+<FONT color="green">525</FONT>                else {<a name="line.525"></a>
+<FONT color="green">526</FONT>                    // We don't know for sure, but it looks like it is in the encoding<a name="line.526"></a>
+<FONT color="green">527</FONT>                    isInEncoding = true; <a name="line.527"></a>
+<FONT color="green">528</FONT>                }<a name="line.528"></a>
+<FONT color="green">529</FONT>            }<a name="line.529"></a>
+<FONT color="green">530</FONT>            return isInEncoding;<a name="line.530"></a>
+<FONT color="green">531</FONT>        }<a name="line.531"></a>
+<FONT color="green">532</FONT>        <a name="line.532"></a>
+<FONT color="green">533</FONT>        /**<a name="line.533"></a>
+<FONT color="green">534</FONT>         * This method exists for performance reasons.<a name="line.534"></a>
+<FONT color="green">535</FONT>         * &lt;p&gt;<a name="line.535"></a>
+<FONT color="green">536</FONT>         * Except for '\u0000', if a char is less than or equal to the value<a name="line.536"></a>
+<FONT color="green">537</FONT>         * returned by this method then it in the encoding.<a name="line.537"></a>
+<FONT color="green">538</FONT>         * &lt;p&gt;<a name="line.538"></a>
+<FONT color="green">539</FONT>         * The characters in an encoding are not contiguous, however<a name="line.539"></a>
+<FONT color="green">540</FONT>         * there is a lowest group of chars starting at '\u0001' upto and<a name="line.540"></a>
+<FONT color="green">541</FONT>         * including the char returned by this method that are all in the encoding.<a name="line.541"></a>
+<FONT color="green">542</FONT>         * So the char returned by this method essentially defines the lowest<a name="line.542"></a>
+<FONT color="green">543</FONT>         * contiguous group.<a name="line.543"></a>
+<FONT color="green">544</FONT>         * &lt;p&gt;<a name="line.544"></a>
+<FONT color="green">545</FONT>         * chars above the value returned might be in the encoding, but <a name="line.545"></a>
+<FONT color="green">546</FONT>         * chars at or below the value returned are definately in the encoding.<a name="line.546"></a>
+<FONT color="green">547</FONT>         * &lt;p&gt;<a name="line.547"></a>
+<FONT color="green">548</FONT>         * In any case however, the isInEncoding(char) method can be used<a name="line.548"></a>
+<FONT color="green">549</FONT>         * regardless of the value of the char returned by this method.<a name="line.549"></a>
+<FONT color="green">550</FONT>         * &lt;p&gt;<a name="line.550"></a>
+<FONT color="green">551</FONT>         * If the value returned is '\u0000' it means that every character must be tested<a name="line.551"></a>
+<FONT color="green">552</FONT>         * with an isInEncoding method {@link #isInEncoding(char)} or {@link #isInEncoding(char, char)} <a name="line.552"></a>
+<FONT color="green">553</FONT>         * for surrogate pairs.<a name="line.553"></a>
+<FONT color="green">554</FONT>         * &lt;p&gt;<a name="line.554"></a>
+<FONT color="green">555</FONT>         * This method is not a public API.<a name="line.555"></a>
+<FONT color="green">556</FONT>         * @xsl.usage internal<a name="line.556"></a>
+<FONT color="green">557</FONT>         */<a name="line.557"></a>
+<FONT color="green">558</FONT>        public final char getHighChar() {<a name="line.558"></a>
+<FONT color="green">559</FONT>            return m_highCharInContiguousGroup;<a name="line.559"></a>
+<FONT color="green">560</FONT>        }<a name="line.560"></a>
+<FONT color="green">561</FONT>    <a name="line.561"></a>
+<FONT color="green">562</FONT>    }<a name="line.562"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

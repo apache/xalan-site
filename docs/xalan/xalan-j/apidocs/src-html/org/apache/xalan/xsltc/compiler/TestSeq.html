@@ -1,0 +1,353 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: TestSeq.java 468650 2006-10-28 07:03:30Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    <a name="line.21"></a>
+<FONT color="green">022</FONT>    package org.apache.xalan.xsltc.compiler;<a name="line.22"></a>
+<FONT color="green">023</FONT>    <a name="line.23"></a>
+<FONT color="green">024</FONT>    import java.util.Dictionary;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import java.util.Vector;<a name="line.25"></a>
+<FONT color="green">026</FONT>    <a name="line.26"></a>
+<FONT color="green">027</FONT>    import org.apache.bcel.generic.GOTO_W;<a name="line.27"></a>
+<FONT color="green">028</FONT>    import org.apache.bcel.generic.InstructionHandle;<a name="line.28"></a>
+<FONT color="green">029</FONT>    import org.apache.bcel.generic.InstructionList;<a name="line.29"></a>
+<FONT color="green">030</FONT>    import org.apache.xalan.xsltc.compiler.util.ClassGenerator;<a name="line.30"></a>
+<FONT color="green">031</FONT>    import org.apache.xalan.xsltc.compiler.util.MethodGenerator;<a name="line.31"></a>
+<FONT color="green">032</FONT>    <a name="line.32"></a>
+<FONT color="green">033</FONT>    /**<a name="line.33"></a>
+<FONT color="green">034</FONT>     * A test sequence is a sequence of patterns that<a name="line.34"></a>
+<FONT color="green">035</FONT>     *<a name="line.35"></a>
+<FONT color="green">036</FONT>     *  (1) occured in templates in the same mode<a name="line.36"></a>
+<FONT color="green">037</FONT>     *  (2) share the same kernel node type (e.g. A/B and C/C/B)<a name="line.37"></a>
+<FONT color="green">038</FONT>     *  (3) may also contain patterns matching "*" and "node()"<a name="line.38"></a>
+<FONT color="green">039</FONT>     *      (element sequence only) or matching "@*" (attribute<a name="line.39"></a>
+<FONT color="green">040</FONT>     *      sequence only).<a name="line.40"></a>
+<FONT color="green">041</FONT>     *<a name="line.41"></a>
+<FONT color="green">042</FONT>     * A test sequence may have a default template, which will be <a name="line.42"></a>
+<FONT color="green">043</FONT>     * instantiated if none of the other patterns match. <a name="line.43"></a>
+<FONT color="green">044</FONT>     * @author Jacek Ambroziak<a name="line.44"></a>
+<FONT color="green">045</FONT>     * @author Santiago Pericas-Geertsen<a name="line.45"></a>
+<FONT color="green">046</FONT>     * @author Erwin Bolwidt &lt;ejb@klomp.org&gt;<a name="line.46"></a>
+<FONT color="green">047</FONT>     * @author Morten Jorgensen &lt;morten.jorgensen@sun.com&gt;<a name="line.47"></a>
+<FONT color="green">048</FONT>     */<a name="line.48"></a>
+<FONT color="green">049</FONT>    final class TestSeq {<a name="line.49"></a>
+<FONT color="green">050</FONT>    <a name="line.50"></a>
+<FONT color="green">051</FONT>        /**<a name="line.51"></a>
+<FONT color="green">052</FONT>         * Integer code for the kernel type of this test sequence<a name="line.52"></a>
+<FONT color="green">053</FONT>         */<a name="line.53"></a>
+<FONT color="green">054</FONT>        private int _kernelType;<a name="line.54"></a>
+<FONT color="green">055</FONT>    <a name="line.55"></a>
+<FONT color="green">056</FONT>        /**<a name="line.56"></a>
+<FONT color="green">057</FONT>         * Vector of all patterns in the test sequence. May include<a name="line.57"></a>
+<FONT color="green">058</FONT>         * patterns with "*", "@*" or "node()" kernel.<a name="line.58"></a>
+<FONT color="green">059</FONT>         */<a name="line.59"></a>
+<FONT color="green">060</FONT>        private Vector _patterns = null;<a name="line.60"></a>
+<FONT color="green">061</FONT>    <a name="line.61"></a>
+<FONT color="green">062</FONT>        /**<a name="line.62"></a>
+<FONT color="green">063</FONT>         * A reference to the Mode object.<a name="line.63"></a>
+<FONT color="green">064</FONT>         */<a name="line.64"></a>
+<FONT color="green">065</FONT>        private Mode _mode = null;<a name="line.65"></a>
+<FONT color="green">066</FONT>    <a name="line.66"></a>
+<FONT color="green">067</FONT>        /**<a name="line.67"></a>
+<FONT color="green">068</FONT>         * Default template for this test sequence<a name="line.68"></a>
+<FONT color="green">069</FONT>         */<a name="line.69"></a>
+<FONT color="green">070</FONT>        private Template _default = null;<a name="line.70"></a>
+<FONT color="green">071</FONT>    <a name="line.71"></a>
+<FONT color="green">072</FONT>        /**<a name="line.72"></a>
+<FONT color="green">073</FONT>         * Instruction list representing this test sequence.<a name="line.73"></a>
+<FONT color="green">074</FONT>         */<a name="line.74"></a>
+<FONT color="green">075</FONT>        private InstructionList _instructionList;<a name="line.75"></a>
+<FONT color="green">076</FONT>    <a name="line.76"></a>
+<FONT color="green">077</FONT>        /**<a name="line.77"></a>
+<FONT color="green">078</FONT>         * Cached handle to avoid compiling more than once.<a name="line.78"></a>
+<FONT color="green">079</FONT>         */<a name="line.79"></a>
+<FONT color="green">080</FONT>        private InstructionHandle _start = null;<a name="line.80"></a>
+<FONT color="green">081</FONT>    <a name="line.81"></a>
+<FONT color="green">082</FONT>        /**<a name="line.82"></a>
+<FONT color="green">083</FONT>         * Creates a new test sequence given a set of patterns and a mode.<a name="line.83"></a>
+<FONT color="green">084</FONT>         */<a name="line.84"></a>
+<FONT color="green">085</FONT>        public TestSeq(Vector patterns, Mode mode) {<a name="line.85"></a>
+<FONT color="green">086</FONT>            this(patterns, -2, mode);<a name="line.86"></a>
+<FONT color="green">087</FONT>        }<a name="line.87"></a>
+<FONT color="green">088</FONT>    <a name="line.88"></a>
+<FONT color="green">089</FONT>        public TestSeq(Vector patterns, int kernelType, Mode mode) {<a name="line.89"></a>
+<FONT color="green">090</FONT>            _patterns = patterns;<a name="line.90"></a>
+<FONT color="green">091</FONT>            _kernelType = kernelType;<a name="line.91"></a>
+<FONT color="green">092</FONT>            _mode = mode;<a name="line.92"></a>
+<FONT color="green">093</FONT>        }<a name="line.93"></a>
+<FONT color="green">094</FONT>    <a name="line.94"></a>
+<FONT color="green">095</FONT>        /**<a name="line.95"></a>
+<FONT color="green">096</FONT>         * Returns a string representation of this test sequence. Notice<a name="line.96"></a>
+<FONT color="green">097</FONT>         * that test sequences are mutable, so the value returned by this<a name="line.97"></a>
+<FONT color="green">098</FONT>         * method is different before and after calling reduce().<a name="line.98"></a>
+<FONT color="green">099</FONT>         */<a name="line.99"></a>
+<FONT color="green">100</FONT>        public String toString() {<a name="line.100"></a>
+<FONT color="green">101</FONT>            final int count = _patterns.size();<a name="line.101"></a>
+<FONT color="green">102</FONT>            final StringBuffer result = new StringBuffer();<a name="line.102"></a>
+<FONT color="green">103</FONT>    <a name="line.103"></a>
+<FONT color="green">104</FONT>            for (int i = 0; i &lt; count; i++) {<a name="line.104"></a>
+<FONT color="green">105</FONT>                final LocationPathPattern pattern =<a name="line.105"></a>
+<FONT color="green">106</FONT>                    (LocationPathPattern) _patterns.elementAt(i);<a name="line.106"></a>
+<FONT color="green">107</FONT>    <a name="line.107"></a>
+<FONT color="green">108</FONT>                if (i == 0) {<a name="line.108"></a>
+<FONT color="green">109</FONT>                    result.append("Testseq for kernel " + _kernelType)<a name="line.109"></a>
+<FONT color="green">110</FONT>                          .append('\n');<a name="line.110"></a>
+<FONT color="green">111</FONT>                }<a name="line.111"></a>
+<FONT color="green">112</FONT>                result.append("   pattern " + i + ": ")<a name="line.112"></a>
+<FONT color="green">113</FONT>                      .append(pattern.toString())<a name="line.113"></a>
+<FONT color="green">114</FONT>                      .append('\n');<a name="line.114"></a>
+<FONT color="green">115</FONT>            }<a name="line.115"></a>
+<FONT color="green">116</FONT>            return result.toString();<a name="line.116"></a>
+<FONT color="green">117</FONT>        }<a name="line.117"></a>
+<FONT color="green">118</FONT>    <a name="line.118"></a>
+<FONT color="green">119</FONT>        /**<a name="line.119"></a>
+<FONT color="green">120</FONT>         * Returns the instruction list for this test sequence<a name="line.120"></a>
+<FONT color="green">121</FONT>         */<a name="line.121"></a>
+<FONT color="green">122</FONT>        public InstructionList getInstructionList() {<a name="line.122"></a>
+<FONT color="green">123</FONT>            return _instructionList;<a name="line.123"></a>
+<FONT color="green">124</FONT>        }<a name="line.124"></a>
+<FONT color="green">125</FONT>    <a name="line.125"></a>
+<FONT color="green">126</FONT>        /**<a name="line.126"></a>
+<FONT color="green">127</FONT>         * Return the highest priority for a pattern in this test<a name="line.127"></a>
+<FONT color="green">128</FONT>         * sequence. This is either the priority of the first or<a name="line.128"></a>
+<FONT color="green">129</FONT>         * of the default pattern.<a name="line.129"></a>
+<FONT color="green">130</FONT>         */<a name="line.130"></a>
+<FONT color="green">131</FONT>        public double getPriority() {<a name="line.131"></a>
+<FONT color="green">132</FONT>            final Template template = (_patterns.size() == 0) ? _default <a name="line.132"></a>
+<FONT color="green">133</FONT>                : ((Pattern) _patterns.elementAt(0)).getTemplate();<a name="line.133"></a>
+<FONT color="green">134</FONT>            return template.getPriority();<a name="line.134"></a>
+<FONT color="green">135</FONT>        }<a name="line.135"></a>
+<FONT color="green">136</FONT>    <a name="line.136"></a>
+<FONT color="green">137</FONT>        /**<a name="line.137"></a>
+<FONT color="green">138</FONT>         * Returns the position of the highest priority pattern in <a name="line.138"></a>
+<FONT color="green">139</FONT>         * this test sequence.<a name="line.139"></a>
+<FONT color="green">140</FONT>         */<a name="line.140"></a>
+<FONT color="green">141</FONT>        public int getPosition() {<a name="line.141"></a>
+<FONT color="green">142</FONT>            final Template template = (_patterns.size() == 0) ? _default <a name="line.142"></a>
+<FONT color="green">143</FONT>                : ((Pattern) _patterns.elementAt(0)).getTemplate();<a name="line.143"></a>
+<FONT color="green">144</FONT>            return template.getPosition();<a name="line.144"></a>
+<FONT color="green">145</FONT>        }<a name="line.145"></a>
+<FONT color="green">146</FONT>    <a name="line.146"></a>
+<FONT color="green">147</FONT>        /**<a name="line.147"></a>
+<FONT color="green">148</FONT>         * Reduce the patterns in this test sequence. Creates a new<a name="line.148"></a>
+<FONT color="green">149</FONT>         * vector of patterns and sets the default pattern if it<a name="line.149"></a>
+<FONT color="green">150</FONT>         * finds a patterns that is fully reduced.<a name="line.150"></a>
+<FONT color="green">151</FONT>         */<a name="line.151"></a>
+<FONT color="green">152</FONT>        public void reduce() {<a name="line.152"></a>
+<FONT color="green">153</FONT>            final Vector newPatterns = new Vector();<a name="line.153"></a>
+<FONT color="green">154</FONT>    <a name="line.154"></a>
+<FONT color="green">155</FONT>            final int count = _patterns.size();<a name="line.155"></a>
+<FONT color="green">156</FONT>            for (int i = 0; i &lt; count; i++) {<a name="line.156"></a>
+<FONT color="green">157</FONT>                final LocationPathPattern pattern =<a name="line.157"></a>
+<FONT color="green">158</FONT>                    (LocationPathPattern)_patterns.elementAt(i);<a name="line.158"></a>
+<FONT color="green">159</FONT>                    <a name="line.159"></a>
+<FONT color="green">160</FONT>                // Reduce this pattern<a name="line.160"></a>
+<FONT color="green">161</FONT>                pattern.reduceKernelPattern();<a name="line.161"></a>
+<FONT color="green">162</FONT>                            <a name="line.162"></a>
+<FONT color="green">163</FONT>                // Is this pattern fully reduced?<a name="line.163"></a>
+<FONT color="green">164</FONT>                if (pattern.isWildcard()) {<a name="line.164"></a>
+<FONT color="green">165</FONT>                    _default = pattern.getTemplate();<a name="line.165"></a>
+<FONT color="green">166</FONT>                    break;          // Ignore following patterns <a name="line.166"></a>
+<FONT color="green">167</FONT>                }<a name="line.167"></a>
+<FONT color="green">168</FONT>                else {<a name="line.168"></a>
+<FONT color="green">169</FONT>                    newPatterns.addElement(pattern);<a name="line.169"></a>
+<FONT color="green">170</FONT>                }<a name="line.170"></a>
+<FONT color="green">171</FONT>            }<a name="line.171"></a>
+<FONT color="green">172</FONT>            _patterns = newPatterns;<a name="line.172"></a>
+<FONT color="green">173</FONT>        }<a name="line.173"></a>
+<FONT color="green">174</FONT>    <a name="line.174"></a>
+<FONT color="green">175</FONT>        /**<a name="line.175"></a>
+<FONT color="green">176</FONT>         * Returns, by reference, the templates that are included in <a name="line.176"></a>
+<FONT color="green">177</FONT>         * this test sequence. Note that a single template can occur <a name="line.177"></a>
+<FONT color="green">178</FONT>         * in several test sequences if its pattern is a union.<a name="line.178"></a>
+<FONT color="green">179</FONT>         */<a name="line.179"></a>
+<FONT color="green">180</FONT>        public void findTemplates(Dictionary templates) {<a name="line.180"></a>
+<FONT color="green">181</FONT>            if (_default != null) {<a name="line.181"></a>
+<FONT color="green">182</FONT>                templates.put(_default, this);<a name="line.182"></a>
+<FONT color="green">183</FONT>            }<a name="line.183"></a>
+<FONT color="green">184</FONT>            for (int i = 0; i &lt; _patterns.size(); i++) {<a name="line.184"></a>
+<FONT color="green">185</FONT>                final LocationPathPattern pattern =<a name="line.185"></a>
+<FONT color="green">186</FONT>                    (LocationPathPattern)_patterns.elementAt(i);<a name="line.186"></a>
+<FONT color="green">187</FONT>                templates.put(pattern.getTemplate(), this);<a name="line.187"></a>
+<FONT color="green">188</FONT>            }<a name="line.188"></a>
+<FONT color="green">189</FONT>        }<a name="line.189"></a>
+<FONT color="green">190</FONT>    <a name="line.190"></a>
+<FONT color="green">191</FONT>        /**<a name="line.191"></a>
+<FONT color="green">192</FONT>         * Get the instruction handle to a template's code. This is <a name="line.192"></a>
+<FONT color="green">193</FONT>         * used when a single template occurs in several test <a name="line.193"></a>
+<FONT color="green">194</FONT>         * sequences; that is, if its pattern is a union of patterns <a name="line.194"></a>
+<FONT color="green">195</FONT>         * (e.g. match="A/B | A/C").<a name="line.195"></a>
+<FONT color="green">196</FONT>         */<a name="line.196"></a>
+<FONT color="green">197</FONT>        private InstructionHandle getTemplateHandle(Template template) {<a name="line.197"></a>
+<FONT color="green">198</FONT>            return (InstructionHandle)_mode.getTemplateInstructionHandle(template);<a name="line.198"></a>
+<FONT color="green">199</FONT>        }<a name="line.199"></a>
+<FONT color="green">200</FONT>    <a name="line.200"></a>
+<FONT color="green">201</FONT>        /**<a name="line.201"></a>
+<FONT color="green">202</FONT>         * Returns pattern n in this test sequence<a name="line.202"></a>
+<FONT color="green">203</FONT>         */<a name="line.203"></a>
+<FONT color="green">204</FONT>        private LocationPathPattern getPattern(int n) {<a name="line.204"></a>
+<FONT color="green">205</FONT>            return (LocationPathPattern)_patterns.elementAt(n);<a name="line.205"></a>
+<FONT color="green">206</FONT>        }<a name="line.206"></a>
+<FONT color="green">207</FONT>    <a name="line.207"></a>
+<FONT color="green">208</FONT>        /**<a name="line.208"></a>
+<FONT color="green">209</FONT>         * Compile the code for this test sequence. Compile patterns <a name="line.209"></a>
+<FONT color="green">210</FONT>         * from highest to lowest priority. Note that since patterns <a name="line.210"></a>
+<FONT color="green">211</FONT>         * can be share by multiple test sequences, instruction lists <a name="line.211"></a>
+<FONT color="green">212</FONT>         * must be copied before backpatching.<a name="line.212"></a>
+<FONT color="green">213</FONT>         */<a name="line.213"></a>
+<FONT color="green">214</FONT>        public InstructionHandle compile(ClassGenerator classGen,<a name="line.214"></a>
+<FONT color="green">215</FONT>                                         MethodGenerator methodGen,<a name="line.215"></a>
+<FONT color="green">216</FONT>                                         InstructionHandle continuation) <a name="line.216"></a>
+<FONT color="green">217</FONT>        {<a name="line.217"></a>
+<FONT color="green">218</FONT>            // Returned cached value if already compiled<a name="line.218"></a>
+<FONT color="green">219</FONT>            if (_start != null) {<a name="line.219"></a>
+<FONT color="green">220</FONT>                return _start;<a name="line.220"></a>
+<FONT color="green">221</FONT>            }<a name="line.221"></a>
+<FONT color="green">222</FONT>    <a name="line.222"></a>
+<FONT color="green">223</FONT>            // If not patterns, then return handle for default template<a name="line.223"></a>
+<FONT color="green">224</FONT>            final int count = _patterns.size();<a name="line.224"></a>
+<FONT color="green">225</FONT>            if (count == 0) {<a name="line.225"></a>
+<FONT color="green">226</FONT>                return (_start = getTemplateHandle(_default));<a name="line.226"></a>
+<FONT color="green">227</FONT>            }<a name="line.227"></a>
+<FONT color="green">228</FONT>    <a name="line.228"></a>
+<FONT color="green">229</FONT>            // Init handle to jump when all patterns failed<a name="line.229"></a>
+<FONT color="green">230</FONT>            InstructionHandle fail = (_default == null) ? continuation<a name="line.230"></a>
+<FONT color="green">231</FONT>                : getTemplateHandle(_default);<a name="line.231"></a>
+<FONT color="green">232</FONT>            <a name="line.232"></a>
+<FONT color="green">233</FONT>            // Compile all patterns in reverse order<a name="line.233"></a>
+<FONT color="green">234</FONT>            for (int n = count - 1; n &gt;= 0; n--) {<a name="line.234"></a>
+<FONT color="green">235</FONT>                final LocationPathPattern pattern = getPattern(n);<a name="line.235"></a>
+<FONT color="green">236</FONT>                final Template template = pattern.getTemplate();<a name="line.236"></a>
+<FONT color="green">237</FONT>                final InstructionList il = new InstructionList();<a name="line.237"></a>
+<FONT color="green">238</FONT>    <a name="line.238"></a>
+<FONT color="green">239</FONT>                // Patterns expect current node on top of stack<a name="line.239"></a>
+<FONT color="green">240</FONT>                il.append(methodGen.loadCurrentNode());<a name="line.240"></a>
+<FONT color="green">241</FONT>    <a name="line.241"></a>
+<FONT color="green">242</FONT>                // Apply the test-code compiled for the pattern<a name="line.242"></a>
+<FONT color="green">243</FONT>                InstructionList ilist = methodGen.getInstructionList(pattern);<a name="line.243"></a>
+<FONT color="green">244</FONT>                if (ilist == null) {<a name="line.244"></a>
+<FONT color="green">245</FONT>                    ilist = pattern.compile(classGen, methodGen);<a name="line.245"></a>
+<FONT color="green">246</FONT>                    methodGen.addInstructionList(pattern, ilist);<a name="line.246"></a>
+<FONT color="green">247</FONT>                }<a name="line.247"></a>
+<FONT color="green">248</FONT>    <a name="line.248"></a>
+<FONT color="green">249</FONT>                // Make a copy of the instruction list for backpatching<a name="line.249"></a>
+<FONT color="green">250</FONT>                InstructionList copyOfilist = ilist.copy();<a name="line.250"></a>
+<FONT color="green">251</FONT>    <a name="line.251"></a>
+<FONT color="green">252</FONT>                FlowList trueList = pattern.getTrueList();<a name="line.252"></a>
+<FONT color="green">253</FONT>                if (trueList != null) {<a name="line.253"></a>
+<FONT color="green">254</FONT>                    trueList = trueList.copyAndRedirect(ilist, copyOfilist);<a name="line.254"></a>
+<FONT color="green">255</FONT>                }<a name="line.255"></a>
+<FONT color="green">256</FONT>                FlowList falseList = pattern.getFalseList();<a name="line.256"></a>
+<FONT color="green">257</FONT>                if (falseList != null) {<a name="line.257"></a>
+<FONT color="green">258</FONT>                    falseList = falseList.copyAndRedirect(ilist, copyOfilist);<a name="line.258"></a>
+<FONT color="green">259</FONT>                }<a name="line.259"></a>
+<FONT color="green">260</FONT>    <a name="line.260"></a>
+<FONT color="green">261</FONT>                il.append(copyOfilist);<a name="line.261"></a>
+<FONT color="green">262</FONT>    <a name="line.262"></a>
+<FONT color="green">263</FONT>                // On success branch to the template code<a name="line.263"></a>
+<FONT color="green">264</FONT>                final InstructionHandle gtmpl = getTemplateHandle(template);<a name="line.264"></a>
+<FONT color="green">265</FONT>                final InstructionHandle success = il.append(new GOTO_W(gtmpl));<a name="line.265"></a>
+<FONT color="green">266</FONT>    <a name="line.266"></a>
+<FONT color="green">267</FONT>                if (trueList != null) {<a name="line.267"></a>
+<FONT color="green">268</FONT>                    trueList.backPatch(success);<a name="line.268"></a>
+<FONT color="green">269</FONT>                }<a name="line.269"></a>
+<FONT color="green">270</FONT>                if (falseList != null) {<a name="line.270"></a>
+<FONT color="green">271</FONT>                    falseList.backPatch(fail);<a name="line.271"></a>
+<FONT color="green">272</FONT>                } <a name="line.272"></a>
+<FONT color="green">273</FONT>    <a name="line.273"></a>
+<FONT color="green">274</FONT>                // Next pattern's 'fail' target is this pattern's first instruction<a name="line.274"></a>
+<FONT color="green">275</FONT>                fail = il.getStart();<a name="line.275"></a>
+<FONT color="green">276</FONT>    <a name="line.276"></a>
+<FONT color="green">277</FONT>                // Append existing instruction list to the end of this one<a name="line.277"></a>
+<FONT color="green">278</FONT>                if (_instructionList != null) {<a name="line.278"></a>
+<FONT color="green">279</FONT>                    il.append(_instructionList);<a name="line.279"></a>
+<FONT color="green">280</FONT>                }<a name="line.280"></a>
+<FONT color="green">281</FONT>    <a name="line.281"></a>
+<FONT color="green">282</FONT>                // Set current instruction list to be this one<a name="line.282"></a>
+<FONT color="green">283</FONT>                _instructionList = il;<a name="line.283"></a>
+<FONT color="green">284</FONT>            }<a name="line.284"></a>
+<FONT color="green">285</FONT>            return (_start = fail);<a name="line.285"></a>
+<FONT color="green">286</FONT>        }<a name="line.286"></a>
+<FONT color="green">287</FONT>    }<a name="line.287"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

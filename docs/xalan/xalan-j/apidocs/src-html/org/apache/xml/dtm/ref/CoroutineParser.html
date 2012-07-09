@@ -1,0 +1,206 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: CoroutineParser.java 468653 2006-10-28 07:07:05Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    <a name="line.21"></a>
+<FONT color="green">022</FONT>    package org.apache.xml.dtm.ref;<a name="line.22"></a>
+<FONT color="green">023</FONT>    <a name="line.23"></a>
+<FONT color="green">024</FONT>    import org.xml.sax.ContentHandler;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import org.xml.sax.InputSource;<a name="line.25"></a>
+<FONT color="green">026</FONT>    import org.xml.sax.XMLReader;<a name="line.26"></a>
+<FONT color="green">027</FONT>    <a name="line.27"></a>
+<FONT color="green">028</FONT>    /** &lt;p&gt;CoroutineParser is an API for parser threads that operate as<a name="line.28"></a>
+<FONT color="green">029</FONT>     * coroutines. See CoroutineSAXParser and CoroutineSAXParser_Xerces<a name="line.29"></a>
+<FONT color="green">030</FONT>     * for examples.&lt;/p&gt;<a name="line.30"></a>
+<FONT color="green">031</FONT>     *<a name="line.31"></a>
+<FONT color="green">032</FONT>     * &lt;p&gt;&amp;lt;grumble&amp;gt; I'd like the interface to require a specific form<a name="line.32"></a>
+<FONT color="green">033</FONT>     * for either the base constructor or a static factory method. Java<a name="line.33"></a>
+<FONT color="green">034</FONT>     * doesn't allow us to specify either, so I'll just document them<a name="line.34"></a>
+<FONT color="green">035</FONT>     * here:<a name="line.35"></a>
+<FONT color="green">036</FONT>     *<a name="line.36"></a>
+<FONT color="green">037</FONT>     * &lt;ul&gt;<a name="line.37"></a>
+<FONT color="green">038</FONT>     * &lt;li&gt;public CoroutineParser(CoroutineManager co, int appCoroutine);&lt;/li&gt;<a name="line.38"></a>
+<FONT color="green">039</FONT>     * &lt;li&gt;public CoroutineParser createCoroutineParser(CoroutineManager co, int appCoroutine);&lt;/li&gt;<a name="line.39"></a>
+<FONT color="green">040</FONT>     * &lt;/ul&gt;<a name="line.40"></a>
+<FONT color="green">041</FONT>     *<a name="line.41"></a>
+<FONT color="green">042</FONT>     * &amp;lt;/grumble&amp;gt;&lt;/p&gt;<a name="line.42"></a>
+<FONT color="green">043</FONT>     *<a name="line.43"></a>
+<FONT color="green">044</FONT>     * @deprecated Since the ability to start a parse via the<a name="line.44"></a>
+<FONT color="green">045</FONT>     * coroutine protocol was not being used and was complicating design.<a name="line.45"></a>
+<FONT color="green">046</FONT>     * See {@link IncrementalSAXSource}.<a name="line.46"></a>
+<FONT color="green">047</FONT>     * */<a name="line.47"></a>
+<FONT color="green">048</FONT>    public interface CoroutineParser {<a name="line.48"></a>
+<FONT color="green">049</FONT>    <a name="line.49"></a>
+<FONT color="green">050</FONT>        /** @return the coroutine ID number for this CoroutineParser object.<a name="line.50"></a>
+<FONT color="green">051</FONT>         * Note that this isn't useful unless you know which CoroutineManager<a name="line.51"></a>
+<FONT color="green">052</FONT>         * you're talking to. Also note that the do...() methods encapsulate<a name="line.52"></a>
+<FONT color="green">053</FONT>         * the common transactions with the CoroutineParser, so you shouldn't<a name="line.53"></a>
+<FONT color="green">054</FONT>         * need this in most cases.<a name="line.54"></a>
+<FONT color="green">055</FONT>         * */<a name="line.55"></a>
+<FONT color="green">056</FONT>        public int getParserCoroutineID();<a name="line.56"></a>
+<FONT color="green">057</FONT>    <a name="line.57"></a>
+<FONT color="green">058</FONT>        /** @return the CoroutineManager for this CoroutineParser object.<a name="line.58"></a>
+<FONT color="green">059</FONT>         * If you're using the do...() methods, applications should only<a name="line.59"></a>
+<FONT color="green">060</FONT>         * need to talk to the CoroutineManager once, to obtain the<a name="line.60"></a>
+<FONT color="green">061</FONT>         * application's Coroutine ID.<a name="line.61"></a>
+<FONT color="green">062</FONT>         * */<a name="line.62"></a>
+<FONT color="green">063</FONT>        public CoroutineManager getCoroutineManager();<a name="line.63"></a>
+<FONT color="green">064</FONT>    <a name="line.64"></a>
+<FONT color="green">065</FONT>      /** Register a SAX-style content handler for us to output to */<a name="line.65"></a>
+<FONT color="green">066</FONT>      public void setContentHandler(ContentHandler handler);<a name="line.66"></a>
+<FONT color="green">067</FONT>    <a name="line.67"></a>
+<FONT color="green">068</FONT>      /**  Register a SAX-style lexical handler for us to output to<a name="line.68"></a>
+<FONT color="green">069</FONT>       *  Not all parsers support this...<a name="line.69"></a>
+<FONT color="green">070</FONT>       *<a name="line.70"></a>
+<FONT color="green">071</FONT>       * %REVIEW% Not called setLexicalHandler because Xalan uses that name<a name="line.71"></a>
+<FONT color="green">072</FONT>       * internally, which causes subclassing nuisances. <a name="line.72"></a>
+<FONT color="green">073</FONT>       */<a name="line.73"></a>
+<FONT color="green">074</FONT>      public void setLexHandler(org.xml.sax.ext.LexicalHandler handler);<a name="line.74"></a>
+<FONT color="green">075</FONT>    <a name="line.75"></a>
+<FONT color="green">076</FONT>      /* The run() method is required in CoroutineParsers that run as<a name="line.76"></a>
+<FONT color="green">077</FONT>       * threads (of course)... but it isn't part of our API, and<a name="line.77"></a>
+<FONT color="green">078</FONT>       * shouldn't be declared here.<a name="line.78"></a>
+<FONT color="green">079</FONT>       * */<a name="line.79"></a>
+<FONT color="green">080</FONT>    <a name="line.80"></a>
+<FONT color="green">081</FONT>      //================================================================<a name="line.81"></a>
+<FONT color="green">082</FONT>      /** doParse() is a simple API which tells the coroutine parser<a name="line.82"></a>
+<FONT color="green">083</FONT>       * to begin reading from a file.  This is intended to be called from one<a name="line.83"></a>
+<FONT color="green">084</FONT>       * of our partner coroutines, and serves both to encapsulate the<a name="line.84"></a>
+<FONT color="green">085</FONT>       * communication protocol and to avoid having to explicitly use the<a name="line.85"></a>
+<FONT color="green">086</FONT>       * CoroutineParser's coroutine ID number.<a name="line.86"></a>
+<FONT color="green">087</FONT>       *<a name="line.87"></a>
+<FONT color="green">088</FONT>       * %REVIEW% Can/should this unify with doMore? (if URI hasn't changed,<a name="line.88"></a>
+<FONT color="green">089</FONT>       * parse more from same file, else end and restart parsing...?<a name="line.89"></a>
+<FONT color="green">090</FONT>       *<a name="line.90"></a>
+<FONT color="green">091</FONT>       * @param source The InputSource to parse from.<a name="line.91"></a>
+<FONT color="green">092</FONT>       * @param appCoroutine The coroutine ID number of the coroutine invoking<a name="line.92"></a>
+<FONT color="green">093</FONT>       * this method, so it can be resumed after the parser has responded to the<a name="line.93"></a>
+<FONT color="green">094</FONT>       * request.<a name="line.94"></a>
+<FONT color="green">095</FONT>       * @return Boolean.TRUE if the CoroutineParser believes more data may be available<a name="line.95"></a>
+<FONT color="green">096</FONT>       * for further parsing. Boolean.FALSE if parsing ran to completion.<a name="line.96"></a>
+<FONT color="green">097</FONT>       * Exception if the parser objected for some reason.<a name="line.97"></a>
+<FONT color="green">098</FONT>       * */<a name="line.98"></a>
+<FONT color="green">099</FONT>      public Object doParse(InputSource source, int appCoroutine);<a name="line.99"></a>
+<FONT color="green">100</FONT>    <a name="line.100"></a>
+<FONT color="green">101</FONT>      /** doMore() is a simple API which tells the coroutine parser<a name="line.101"></a>
+<FONT color="green">102</FONT>       * that we need more nodes.  This is intended to be called from one<a name="line.102"></a>
+<FONT color="green">103</FONT>       * of our partner coroutines, and serves both to encapsulate the<a name="line.103"></a>
+<FONT color="green">104</FONT>       * communication protocol and to avoid having to explicitly use the<a name="line.104"></a>
+<FONT color="green">105</FONT>       * CoroutineParser's coroutine ID number.<a name="line.105"></a>
+<FONT color="green">106</FONT>       *<a name="line.106"></a>
+<FONT color="green">107</FONT>       * @param parsemore If true, tells the incremental parser to generate<a name="line.107"></a>
+<FONT color="green">108</FONT>       * another chunk of output. If false, tells the parser that we're<a name="line.108"></a>
+<FONT color="green">109</FONT>       * satisfied and it can terminate parsing of this document.<a name="line.109"></a>
+<FONT color="green">110</FONT>       * @param appCoroutine The coroutine ID number of the coroutine invoking<a name="line.110"></a>
+<FONT color="green">111</FONT>       * this method, so it can be resumed after the parser has responded to the<a name="line.111"></a>
+<FONT color="green">112</FONT>       * request.<a name="line.112"></a>
+<FONT color="green">113</FONT>       * @return Boolean.TRUE if the CoroutineParser believes more data may be available<a name="line.113"></a>
+<FONT color="green">114</FONT>       * for further parsing. Boolean.FALSE if parsing ran to completion.<a name="line.114"></a>
+<FONT color="green">115</FONT>       * Exception if the parser objected for some reason.<a name="line.115"></a>
+<FONT color="green">116</FONT>       * */<a name="line.116"></a>
+<FONT color="green">117</FONT>      public Object doMore (boolean parsemore, int appCoroutine);<a name="line.117"></a>
+<FONT color="green">118</FONT>    <a name="line.118"></a>
+<FONT color="green">119</FONT>      /** doTerminate() is a simple API which tells the coroutine<a name="line.119"></a>
+<FONT color="green">120</FONT>       * parser to terminate itself.  This is intended to be called from<a name="line.120"></a>
+<FONT color="green">121</FONT>       * one of our partner coroutines, and serves both to encapsulate the<a name="line.121"></a>
+<FONT color="green">122</FONT>       * communication protocol and to avoid having to explicitly use the<a name="line.122"></a>
+<FONT color="green">123</FONT>       * CoroutineParser's coroutine ID number.<a name="line.123"></a>
+<FONT color="green">124</FONT>       *<a name="line.124"></a>
+<FONT color="green">125</FONT>       * Returns only after the CoroutineParser has acknowledged the request.<a name="line.125"></a>
+<FONT color="green">126</FONT>       *<a name="line.126"></a>
+<FONT color="green">127</FONT>       * @param appCoroutine The coroutine ID number of the coroutine invoking<a name="line.127"></a>
+<FONT color="green">128</FONT>       * this method, so it can be resumed after the parser has responded to the<a name="line.128"></a>
+<FONT color="green">129</FONT>       * request.<a name="line.129"></a>
+<FONT color="green">130</FONT>       * */<a name="line.130"></a>
+<FONT color="green">131</FONT>      public void doTerminate(int appCoroutine);<a name="line.131"></a>
+<FONT color="green">132</FONT>    <a name="line.132"></a>
+<FONT color="green">133</FONT>      /**<a name="line.133"></a>
+<FONT color="green">134</FONT>       * Initialize the coroutine parser. Same parameters could be passed<a name="line.134"></a>
+<FONT color="green">135</FONT>       * in a non-default constructor, or by using using context ClassLoader<a name="line.135"></a>
+<FONT color="green">136</FONT>       * and newInstance and then calling init()<a name="line.136"></a>
+<FONT color="green">137</FONT>       */<a name="line.137"></a>
+<FONT color="green">138</FONT>      public void init( CoroutineManager co, int appCoroutineID, XMLReader parser );<a name="line.138"></a>
+<FONT color="green">139</FONT>    <a name="line.139"></a>
+<FONT color="green">140</FONT>    } // class CoroutineParser<a name="line.140"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

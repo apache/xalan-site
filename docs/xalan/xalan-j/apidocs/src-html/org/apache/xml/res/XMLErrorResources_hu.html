@@ -1,0 +1,496 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Licensed to the Apache Software Foundation (ASF) under one<a name="line.2"></a>
+<FONT color="green">003</FONT>     * or more contributor license agreements. See the NOTICE file<a name="line.3"></a>
+<FONT color="green">004</FONT>     * distributed with this work for additional information<a name="line.4"></a>
+<FONT color="green">005</FONT>     * regarding copyright ownership. The ASF licenses this file<a name="line.5"></a>
+<FONT color="green">006</FONT>     * to you under the Apache License, Version 2.0 (the  "License");<a name="line.6"></a>
+<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
+<FONT color="green">009</FONT>     *<a name="line.9"></a>
+<FONT color="green">010</FONT>     *     http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<FONT color="green">011</FONT>     *<a name="line.11"></a>
+<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
+<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    /*<a name="line.18"></a>
+<FONT color="green">019</FONT>     * $Id: XMLErrorResources_hu.java 468653 2006-10-28 07:07:05Z minchau $<a name="line.19"></a>
+<FONT color="green">020</FONT>     */<a name="line.20"></a>
+<FONT color="green">021</FONT>    package org.apache.xml.res;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>    <a name="line.23"></a>
+<FONT color="green">024</FONT>    import java.util.ListResourceBundle;<a name="line.24"></a>
+<FONT color="green">025</FONT>    import java.util.Locale;<a name="line.25"></a>
+<FONT color="green">026</FONT>    import java.util.MissingResourceException;<a name="line.26"></a>
+<FONT color="green">027</FONT>    import java.util.ResourceBundle;<a name="line.27"></a>
+<FONT color="green">028</FONT>    <a name="line.28"></a>
+<FONT color="green">029</FONT>    /**<a name="line.29"></a>
+<FONT color="green">030</FONT>     * Set up error messages.<a name="line.30"></a>
+<FONT color="green">031</FONT>     * We build a two dimensional array of message keys and<a name="line.31"></a>
+<FONT color="green">032</FONT>     * message strings. In order to add a new message here,<a name="line.32"></a>
+<FONT color="green">033</FONT>     * you need to first add a String constant. And you need<a name="line.33"></a>
+<FONT color="green">034</FONT>     * to enter key, value pair as part of the contents<a name="line.34"></a>
+<FONT color="green">035</FONT>     * array. You also need to update MAX_CODE for error strings<a name="line.35"></a>
+<FONT color="green">036</FONT>     * and MAX_WARNING for warnings ( Needed for only information<a name="line.36"></a>
+<FONT color="green">037</FONT>     * purpose )<a name="line.37"></a>
+<FONT color="green">038</FONT>     */<a name="line.38"></a>
+<FONT color="green">039</FONT>    public class XMLErrorResources_hu extends ListResourceBundle<a name="line.39"></a>
+<FONT color="green">040</FONT>    {<a name="line.40"></a>
+<FONT color="green">041</FONT>    <a name="line.41"></a>
+<FONT color="green">042</FONT>    /*<a name="line.42"></a>
+<FONT color="green">043</FONT>     * This file contains error and warning messages related to Xalan Error<a name="line.43"></a>
+<FONT color="green">044</FONT>     * Handling.<a name="line.44"></a>
+<FONT color="green">045</FONT>     *<a name="line.45"></a>
+<FONT color="green">046</FONT>     *  General notes to translators:<a name="line.46"></a>
+<FONT color="green">047</FONT>     *<a name="line.47"></a>
+<FONT color="green">048</FONT>     *  1) Xalan (or more properly, Xalan-interpretive) and XSLTC are names of<a name="line.48"></a>
+<FONT color="green">049</FONT>     *     components.<a name="line.49"></a>
+<FONT color="green">050</FONT>     *     XSLT is an acronym for "XML Stylesheet Language: Transformations".<a name="line.50"></a>
+<FONT color="green">051</FONT>     *     XSLTC is an acronym for XSLT Compiler.<a name="line.51"></a>
+<FONT color="green">052</FONT>     *<a name="line.52"></a>
+<FONT color="green">053</FONT>     *  2) A stylesheet is a description of how to transform an input XML document<a name="line.53"></a>
+<FONT color="green">054</FONT>     *     into a resultant XML document (or HTML document or text).  The<a name="line.54"></a>
+<FONT color="green">055</FONT>     *     stylesheet itself is described in the form of an XML document.<a name="line.55"></a>
+<FONT color="green">056</FONT>     *<a name="line.56"></a>
+<FONT color="green">057</FONT>     *  3) A template is a component of a stylesheet that is used to match a<a name="line.57"></a>
+<FONT color="green">058</FONT>     *     particular portion of an input document and specifies the form of the<a name="line.58"></a>
+<FONT color="green">059</FONT>     *     corresponding portion of the output document.<a name="line.59"></a>
+<FONT color="green">060</FONT>     *<a name="line.60"></a>
+<FONT color="green">061</FONT>     *  4) An element is a mark-up tag in an XML document; an attribute is a<a name="line.61"></a>
+<FONT color="green">062</FONT>     *     modifier on the tag.  For example, in &lt;elem attr='val' attr2='val2'&gt;<a name="line.62"></a>
+<FONT color="green">063</FONT>     *     "elem" is an element name, "attr" and "attr2" are attribute names with<a name="line.63"></a>
+<FONT color="green">064</FONT>     *     the values "val" and "val2", respectively.<a name="line.64"></a>
+<FONT color="green">065</FONT>     *<a name="line.65"></a>
+<FONT color="green">066</FONT>     *  5) A namespace declaration is a special attribute that is used to associate<a name="line.66"></a>
+<FONT color="green">067</FONT>     *     a prefix with a URI (the namespace).  The meanings of element names and<a name="line.67"></a>
+<FONT color="green">068</FONT>     *     attribute names that use that prefix are defined with respect to that<a name="line.68"></a>
+<FONT color="green">069</FONT>     *     namespace.<a name="line.69"></a>
+<FONT color="green">070</FONT>     *<a name="line.70"></a>
+<FONT color="green">071</FONT>     *  6) "Translet" is an invented term that describes the class file that<a name="line.71"></a>
+<FONT color="green">072</FONT>     *     results from compiling an XML stylesheet into a Java class.<a name="line.72"></a>
+<FONT color="green">073</FONT>     *<a name="line.73"></a>
+<FONT color="green">074</FONT>     *  7) XPath is a specification that describes a notation for identifying<a name="line.74"></a>
+<FONT color="green">075</FONT>     *     nodes in a tree-structured representation of an XML document.  An<a name="line.75"></a>
+<FONT color="green">076</FONT>     *     instance of that notation is referred to as an XPath expression.<a name="line.76"></a>
+<FONT color="green">077</FONT>     *<a name="line.77"></a>
+<FONT color="green">078</FONT>     */<a name="line.78"></a>
+<FONT color="green">079</FONT>    <a name="line.79"></a>
+<FONT color="green">080</FONT>      /*<a name="line.80"></a>
+<FONT color="green">081</FONT>       * Message keys<a name="line.81"></a>
+<FONT color="green">082</FONT>       */<a name="line.82"></a>
+<FONT color="green">083</FONT>      public static final String ER_FUNCTION_NOT_SUPPORTED = "ER_FUNCTION_NOT_SUPPORTED";<a name="line.83"></a>
+<FONT color="green">084</FONT>      public static final String ER_CANNOT_OVERWRITE_CAUSE = "ER_CANNOT_OVERWRITE_CAUSE";<a name="line.84"></a>
+<FONT color="green">085</FONT>      public static final String ER_NO_DEFAULT_IMPL = "ER_NO_DEFAULT_IMPL";<a name="line.85"></a>
+<FONT color="green">086</FONT>      public static final String ER_CHUNKEDINTARRAY_NOT_SUPPORTED = "ER_CHUNKEDINTARRAY_NOT_SUPPORTED";<a name="line.86"></a>
+<FONT color="green">087</FONT>      public static final String ER_OFFSET_BIGGER_THAN_SLOT = "ER_OFFSET_BIGGER_THAN_SLOT";<a name="line.87"></a>
+<FONT color="green">088</FONT>      public static final String ER_COROUTINE_NOT_AVAIL = "ER_COROUTINE_NOT_AVAIL";<a name="line.88"></a>
+<FONT color="green">089</FONT>      public static final String ER_COROUTINE_CO_EXIT = "ER_COROUTINE_CO_EXIT";<a name="line.89"></a>
+<FONT color="green">090</FONT>      public static final String ER_COJOINROUTINESET_FAILED = "ER_COJOINROUTINESET_FAILED";<a name="line.90"></a>
+<FONT color="green">091</FONT>      public static final String ER_COROUTINE_PARAM = "ER_COROUTINE_PARAM";<a name="line.91"></a>
+<FONT color="green">092</FONT>      public static final String ER_PARSER_DOTERMINATE_ANSWERS = "ER_PARSER_DOTERMINATE_ANSWERS";<a name="line.92"></a>
+<FONT color="green">093</FONT>      public static final String ER_NO_PARSE_CALL_WHILE_PARSING = "ER_NO_PARSE_CALL_WHILE_PARSING";<a name="line.93"></a>
+<FONT color="green">094</FONT>      public static final String ER_TYPED_ITERATOR_AXIS_NOT_IMPLEMENTED = "ER_TYPED_ITERATOR_AXIS_NOT_IMPLEMENTED";<a name="line.94"></a>
+<FONT color="green">095</FONT>      public static final String ER_ITERATOR_AXIS_NOT_IMPLEMENTED = "ER_ITERATOR_AXIS_NOT_IMPLEMENTED";<a name="line.95"></a>
+<FONT color="green">096</FONT>      public static final String ER_ITERATOR_CLONE_NOT_SUPPORTED = "ER_ITERATOR_CLONE_NOT_SUPPORTED";<a name="line.96"></a>
+<FONT color="green">097</FONT>      public static final String ER_UNKNOWN_AXIS_TYPE = "ER_UNKNOWN_AXIS_TYPE";<a name="line.97"></a>
+<FONT color="green">098</FONT>      public static final String ER_AXIS_NOT_SUPPORTED = "ER_AXIS_NOT_SUPPORTED";<a name="line.98"></a>
+<FONT color="green">099</FONT>      public static final String ER_NO_DTMIDS_AVAIL = "ER_NO_DTMIDS_AVAIL";<a name="line.99"></a>
+<FONT color="green">100</FONT>      public static final String ER_NOT_SUPPORTED = "ER_NOT_SUPPORTED";<a name="line.100"></a>
+<FONT color="green">101</FONT>      public static final String ER_NODE_NON_NULL = "ER_NODE_NON_NULL";<a name="line.101"></a>
+<FONT color="green">102</FONT>      public static final String ER_COULD_NOT_RESOLVE_NODE = "ER_COULD_NOT_RESOLVE_NODE";<a name="line.102"></a>
+<FONT color="green">103</FONT>      public static final String ER_STARTPARSE_WHILE_PARSING = "ER_STARTPARSE_WHILE_PARSING";<a name="line.103"></a>
+<FONT color="green">104</FONT>      public static final String ER_STARTPARSE_NEEDS_SAXPARSER = "ER_STARTPARSE_NEEDS_SAXPARSER";<a name="line.104"></a>
+<FONT color="green">105</FONT>      public static final String ER_COULD_NOT_INIT_PARSER = "ER_COULD_NOT_INIT_PARSER";<a name="line.105"></a>
+<FONT color="green">106</FONT>      public static final String ER_EXCEPTION_CREATING_POOL = "ER_EXCEPTION_CREATING_POOL";<a name="line.106"></a>
+<FONT color="green">107</FONT>      public static final String ER_PATH_CONTAINS_INVALID_ESCAPE_SEQUENCE = "ER_PATH_CONTAINS_INVALID_ESCAPE_SEQUENCE";<a name="line.107"></a>
+<FONT color="green">108</FONT>      public static final String ER_SCHEME_REQUIRED = "ER_SCHEME_REQUIRED";<a name="line.108"></a>
+<FONT color="green">109</FONT>      public static final String ER_NO_SCHEME_IN_URI = "ER_NO_SCHEME_IN_URI";<a name="line.109"></a>
+<FONT color="green">110</FONT>      public static final String ER_NO_SCHEME_INURI = "ER_NO_SCHEME_INURI";<a name="line.110"></a>
+<FONT color="green">111</FONT>      public static final String ER_PATH_INVALID_CHAR = "ER_PATH_INVALID_CHAR";<a name="line.111"></a>
+<FONT color="green">112</FONT>      public static final String ER_SCHEME_FROM_NULL_STRING = "ER_SCHEME_FROM_NULL_STRING";<a name="line.112"></a>
+<FONT color="green">113</FONT>      public static final String ER_SCHEME_NOT_CONFORMANT = "ER_SCHEME_NOT_CONFORMANT";<a name="line.113"></a>
+<FONT color="green">114</FONT>      public static final String ER_HOST_ADDRESS_NOT_WELLFORMED = "ER_HOST_ADDRESS_NOT_WELLFORMED";<a name="line.114"></a>
+<FONT color="green">115</FONT>      public static final String ER_PORT_WHEN_HOST_NULL = "ER_PORT_WHEN_HOST_NULL";<a name="line.115"></a>
+<FONT color="green">116</FONT>      public static final String ER_INVALID_PORT = "ER_INVALID_PORT";<a name="line.116"></a>
+<FONT color="green">117</FONT>      public static final String ER_FRAG_FOR_GENERIC_URI ="ER_FRAG_FOR_GENERIC_URI";<a name="line.117"></a>
+<FONT color="green">118</FONT>      public static final String ER_FRAG_WHEN_PATH_NULL = "ER_FRAG_WHEN_PATH_NULL";<a name="line.118"></a>
+<FONT color="green">119</FONT>      public static final String ER_FRAG_INVALID_CHAR = "ER_FRAG_INVALID_CHAR";<a name="line.119"></a>
+<FONT color="green">120</FONT>      public static final String ER_PARSER_IN_USE = "ER_PARSER_IN_USE";<a name="line.120"></a>
+<FONT color="green">121</FONT>      public static final String ER_CANNOT_CHANGE_WHILE_PARSING = "ER_CANNOT_CHANGE_WHILE_PARSING";<a name="line.121"></a>
+<FONT color="green">122</FONT>      public static final String ER_SELF_CAUSATION_NOT_PERMITTED = "ER_SELF_CAUSATION_NOT_PERMITTED";<a name="line.122"></a>
+<FONT color="green">123</FONT>      public static final String ER_NO_USERINFO_IF_NO_HOST = "ER_NO_USERINFO_IF_NO_HOST";<a name="line.123"></a>
+<FONT color="green">124</FONT>      public static final String ER_NO_PORT_IF_NO_HOST = "ER_NO_PORT_IF_NO_HOST";<a name="line.124"></a>
+<FONT color="green">125</FONT>      public static final String ER_NO_QUERY_STRING_IN_PATH = "ER_NO_QUERY_STRING_IN_PATH";<a name="line.125"></a>
+<FONT color="green">126</FONT>      public static final String ER_NO_FRAGMENT_STRING_IN_PATH = "ER_NO_FRAGMENT_STRING_IN_PATH";<a name="line.126"></a>
+<FONT color="green">127</FONT>      public static final String ER_CANNOT_INIT_URI_EMPTY_PARMS = "ER_CANNOT_INIT_URI_EMPTY_PARMS";<a name="line.127"></a>
+<FONT color="green">128</FONT>      public static final String ER_METHOD_NOT_SUPPORTED ="ER_METHOD_NOT_SUPPORTED";<a name="line.128"></a>
+<FONT color="green">129</FONT>      public static final String ER_INCRSAXSRCFILTER_NOT_RESTARTABLE = "ER_INCRSAXSRCFILTER_NOT_RESTARTABLE";<a name="line.129"></a>
+<FONT color="green">130</FONT>      public static final String ER_XMLRDR_NOT_BEFORE_STARTPARSE = "ER_XMLRDR_NOT_BEFORE_STARTPARSE";<a name="line.130"></a>
+<FONT color="green">131</FONT>      public static final String ER_AXIS_TRAVERSER_NOT_SUPPORTED = "ER_AXIS_TRAVERSER_NOT_SUPPORTED";<a name="line.131"></a>
+<FONT color="green">132</FONT>      public static final String ER_ERRORHANDLER_CREATED_WITH_NULL_PRINTWRITER = "ER_ERRORHANDLER_CREATED_WITH_NULL_PRINTWRITER";<a name="line.132"></a>
+<FONT color="green">133</FONT>      public static final String ER_SYSTEMID_UNKNOWN = "ER_SYSTEMID_UNKNOWN";<a name="line.133"></a>
+<FONT color="green">134</FONT>      public static final String ER_LOCATION_UNKNOWN = "ER_LOCATION_UNKNOWN";<a name="line.134"></a>
+<FONT color="green">135</FONT>      public static final String ER_PREFIX_MUST_RESOLVE = "ER_PREFIX_MUST_RESOLVE";<a name="line.135"></a>
+<FONT color="green">136</FONT>      public static final String ER_CREATEDOCUMENT_NOT_SUPPORTED = "ER_CREATEDOCUMENT_NOT_SUPPORTED";<a name="line.136"></a>
+<FONT color="green">137</FONT>      public static final String ER_CHILD_HAS_NO_OWNER_DOCUMENT = "ER_CHILD_HAS_NO_OWNER_DOCUMENT";<a name="line.137"></a>
+<FONT color="green">138</FONT>      public static final String ER_CHILD_HAS_NO_OWNER_DOCUMENT_ELEMENT = "ER_CHILD_HAS_NO_OWNER_DOCUMENT_ELEMENT";<a name="line.138"></a>
+<FONT color="green">139</FONT>      public static final String ER_CANT_OUTPUT_TEXT_BEFORE_DOC = "ER_CANT_OUTPUT_TEXT_BEFORE_DOC";<a name="line.139"></a>
+<FONT color="green">140</FONT>      public static final String ER_CANT_HAVE_MORE_THAN_ONE_ROOT = "ER_CANT_HAVE_MORE_THAN_ONE_ROOT";<a name="line.140"></a>
+<FONT color="green">141</FONT>      public static final String ER_ARG_LOCALNAME_NULL = "ER_ARG_LOCALNAME_NULL";<a name="line.141"></a>
+<FONT color="green">142</FONT>      public static final String ER_ARG_LOCALNAME_INVALID = "ER_ARG_LOCALNAME_INVALID";<a name="line.142"></a>
+<FONT color="green">143</FONT>      public static final String ER_ARG_PREFIX_INVALID = "ER_ARG_PREFIX_INVALID";<a name="line.143"></a>
+<FONT color="green">144</FONT>      public static final String ER_NAME_CANT_START_WITH_COLON = "ER_NAME_CANT_START_WITH_COLON";<a name="line.144"></a>
+<FONT color="green">145</FONT>    <a name="line.145"></a>
+<FONT color="green">146</FONT>      /*<a name="line.146"></a>
+<FONT color="green">147</FONT>       * Now fill in the message text.<a name="line.147"></a>
+<FONT color="green">148</FONT>       * Then fill in the message text for that message code in the<a name="line.148"></a>
+<FONT color="green">149</FONT>       * array. Use the new error code as the index into the array.<a name="line.149"></a>
+<FONT color="green">150</FONT>       */<a name="line.150"></a>
+<FONT color="green">151</FONT>    <a name="line.151"></a>
+<FONT color="green">152</FONT>      // Error messages...<a name="line.152"></a>
+<FONT color="green">153</FONT>    <a name="line.153"></a>
+<FONT color="green">154</FONT>      /**<a name="line.154"></a>
+<FONT color="green">155</FONT>       * Get the lookup table for error messages<a name="line.155"></a>
+<FONT color="green">156</FONT>       *<a name="line.156"></a>
+<FONT color="green">157</FONT>       * @return The association list.<a name="line.157"></a>
+<FONT color="green">158</FONT>       */<a name="line.158"></a>
+<FONT color="green">159</FONT>      public Object[][] getContents()<a name="line.159"></a>
+<FONT color="green">160</FONT>      {<a name="line.160"></a>
+<FONT color="green">161</FONT>        return new Object[][] {<a name="line.161"></a>
+<FONT color="green">162</FONT>    <a name="line.162"></a>
+<FONT color="green">163</FONT>      /** Error message ID that has a null message, but takes in a single object.    */<a name="line.163"></a>
+<FONT color="green">164</FONT>        {"ER0000" , "{0}" },<a name="line.164"></a>
+<FONT color="green">165</FONT>    <a name="line.165"></a>
+<FONT color="green">166</FONT>        { ER_FUNCTION_NOT_SUPPORTED,<a name="line.166"></a>
+<FONT color="green">167</FONT>          "A f\u00fcggv\u00e9ny nem t\u00e1mogatott."},<a name="line.167"></a>
+<FONT color="green">168</FONT>    <a name="line.168"></a>
+<FONT color="green">169</FONT>        { ER_CANNOT_OVERWRITE_CAUSE,<a name="line.169"></a>
+<FONT color="green">170</FONT>          "Nem lehet fel\u00fcl\u00edrni az okot"},<a name="line.170"></a>
+<FONT color="green">171</FONT>    <a name="line.171"></a>
+<FONT color="green">172</FONT>        { ER_NO_DEFAULT_IMPL,<a name="line.172"></a>
+<FONT color="green">173</FONT>          "Nem tal\u00e1lhat\u00f3 alap\u00e9rtelmezett megval\u00f3s\u00edt\u00e1s "},<a name="line.173"></a>
+<FONT color="green">174</FONT>    <a name="line.174"></a>
+<FONT color="green">175</FONT>        { ER_CHUNKEDINTARRAY_NOT_SUPPORTED,<a name="line.175"></a>
+<FONT color="green">176</FONT>          "A ChunkedIntArray({0}) jelenleg nem t\u00e1mogatott"},<a name="line.176"></a>
+<FONT color="green">177</FONT>    <a name="line.177"></a>
+<FONT color="green">178</FONT>        { ER_OFFSET_BIGGER_THAN_SLOT,<a name="line.178"></a>
+<FONT color="green">179</FONT>          "Az eltol\u00e1s nagyobb mint a ny\u00edl\u00e1s"},<a name="line.179"></a>
+<FONT color="green">180</FONT>    <a name="line.180"></a>
+<FONT color="green">181</FONT>        { ER_COROUTINE_NOT_AVAIL,<a name="line.181"></a>
+<FONT color="green">182</FONT>          "T\u00e1rs szubrutin nem \u00e9rhet\u0151 el, id={0}"},<a name="line.182"></a>
+<FONT color="green">183</FONT>    <a name="line.183"></a>
+<FONT color="green">184</FONT>        { ER_COROUTINE_CO_EXIT,<a name="line.184"></a>
+<FONT color="green">185</FONT>          "CoroutineManager \u00e9rkezett a co_exit() k\u00e9r\u00e9sre"},<a name="line.185"></a>
+<FONT color="green">186</FONT>    <a name="line.186"></a>
+<FONT color="green">187</FONT>        { ER_COJOINROUTINESET_FAILED,<a name="line.187"></a>
+<FONT color="green">188</FONT>          "A co_joinCoroutineSet() nem siker\u00fclt "},<a name="line.188"></a>
+<FONT color="green">189</FONT>    <a name="line.189"></a>
+<FONT color="green">190</FONT>        { ER_COROUTINE_PARAM,<a name="line.190"></a>
+<FONT color="green">191</FONT>          "T\u00e1rs szubrutin param\u00e9terhiba ({0})"},<a name="line.191"></a>
+<FONT color="green">192</FONT>    <a name="line.192"></a>
+<FONT color="green">193</FONT>        { ER_PARSER_DOTERMINATE_ANSWERS,<a name="line.193"></a>
+<FONT color="green">194</FONT>          "\nV\u00c1RATLAN: \u00c9rtelmez\u0151 doTerminate v\u00e1laszok {0}"},<a name="line.194"></a>
+<FONT color="green">195</FONT>    <a name="line.195"></a>
+<FONT color="green">196</FONT>        { ER_NO_PARSE_CALL_WHILE_PARSING,<a name="line.196"></a>
+<FONT color="green">197</FONT>          "\u00e9rtelmez\u00e9s nem h\u00edvhat\u00f3 meg \u00e9rtelmez\u00e9s k\u00f6zben "},<a name="line.197"></a>
+<FONT color="green">198</FONT>    <a name="line.198"></a>
+<FONT color="green">199</FONT>        { ER_TYPED_ITERATOR_AXIS_NOT_IMPLEMENTED,<a name="line.199"></a>
+<FONT color="green">200</FONT>          "Hiba: A tipiz\u00e1lt iter\u00e1tor a(z) {0} tengelyhez nincs megval\u00f3s\u00edtva"},<a name="line.200"></a>
+<FONT color="green">201</FONT>    <a name="line.201"></a>
+<FONT color="green">202</FONT>        { ER_ITERATOR_AXIS_NOT_IMPLEMENTED,<a name="line.202"></a>
+<FONT color="green">203</FONT>          "Hiba: Az iter\u00e1tor a(z) {0} tengelyhez nincs megval\u00f3s\u00edtva "},<a name="line.203"></a>
+<FONT color="green">204</FONT>    <a name="line.204"></a>
+<FONT color="green">205</FONT>        { ER_ITERATOR_CLONE_NOT_SUPPORTED,<a name="line.205"></a>
+<FONT color="green">206</FONT>          "Az iter\u00e1tor kl\u00f3noz\u00e1sa nem t\u00e1mogatott"},<a name="line.206"></a>
+<FONT color="green">207</FONT>    <a name="line.207"></a>
+<FONT color="green">208</FONT>        { ER_UNKNOWN_AXIS_TYPE,<a name="line.208"></a>
+<FONT color="green">209</FONT>          "Ismeretlen tengely bej\u00e1r\u00e1si \u00fat t\u00edpus: {0}"},<a name="line.209"></a>
+<FONT color="green">210</FONT>    <a name="line.210"></a>
+<FONT color="green">211</FONT>        { ER_AXIS_NOT_SUPPORTED,<a name="line.211"></a>
+<FONT color="green">212</FONT>          "A tengely bej\u00e1r\u00e1si \u00fat nem t\u00e1mogatott: {0}"},<a name="line.212"></a>
+<FONT color="green">213</FONT>    <a name="line.213"></a>
+<FONT color="green">214</FONT>        { ER_NO_DTMIDS_AVAIL,<a name="line.214"></a>
+<FONT color="green">215</FONT>          "Nincs t\u00f6bb DTM azonos\u00edt\u00f3"},<a name="line.215"></a>
+<FONT color="green">216</FONT>    <a name="line.216"></a>
+<FONT color="green">217</FONT>        { ER_NOT_SUPPORTED,<a name="line.217"></a>
+<FONT color="green">218</FONT>          "Nem t\u00e1mogatott: {0}"},<a name="line.218"></a>
+<FONT color="green">219</FONT>    <a name="line.219"></a>
+<FONT color="green">220</FONT>        { ER_NODE_NON_NULL,<a name="line.220"></a>
+<FONT color="green">221</FONT>          "A csom\u00f3pont nem lehet null a getDTMHandleFromNode f\u00fcggv\u00e9nyhez"},<a name="line.221"></a>
+<FONT color="green">222</FONT>    <a name="line.222"></a>
+<FONT color="green">223</FONT>        { ER_COULD_NOT_RESOLVE_NODE,<a name="line.223"></a>
+<FONT color="green">224</FONT>          "A csom\u00f3pontot nem lehet azonos\u00edt\u00f3ra feloldani"},<a name="line.224"></a>
+<FONT color="green">225</FONT>    <a name="line.225"></a>
+<FONT color="green">226</FONT>        { ER_STARTPARSE_WHILE_PARSING,<a name="line.226"></a>
+<FONT color="green">227</FONT>           "A startParse f\u00fcggv\u00e9nyt nem h\u00edvhatja meg \u00e9rtelmez\u00e9s k\u00f6zben"},<a name="line.227"></a>
+<FONT color="green">228</FONT>    <a name="line.228"></a>
+<FONT color="green">229</FONT>        { ER_STARTPARSE_NEEDS_SAXPARSER,<a name="line.229"></a>
+<FONT color="green">230</FONT>           "A startParse f\u00fcggv\u00e9nyhez nemnull SAXParser sz\u00fcks\u00e9ges"},<a name="line.230"></a>
+<FONT color="green">231</FONT>    <a name="line.231"></a>
+<FONT color="green">232</FONT>        { ER_COULD_NOT_INIT_PARSER,<a name="line.232"></a>
+<FONT color="green">233</FONT>           "Nem lehet inicializ\u00e1lni az \u00e9rtelmez\u0151t ezzel"},<a name="line.233"></a>
+<FONT color="green">234</FONT>    <a name="line.234"></a>
+<FONT color="green">235</FONT>        { ER_EXCEPTION_CREATING_POOL,<a name="line.235"></a>
+<FONT color="green">236</FONT>           "kiv\u00e9tel egy \u00faj t\u00e1rol\u00f3p\u00e9ld\u00e1ny l\u00e9trehoz\u00e1sakor"},<a name="line.236"></a>
+<FONT color="green">237</FONT>    <a name="line.237"></a>
+<FONT color="green">238</FONT>        { ER_PATH_CONTAINS_INVALID_ESCAPE_SEQUENCE,<a name="line.238"></a>
+<FONT color="green">239</FONT>           "Az el\u00e9r\u00e9si \u00fat \u00e9rv\u00e9nytelen vez\u00e9rl\u0151 jelsorozatot tartalmaz"},<a name="line.239"></a>
+<FONT color="green">240</FONT>    <a name="line.240"></a>
+<FONT color="green">241</FONT>        { ER_SCHEME_REQUIRED,<a name="line.241"></a>
+<FONT color="green">242</FONT>           "S\u00e9ma sz\u00fcks\u00e9ges."},<a name="line.242"></a>
+<FONT color="green">243</FONT>    <a name="line.243"></a>
+<FONT color="green">244</FONT>        { ER_NO_SCHEME_IN_URI,<a name="line.244"></a>
+<FONT color="green">245</FONT>           "Nem tal\u00e1lhat\u00f3 s\u00e9ma az URI-ban: {0}"},<a name="line.245"></a>
+<FONT color="green">246</FONT>    <a name="line.246"></a>
+<FONT color="green">247</FONT>        { ER_NO_SCHEME_INURI,<a name="line.247"></a>
+<FONT color="green">248</FONT>           "Nem tal\u00e1lhat\u00f3 s\u00e9ma az URI-ban"},<a name="line.248"></a>
+<FONT color="green">249</FONT>    <a name="line.249"></a>
+<FONT color="green">250</FONT>        { ER_PATH_INVALID_CHAR,<a name="line.250"></a>
+<FONT color="green">251</FONT>           "Az el\u00e9r\u00e9si \u00fat \u00e9rv\u00e9nytelen karaktert tartalmaz: {0}"},<a name="line.251"></a>
+<FONT color="green">252</FONT>    <a name="line.252"></a>
+<FONT color="green">253</FONT>        { ER_SCHEME_FROM_NULL_STRING,<a name="line.253"></a>
+<FONT color="green">254</FONT>           "Nem lehet be\u00e1ll\u00edtani a s\u00e9m\u00e1t null karaktersorozatb\u00f3l"},<a name="line.254"></a>
+<FONT color="green">255</FONT>    <a name="line.255"></a>
+<FONT color="green">256</FONT>        { ER_SCHEME_NOT_CONFORMANT,<a name="line.256"></a>
+<FONT color="green">257</FONT>           "A s\u00e9ma nem megfelel\u0151."},<a name="line.257"></a>
+<FONT color="green">258</FONT>    <a name="line.258"></a>
+<FONT color="green">259</FONT>        { ER_HOST_ADDRESS_NOT_WELLFORMED,<a name="line.259"></a>
+<FONT color="green">260</FONT>           "A hoszt nem j\u00f3l form\u00e1zott c\u00edm"},<a name="line.260"></a>
+<FONT color="green">261</FONT>    <a name="line.261"></a>
+<FONT color="green">262</FONT>        { ER_PORT_WHEN_HOST_NULL,<a name="line.262"></a>
+<FONT color="green">263</FONT>           "A portot nem \u00e1ll\u00edthatja be, ha a hoszt null"},<a name="line.263"></a>
+<FONT color="green">264</FONT>    <a name="line.264"></a>
+<FONT color="green">265</FONT>        { ER_INVALID_PORT,<a name="line.265"></a>
+<FONT color="green">266</FONT>           "\u00c9rv\u00e9nytelen portsz\u00e1m"},<a name="line.266"></a>
+<FONT color="green">267</FONT>    <a name="line.267"></a>
+<FONT color="green">268</FONT>        { ER_FRAG_FOR_GENERIC_URI,<a name="line.268"></a>
+<FONT color="green">269</FONT>           "Csak \u00e1ltal\u00e1nos URI-hoz \u00e1ll\u00edthat be t\u00f6red\u00e9ket "},<a name="line.269"></a>
+<FONT color="green">270</FONT>    <a name="line.270"></a>
+<FONT color="green">271</FONT>        { ER_FRAG_WHEN_PATH_NULL,<a name="line.271"></a>
+<FONT color="green">272</FONT>           "A t\u00f6red\u00e9ket nem \u00e1ll\u00edthatja be, ha az el\u00e9r\u00e9si \u00fat null"},<a name="line.272"></a>
+<FONT color="green">273</FONT>    <a name="line.273"></a>
+<FONT color="green">274</FONT>        { ER_FRAG_INVALID_CHAR,<a name="line.274"></a>
+<FONT color="green">275</FONT>           "A t\u00f6red\u00e9k \u00e9rv\u00e9nytelen karaktert tartalmaz"},<a name="line.275"></a>
+<FONT color="green">276</FONT>    <a name="line.276"></a>
+<FONT color="green">277</FONT>        { ER_PARSER_IN_USE,<a name="line.277"></a>
+<FONT color="green">278</FONT>          "Az \u00e9rtelmez\u0151 m\u00e1r haszn\u00e1latban van"},<a name="line.278"></a>
+<FONT color="green">279</FONT>    <a name="line.279"></a>
+<FONT color="green">280</FONT>        { ER_CANNOT_CHANGE_WHILE_PARSING,<a name="line.280"></a>
+<FONT color="green">281</FONT>          "Nem v\u00e1ltoztathat\u00f3 meg a(z) {0} {1} \u00e9rtelmez\u00e9s k\u00f6zben"},<a name="line.281"></a>
+<FONT color="green">282</FONT>    <a name="line.282"></a>
+<FONT color="green">283</FONT>        { ER_SELF_CAUSATION_NOT_PERMITTED,<a name="line.283"></a>
+<FONT color="green">284</FONT>          "Az \u00f6n-megokol\u00e1s nem megengedett"},<a name="line.284"></a>
+<FONT color="green">285</FONT>    <a name="line.285"></a>
+<FONT color="green">286</FONT>        { ER_NO_USERINFO_IF_NO_HOST,<a name="line.286"></a>
+<FONT color="green">287</FONT>          "Nem adhatja meg a felhaszn\u00e1l\u00f3i inform\u00e1ci\u00f3kat, ha nincs megadva hoszt"},<a name="line.287"></a>
+<FONT color="green">288</FONT>    <a name="line.288"></a>
+<FONT color="green">289</FONT>        { ER_NO_PORT_IF_NO_HOST,<a name="line.289"></a>
+<FONT color="green">290</FONT>          "Nem adhatja meg a portot, ha nincs megadva hoszt"},<a name="line.290"></a>
+<FONT color="green">291</FONT>    <a name="line.291"></a>
+<FONT color="green">292</FONT>        { ER_NO_QUERY_STRING_IN_PATH,<a name="line.292"></a>
+<FONT color="green">293</FONT>          "Nem adhat meg lek\u00e9rdez\u00e9si karaktersorozatot az el\u00e9r\u00e9si \u00fatban \u00e9s a lek\u00e9rdez\u00e9si karaktersorozatban"},<a name="line.293"></a>
+<FONT color="green">294</FONT>    <a name="line.294"></a>
+<FONT color="green">295</FONT>        { ER_NO_FRAGMENT_STRING_IN_PATH,<a name="line.295"></a>
+<FONT color="green">296</FONT>          "Nem adhat meg t\u00f6red\u00e9ket az el\u00e9r\u00e9si \u00fatban \u00e9s a t\u00f6red\u00e9kben is"},<a name="line.296"></a>
+<FONT color="green">297</FONT>    <a name="line.297"></a>
+<FONT color="green">298</FONT>        { ER_CANNOT_INIT_URI_EMPTY_PARMS,<a name="line.298"></a>
+<FONT color="green">299</FONT>          "Az URI nem inicializ\u00e1lhat\u00f3 \u00fcres param\u00e9terekkel"},<a name="line.299"></a>
+<FONT color="green">300</FONT>    <a name="line.300"></a>
+<FONT color="green">301</FONT>        { ER_METHOD_NOT_SUPPORTED,<a name="line.301"></a>
+<FONT color="green">302</FONT>          "A met\u00f3dus m\u00e9g nem t\u00e1mogatott "},<a name="line.302"></a>
+<FONT color="green">303</FONT>    <a name="line.303"></a>
+<FONT color="green">304</FONT>        { ER_INCRSAXSRCFILTER_NOT_RESTARTABLE,<a name="line.304"></a>
+<FONT color="green">305</FONT>          "Az IncrementalSAXSource_Filter jelenleg nem \u00ednd\u00edthat\u00f3 \u00fajra"},<a name="line.305"></a>
+<FONT color="green">306</FONT>    <a name="line.306"></a>
+<FONT color="green">307</FONT>        { ER_XMLRDR_NOT_BEFORE_STARTPARSE,<a name="line.307"></a>
+<FONT color="green">308</FONT>          "Az XMLReader nem a startParse k\u00e9r\u00e9s el\u0151tt van "},<a name="line.308"></a>
+<FONT color="green">309</FONT>    <a name="line.309"></a>
+<FONT color="green">310</FONT>        { ER_AXIS_TRAVERSER_NOT_SUPPORTED,<a name="line.310"></a>
+<FONT color="green">311</FONT>          "A tengely bej\u00e1r\u00e1si \u00fat nem t\u00e1mogatott: {0}"},<a name="line.311"></a>
+<FONT color="green">312</FONT>    <a name="line.312"></a>
+<FONT color="green">313</FONT>        { ER_ERRORHANDLER_CREATED_WITH_NULL_PRINTWRITER,<a name="line.313"></a>
+<FONT color="green">314</FONT>          "A ListingErrorHandler null PrintWriter \u00e9rt\u00e9kkel j\u00f6tt l\u00e9tre."},<a name="line.314"></a>
+<FONT color="green">315</FONT>    <a name="line.315"></a>
+<FONT color="green">316</FONT>        { ER_SYSTEMID_UNKNOWN,<a name="line.316"></a>
+<FONT color="green">317</FONT>          "Ismeretlen SystemId"},<a name="line.317"></a>
+<FONT color="green">318</FONT>    <a name="line.318"></a>
+<FONT color="green">319</FONT>        { ER_LOCATION_UNKNOWN,<a name="line.319"></a>
+<FONT color="green">320</FONT>          "A hiba helye ismeretlen"},<a name="line.320"></a>
+<FONT color="green">321</FONT>    <a name="line.321"></a>
+<FONT color="green">322</FONT>        { ER_PREFIX_MUST_RESOLVE,<a name="line.322"></a>
+<FONT color="green">323</FONT>          "Az el\u0151tagnak egy n\u00e9vt\u00e9rre kell felold\u00f3dnia: {0}"},<a name="line.323"></a>
+<FONT color="green">324</FONT>    <a name="line.324"></a>
+<FONT color="green">325</FONT>        { ER_CREATEDOCUMENT_NOT_SUPPORTED,<a name="line.325"></a>
+<FONT color="green">326</FONT>          "A createDocument() nem t\u00e1mogatott az XPathContext-ben."},<a name="line.326"></a>
+<FONT color="green">327</FONT>    <a name="line.327"></a>
+<FONT color="green">328</FONT>        { ER_CHILD_HAS_NO_OWNER_DOCUMENT,<a name="line.328"></a>
+<FONT color="green">329</FONT>          "Az attrib\u00fatum ut\u00f3dnak nincs tulajdonos dokumentuma."},<a name="line.329"></a>
+<FONT color="green">330</FONT>    <a name="line.330"></a>
+<FONT color="green">331</FONT>        { ER_CHILD_HAS_NO_OWNER_DOCUMENT_ELEMENT,<a name="line.331"></a>
+<FONT color="green">332</FONT>          "Az attrib\u00fatum ut\u00f3dnak nincs tulajdonos dokumentumeleme."},<a name="line.332"></a>
+<FONT color="green">333</FONT>    <a name="line.333"></a>
+<FONT color="green">334</FONT>        { ER_CANT_OUTPUT_TEXT_BEFORE_DOC,<a name="line.334"></a>
+<FONT color="green">335</FONT>          "Figyelmeztet\u00e9s: nem lehet sz\u00f6veget ki\u00edrni dokumentum elem el\u0151tt. Figyelmen k\u00edv\u00fcl marad..."},<a name="line.335"></a>
+<FONT color="green">336</FONT>    <a name="line.336"></a>
+<FONT color="green">337</FONT>        { ER_CANT_HAVE_MORE_THAN_ONE_ROOT,<a name="line.337"></a>
+<FONT color="green">338</FONT>          "Nem lehet egyn\u00e9l t\u00f6bb gy\u00f6k\u00e9r a DOM-ban"},<a name="line.338"></a>
+<FONT color="green">339</FONT>    <a name="line.339"></a>
+<FONT color="green">340</FONT>        { ER_ARG_LOCALNAME_NULL,<a name="line.340"></a>
+<FONT color="green">341</FONT>           "A 'localName' argumentum null"},<a name="line.341"></a>
+<FONT color="green">342</FONT>    <a name="line.342"></a>
+<FONT color="green">343</FONT>        // Note to translators:  A QNAME has the syntactic form [NCName:]NCName<a name="line.343"></a>
+<FONT color="green">344</FONT>        // The localname is the portion after the optional colon; the message indicates<a name="line.344"></a>
+<FONT color="green">345</FONT>        // that there is a problem with that part of the QNAME.<a name="line.345"></a>
+<FONT color="green">346</FONT>        { ER_ARG_LOCALNAME_INVALID,<a name="line.346"></a>
+<FONT color="green">347</FONT>           "A QNAME-beli helyi n\u00e9vnek egy \u00e9rv\u00e9nyes NCName-nek kell lennie"},<a name="line.347"></a>
+<FONT color="green">348</FONT>    <a name="line.348"></a>
+<FONT color="green">349</FONT>        // Note to translators:  A QNAME has the syntactic form [NCName:]NCName<a name="line.349"></a>
+<FONT color="green">350</FONT>        // The prefix is the portion before the optional colon; the message indicates<a name="line.350"></a>
+<FONT color="green">351</FONT>        // that there is a problem with that part of the QNAME.<a name="line.351"></a>
+<FONT color="green">352</FONT>        { ER_ARG_PREFIX_INVALID,<a name="line.352"></a>
+<FONT color="green">353</FONT>           "A QNAME-beli el\u0151tagnak \u00e9rv\u00e9nyes NCName-nek kell lennie"},<a name="line.353"></a>
+<FONT color="green">354</FONT>    <a name="line.354"></a>
+<FONT color="green">355</FONT>        { ER_NAME_CANT_START_WITH_COLON,<a name="line.355"></a>
+<FONT color="green">356</FONT>          "A n\u00e9v nem kezd\u0151dhet kett\u0151sponttal"},<a name="line.356"></a>
+<FONT color="green">357</FONT>    <a name="line.357"></a>
+<FONT color="green">358</FONT>        { "BAD_CODE", "A createMessage egyik param\u00e9tere nincs a megfelel\u0151 tartom\u00e1nyban"},<a name="line.358"></a>
+<FONT color="green">359</FONT>        { "FORMAT_FAILED", "Kiv\u00e9tel t\u00f6rt\u00e9nt a messageFormat h\u00edv\u00e1sa k\u00f6zben"},<a name="line.359"></a>
+<FONT color="green">360</FONT>        { "line", "Sor #"},<a name="line.360"></a>
+<FONT color="green">361</FONT>        { "column","Oszlop #"}<a name="line.361"></a>
+<FONT color="green">362</FONT>    <a name="line.362"></a>
+<FONT color="green">363</FONT>    <a name="line.363"></a>
+<FONT color="green">364</FONT>      };<a name="line.364"></a>
+<FONT color="green">365</FONT>      }<a name="line.365"></a>
+<FONT color="green">366</FONT>    <a name="line.366"></a>
+<FONT color="green">367</FONT>      /**<a name="line.367"></a>
+<FONT color="green">368</FONT>       *   Return a named ResourceBundle for a particular locale.  This method mimics the behavior<a name="line.368"></a>
+<FONT color="green">369</FONT>       *   of ResourceBundle.getBundle().<a name="line.369"></a>
+<FONT color="green">370</FONT>       *<a name="line.370"></a>
+<FONT color="green">371</FONT>       *   @param className the name of the class that implements the resource bundle.<a name="line.371"></a>
+<FONT color="green">372</FONT>       *   @return the ResourceBundle<a name="line.372"></a>
+<FONT color="green">373</FONT>       *   @throws MissingResourceException<a name="line.373"></a>
+<FONT color="green">374</FONT>       */<a name="line.374"></a>
+<FONT color="green">375</FONT>      public static final XMLErrorResources loadResourceBundle(String className)<a name="line.375"></a>
+<FONT color="green">376</FONT>              throws MissingResourceException<a name="line.376"></a>
+<FONT color="green">377</FONT>      {<a name="line.377"></a>
+<FONT color="green">378</FONT>    <a name="line.378"></a>
+<FONT color="green">379</FONT>        Locale locale = Locale.getDefault();<a name="line.379"></a>
+<FONT color="green">380</FONT>        String suffix = getResourceSuffix(locale);<a name="line.380"></a>
+<FONT color="green">381</FONT>    <a name="line.381"></a>
+<FONT color="green">382</FONT>        try<a name="line.382"></a>
+<FONT color="green">383</FONT>        {<a name="line.383"></a>
+<FONT color="green">384</FONT>    <a name="line.384"></a>
+<FONT color="green">385</FONT>          // first try with the given locale<a name="line.385"></a>
+<FONT color="green">386</FONT>          return (XMLErrorResources) ResourceBundle.getBundle(className<a name="line.386"></a>
+<FONT color="green">387</FONT>                  + suffix, locale);<a name="line.387"></a>
+<FONT color="green">388</FONT>        }<a name="line.388"></a>
+<FONT color="green">389</FONT>        catch (MissingResourceException e)<a name="line.389"></a>
+<FONT color="green">390</FONT>        {<a name="line.390"></a>
+<FONT color="green">391</FONT>          try  // try to fall back to en_US if we can't load<a name="line.391"></a>
+<FONT color="green">392</FONT>          {<a name="line.392"></a>
+<FONT color="green">393</FONT>    <a name="line.393"></a>
+<FONT color="green">394</FONT>            // Since we can't find the localized property file,<a name="line.394"></a>
+<FONT color="green">395</FONT>            // fall back to en_US.<a name="line.395"></a>
+<FONT color="green">396</FONT>            return (XMLErrorResources) ResourceBundle.getBundle(className,<a name="line.396"></a>
+<FONT color="green">397</FONT>                    new Locale("hu", "HU"));<a name="line.397"></a>
+<FONT color="green">398</FONT>          }<a name="line.398"></a>
+<FONT color="green">399</FONT>          catch (MissingResourceException e2)<a name="line.399"></a>
+<FONT color="green">400</FONT>          {<a name="line.400"></a>
+<FONT color="green">401</FONT>    <a name="line.401"></a>
+<FONT color="green">402</FONT>            // Now we are really in trouble.<a name="line.402"></a>
+<FONT color="green">403</FONT>            // very bad, definitely very bad...not going to get very far<a name="line.403"></a>
+<FONT color="green">404</FONT>            throw new MissingResourceException(<a name="line.404"></a>
+<FONT color="green">405</FONT>              "Could not load any resource bundles.", className, "");<a name="line.405"></a>
+<FONT color="green">406</FONT>          }<a name="line.406"></a>
+<FONT color="green">407</FONT>        }<a name="line.407"></a>
+<FONT color="green">408</FONT>      }<a name="line.408"></a>
+<FONT color="green">409</FONT>    <a name="line.409"></a>
+<FONT color="green">410</FONT>      /**<a name="line.410"></a>
+<FONT color="green">411</FONT>       * Return the resource file suffic for the indicated locale<a name="line.411"></a>
+<FONT color="green">412</FONT>       * For most locales, this will be based the language code.  However<a name="line.412"></a>
+<FONT color="green">413</FONT>       * for Chinese, we do distinguish between Taiwan and PRC<a name="line.413"></a>
+<FONT color="green">414</FONT>       *<a name="line.414"></a>
+<FONT color="green">415</FONT>       * @param locale the locale<a name="line.415"></a>
+<FONT color="green">416</FONT>       * @return an String suffix which canbe appended to a resource name<a name="line.416"></a>
+<FONT color="green">417</FONT>       */<a name="line.417"></a>
+<FONT color="green">418</FONT>      private static final String getResourceSuffix(Locale locale)<a name="line.418"></a>
+<FONT color="green">419</FONT>      {<a name="line.419"></a>
+<FONT color="green">420</FONT>    <a name="line.420"></a>
+<FONT color="green">421</FONT>        String suffix = "_" + locale.getLanguage();<a name="line.421"></a>
+<FONT color="green">422</FONT>        String country = locale.getCountry();<a name="line.422"></a>
+<FONT color="green">423</FONT>    <a name="line.423"></a>
+<FONT color="green">424</FONT>        if (country.equals("TW"))<a name="line.424"></a>
+<FONT color="green">425</FONT>          suffix += "_" + country;<a name="line.425"></a>
+<FONT color="green">426</FONT>    <a name="line.426"></a>
+<FONT color="green">427</FONT>        return suffix;<a name="line.427"></a>
+<FONT color="green">428</FONT>      }<a name="line.428"></a>
+<FONT color="green">429</FONT>    <a name="line.429"></a>
+<FONT color="green">430</FONT>    }<a name="line.430"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>
