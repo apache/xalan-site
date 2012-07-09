@@ -27,7 +27,9 @@
 -->
 <group label="Projects">
   <external href="xalan-c/index.html" label="Xalan C++"/>  
-  <external href="http://xml.apache.org/xalan-j/index.html" label="Xalan Java"/>
+  <external href="old/xalan-c/index.html" label="Xalan C++ (old)"/>
+  <external href="xalan-j/index.html" label="Xalan Java"/>
+  <external href="old/xalan-j/index.html" label="Xalan Java (old)"/>
 </group>
   <separator/>  
 <group label="Mail Lists">
