@@ -35,8 +35,8 @@ at the left of the screen. </p>
 * Xalan C++ Version 1.10 [xml.apache.org/xalan-c]
 * Xalan Java Version 2.7.1 [xml.apache.org/xalan-j]
 -->
-  <li><jump href="http://xml.apache.org/xalan-c">Xalan C++ Version 1.10</jump></li>
-  <li><jump href="http://xml.apache.org/xalan-j">Xalan Java Version 2.7.1</jump></li>
+  <li><jump href="old/xalan-c/index.html">Xalan C++ Version 1.10</jump></li>
+  <li><jump href="old/xalan-j/index.html">Xalan Java Version 2.7.1</jump></li>
 </ul>
 
 <p>The links on the left navigation panel point to the current documentation.</p>
@@ -48,8 +48,8 @@ As our charter will tell you, the Apache Xalan Project is a collaborative softwa
 project dedicated to providing robust, full-featured, commercial-quality, and 
 freely available XSLT support on a wide variety of platforms.</p>
 <p>There are currently two subprojects under the Apache Xalan Project:  
-<jump href="http://xml.apache.org/xalan-c/">Xalan C++</jump>, and 
-<jump href="http://xml.apache.org/xalan-j/">Xalan Java</jump>, representing
+<jump href="old/xalan-c/index.html">Xalan C++</jump>, and 
+<jump href="old/xalan-j/index.html">Xalan Java</jump>, representing
 C++ and Java implementations of the <jump href="http://www.w3.org/TR/xslt">W3C XSL Transformations (XSLT) 
 Version 1.0</jump> and the <jump href="http://www.w3.org/TR/xpath">XML Path Language (XPath) Version 1.0</jump> 
 recommendations.</p> 
