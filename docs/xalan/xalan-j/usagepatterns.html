@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
 <title>ASF: Basic usage patterns</title>
-<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
 </head>
@@ -223,7 +223,7 @@ XSLTC</a> for information on using the Xalan-Java Compiling processor.</td>
 </tr>
 </table>
 <br />
-<a name="basic">&#8204;</a>
+<a name="basic">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -265,7 +265,7 @@ transformer.transform
 <td class="noteTxt">For a working example of this model at its simplest, see SimpleTransform.java in the java/samples/SimpleTransform subdirectory.</td>
 </tr>
 </table>
-  <a name="transformerfactory">&#8204;</a>
+  <a name="transformerfactory">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -273,7 +273,7 @@ transformer.transform
   <p>
 <a href="apidocs/javax/xml/transform/TransformerFactory.html">TransformerFactory</a> is an abstract class with a static newInstance() method that instantiates the concrete subclass designated by the javax.xml.transform.TransformerFactory system property.</p>
   <p>The default setting for this system property is <a href="apidocs/org/apache/xalan/processor/TransformerFactoryImpl.html">org.apache.xalan.processor.TransformerFactoryImpl</a>.</p>
-<a name="transformer">&#8204;</a>
+<a name="transformer">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -288,7 +288,7 @@ transformer.transform
 <td class="noteTxt">If you plan to use the stylesheet Source to transform multiple XML Sources, you should use the TransformerFactory <a href="apidocs/javax/xml/transform/TransformerFactory.html#newTemplates(javax.xml.transform.Source)">newTemplates(Source xslSource)</a> method to explicitly generate a Templates object. For each transformation, use the Templates object to generate a new Transformer. For the details, see <a href="#multithreading">Multithreading</a>.</td>
 </tr>
 </table>
-<a name="transformation">&#8204;</a>
+<a name="transformation">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -296,7 +296,7 @@ transformer.transform
 <p>Use the Transformer <a href="apidocs/javax/xml/transform/Transformer.html#transform(javax.xml.transform.Source,javax.xml.transform.Result">transform(Source xmlSource, Result transformResult)</a> method to transform  the XML Source and place the transformation output in a Result object.</p>
 <p>Just as with the stylesheet, you can supply the XML Source in the form of a <a href="apidocs/javax/xml/transform/stream/StreamSource.html">StreamSource</a>, <a href="apidocs/javax/xml/transform/dom/DOMSource.html">DOMSource</a>, or <a href="apidocs/javax/xml/transform/sax/SAXSource.html">SAXSource</a>. Likewise, the Result may be a <a href="apidocs/javax/xml/transform/stream/StreamResult.html">StreamResult</a>, <a href="apidocs/javax/xml/transform/dom/DOMResult.html">DOMResult</a>, or <a href="apidocs/javax/xml/transform/sax/SAXResult.html">SAXResult</a>.</p>
 <p>For each node in the XML source, the Transformer uses the transformation instructions in the Templates object to determine which template to apply: one of the templates in the Templates object, a default template rule as specified in the XSLT spec, or none.</p>
-<a name="plug">&#8204;</a>
+<a name="plug">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -358,7 +358,7 @@ transformer.transform
 <i>Java API for XML Processing</i>
 </b> at 
 <a href="http://java.sun.com/aboutJava/communityprocess/review/jsr063/index.html">JSR-000063 1.1</a>.</p> 
-<a name="outputprops">&#8204;</a>
+<a name="outputprops">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -549,7 +549,7 @@ interface and recieves calls during result tree serialization. If you specify an
 alternate Java class it must implement the ContentHandler interface.</td>
 </tr>
 </table>
-<a name="outputencoding">&#8204;</a>
+<a name="outputencoding">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -560,7 +560,7 @@ use StreamResult(java.io.Writer) to construct a
 If you do, the Writer uses its own encoding rather than the encoding specified in the stylesheet.</p>
 <p>If you want to use a Writer, you can specify an encoding when you create the Writer (java.io.OutputStreamWriter). Once the 
 Writer exists, you cannot reset the encoding it uses.</p>
-<a name="incremental">&#8204;</a>
+<a name="incremental">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -576,7 +576,7 @@ transformation result while the source document is still being parsed. For more 
 <td class="noteTxt">You can also enable incremental transformations with the <a href="commandline.html">command-line utility</a> by including the -INCREMENTAL flag.</td>
 </tr>
 </table>
-<a name="embed">&#8204;</a>
+<a name="embed">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -624,7 +624,7 @@ instructions:</p>
 </li>
   <li>Do not include the <code>-xsl</code> flag.</li>
 </ol>
-<a name="serialize">&#8204;</a>
+<a name="serialize">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -634,7 +634,7 @@ instructions:</p>
 support for this operation. Simply use the TransformerFactory newTransformer() method (no arguments) to create a Transformer 
 that you can use to "copy" a DOMSource to a StreamResult. For examples, see Examples.exampleDOM2DOM(), 
 Examples.exampleSerializeNode(), and Examples.exampleAsSerializer() in the <a href="samples.html#trax">trax (JAXP transform) sample</a>.</p>
-<a name="params">&#8204;</a>
+<a name="params">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -655,7 +655,7 @@ Examples.exampleSerializeNode(), and Examples.exampleAsSerializer() in the <a hr
 quotes (') as string expressions.</td>
 </tr>
 </table>
-<a name="sax">&#8204;</a>
+<a name="sax">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -730,7 +730,7 @@ if (tFactory.getFeature(javax.xml.transform.sax.SAXSource.FEATURE) &amp;&amp;
     to events after the first endDocument event occurs.</td>
 </tr>
 </table>
-<a name="outasin">&#8204;</a>
+<a name="outasin">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -744,7 +744,7 @@ the first TransformerHandler as the ContentHandler for the XMLReader that parses
 </li>
   <li>Use the SAXTransformerFactory to process the stylesheet and create a SAX XMLFilter for each transformation. Set an XMLReader as the parent of the first XMLFilter, the first XMLFilter as the parent of the second XMLFilter, and so on. You launch the series of transformations by instructing the last XMLFilter to parse the XML Source for the first transformation. For more detail and an example, see the <a href="samples.html#usexmlfilters">UseXMLFilters</a> sample.</li>
 </ul>
-<a name="dom">&#8204;</a>
+<a name="dom">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -784,7 +784,7 @@ and place the output in a DOMResult object.</td>
 </tr>
 </table>
 <p>The <a href="samples.html#dom2dom">DOM2DOM</a> illustrates both procedures, and serializes the DOMResult to System.out.</p>
-<a name="xpath">&#8204;</a>
+<a name="xpath">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -797,7 +797,7 @@ and place the output in a DOMResult object.</td>
 see <a href="samples.html#applyxpath">ApplyXPath</a>. For examples on how to use the new JAXP 1.3 XPath
 API, see <a href="samples.html#applyxpathjaxp">ApplyXPathJAXP</a> and 
 <a href="samples.html#xpathresolver">XPathResolver</a>.</p>
-<a name="applet">&#8204;</a>
+<a name="applet">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -835,7 +835,7 @@ You can use the DocumentURL and StyleURL PARAM tags or the <a href="apidocs/org/
 </blockquote>
 <p>When the user clicks the Transform button, the HTML client calls the getHtmlText() method, and puts the returned HTML text in a frame for the user to view.</p>
 <p>For samples, see <a href="samples.html#applet">AppletXMLtoHTML</a>.</p>
-<a name="netscape">&#8204;</a>
+<a name="netscape">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -849,7 +849,7 @@ You can use the DocumentURL and StyleURL PARAM tags or the <a href="apidocs/org/
     Netscape bug, which hopefully will be fixed soon. For more information, see 
     <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=3231">Bugzilla bug 3231</a>.</p>
     
-<a name="servlet">&#8204;</a>
+<a name="servlet">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -903,13 +903,13 @@ public class SampleXSLTServlet extends javax.servlet.http.HttpServlet {
 </blockquote>
 <p>For a working sample, see <a href="samples.html#simplexsltservlet">SimpleXSLTServlet</a>.</p>
 <p>In the preceding example, the URLs for the XML document and XSL stylesheet are hardcoded in the servlet. You can also create a servlet that parses the request URL for input parameters specifying the XML document, XSL stylesheet, and any relevant stylesheet parameters. For samples, see <a href="samples.html#usestylesheetparamservlet">UseStylesheetParamServlet</a> and <a href="samples.html#xsltservletwithparams">XSLTServletWithParams</a>. For a more robust and complex sample that also employs a properties file to determine which stylesheet to use depending on the client browser/device, see <a href="samples.html#applyxslt">ApplyXSLT</a>.</p>
-<a name="extensions">&#8204;</a>
+<a name="extensions">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
 <h3>Creating and using extensions</h3>
 <p>For those cases where you want to be able to call procedural code from within a stylesheet, the Xalan-Java Extensions facility supports the creation of extension elements and extension functions. See <a href="extensions.html">Extensions</a> and <a href="samples.html#extensions">Extensions samples</a>.</p>
-<a name="multithreading">&#8204;</a>
+<a name="multithreading">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -925,7 +925,7 @@ public class SampleXSLTServlet extends javax.servlet.http.HttpServlet {
 <a href="apidocs/javax/xml/transform/Transformer.html#transform(javax.xml.transform.Source,javax.xml.transform.Result)">transform(Source xmlSource, Result transformResult)</a> method to perform the transformation.</li>
 </ol>
 <p>For an example, see Examples.exampleUseTemplatesObj() in the <a href="samples.html#trax">trax sample</a>.</p>
-<a name="debugging">&#8204;</a>
+<a name="debugging">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -1020,7 +1020,7 @@ fw.close();</pre>
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright � 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sun 03/18/2012</div>
+<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Fri 07/13/2012</div>
 </div>
 </body>
 </html>

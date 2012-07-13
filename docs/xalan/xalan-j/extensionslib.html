@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
 <title>ASF: Extensions library</title>
-<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
 </head>
@@ -209,7 +209,7 @@ more information.</td>
 </table>
 <br />
 
-<a name="intro">&#8204;</a>
+<a name="intro">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -220,7 +220,7 @@ Xalan. With input and contributions from the XML open-source developer community
 placing the most useful extensions in an extensions library distributed with Xalan-Java. If you have 
 ideas and/or contributions you would like to make, please email us at 
 the <a href="mailto:xalan-dev@xml.apache.org">Xalan Development Mailing List</a>.</p>
-<a name="exslt">&#8204;</a>
+<a name="exslt">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -253,12 +253,12 @@ following EXSLT extension modules:</p>
 </ul>
 <p>All EXSLT extensions use namespaces specified in the EXSLT specification. For example, to use the 
 EXSLT math functions, specify a namespace URI as follows:</p>
-<p>     <code>xmlns:math="http://exslt.org/math"</code>
+<p>Â Â Â Â Â <code>xmlns:math="http://exslt.org/math"</code>
 </p>
 <p>Anyone who would like to help by implementating other EXSLT extensions is more than welcome. Please 
 email us at the <a href="mailto:xalan-dev@xml.apache.org">Xalan Development Mailing List</a>.</p>
 
-<a name="xalanns">&#8204;</a>
+<a name="xalanns">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -269,7 +269,7 @@ org.apache.xalan.lib.Extensions</a>. Some extension
 functions (e.g. intersection, difference, etc.) used to be in this class are now moved to the 
 corresponding <a href="#exslt">EXSLT</a> modules. All Xalan extensions use namespace URIs 
 starting with:</p>
-<p>     <code>http://xml.apache.org/xalan</code>
+<p>Â Â Â Â Â <code>http://xml.apache.org/xalan</code>
 </p>
 <p>If you are calling Xalan-Java-supplied extensions, we recommend that you define the corresponding 
 namespace in your stylesheet, and call the extension using the namespace prefix that you have associated 
@@ -277,7 +277,7 @@ with that namespace. That way, if we later reorganize how the Xalan-Java-supplie
 you won't have to modify your stylesheet.</p>
 <p>For an example that uses this namespace, see <a href="#ex-nodeset">Example with the nodeset 
 extension function</a>.</p>
-<a name="redirect">&#8204;</a>
+<a name="redirect">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -287,7 +287,7 @@ result tree. The transformation sends the entire result to a single
 <a href="apidocs/javax/xml/transform/Result.html">javax.xml.transform.Result</a> object.</p> 
 <p>The namespace for the <a href="apidocs/org/apache/xalan/lib/Redirect.html">Redirect</a> 
 extension is:</p>
-<p>     <code>http://xml.apache.org/xalan/redirect</code>
+<p>Â Â Â Â Â <code>http://xml.apache.org/xalan/redirect</code>
 </p>
 <p>It supplies three extension elements that you can use to redirect portions of your transformation 
 output to multiple files: &lt;open&gt;, &lt;write&gt;, and &lt;close&gt;. If you use the &lt;write&gt; 
@@ -302,7 +302,7 @@ the select attribute, and falls back to the file attribute if the select attribu
 not return a valid file name.</p>
 <p>The &lt;open&gt; and &lt;write&gt; elements also support an append attribute. If the append attribute 
 is set to true or yes, then the result is appended to the output file.</p>
-<a name="ex-redirect">&#8204;</a> 
+<a name="ex-redirect">â€Œ</a> 
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -380,7 +380,7 @@ illustrates the basic structure of the XML source:</p>
 <p>For more information on using the Redirect extension to send output to multiple files, examine 
 the <a href="samples.html#ext1">SimpleRedirect</a> sample and see the 
 <a href="apidocs/org/apache/xalan/lib/Redirect.html">Redirect</a> class Javadoc.</p>  
-<a name="nodeset">&#8204;</a>
+<a name="nodeset">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -403,7 +403,7 @@ see <a href="http://www.w3.org/TR/xslt#section-Result-Tree-Fragments">Result Tre
 Fragments</a>.</td>
 </tr>
 </table>
-<a name="ex-nodeset">&#8204;</a>
+<a name="ex-nodeset">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -440,7 +440,7 @@ xml.apache.xalan.lib.Extensions.</p>
 </blockquote>
 <p>The output of running this stylesheet (with any XML input source) is a comma-delimited list of 
 the element names in the node-set<br />
-  <code>&lt;out&gt;elem1,elem1a,elem1b,elem2,elem2a&lt;/out&gt;</code>
+Â Â <code>&lt;out&gt;elem1,elem1a,elem1b,elem2,elem2a&lt;/out&gt;</code>
 </p>
 <table class="note">
 <tr>
@@ -456,7 +456,7 @@ to the variable named rtf.</td>
 
 
 
-<a name="nodeinfo">&#8204;</a>
+<a name="nodeinfo">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -490,7 +490,7 @@ You can use the <a href="commandline.html">command-line utility</a> -L flag or t
 </tr>
 </table>
 
-<a name="systemid">&#8204;</a>
+<a name="systemid">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -501,7 +501,7 @@ org.apache.xalan.lib.NodeInfo</a>,
 <code>systemId(node-set)</code> returns the system ID of the first node in the node-set.</p>
 
 
-<a name="publicid">&#8204;</a>
+<a name="publicid">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -513,7 +513,7 @@ org.apache.xalan.lib.NodeInfo</a>,
 <code>publicId(node-set)</code> will return the public ID of the first node in the node-set.</p>
 
 
-<a name="linenumber">&#8204;</a>
+<a name="linenumber">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -534,7 +534,7 @@ DOM Document).</td>
 </table>
 
 
-<a name="columnnumber">&#8204;</a>
+<a name="columnnumber">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -555,7 +555,7 @@ Document).</td>
 
 
 
-<a name="sql">&#8204;</a>
+<a name="sql">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -641,7 +641,7 @@ See <a href="extensionslib.html#sql-ext-features">SQL Extension Features</a>.
 <li>close() -- Use the XConnection object close() method to terminate the connection.</li>      
 </ol>
 
-<a name="sql-ext-features">&#8204;</a>
+<a name="sql-ext-features">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -680,7 +680,7 @@ of col elements. Each column-header element (one per column in the row-set) cont
 element contains a text node with a textual representation of the value for that column in the 
 current row.</p>
 
-<a name="sqlconn">&#8204;</a>
+<a name="sqlconn">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -712,11 +712,11 @@ transformation. Suppose you have the following DBINFO nodeset in an XML document
 <blockquote class="source">
 <pre>
      &lt;xsl:stylesheet version 1.0
-           xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-           xmlns:sql="http://xml.apache.org/xalan/sql"
-           extension-element-prefixes="sql"&gt;
-        &lt;xsl:param name="cinfo" select="//DBINFO"/&gt;
-        &lt;xsl:variable name="db" select="sql:new($cinfo)"/&gt;
+      Â Â Â Â Â xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+      Â Â Â Â Â xmlns:sql="http://xml.apache.org/xalan/sql"
+      Â Â Â Â Â extension-element-prefixes="sql"&gt;
+      Â Â &lt;xsl:param name="cinfo" select="//DBINFO"/&gt;
+      Â Â &lt;xsl:variable name="db" select="sql:new($cinfo)"/&gt;
       ....
 </pre>
 </blockquote> 
@@ -756,7 +756,7 @@ samples.</p>
 sample.</p>
 
 
-<a name="sqlparam">&#8204;</a>
+<a name="sqlparam">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -784,7 +784,7 @@ For a complete example, see the <a href="samples.html#pquery">Parameterized quer
 </p>
 
 
-<a name="ex-sql">&#8204;</a> 
+<a name="ex-sql">â€Œ</a> 
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -846,7 +846,7 @@ available as a sample application; see <a href="samples.html#sql">SQl Extension 
 
 
 
-<a name="pipedocument">&#8204;</a>
+<a name="pipedocument">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -857,7 +857,7 @@ the pipeDocument extension element pipes an XML document through a series of one
 transformations. The output of each transformation is piped to the next transformation. The 
 final transformation creates a target file.</p>
 <p>The namespace for the pipeDocument extension is:</p>
-<p>     <code>http://xml.apache.org/xalan/PipeDocument</code>
+<p>Â Â Â Â Â <code>http://xml.apache.org/xalan/PipeDocument</code>
 </p>
 <p>Suppose, for example,you have a stylesheet that is processing a "book" document with elements 
 designating the documents to be transformed. This primary stylesheet generates a table of 
@@ -963,7 +963,7 @@ than invoke the extension element.</p>
   
 
 
-<a name="evaluate">&#8204;</a>
+<a name="evaluate">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -985,7 +985,7 @@ stylesheet more portable across XSLT processors that support EXSLT extensions.</
 </table>
 
 
-<a name="tokenize">&#8204;</a>
+<a name="tokenize">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -1016,7 +1016,7 @@ stylesheet more portable across XSLT processors that support EXSLT extensions.</
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sun 03/18/2012</div>
+<div id="footer">Copyright Â© 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Fri 07/13/2012</div>
 </div>
 </body>
 </html>

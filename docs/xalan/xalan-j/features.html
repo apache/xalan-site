@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
 <title>ASF: Transform Features</title>
-<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
 </head>
@@ -167,7 +167,7 @@
 <a href="#factoryattribute">Implementation-specific TransformerFactory attributes</a>
 </li>
 </ul>
-<a name="factoryfeature">&#8204;</a>
+<a name="factoryfeature">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -214,7 +214,7 @@ method to set the value of a feature. Xalan-Java only supports setting of the
 <a href="apidocs/javax/xml/XMLConstants.html#FEATURE_SECURE_PROCESSING">XMLConstants.FEATURE_SECURE_PROCESSING</a>
 feature. For all other features, TransformerFactory exposes their values, but cannot change their states.</p>
 <p>Xalan-Java supports <b>all</b> TransformerFactory features.</p>
-<a name="streamsource">&#8204;</a>
+<a name="streamsource">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -234,7 +234,7 @@ if (tFact.getFeature(StreamSource.FEATURE)){
 }</pre>
 </blockquote>
 <p>For a example that uses this feature, see <a href="samples.html#simpletransform">SimpleTransform</a>.</p>
-<a name="streamresult">&#8204;</a>
+<a name="streamresult">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -254,7 +254,7 @@ if (tFact.getFeature(StreamResult.FEATURE)){
 }</pre>
 </blockquote>
 <p>For a example that uses this feature, see <a href="samples.html#simpletransform">SimpleTransform</a>.</p>
-<a name="domsource">&#8204;</a>
+<a name="domsource">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -274,7 +274,7 @@ if (tFact.getFeature(DOMSource.FEATURE)){
 }</pre>
 </blockquote>
 <p>For a example that uses this feature, see <a href="samples.html#dom2dom">DOM2DOM</a>.</p>
-<a name="domresult">&#8204;</a>
+<a name="domresult">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -294,7 +294,7 @@ if (tFact.getFeature(DOMResult.FEATURE)){
 }</pre>
 </blockquote>
 <p>For a example that uses this feature, see <a href="samples.html#dom2dom">DOM2DOM</a>.</p>
-<a name="saxsource">&#8204;</a>
+<a name="saxsource">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -313,7 +313,7 @@ if (tFact.getFeature(SAXSource.FEATURE)){
   ..
 }</pre>
 </blockquote>
-<a name="saxresult">&#8204;</a>
+<a name="saxresult">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -333,7 +333,7 @@ if (tFact.getFeature(SAXResult.FEATURE)){
 }</pre>
 </blockquote>
 <p>For a example that uses this feature, see <a href="samples.html#sax2sax">SAX2SAX</a>.</p>
-<a name="saxtransformerfactory">&#8204;</a>
+<a name="saxtransformerfactory">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -355,7 +355,7 @@ if (tFact.getFeature(SAXTransformerFactory.FEATURE)){
 }</pre>
 </blockquote>
 <p>For a example that uses this feature, see <a href="samples.html#sax2sax">SAX2SAX</a>.</p>
-<a name="xmlfilter">&#8204;</a>
+<a name="xmlfilter">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -380,7 +380,7 @@ if (tFact.getFeature(SAXTransformerFactory.FEATURE_XMLFILTER))){
 <p>For an example that uses this feature to chain together a series of transformations, see 
 <a href="samples.html#usexmlfilters">UseXMLFilters</a>.</p>
 
-<a name="secureprocessing">&#8204;</a>
+<a name="secureprocessing">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -397,7 +397,7 @@ is set to true:<br />
 <li>parsers created by the XSLT processors will also have the secure processing feature set to true.</li>
 </p>
 
-<a name="factoryattribute">&#8204;</a>
+<a name="factoryattribute">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -419,7 +419,7 @@ is set to true:<br />
 attributes, you can cast the return value to a boolean. To set an attribute, use the TransformerFactory.setAttribute(String, Object) method. 
 For the String argument, provide the static String variable or literal URI String as detailed below. For the Object argument, use 
 Boolean.TRUE or Boolean.FALSE (or the Strings "true" or "false").</p>
-<a name="optimize">&#8204;</a>
+<a name="optimize">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -440,7 +440,7 @@ if (tFact instanceof TransformerFactoryImpl) {
                      Boolean.FALSE);
 }</pre>
 </blockquote>
-<a name="incremental">&#8204;</a>
+<a name="incremental">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -470,7 +470,7 @@ if (tFact instanceof TransformerFactoryImpl) {
 </tr>
 </table>
 
-<a name="source_location">&#8204;</a>
+<a name="source_location">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -503,7 +503,7 @@ if (tFact instanceof TransformerFactoryImpl) {
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright � 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sun 03/18/2012</div>
+<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Fri 07/13/2012</div>
 </div>
 </body>
 </html>

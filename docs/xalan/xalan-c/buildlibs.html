@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
 <title>ASF: Building Xalan-C/C++</title>
-<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
 </head>
@@ -184,7 +184,7 @@
 <p>You can get more information on the Xerces-C/C++ distributions at the <a href="http://xml.apache.org/xerces-c">http://xml.apache.org/xerces-c</a> web site.
 </p>
 
-<a name="winbldenv">&#8204;</a>
+<a name="winbldenv">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -215,7 +215,7 @@
 
 <p>I like to create command or batch files to setup the build environment variables and start the Visual Studio .NET development system using the custom build environment.  I find this much easier than navigating the graphical interface to add custom build environments. The Microsoft *.vsprops custom property files are not available in the early versions of Visual Studio .NET platforms.
 </p>
-<a name="winbld">&#8204;</a>
+<a name="winbld">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -250,7 +250,7 @@ binary packages from Xalan-C compiled sources for the various versions of
 Microsoft Visual Studio products.
 </p>
 
-<a name="winbldcmd">&#8204;</a>
+<a name="winbldcmd">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -387,7 +387,7 @@ devenv.exe "%XALANCBUILDSLN%" /useenv
 </pre>
 </blockquote>
 
-<a name="winbldinst">&#8204;</a>
+<a name="winbldinst">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -423,7 +423,7 @@ XCOPY xalanc\*.h   "%XALANCTARGET%\include\xalanc" /E /C /I /R /Y
 </pre>
 </blockquote>
 
-<a name="unixbldenv">&#8204;</a>
+<a name="unixbldenv">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -443,9 +443,9 @@ XCOPY xalanc\*.h   "%XALANCTARGET%\include\xalanc" /E /C /I /R /Y
 <b>Source Trees:</b> (<code>--srcdir</code>) configuration parameter
 </p>
 <p>
-  	<code>/opt/xerces/c/&lt;trunk&gt;/</code>&lt;the Xerces-C/C++ XML parser library source distribution&gt;
+Â Â 	<code>/opt/xerces/c/&lt;trunk&gt;/</code>&lt;the Xerces-C/C++ XML parser library source distribution&gt;
 <br />
-  	<code>/opt/xalan/c/&lt;trunk&gt;</code>/&lt;the Xalan-C/C++ XSLT library source distribution&gt;
+Â Â 	<code>/opt/xalan/c/&lt;trunk&gt;</code>/&lt;the Xalan-C/C++ XSLT library source distribution&gt;
 </p>
 <p>If the source distribution is well-constructed, the source directory trees can be read-only.
 </p>
@@ -453,24 +453,24 @@ XCOPY xalanc\*.h   "%XALANCTARGET%\include\xalanc" /E /C /I /R /Y
 <b>Binary Installation Trees:</b> (<code>--prefix</code>) configuration parameter
 </p>
 <p>
-  	<code>/usr/local/</code>  &lt;the target for the 
+Â Â 	<code>/usr/local/</code>Â  &lt;the target for the 
 release binary installation&gt;
 <br />
-      	<code>./bin</code>    	The sample programs
+Â Â Â Â Â Â 	<code>./bin</code>Â Â Â Â 	The sample programs
 <br />
-      	<code>./lib</code>    	The shared and static library files
+Â Â Â Â Â Â 	<code>./lib</code>Â Â Â Â 	The shared and static library files
 <br />
-      	<code>./include</code>  	The library header files
+Â Â Â Â Â Â 	<code>./include</code>Â Â 	The library header files
 <br />
 <br />
-  	<code>/opt/apache/debug/</code>  &lt;the target for the 
+Â Â 	<code>/opt/apache/debug/</code>Â  &lt;the target for the 
 debug binary installation&gt;
 <br />
-      	<code>./bin</code>    	The sample programs
+Â Â Â Â Â Â 	<code>./bin</code>Â Â Â Â 	The sample programs
 <br />
-      	<code>./lib</code>    	The shared and static library files
+Â Â Â Â Â Â 	<code>./lib</code>Â Â Â Â 	The shared and static library files
 <br />
-      	<code>./include</code>  	The library header files
+Â Â Â Â Â Â 	<code>./include</code>Â Â 	The library header files
 </p>
 
 <p>The default (<code>--prefix</code>) value is <code>/usr/local</code> which I use for release builds.
@@ -481,7 +481,7 @@ debug binary installation&gt;
 <p>
 <b>Build Tree:</b> The build working directory tree
 </p>
-<p>  	<code>/&lt;user-directory&gt;/Build/</code>
+<p>Â Â 	<code>/&lt;user-directory&gt;/Build/</code>
 </p>
 
 <p>You can use any empty file system or directory path with write access.  Starting with an empty directory is a quick way to do a clean build.  Make this empty directory to be your current working directory.
@@ -489,17 +489,17 @@ debug binary installation&gt;
 <p>I also like to make some shell scripts so that the build process can be automated. I locate these scripts outside of the Build directory so they don't get lost when I purge directory content.
 </p>
 <p>
-  	<code>../build-xerces-lib.sh</code>
+Â Â 	<code>../build-xerces-lib.sh</code>
 </p>
 <p>
-  	<code>../build-xalan-lib.sh</code>
+Â Â 	<code>../build-xalan-lib.sh</code>
 </p>
 <p>
-  	<code>../build-xalan-app.sh</code>
+Â Â 	<code>../build-xalan-app.sh</code>
 </p>
 <p>I generate these shell scripts with a text editor and use them to minimize keyboard typing errors.
 </p>
-<a name="unixlibpath">&#8204;</a>
+<a name="unixlibpath">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -540,7 +540,7 @@ debug binary installation&gt;
 </p>
 
 
-<a name="unixbldxalan">&#8204;</a>
+<a name="unixbldxalan">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -757,7 +757,7 @@ make install
 
 
 
-<a name="unixcompileref">&#8204;</a>
+<a name="unixcompileref">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -881,7 +881,7 @@ CXXFLAGS="-arch i386 -arch ppc"</td>
 </table>
 
 
-<a name="xercesmodules">&#8204;</a>
+<a name="xercesmodules">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -895,7 +895,7 @@ CXXFLAGS="-arch i386 -arch ppc"</td>
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Tue 07/10/2012</div>
+<div id="footer">Copyright Â© 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Fri 07/13/2012</div>
 </div>
 </body>
 </html>

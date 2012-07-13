@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
 <title>ASF: Getting Started with XSLTC</title>
-<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
 </head>
@@ -205,7 +205,7 @@ Patterns</a> for information on using the Xalan-Java Interpretive processor.</td
 </table>
 <br />
 
-<a name="intro">&#8204;</a>
+<a name="intro">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -216,7 +216,7 @@ Java classes). Use the runtime processor to apply the translet to an XML
 document and perform a transformation.</p>
 
 
-<a name="classpath">&#8204;</a>
+<a name="classpath">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -331,7 +331,7 @@ the unbundled jar approach, put the following on the system classpath:</p>
 the compiler; see <a href="#compile">Compiling translets</a>.</p>
 
 
-<a name="compile">&#8204;</a>
+<a name="compile">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -367,7 +367,7 @@ the compiler; see <a href="#compile">Compiling translets</a>.</p>
 </tr>
 </table>
 
-<a name="comp-synopsis">&#8204;</a>
+<a name="comp-synopsis">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -375,14 +375,14 @@ the compiler; see <a href="#compile">Compiling translets</a>.</p>
 <p>
 <code>java org.apache.xalan.xsltc.cmdline.Compile</code>
 <br />
-<code>    [-o &lt;output&gt;] [-d &lt;directory&gt;] [-j &lt;jarfile&gt;]</code>
+<code>Â Â Â Â [-o &lt;output&gt;] [-d &lt;directory&gt;] [-j &lt;jarfile&gt;]</code>
 <br />
-<code>    [-p &lt;package name&gt;] [-n] [-x] [-v] [-u] [-h]<br />
-    {&lt;stylesheet&gt; | -i }</code>
+<code>Â Â Â Â [-p &lt;package name&gt;] [-n] [-x] [-v] [-u] [-h]<br />
+Â Â Â Â {&lt;stylesheet&gt; | -i }</code>
 </p> 
 
 
-<a name="comp-args">&#8204;</a>
+<a name="comp-args">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -448,7 +448,7 @@ be named <code>my_stylesheet</code>.
 </table>
 
 
-<a name="comp-examples">&#8204;</a>
+<a name="comp-examples">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -463,7 +463,7 @@ be named <code>my_stylesheet</code>.
     <p>
 <code>java org.apache.xalan.xsltc.cmdline.Compile</code>
 <br />
-    <code>     hamlet.xsl</code>
+    <code>Â Â Â Â  hamlet.xsl</code>
 </p>    
     <p>Example 1 produces a set of class files such as hamlet.class, hamlet$0.class, hamlet$1.class.</p>
 
@@ -472,7 +472,7 @@ be named <code>my_stylesheet</code>.
     <p>
 <code>java org.apache.xalan.xsltc.cmdline.Compile</code>
 <br />
-    <code>     -j hamlet.jar hamlet.xsl</code>
+    <code>Â Â Â Â  -j hamlet.jar hamlet.xsl</code>
 </p>
     <p>Example 2 produces hamlet.jar, which contains the translet class
        files.</p>
@@ -482,7 +482,7 @@ be named <code>my_stylesheet</code>.
     <p>
 <code>java org.apache.xalan.xsltc.cmdline.Compile</code>
 <br />
-    <code>     -o newhamlet hamlet.xsl</code>
+    <code>Â Â Â Â  -o newhamlet hamlet.xsl</code>
 </p>
     <p>Example 3 produces a set of class files such as newhamlet.class,
        newhamlet$0.class, etc., rather than hamlet.class, hamlet$0.class,
@@ -494,7 +494,7 @@ be named <code>my_stylesheet</code>.
     <p>
 <code>java org.apache.xalan.xsltc.cmdline.Compile</code>
 <br />
-    <code>     hamlet1.xsl hamlet2.xsl hamlet3.xsl</code>
+    <code>Â Â Â Â  hamlet1.xsl hamlet2.xsl hamlet3.xsl</code>
 </p>
     <p>Example 4 produces three translets and set of class files derived from the three stylesheets.</p>
 
@@ -503,14 +503,14 @@ be named <code>my_stylesheet</code>.
     <p>
 <code>java org.apache.xalan.xsltc.cmdline.Compile</code>
 <br />
-    <code>     -p com.mycompany.translets hamlet.xsl</code>
+    <code>Â Â Â Â  -p com.mycompany.translets hamlet.xsl</code>
 </p>
     <p>Example 5 produces a set of class files such as com/mycompany/translets/hamlet.class,
     com/mycompany/translets/hamlet$0.class', etc.</p>
 
 
 
-<a name="run">&#8204;</a>
+<a name="run">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -552,7 +552,7 @@ be named <code>my_stylesheet</code>.
 </tr>
 </table>
 
-<a name="run-synopsis">&#8204;</a>
+<a name="run-synopsis">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -560,13 +560,13 @@ be named <code>my_stylesheet</code>.
 <p>
 <code>java org.apache.xalan.xsltc.cmdline.Transform</code>
 <br />
-<code>     [-j &lt;jarfile&gt;] [-x] {-u &lt;document_url&gt; | &lt;document&gt;} &lt;class&gt;</code>
+<code>Â Â Â Â  [-j &lt;jarfile&gt;] [-x] {-u &lt;document_url&gt; | &lt;document&gt;} &lt;class&gt;</code>
 <br />
-<code>     [&lt;name1&gt;=&lt;value1&gt; ...]</code>
+<code>Â Â Â Â  [&lt;name1&gt;=&lt;value1&gt; ...]</code>
 </p>
 
 
-<a name="run-args">&#8204;</a>
+<a name="run-args">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -602,7 +602,7 @@ Arguments without flags:
 </blockquote>
 
 
-<a name="run-examples">&#8204;</a>
+<a name="run-examples">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -620,7 +620,7 @@ Arguments without flags:
 <code> java -cp .;%CLASSPATH% ...</code>
 <br />
        <b>
-<i>UNIX:     </i>
+<i>UNIX:Â Â Â Â Â </i>
 </b>
 <code> java -cp .:$CLASSPATH ...</code>
 </p>
@@ -631,7 +631,7 @@ Arguments without flags:
     <p>
 <code>java org.apache.xalan.xsltc.cmdline.Transform</code>
 <br />
-       <code>      hamlet.xml hamlet</code>
+       <code>Â Â Â Â   hamlet.xml hamlet</code>
 </p> 
 
     <p>Example 1 uses the specified translet (hamlet) to transform the specified XML input document (hamlet.xml). 
@@ -644,9 +644,9 @@ Arguments without flags:
     <p>
 <code>java org.apache.xalan.xsltc.cmdline.Transform</code>
 <br />
-       <code>     hamlet.xml hamlet</code>
+       <code>Â Â Â Â  hamlet.xml hamlet</code>
 <br />
-       <code>     speaker=HAMLET 'scene=SCENE IV'</code>
+       <code>Â Â Â Â  speaker=HAMLET 'scene=SCENE IV'</code>
 </p>
 
     <p>Example 2 passes "HAMLET" to the stylesheet for the stylesheet parameter named speaker, and "SCENE IV" for the
@@ -659,7 +659,7 @@ Arguments without flags:
     <p>
 <code>java org.apache.xalan.xsltc.cmdline.Transform</code>
 <br />
-       <code>      -u http://zarya.east/test.xml hamlet</code>
+       <code>Â Â Â Â   -u http://zarya.east/test.xml hamlet</code>
 </p>
 
     <p>Example 3 applies the translet (hamlet) to the XML input document (http://zarya.east/test.xml hamlet). Inclusion of
@@ -667,7 +667,7 @@ Arguments without flags:
 
 
 
-<a name="api">&#8204;</a>
+<a name="api">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -735,7 +735,7 @@ parser</a>.</p>
 translets by way of the JAXP Transform API - without having to recompile the
 stylesheet each time.</p>
 
-<a name="api-attributes">&#8204;</a>
+<a name="api-attributes">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -827,7 +827,7 @@ underscore.  For example, if the translet name specified was
 </table>
 
 
-<a name="api-examples">&#8204;</a>
+<a name="api-examples">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -912,7 +912,7 @@ transformer.transform(new StreamSource(xmlInURI2),
 
 
 
-<a name="xsltcsmart">&#8204;</a>
+<a name="xsltcsmart">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -932,7 +932,7 @@ create a <code>Templates</code> object from which you would create your
 <code>Transformer</code> objects.</p> 
 
 
-<a name="native_api">&#8204;</a>
+<a name="native_api">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -941,7 +941,7 @@ create a <code>Templates</code> object from which you would create your
 use XSLTC with the JAXP Transform API.</p>
 
 
-<a name="constraints">&#8204;</a>
+<a name="constraints">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -986,7 +986,7 @@ tfac.setAttribute("enable-inlining", Boolean.TRUE);</pre>
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sun 03/18/2012</div>
+<div id="footer">Copyright Â© 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Fri 07/13/2012</div>
 </div>
 </body>
 </html>

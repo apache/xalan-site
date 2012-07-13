@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
 <title>ASF: XSLTC Internal DOM</title>
-<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
 </head>
@@ -164,7 +164,7 @@
 </li>
   </ul>
 
-  <a name="functionality">&#8204;</a>
+  <a name="functionality">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -174,7 +174,7 @@
   class. This is the interface that the translet uses to access the DOM. 
   There is also an interface specified for DOM caches -- DOMCache.java</p>
 
-  <a name="components">&#8204;</a>
+  <a name="components">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -238,7 +238,7 @@
   accordingly and instanciate a MultiDOM object if needed (this code is compiled
    in the compiler's <code>Stylesheet.compileTransform()</code> method).</p>
 
-  <a name="structure">&#8204;</a>
+  <a name="structure">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -262,7 +262,7 @@
     <li>
 <a href="#pi" />Processing instructions</li>
   </ul>
-  <a name="node-id">&#8204;</a>
+  <a name="node-id">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -314,7 +314,7 @@
     String namespace = _nsNamesArray[nstype];   // get node namespace name
 </pre>
 </blockquote>
-  <a name="element-nodes">&#8204;</a>
+  <a name="element-nodes">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -336,7 +336,7 @@
   This value is OK since the root node (the 0 node) will not be a child of
   any element.</p>
 
-  <a name="attribute-nodes">&#8204;</a>
+  <a name="attribute-nodes">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -363,7 +363,7 @@
     String value     = new String(_text, offset, length);
 </pre>
 </blockquote>
-  <a name="text-nodes">&#8204;</a>
+  <a name="text-nodes">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -371,7 +371,7 @@
 
   <p>Text nodes are stored identically to attribute values. See the previous
   section on <a href="#attribute-nodes">attribute nodes</a>.</p>
-  <a name="comment-nodes">&#8204;</a>
+  <a name="comment-nodes">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -380,7 +380,7 @@
   <p>The internal DOM does currently <b>not</b> contain comment nodes. Yes, I
   am quite aware that the DOM has a type assigned to comment nodes, but comments
   are still not inserted into the DOM.</p>
-  <a name="pi">&#8204;</a>
+  <a name="pi">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -390,7 +390,7 @@
   identically to attribute values. See the previous section on
   <a href="#attribute-nodes">attribute nodes</a>.</p>
 
-  <a name="navigation">&#8204;</a>
+  <a name="navigation">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -421,7 +421,7 @@
   iterators and filtering iterators. These iterators are implemented in
   separate classes and can be instanciated directly by the translet.</p>
 
-  <a name="namespaces">&#8204;</a>
+  <a name="namespaces">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -432,7 +432,7 @@
   There is a separate <a href="xsltc_namespace.html">design
   document</a> that covers namespaces.</p>
 
-  <a name="w3c">&#8204;</a>
+  <a name="w3c">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -453,7 +453,7 @@
   <p>These methods return instances of inner classes of the DOM that implement
   the W3C Node and NodeList interfaces.</p>
 
-  <a name="adapter">&#8204;</a>
+  <a name="adapter">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -469,7 +469,7 @@
 <a href="#method-mapping">Method mapping</a>
 </li>
   </ul>
-  <a name="translet-dom">&#8204;</a>
+  <a name="translet-dom">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -506,7 +506,7 @@
 
   <p>There are two additional mapping tables: <code>_NSmapping[]</code> and
   <code>_NSreverse[]</code> that do the same for namespace types.</p>
-  <a name="whitespace">&#8204;</a>
+  <a name="whitespace">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -515,7 +515,7 @@
   <p>The DOMAdapter class has the additional function of stripping whitespace
   nodes in the DOM. This functionality had to be put in the DOMAdapter, as
   different translets will have different preferences for node stripping.</p>
-  <a name="method-mapping">&#8204;</a>
+  <a name="method-mapping">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -542,7 +542,7 @@
 </pre>
 </blockquote>
 
-  <a name="multiplexer">&#8204;</a>
+  <a name="multiplexer">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -585,7 +585,7 @@
   bits as the input node. This is why we <code>OR</code> the result from
   <code>DOMAdapter.getParent()</code> with the top 8 bits of the input node.</p>
 
-  <a name="builder">&#8204;</a>
+  <a name="builder">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -632,7 +632,7 @@
 
   <p>The DOM builder will start to populate the DOM once the XML parser starts
   generating SAX2 events:</p>
-  <a name="startelement">&#8204;</a>
+  <a name="startelement">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -655,7 +655,7 @@
   <code>makeAttributeNode()</code>), and finally creates the actual element node
   (by calling <code>internElement()</code>, which inserts a new entry in the
   <code>_type[]</code> array).</p>
-  <a name="endelement">&#8204;</a>
+  <a name="endelement">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -664,7 +664,7 @@
   <p>This method does some cleanup after the <code>startElement()</code> method,
   such as revering <code>xml:space</code> settings and linking the element's
   child nodes.</p>
-  <a name="startprefixmapping">&#8204;</a>
+  <a name="startprefixmapping">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -692,7 +692,7 @@
   <p>Each call to <code>startPrefixMapping()</code> results in a lookup in the
   Hashtable (using the prefix), and a <code>push()</code> of the URI onto the
   Stack that the prefix maps to.</p>
-  <a name="endprefixmapping">&#8204;</a>
+  <a name="endprefixmapping">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -700,7 +700,7 @@
 
   <p>A namespace prefix/uri mapping is closed by locating the Stack for the
   prefix, and then <code>pop()</code>'ing the topmost URI off this Stack.</p>
-  <a name="characters">&#8204;</a>
+  <a name="characters">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -717,7 +717,7 @@
   method is always called before a new character string is stored in the
   <code>_text[]</code> array. This method will locate the offset of an existing
   instance of a character sequence.</p>
-  <a name="startdocument">&#8204;</a>
+  <a name="startdocument">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -726,7 +726,7 @@
   <p>This method initialises a bunch of data structures that are used by the
   builder. It also pushes the default namespace on the namespace stack (so that
   the "" prefix maps to the <code>null</code> namespace).</p>
-  <a name="enddocument">&#8204;</a>
+  <a name="enddocument">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -742,7 +742,7 @@
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright � 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sun 03/18/2012</div>
+<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Fri 07/13/2012</div>
 </div>
 </body>
 </html>

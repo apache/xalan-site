@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
 <title>ASF: XSLTC and Namespaces</title>
-<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
 </head>
@@ -151,7 +151,7 @@
 <a href="#NSC">Namespaces in the output document</a>
 </li>
   </ul>
-  <a name="functionality">&#8204;</a>
+  <a name="functionality">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -190,7 +190,7 @@
     more likely to happen to the default namespace than any other prefix. Here
     is an example of this:</p>
 
-    <a name="xml_sample_1">&#8204;</a>
+    <a name="xml_sample_1">‌</a>
 <blockquote class="source">
 <pre>
     &lt;?xml version="1.0"?&gt;
@@ -223,7 +223,7 @@
     <p>By changing the default namespace we could have made the document a
     little bit simpler and more readable:</p>
 
-    <a name="xml_sample_2">&#8204;</a>
+    <a name="xml_sample_2">‌</a>
 <blockquote class="source">
 <pre>
     &lt;?xml version="1.0"?&gt;
@@ -248,7 +248,7 @@
     sufficient. Note that this also applies to the <code>&lt;address&gt;</code>
     where the namespace is first defined. This is in effect a redefinition of
     the default namespace.</p>
-  <a name="overview">&#8204;</a>
+  <a name="overview">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -257,7 +257,7 @@
     <p>Namespaces will have to be handled in three separate parts of the XSLT
     compiler:</p>
 
-    <a name="all_namespaces">&#8204;</a>
+    <a name="all_namespaces">‌</a>
       <p>
 <img src="all_namespaces.gif" alt="all_namespaces.gif" />
 </p>
@@ -278,7 +278,7 @@
     intersection of the first two. The output document should not contain any
     more namespace declarations than necessary.</p>
 
-    <a name="NSA">&#8204;</a>
+    <a name="NSA">‌</a>
     <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -291,7 +291,7 @@
 <a href="#assign">Assigning namespace types to DOM nodes</a>
 </li>                
     </ul>
-    <a name="dom-namespace">&#8204;</a>
+    <a name="dom-namespace">‌</a>
     <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -326,7 +326,7 @@
     namespace type maps to a namespace name (and a prefix with a limited
     scope):</p>
 
-    <a name="type_mappings">&#8204;</a>
+    <a name="type_mappings">‌</a>
     <p>
 <img src="type_mappings.gif" alt="type_mappings.gif" />
 </p>
@@ -352,7 +352,7 @@
     are local to the XML document and will be expanded to the full namespace
     names when the nodes are put into the DOM. This, however, is not a trivial
     matter.</p>
-    <a name="assign">&#8204;</a>
+    <a name="assign">‌</a>
     <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -453,7 +453,7 @@
 </pre>
 </blockquote>
 
-  <a name="NSB">&#8204;</a>
+  <a name="NSB">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -469,7 +469,7 @@
 <a href="#wildcards">Wildcards and namespaces</a>
 </li>
   </ul>
-    <a name="store-access">&#8204;</a>
+    <a name="store-access">‌</a>
     <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -527,7 +527,7 @@
     has built the DOM (a DOMImpl object), it passes the DOM to the a DOM
     adapter (a DOMAdapter object) together with the names array. The DOM
     adapter then maps the translet's types to the DOM's types.</p>
-   <a name="mapdom-stylesheet">&#8204;</a>
+   <a name="mapdom-stylesheet">‌</a>
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -539,7 +539,7 @@
     QName in the translet will match the exanded QName in the DOM. This assures
     matches on full QNames, but does not do much for <code>match="A:*"</code> type
     XPath patterns. This is where our main challenge lies.</p>
-    <a name="wildcards">&#8204;</a>
+    <a name="wildcards">‌</a>
     <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -555,7 +555,7 @@
     for the node's parents in case you were matching on "<code>path/*</code>"-type
     patterns.) This figure shows how that was done:</p>
 
-    <a name="match_namespace1">&#8204;</a>
+    <a name="match_namespace1">‌</a>
     <p>
 <img src="match_namespace1.gif" alt="match_namespace1.gif" />
 </p>
@@ -581,7 +581,7 @@
     format "<code>ns:*</code>", "<code>foo/ns:*</code>" or "<code>ns:@*</code>", which
     this figure illustrates:</p>
 
-    <a name="match_namespace2">&#8204;</a>
+    <a name="match_namespace2">‌</a>
       <p>
 <img src="match_namespace2.gif" alt="match_namespace2.gif" />
 </p>
@@ -757,7 +757,7 @@
      
     </ul>
 
-     <a name="NSC">&#8204;</a>
+     <a name="NSC">‌</a>
      <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -784,7 +784,7 @@
       </li>
     </ul>
 
-      <a name="output_namespaces1">&#8204;</a>
+      <a name="output_namespaces1">‌</a>
       <p>
 <img src="output_namespaces1.gif" alt="output_namespaces1.gif" />
 </p>
@@ -811,7 +811,7 @@
     The datastructures used for this are similar to those used to track
     namespaces in the XSL stylesheet:</p>
 
-    <a name="output_namespaces2">&#8204;</a>
+    <a name="output_namespaces2">‌</a>
     <p>
 <img src="output_namespaces2.gif" alt="output_namespaces2.gif" />
 </p>
@@ -826,7 +826,7 @@
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright � 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sun 03/18/2012</div>
+<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Fri 07/13/2012</div>
 </div>
 </body>
 </html>

@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
 <title>ASF: Xalan-Java Extensions</title>
-<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
 </head>
@@ -197,7 +197,7 @@ more information.</td>
 </tr>
 </table>
 <br />
-<a name="intro">&#8204;</a>
+<a name="intro">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -232,7 +232,7 @@ more information.</td>
      requirements, not on XSLT extensions in general. For additional information on extensions, 
      consult the Recommendation or the other resources listed in <a href="overview.html#uptospeed">Getting up to speed with XSLT</a>.</p>
 
-<a name="supported-lang">&#8204;</a>
+<a name="supported-lang">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -252,7 +252,7 @@ more information.</td>
    listed at the Jakarta BSF web site as <a href="http://jakarta.apache.org/bsf/projects.html"> 
    Related Projects </a> . These files are available from the sources indicated and are not shipped 
    with Xalan-Java. </p>
-<a name="BSFManager">&#8204;</a>
+<a name="BSFManager">â€Œ</a>
 <p>By default Xalan-Java assumes BSF support is provided by the Jakarta BSF implementation. There are three 
    ways of specifying the class that provides the BSF Manager service:.</p>
 <ul>
@@ -263,7 +263,7 @@ more information.</td>
     <li>Include a META-INF/services/org.apache.xalan.extensions.bsf.BSFManager 
     file in your classpath;</li>
 </ul>
-<a name="basic-pattern">&#8204;</a>
+<a name="basic-pattern">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -320,7 +320,7 @@ more information.</td>
   <li>The xalan:script subelement with a JavaScript implementation of the extension. For Java
      extensions, the xalan:script element has a src attribute that you set to identify the Java class.</li>
 </ol>
-<a name="ex-basic">&#8204;</a>   
+<a name="ex-basic">â€Œ</a>   
 <blockquote class="source">
 <pre>&lt;?xml version="1.0"?&gt;
 &lt;!--Namespaces are global if you set them in the stylesheet element--&gt;
@@ -365,7 +365,7 @@ more information.</td>
 </pre>
 </blockquote>
 
-<a name="setup-runtime">&#8204;</a>
+<a name="setup-runtime">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -375,7 +375,7 @@ more information.</td>
    implemented in a scripting language, see the additional requirements in 
    <a href="#supported-lang">Supported languages</a>.</p>
 
-<a name="basic-syntax">&#8204;</a>
+<a name="basic-syntax">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -480,15 +480,15 @@ namespaces from the output, use</p>
 <i>prefix</i>
 </b>" </code>
 <br />
-   <code>    functions="<b>
+   <code>Â Â Â Â functions="<b>
 <i>func-1 func-2 ...func-n</i>
 </b>"</code>
 <br /> 
-   <code>    elements="<b>
+   <code>Â Â Â Â elements="<b>
 <i>elem-1 elem-2 ...elem-n</i>
 </b>"&gt;</code>
 <br />
-   <code>  &lt;!--See xalan:script below--&gt;</code>
+   <code>Â Â &lt;!--See xalan:script below--&gt;</code>
 <br />
    <code>&lt;/xalan:component&gt;</code>
 </p>
@@ -511,7 +511,7 @@ Java methods.</td>
 </tr>
 </table>
 
-<a name="setup-script">&#8204;</a>
+<a name="setup-script">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -522,7 +522,7 @@ is implemented in JavaScript:</p>
 <p>
 <code>&lt;xalan:script lang="javascript" &gt;</code>
 <br />
-<code>  &lt;!--The implementation script--&gt;</code>
+<code>Â Â &lt;!--The implementation script--&gt;</code>
 <br />
 <code>&lt;/xalan:script&gt;</code>
 </p>
@@ -573,7 +573,7 @@ explained in <a href="#java-namespace-declare">Declare the namespace</a>.</p>
   src CDATA #IMPLIED&gt;</pre>
 </blockquote>
 
-<a name="ext-elements">&#8204;</a>
+<a name="ext-elements">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -610,7 +610,7 @@ following signature, or the scripting language equivalent:</p>
 <i>Type element</i>
 </b>(org.apache.xalan.extensions.XSLProcessorContext, </code>
 <br />
-<code>             org.apache.xalan.templates.ElemExtensionCall extensionElement)</code>
+<code>Â Â Â Â Â Â Â Â Â Â Â Â Â org.apache.xalan.templates.ElemExtensionCall extensionElement)</code>
 </p>
 <p>where <b>
 <i>Type</i>
@@ -627,9 +627,9 @@ If you are not interested in a return value, use a public void Java method or re
 scripting language function.</p>
 <p>Java example: <code>public void myElement</code>
 <br />
-<code>         (org.apache.xalan.extensions.XSLProcessorContext, </code>
+<code>Â Â Â Â Â Â Â Â Â (org.apache.xalan.extensions.XSLProcessorContext, </code>
 <br />
-<code>          org.apache.xalan.templates.ElemExtensionCall extensionElement)</code>
+<code>Â Â Â Â Â Â Â Â Â Â org.apache.xalan.templates.ElemExtensionCall extensionElement)</code>
 </p>
 <p>JavaScript example: <code>function myElement(xslProcContext, element)</code>
 </p>
@@ -637,7 +637,7 @@ scripting language function.</p>
 library contains three extension elements.</p>
 
 
-<a name="ext-functions">&#8204;</a>
+<a name="ext-functions">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -743,7 +743,7 @@ ExpressionContext as the first parameter will score higher than any method which
 ExpressionContext as a first parameter.</p>
 
 
-<a name="ext-func-retval">&#8204;</a>
+<a name="ext-func-retval">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -802,7 +802,7 @@ ExpressionContext as a first parameter.</p>
 </table>
 
 
-<a name="ext-func-calls">&#8204;</a>
+<a name="ext-func-calls">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -836,7 +836,7 @@ ExpressionContext as a first parameter.</p>
    selection.
 <br />Example: <code>&lt;xsl:variable name="myType"</code>
 <br />
-<code>       select="my-class:new()"&gt;</code>
+<code>Â Â Â Â Â Â Â select="my-class:new()"&gt;</code>
 </p>
 
 <p>
@@ -878,7 +878,7 @@ ExpressionContext as a first parameter.</p>
 <br />
 Example: <code>&lt;xsl:variable name="new-pop"</code>
 <br />
-<code>     select="my-class:valueOf($myType, string(@population))"&gt;</code>
+<code>Â Â Â Â Â select="my-class:valueOf($myType, string(@population))"&gt;</code>
 </p>
 
 <p>
@@ -912,7 +912,7 @@ exist.
 <br />
 Example: <code>&lt;xsl:variable name="new-pop"</code>
 <br />
-<code>     select="my-class:valueOf(string(@population))"&gt;</code>
+<code>Â Â Â Â Â select="my-class:valueOf(string(@population))"&gt;</code>
 </p>
 
 <p>
@@ -944,7 +944,7 @@ be passed to the invoked static method.
 <br />
 Example: <code>&lt;xsl:variable name="new-pop"</code>
 <br />
-<code>     select="my-class:printit(string(@population))"&gt;</code>
+<code>Â Â Â Â Â select="my-class:printit(string(@population))"&gt;</code>
 </p>
 
 <h5>Package format namespace</h5>
@@ -977,7 +977,7 @@ is the name of the class. A new instance is to be created with the <b>
 arguments (if any). All constructor methods are qualified for method selection.
 <br />Example: <code>&lt;xsl:variable name="myType"</code>
 <br />
-<code>       select="my-package:extclass.new()"&gt;</code>
+<code>Â Â Â Â Â Â Â select="my-package:extclass.new()"&gt;</code>
 </p>
 
 <p>
@@ -1018,7 +1018,7 @@ passed to the invoked method.
 <br />
 Example: <code>&lt;xsl:variable name="new-pop"</code>
 <br />
-<code>     select="my-package:valueOf($myType, string(@population))"&gt;</code>
+<code>Â Â Â Â Â select="my-package:valueOf($myType, string(@population))"&gt;</code>
 </p>
 
 <p>
@@ -1059,7 +1059,7 @@ methods. If a matching method is found, <b>
 <br />
 Example: <code>&lt;xsl:variable name="new-pop"</code>
 <br />
-<code>     select="my-package:extclass.printit(string(@population))"&gt;</code>
+<code>Â Â Â Â Â select="my-package:extclass.printit(string(@population))"&gt;</code>
 </p>
 <table class="note">
 <tr>
@@ -1097,7 +1097,7 @@ be created with the <b>
 qualified for method selection.
 <br />Example: <code>&lt;xsl:variable name="myHash"</code>
 <br />
-<code>       select="java:java.util.Hashtable.new()"&gt;</code>
+<code>Â Â Â Â Â Â Â select="java:java.util.Hashtable.new()"&gt;</code>
 </p>
 
 <p>
@@ -1138,7 +1138,7 @@ passed to the invoked method.
 <br />
 Example: <code>&lt;xsl:variable name="new-pop"</code>
 <br />
-<code>     select="java:put($myHash, string(@region), $newpop)"&gt;</code>
+<code>Â Â Â Â Â select="java:put($myHash, string(@region), $newpop)"&gt;</code>
 </p>
 
 <p>
@@ -1175,7 +1175,7 @@ passed to the invoked static method.
 <br />
 Example: <code>&lt;xsl:variable name="new-pop"</code>
 <br />
-<code>     select="java:java.lang.Integer.valueOf(string(@population))"&gt;</code>
+<code>Â Â Â Â Â select="java:java.lang.Integer.valueOf(string(@population))"&gt;</code>
 </p>
 <table class="note">
 <tr>
@@ -1270,7 +1270,7 @@ Java method with the signature shown above or one with the following signature:<
 </b>)</code>
 </p>
 
-<a name="java-namespace">&#8204;</a>
+<a name="java-namespace">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -1281,7 +1281,7 @@ functions.</p>
 <p>The abbreviated syntax supports the use of extension functions and extension elements implemented 
 in Java. You cannot use this syntax with extensions implemented in JavaScript or another scripting 
 language.</p>
-<a name="java-namespace-declare">&#8204;</a>
+<a name="java-namespace-declare">â€Œ</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -1298,7 +1298,7 @@ technique for invoking an extension for each format is explained in
 <i>FQCN</i>
 </b> is the fully qualified class name.
 <br />Examples: <code>xmlns:my-class="xalan://java.util.Hashtable"</code>
-<br />               
+<br />Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â 
 <code>xmlns:my-class="xalan://mypackage.myclass"</code>
 </p>
 <p>
@@ -1311,7 +1311,7 @@ technique for invoking an extension for each format is explained in
 </b> is a partial java package name.  That is, it is the beginning of or the 
 complete name of a java package.
 <br />Examples: <code>xmlns:my-package="xalan://java.util"</code>
-<br />               
+<br />Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â 
 <code>xmlns:my-package="xalan://mypackage"</code>
 </p>
 <p>
@@ -1382,7 +1382,7 @@ since the xalan:component/xalan:script constructs add no functionality.</td>
 are not.</td>
 </tr>
 </table>
-<a name="ex-java-namespace">&#8204;</a> 
+<a name="ex-java-namespace">â€Œ</a> 
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -1428,7 +1428,7 @@ into &lt;p&gt;Date: Thursday, April 27, 2000.&lt;/p&gt;.</p>
      Java constructors and methods is described above in <a href="#ext-func-calls">Extension 
      function Java calls</a>.</li>    
  </ul>
-<a name="format-date-stylesheet">&#8204;</a>   
+<a name="format-date-stylesheet">â€Œ</a>   
 <blockquote class="source">
 <pre>&lt;?xml version="1.0"?&gt;
 &lt;xsl:stylesheet 
@@ -1466,7 +1466,7 @@ into &lt;p&gt;Date: Thursday, April 27, 2000.&lt;/p&gt;.</p>
 <p>This section contains two examples. The first example uses a Java extension to transform a set of 
 name elements  into an alphabetical and numbered list. The second example uses a JavaScript script 
 to do the same. Both examples include equivalent extension elements and an extension function.</p>
-<a name="ex-java">&#8204;</a> 
+<a name="ex-java">â€Œ</a> 
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -1587,7 +1587,7 @@ public class MyCounter {
 &lt;p&gt;[10]. Weir, Robert&lt;/p&gt;
 &lt;/HTML&gt;</pre>
 </blockquote>
-<a name="ex-javascript">&#8204;</a> 
+<a name="ex-javascript">â€Œ</a> 
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -1657,7 +1657,7 @@ public class MyCounter {
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sun 03/18/2012</div>
+<div id="footer">Copyright Â© 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Fri 07/13/2012</div>
 </div>
 </body>
 </html>
