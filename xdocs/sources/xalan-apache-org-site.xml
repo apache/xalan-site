@@ -33,9 +33,14 @@
 </group>
   <separator/>  
 <group label="Mail Lists">
-  <external href="http://marc.theaimsgroup.com/?l=xalan-dev " label="Developers Archive"/>
-  <external href="http://marc.theaimsgroup.com/?l=xalan-c-users" label="C Users Archive"/>
-  <external href="http://marc.theaimsgroup.com/?l=xalan-j-users" label="J Users Archive"/>
+  <external href="http://mail-archives.apache.org/mod_mbox/xalan-dev" label="Developers Archive"/>
+  <external href="http://mail-archives.apache.org/mod_mbox/xalan-c-users" label="C Users Archive"/>
+  <external href="http://mail-archives.apache.org/mod_mbox/xalan-j-users" label="J Users Archive"/>
+</group>
+<group label="Old Archives">
+  <external href="http://marc.info/?l=xalan-dev" label="Developers OLD"/>
+  <external href="http://marc.info/?l=xalan-c-users" label="C Users OLD"/>
+  <external href="http://marc.info/?l=xalan-j-users" label="J Users OLD"/>
 </group>
   <separator/>
 <group label="Resources">

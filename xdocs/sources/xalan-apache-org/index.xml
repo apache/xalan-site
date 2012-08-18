@@ -82,7 +82,7 @@ in the development and project support efforts.</p>
 mail lists.  Posting messages to these lists is how we
 coordinate the activites related to the our projects.</p>
 
-<p>The developers mail list [<jump href="mailto:xalan-dev@xml.apache.org">xalan-dev</jump>]
+<p>The developers mail list [<jump href="mailto:dev@xalan.apache.org">xalan-dev</jump>]
  is for communicating issues to the Apache Xalan development teams.
 Both the Java and C/C++ groups monitor the developers list.
 All project change notices are posted to the developers list.</p>
@@ -91,11 +91,11 @@ All project change notices are posted to the developers list.</p>
 issues.</p>
 
 <p>The user list for Xalan C++ 
- [<jump href="mailto:xalan-c-users@xml.apache.org">xalan-c-users</jump>] is 
+ [<jump href="mailto:c-users@xalan.apache.org">xalan-c-users</jump>] is 
 for general user comments on the Xalan C++ project.</p>
 
 <p>The user list for Xalan Java 
- [<jump href="mailto:xalan-j-users@xml.apache.org">xalan-j-users</jump>] is
+ [<jump href="mailto:j-users@xalan.apache.org">xalan-j-users</jump>] is
 for general user comments on the Xalan Java project.</p>
 
 <p>The Apache Software Foundation has guidance on 
