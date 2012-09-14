@@ -20,6 +20,7 @@
 <book title="Apache Xalan Project " copyright="2011 The Apache Software Foundation">
   <document id="index" label="Apache Xalan" source="xalan-apache-org/index.xml"/>
   <document id="charter" label="Charter" source="xalan-apache-org/charter.xml"/>
+  <external href="htp://wiki.apache.org/xalan" label = "Xalan Wiki"/>
   <separator/>  
 <!--
   <external href="http://xml.apache.org/xalan-c" label="Xalan C++"/>  
