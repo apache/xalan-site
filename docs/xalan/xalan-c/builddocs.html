@@ -137,398 +137,225 @@
 </div>
 <div id="content">
 <h2>Building The Documents</h2>
-
 <ul>
 <li>
-<a href="#buildweb">Building the Xalan-C Web Pages</a>
+<a href="#thedocs">The Xalan-C/C++ HTML Documentation</a>
+</li>
+<li>
+<a href="#unixsetup">Setup UNIX for Building the Documents</a>
 </li>
   <ul>
   <li>
-<a href="#b_web_1">Documentation Source Tree</a>
-</li>
-  <li>
-<a href="#b_web_2">Destination Build Tree</a>
-</li>
-  <li>
-<a href="#b_web_3">The Web Page Build Environment</a>
-</li>
-  <li>
-<a href="#b_web_4">Preparing the Navigation File</a>
-</li>
-  <li>
-<a href="#b_web_5">Creating the Web Pages</a>
+<a href="#unixdocbld">Build the Documentation on UNIX</a>
 </li>
   </ul>
 <li>
-<a href="#buildapi">Building the Xalan-C API Reference</a>
+<a href="#winsetup">Setup WINDOWS for Building the Documents</a>
+</li>
+<li>
+<a href="#aboutstylebook">About the StyleBook XML Markup</a>
 </li>
   <ul>
   <li>
-<a href="#b_api_1">API Configuration Source Tree</a>
+<a href="#sb_dirlayout">Source Directory Layout</a>
 </li>
   <li>
-<a href="#b_api_2">Destination Path for API Web Pages</a>
-</li>
-  <li>
-<a href="#b_api_3">Build the API Web Pages</a>
+<a href="#sb_scripts">Document Building Scripts</a>
 </li>
   </ul>
-<li>
-<a href="#integrateapi">Integrate API With Xalan-C Project Web Pages</a>
-</li>
 </ul>
+<p>Our HTML web page construction does not use or require
+any Java installed or the use of JavaScript.</p>
 
-<a name="buildweb">‌</a>
+<a name="thedocs">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
-<h3>Building the Xalan-C Web Pages</h3>
+<h3>The Xalan-C/C++ HTML Documentation</h3>
+<p>The current Xalan-C/C++ HTML documentation pages are available on our website
+   <a href="http://xalan.apache.org/xalan-c/index.html">
+   http://xalan.apache.org/xalan-c</a>.</p>
+<p>The HTML documentation pages can be built from the Xalan-C
+source distribution.  Let <code>${XALANC}</code> indicate the top directory
+of the source distribution.</p>
+<blockquote class="source">
+<pre>
+   ${XALANC}/src/ = the program library source files
+   ${XALANC}/xdocs/ = the program documentation source files
+   ${XALANC}/build/docs/ = the directory created for documentation builds
+   ${XALANC}/build/docs/apiDocs/html/ = apiDocs created here, then moved
+   ${XALANC}/build/docs/xalan-c/ =  the HTML documentation tree
+</pre>
+</blockquote>
+<p>UNIX platforms can build the complete documentation package (web pages plus
+interactive api reference).</p>
+<p> Windows platforms an only build the basic web pages.</p>
 
-<p>This section shows how to build the documentation products for Xalan-C/C++. 
-This is a subproject of the ASF XALAN PMC.
-</p>
-<p>The XALAN PMC project web page [<a href="http://xalan.apache.org">http://xalan.apache.org</a>] is a top-level page 
-with branches to the subprojects that include the Java and C/C++ code libraries.
-</p>
-<p>The Xalan-C/C++ home web page [<a href="../old/xalan-c">http://xml.apache.org/xalan-c</a>] 
-is the content 
-construction that is being described here.
-</p>
-<p>The Apache StyleBook Java program is no longer needed to create useful web pages. 
-You should have a standard XSLT transform utility. 
-The "Xalan" command-line program distributed with Xalan-C works just fine.
-</p>
-
-<a name="b_web_1">‌</a>
+<a name="unixsetup">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
-<h4>Documentation Source Tree</h4>
-
-<blockquote class="source">
-<pre>
-xalan/c/trunk/xdocs/sources/
-    entities.ent        -- Product specific entities
-    make-book.bat       -- Build All Web Pages
-    make-xalan.bat      -- Build Single Web Page
-    xalan-book.xslt     -- Transformation for StyleBook XML
-    xalan.xml	        -- The Navigation Panel for Xalan-C Pages
-
-xalan/c/trunk/xdocs/sources/xslt-resources/
-    {Common components used by Xalan-C Web Pages}
-    apache-xalan.css    -- The Web Page Presentation Style
-    asf_logo.png        -- The ASF Trademark Logo
-    note.gif            -- A (note:) graphic
-
-xalan/c/trunk/xdocs/sources/xalan/
-    {The StyleBook XML Sources for Xalan-C Web Pages}
-    index.xml           -- This creates the root index.html
-    resources.xml       -- A resources dispatch page
-
-xalan/c/trunk/xdocs/style/dtd/
-    {Resources for Apache StyleBook Validation}
-    blocks.ent
-    book.dtd
-    changes.dtd
-    characters.ent
-    document.dtd
-    faqs.dtd
-    links.ent
-    markup.ent
-</pre>
-</blockquote>
-
-
-<a name="b_web_2">‌</a>
+<h3>Setup UNIX for Building the Documents</h3>
+<ol>
+<li>Requires the <code>
+<b>Xalan</b>
+</code> executable in the <code>${PATH}</code> environment.</li>
+<li>Requires the <code>
+<b>libxerces-c.so</b>
+</code> and 
+    <code>
+<b>libxalan-c.so</b>
+</code> libraries in a path
+   that is accessible to the <code>
+<b>Xalan</b>
+</code> executable.</li>
+<li>Requires a current installation of the 
+    <a href="http://www.doxygen.org">Doxygen</a> package.</li>
+<li>The interactive graphics for apiDocs require the 
+    <a href="http://www.graphviz.org">GraphViz</a> (dot) package.</li>
+</ol>
+<a name="unixdocbld">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
-<h4>Destination Build Tree</h4>
-
-<blockquote class="source">
-<pre>
-xalan/c/trunk/build/docs/html/
-    {The Xalan-C project html Web Pages go here}
-    index.html          -- This is the root of the Xalan-C subproject
-
-xalan/c/trunk/build/docs/html/resources/
-    {Resources to support Xalan-C project html Web Pages}
-    apache-xalan.css
-    asf_logo.png
-    note.gif
-
-xalan/c/trunk/build/docs/html/apiDocs/
-    {The Xalan-C API Web Pages go here}
-    index.html          -- This is the root of the Xalan-C API Documents
-</pre>
-</blockquote>
+<h4>Build the Documentation on UNIX</h4>
+<ol>
+<li>Connect to the <code>${XALANC}/xdocs/</code> directory.</li>
+<li>Run the <code>
+<b>make-apiDocs.sh</b>
+</code> (full graphics) or 
+    <code>
+<b>make-apiDocs-nograf.sh</b>
+</code> (no graphics).</li>
+<li>The script automatically chains to <code>
+<b>sources/make-book.sh</b>
+</code>
+   for building the remainder of the documentation.</li>
+<li>You can now relocate and package the documentation at
+   <code>${XALANC}/build/docs/xalan-c/</code>
+   to your final destination of choice.</li>
+</ol>
 
 
-<a name="b_web_3">‌</a>
+<a name="winsetup">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
-<h4>The Web Page Build Environment</h4>
+<h3>Setup WINDOWS for Building the Documents</h3>
+<ol>
+<li>Create a <code>%XALANC%\bin\</code> directory. Then copy the 
+  <code>
+<b>xalan.exe</b>
+</code> and the DLL
+   libraries for xerces-c and xalan-c into that directory.  This is where
+   the <code>
+<b>make-xalan.bat</b>
+</code> file expects to find the 
+   <code>
+<b>xalan.exe</b>
+</code> executable.</li>
 
-<p>The examples here describe how to build the Xalan-C/C++ web pages when
-connected to the a copy of the (xdocs/sources) directory. So connect to it.
-</p>
-<p>The StyleBook DTD validation files are in the (xdocs/style/dtd) directory.
-</p>
-<p>The StyleBook XML sources for the web pages are in the (xdocs/sources/xalan) directory.  Each web page is associated with an XML file in this directory.  The transformed output is to be placed in the (build/docs/html) directory.  The source XML file and the destination HTML file have the same base filename.
-</p>
-<p>The Web Page output directory is (build/docs/html).
-</p>
-<p>After creating the web pages, copy the (xdocs/sources/xslt-resources/*) files to the (build/docs/html/resources) directory.
-</p>
-<p>Graphic images for individual web pages are in the (xdocs/xalan-graphic) directory and later copied to the (build/docs/html) directory.
-</p>
+<li>Connect to the <code>%XALANC%\xdocs\sources\</code> directory.</li>
 
+<li>Run the <code>
+<b>make-book.bat</b>
+</code> script to create 
+   the <code>%XALANC%\build\docs\xalan-c\</code> documentation.</li>
 
-<a name="b_web_4">‌</a>
+<li>You can now relocate and package the documentation at
+   <code>%XALANC%\build\docs\xalan-c\</code> to your final destination of choice.</li>
+</ol>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">WINDOWS has no Doxygen program for building the apiDocs.
+Building apiDocs requires a Linux or UNIX platform.  You might
+be able to use WINDOWS JavaDocs to get an interactive apiDocs reference.
+The JavaDocs program is part of the Java Developer's platform.</td>
+</tr>
+</table>
+<p>Our documentation does not rely on any Java installation.</p>
+
+<a name="aboutstylebook">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
-<h4>Preparing the Navigation File</h4>
+<h3>About the StyleBook XML Markup</h3>
+<p>The obsolete Apache Java Stylebook program is no longer being used.
+The StyleBook XML markup has been slightly modified to accommodate
+standard XSLT stylesheet transformations.</p>
+<p>A standard <code>
+<b>stylebook.xslt</b>
+</code> XML transform stylesheet now
+allows any standard compliant XSLT processor to prepare the
+basic webpage documents.  The resulting documents are in strict
+XHTML.  The source pages have been adjusted so that
+compliant XML output mode is used and that transitional web
+browsers are accommodated.</p>
+<p>We also include a DTD library so that the markup source pages
+can be processed with a validating XML parser.  The parser used
+with the <code>
+<b>stylebook.xslt</b>
+</code> stylesheet
+must accommodate top-level string parameters and the ability to
+process DTD definitions.</p>
+<p>Our stylebook processing scripts currently expect to use the
+Apache Xalan-C/C++ command-line executable program.</p>
 
-<p>The (xdocs/sources/xalan.xml) is the project navigation file that is on 
-the left side of each web page. 
-The root element is &lt;book&gt; 
-containing child elements of &lt;hidden&gt;, &lt;external&gt;, 
-&lt;document&gt;, &lt;resources&gt;, &lt;faqs&gt;, and &lt;separator&gt;.  The format of this navigation file is inherited from the StyleBook Java program.  Our stylesheet uses the &lt;book&gt; to provide only a navigation panel.  It does not control the production of the entire suite of web pages.
-</p>
-<p>The markup is validated by DTD and entity definitions in the (xdocs/style/dtd) directory.
-</p>
-<p>The "id=" attribute is the name of the web page file without extension.
-</p>
-<p>The "label=" attribute is the navigation text.
-</p>
-<p>The "source=" attribute is the name of the StyleBook XML source file.
-</p>
-<p>The "href=" attribute is a link to an external resource.
-</p>
-
-
-<a name="b_web_5">‌</a>
+<a name="sb_dirlayout">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
-<h4>Creating the Web Pages</h4>
-
-<p>The XSLT transformation utility must support top-level parameters. 
-The <code>Xalan</code> command-line program built and distributed with the this project 
-has sufficient capability to create the project web pages. 
-The <code>xalan-book.xslt</code> stylesheet is designed to interpret StyleBook XML and create XHTML web pages for the Xalan-C project.
-</p>
-<p>Example: Create the <code>index.html</code> web page from <code>index.xml</code> source. The arguments are shown on separate lines for convenience of presentation.
-</p>
+<h4>Source Directory Layout</h4>
 <blockquote class="source">
 <pre>
-Xalan.exe 
-    -p sectionid "'index'" 
-    -p createdate "'Tue 08/09/2011'" 
-    xalan\index.xml
-    xalan-book.xslt
-    &gt; ..\..\build\docs\html\index.html
+  ${XALAN}/xdocs/style/dtd/*  -- the validation DTD definitions
+  ${XALAN}/xdocs/sources/stylebook.xslt -- the XML StyleBook transform
+  ${XALAN}/xdocs/sources/xalan/* -- the StyleBook XML page content
+  ${XALAN}/xdocs/sources/xalan-graphic/* -- page specific graphics
+  ${XALAN}/xdocs/sources/xslt-resources/* -- logos and css stylesheets
+  ${XALAN}/xdocs/sources/xalan.xml  -- the book navigation panel
+  ${XALAN}/xdocs/sources/entities.ent -- book XML general entity definitions
+  ${XALAN}/xdocs/sources/xalan/resources.xml -- general resource links
+  ${XALAN}/build/docs/xalan-c/* -- the StyleBook html transformed pages
 </pre>
 </blockquote>
+<p>The resulting document from <code>
+<b>stylebook.xslt</b>
+</code> is strict XHTML with 
+markup rules that can also be supported on transitional browsers.
+To guard against XML element collapse, we use the Unicode 
+zero-width-non-joining character to provide non-empty content.
+Element collapse prevention is not handled by the "stylebook.xslt" transform.
+The Apache <code>Xalan</code> or <code>xalan.exe</code> programs do not
+should guard against unwanted element collapse.</p>
 
-<p>Do the same for each web page replacing <code>index</code>, 
-<code>index.xml</code>, and <code>index.html</code> in the above example.
-</p>
-<p>Other command-line XSLT processors would have a different calling syntax.
-Check your documentation.</p>
-<p>I use batch files or shell scripts to automate this process. 
-The following batch files are what I use on Windows platforms.
-</p>
-<p>The <code>make-book.bat</code> file is used to create all web pages:
-</p>
-<blockquote class="source">
-<pre>
-  mkdir ..\..\build\docs\html\resources
-
-  call make-xalan usagepatterns
-  call make-xalan samples
-  call make-xalan resources
-  call make-xalan install
-  call make-xalan download
-  call make-xalan overview
-  call make-xalan charter
-  call make-xalan whatsnew
-  call make-xalan extensionslib
-  call make-xalan commandline
-  call make-xalan readme
-  call make-xalan releasenotes
-  call make-xalan programming
-  call make-xalan getstarted
-  call make-xalan index
-  call make-xalan extensions
-  call make-xalan faq
-  call make-xalan license
-  call make-xalan buildlibs
-  call make-xalan secureweb
-
-  copy xalan-graphic\*.* ..\..\build\docs\html
-  copy xslt-resources\*.* ..\..\build\docs\html\resources
-</pre>
-</blockquote>
-
-<p>The <code>make-xalan.bat</code> file to create a single web page:
-</p>
-<blockquote class="source">
-<pre>
-  ::
-  :: Set the current path to include a stylesheet transformation utility
-  ::
-  :: %1               The document filename (without extension) to transform
-  ::
-  :: %XALANEXSLT%     The exslt stylesheet transformation utility
-  ::
-  :: %XALANSTYLE%     The XSLT stylesheet to convert STYLEBOOK markup
-  ::
-  :: %XALANXMLDIR%    Source directory of STYLEBOOK markup XML documents
-  ::
-  :: %XALANOUTDIR%    Target directory of XHTML web page documents
-  ::
-  :: %WEBCREATED%     Web Page Creation Date
-  ::
-  :: sectionid        Top-level stylesheet parameter (document file id)
-  ::
-  :: createdate       Top-level stylesheet parameter (web page creation date)
-  ::
-
-  SET WEBCREATED=%DATE%
-  SET XALANEXSLT=..\..\bin\xalan.exe
-  SET XALANSTYLE=xalan-book.xslt
-  SET XALANXMLDIR=xalan
-  SET XALANOUTDIR=..\..\build\docs\html
-
-  "%XALANEXSLT%" -p sectionid "'%1'" -p createdate "'%WEBCREATED%'"   \
-      %XALANXMLDIR%\%1.xml %XALANSTYLE%  &gt;% XALANOUTDIR%\%1.html
-</pre>
-</blockquote>
-
-
-
-<a name="buildapi">‌</a>
+<a name="sb_scripts">‌</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
-<h3>Building the Xalan-C API Reference</h3>
-
-<p>This section shows how to build the Xalan-C/C++ application program interface (API) documents using the <a href="http://www.doxygen.org">Doxygen</a> and 
-<a href="http://www.graphviz.org">GraphViz</a> programs.  These required software packages are available for most Unix systems.
-</p>
-
-<a name="b_api_1">‌</a>
-<p align="right" size="2">
-<a href="#content">(top)</a>
-</p>
-<h4>API Configuration Source Tree</h4>
-
+<h4>Document Building Scripts</h4>
 <blockquote class="source">
 <pre>
-xalan/c/trunk/src/xalanc/       -- [*.h, *.hpp] source code files
-
-xalan/c/trunk/xdocs/
-    DoxyfileXalan               -- The doxygen configuration file
-
-xalan/c/trunk/xdocs/html/apiDocs/
-    asf_logo_wide.gif           -- The wide ASF trademark logo
-    footer.html                 -- The footer html fragment for copyright
-    header.html                 -- Header html fragment for document title
-    header-local.html           -- Header html fragment for optional title
+  ${XALAN}/xdocs/sources/make-xalan.sh {pagename} -- transform a single page
+  ${XALAN}/xdocs/sources/make-xalan.bat {pagename} -- transform a single page
 </pre>
 </blockquote>
-
-<p>Note: (ApacheLogo.jpg) is replaced with (asf_logo_wide.gif).
-</p>
-<p>Note: (diagramnotes.html) is replaced with (graph_legend.html) created by doxygen.
-</p>
-
-
-<a name="b_api_2">‌</a>
-<p align="right" size="2">
-<a href="#content">(top)</a>
-</p>
-<h4>Destination Path for API Web Pages</h4>
-
-<p>The Xalan-C/C++ API pages are constructed here.</p>
 <blockquote class="source">
 <pre>
-    xalan/c/trunk/build/docs/apiDocs/html
+  ${XALAN}/xdocs/sources/make-book.sh -- transform an entire book
+  ${XALAN}/xdocs/sources/make-book.bat -- transform an entire book
 </pre>
 </blockquote>
 
-
-<a name="b_api_3">‌</a>
-<p align="right" size="2">
-<a href="#content">(top)</a>
-</p>
-<h4>Build the API Web Pages</h4>
-
-<p>You must have usable "doxygen" and "dot" programs in your path.  The "dot" program is part of the GraphViz distribution.
-</p>
-<p>Connect to your development sources or SVN snapshot.<br />
-<blockquote class="source">
-<pre>
-xalan/c/trunk/xdocs/
-</pre>
-</blockquote>
-Run the doxygen (or doxywizard) program.<br />
-<blockquote class="source">
-<pre>
-doxygen DoxyfileXalan 2&gt;errors.log | tee doxygen.log
-</pre>
-</blockquote>
-Examine the (errors.log) file for any fatal errors.  Lots of warnings are ok.
-You can examine the constructed web pages with your favorite browser.<br />
-<blockquote class="source">
-<pre>
-% cd xalan/c/trunk/build/docs/apiDocs/html
-% iceweasel index.html &amp;
-</pre>
-</blockquote>
-</p>
-
-
-
-<a name="integrateapi">‌</a>
-<p align="right" size="2">
-<a href="#content">(top)</a>
-</p>
-<h3>Integrate API With Xalan-C Project Web Pages</h3>
-
-<p>Copy the contents of <br />
-<blockquote class="source">
-<pre>
-xalan/c/trunk/build/docs/apiDocs/html/*
-</pre>
-</blockquote>
-to the Xalan-C Project Web Pages found at <br />
-<blockquote class="source">
-<pre>xalan/c/trunk/build/docs/html/apiDocs/
-</pre>
-</blockquote>
-Copy the trademark logo <br />
-<blockquote class="source">
-<pre>
-xalan/c/trunk/xdocs/html/apiDocs/asf_logo_wide.gif
-</pre>
-</blockquote>
-to its final resting place <br />
-<blockquote class="source">
-<pre>
-xalan/c/trunk/build/docs/html/apiDocs/
-</pre>
-</blockquote>
-</p>
 
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sun 09/09/2012</div>
+<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 2012-10-04</div>
 </div>
 </body>
 </html>
