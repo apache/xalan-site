@@ -139,30 +139,41 @@
 <h2>Building Xalan-C/C++</h2>
 <ul>
 <li>
+<a href="#SourceTools">The Distribution Source Tools</a>
+</li>
+  <ul>
+  <li>
+<a href="#WinBldScripts">Prepare Windows Build Scripts"</a>
+</li>
+  <li>
+<a href="#PrepUnixBld">Prepare Unix Build Scripts</a>
+</li>
+  </ul>
+<li>
 <a href="#winbldenv">Windows Build Environment</a>
 </li>
-<ul>
-<li>
+  <ul>
+  <li>
 <a href="#winbld">Windows Basic Build Instruction</a>
 </li>
-<li>
+  <li>
 <a href="#winbldcmd">Sample Windows Build Command File</a>
 </li>
-<li>
+  <li>
 <a href="#winbldinst">Installing the Xalan Library on Windows</a>
 </li>
-</ul>
+  </ul>
 <li>
 <a href="#unixbldenv">UNIX Build Environment</a>
 </li>
-<ul>
-<li>
+  <ul>
+  <li>
 <a href="#unixlibpath">Finding Runtime Libraries</a>
 </li>
-<li>
+  <li>
 <a href="#unixbldxalan">Building the Xalan-C/C++ XSLT Libraries for UNIX</a>
 </li>
-</ul>
+  </ul>
 <li>
 <a href="#unixcompileref">Reference on Unix Platforms and C++ Compilers</a>
 </li>
@@ -173,17 +184,148 @@
 </ul>
 
 <br />
-<p>The Xalan-C/C++ XSLT library is built upon the Xerces-C/C++ XML Parser library. Before compiling the Xalan-C/C++ XSLT library, you must have a usable Xerces-C/C++ library.
+<p>The Xalan-C/C++ XSLT library is built upon the Xerces-C/C++ XML Parser library. 
+   Before compiling the Xalan-C/C++ XSLT library, you must have a usable Xerces-C/C++ library.
 </p>
-<p>You can either install a compatible binary distribution of Xerces-C/C++ or build your own from a source distribution of Xerces-C/C++.  You can gain additional capability if you build the Xerces-C/C++ XML Parser library from sources.  The Xerces-C/C++ binary distribution is not built for the IBM-ICU libraries.  The IBM-ICU libraries provide additional transcoding services.
+<p>You can either install a compatible binary distribution of Xerces-C/C++ or 
+   build your own from a source distribution of Xerces-C/C++.  You can gain additional 
+   capability if you build the Xerces-C/C++ XML Parser library from sources.  
+   The Xerces-C/C++ binary distribution is not built for the IBM-ICU libraries.  
+   The IBM-ICU libraries provide additional transcoding services.
 </p>
-<p>Building the source code packages ensures that the resulting packages are proper for your system.  There are various binary distributions available, but incompatibilities between C++ compilers (even between compiler versions) are known to cause issues with sharing of libraries.
-</p>
-<p>We don't have persons yet committed to build binary distribution releases.
+<p>Building from the source code packages for Xerces and Xalan libraries ensures that the 
+   resulting packages are proper for your system.  There are various binary distributions 
+   available, but incompatibilities between C++ compilers (even between compiler versions)
+   are known to cause issues with sharing of libraries.
 </p>
 <p>You can get more information on the Xerces-C/C++ distributions at the 
    <a href="http://xerces.apache.org/xerces-c">http://xerces.apache.org/xerces-c</a> web site.
 </p>
+
+<a name="SourceTools">‌</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>The Distribution Source Tools</h3>
+<p>We are including in the distribution some script files that can help with
+   build environment setup and distribution package creation.  These script
+   packages are working examples that developers can use for their own work.</p>
+
+<ul>
+<li>
+<b>
+<code>(src)/scripts/xalan-ms-scripts.zip</code>
+</b> For Windows Packages</li>
+<li>
+<b>
+<code>(src)/scripts/xalan-unix-scripts.tar</code>
+</b> For Unix/Linux Packages</li>
+</ul>
+
+<p>The following discussions in this chapter describe the rules by which these
+   scripts were written.</p>
+<a name="WinBldScripts">‌</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Prepare Windows Build Scripts</h4>
+<p>I use the <code>
+<b>C:\Apache\xalan-builds\</b>
+</code> directory as the home path
+   for building Windows packages.  You may need to edit the scripts for your own
+   package build location.</p>
+<p>You will need a copy of Microsoft Visual Studio .NET installed on your development computer.</p>
+<ol>
+<li>Create your package building directory.</li>
+<li>Unzip the <code>
+<b>xalan-ms-scripts.zip</b>
+</code> into your package building directory.</li>
+<li>Copy the Xerces-C sources into a builds subdirectory <code>
+<b>xerces-src-31</b>
+</code>.</li>
+<li>Copy the Xalan-C sources into a builds subdirectory <code>
+<b>xalan-src-11</b>
+</code>.</li>
+<li>You need the Xerces-C binaries available before building the Xalan-C sources.</li>
+   <ul>
+      <li>Build the Xerces-C sources using an appropriate 
+          <code>
+<b>xerces-build-31-*.bat</b>
+</code> script.
+          This script launches Microsoft Visual Studio with an appropriate environment set.</li>
+      <li>Construct the Xerces-C binary package using the appropriate
+          <code>
+<b>xerces-inst-31-*.bat</b>
+</code> script.  This binary package is later
+          used for the XERCESCPKG environment variable.</li>
+   </ul>
+<li>You can now create the Xalan-C binary package.</li>
+   <ul>
+      <li>Build the Xalan-C sources using an appropriate
+          <code>
+<b>xalan-build-11-31-*.bat</b>
+</code> script.
+          This script launches Microsoft Visual Studio with an appropriate environment set.</li>
+      <li>Construct the Xalan-C binary package using the apppropriate
+          <code>
+<b>xalan-inst-11-31-*.bat</b>
+</code> script. This binary package can later
+          be used for the XALANCPKG environment variable.</li>
+   </ul>
+<li>You can now copy the (XERCESCPKG-31)/bin to your Windows installation directory.</li>
+<li>You can now copy the (XALANCPKG-11-31)/bin to your Windows installation directory.</li>
+<li>You can also merge the (XERCESCPKG-31)/include and (XALANCPKG-11-31)/include to your
+    Windows installation directory.</li>
+<li>You can also merge the (XERCESCPKG-31)/lib and (XALANCPKG-11-31)/lib to your
+    Windows installation directory.</li>
+</ol>
+
+<a name="PrepUnixBld">‌</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Prepare Unix Build Scripts</h4>
+<p>I use my <code>
+<b>$HOME</b>
+</code> directory as the path into which 
+   <code>
+<b>xalan-unix-scripts.tar</b>
+</code> is extracted.  
+   I create subdirectory <code>
+<b>xerces-src</b>
+</code> for the Xerces-C sources and
+   another subdirectory <code>
+<b>xalan-src</b>
+</code> for the Xalan-C sources.  
+   I then create separate directories into which the actual build process
+   takes place.</p>
+<p>Directory <code>
+<b>Xerces-Build</b>
+</code> is where I make the Xerces-C binaries.</p>
+<p>Directory <code>
+<b>Xalan-Build</b>
+</code> is where I make the Xalan-C binaries.</p>
+<p>The following scripts are used to make and install the <b>release</b> build 
+   of binary products to the <code>
+<b>/opt/apache/</b>
+</code> target directory path. 
+   Connect to the appropriate build directory and execute the appropriate script.
+</p>
+<ul>
+  <li>xerces-build.sh</li>
+  <li>xalan-build.sh</li>
+</ul>
+<p>The following scripts are used to make and install the <b>debug</b> build 
+   of binary products to the <code>
+<b>/opt/apache/debug/</b>
+</code> target directory path.
+   Connect to the appropriate build directory and execute the appropriate script.
+</p>
+<ul>
+  <li>xerces-build-debug.sh</li>
+  <li>xalan-build-debug.sh</li>
+</ul>
+
 
 <a name="winbldenv">‌</a>
 <p align="right" size="2">
@@ -896,7 +1038,7 @@ CXXFLAGS="-arch i386 -arch ppc"</td>
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 2012-10-04</div>
+<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sun 2012-10-07</div>
 </div>
 </body>
 </html>
