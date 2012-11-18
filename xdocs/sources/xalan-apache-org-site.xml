@@ -20,7 +20,7 @@
 <book title="Apache Xalan Project " copyright="2011 The Apache Software Foundation">
   <document id="index" label="Apache Xalan" source="xalan-apache-org/index.xml"/>
   <document id="charter" label="Charter" source="xalan-apache-org/charter.xml"/>
-  <external href="htp://wiki.apache.org/xalan" label = "Xalan Wiki"/>
+  <external href="http://wiki.apache.org/xalan" label = "Xalan Wiki"/>
   <separator/>  
 <!--
   <external href="http://xml.apache.org/xalan-c" label="Xalan C++"/>  
@@ -28,20 +28,14 @@
 -->
 <group label="Projects">
   <external href="xalan-c/index.html" label="Xalan C++"/>  
-  <external href="old/xalan-c/index.html" label="Xalan C++ (old)"/>
-  <external href="xalan-j/index.html" label="Xalan Java"/>
+  <external href="xalan-j/index.html" label="Xalan Java (dev)"/>
   <external href="old/xalan-j/index.html" label="Xalan Java (old)"/>
 </group>
-  <separator/>  
+  <separator/>
 <group label="Mail Lists">
-  <external href="http://mail-archives.apache.org/mod_mbox/xalan-dev" label="Developers Archive"/>
-  <external href="http://mail-archives.apache.org/mod_mbox/xalan-c-users" label="C Users Archive"/>
-  <external href="http://mail-archives.apache.org/mod_mbox/xalan-j-users" label="J Users Archive"/>
-</group>
-<group label="Old Archives">
-  <external href="http://marc.info/?l=xalan-dev" label="Developers OLD"/>
-  <external href="http://marc.info/?l=xalan-c-users" label="C Users OLD"/>
-  <external href="http://marc.info/?l=xalan-j-users" label="J Users OLD"/>
+  <external href="http://marc.info/?l=xalan-dev" label="Developers"/>
+  <external href="http://marc.info/?l=xalan-c-users" label="C Users"/>
+  <external href="http://marc.info/?l=xalan-j-users" label="J Users"/>
 </group>
   <separator/>
 <group label="Resources">

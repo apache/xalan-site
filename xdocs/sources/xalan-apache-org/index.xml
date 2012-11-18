@@ -16,64 +16,122 @@
  * limitations under the License.
 -->
 <s1 title="The Apache Xalan Project">
-
-<p>Xalan is an XSLT processor for transforming XML documents into HTML, text, or
-other XML document types.  It uses the Xerces (XML Parser) to convert XML 
-documents to internal nodesets.</p>
-
-<p>The project name and logo are derived from the ancient Xalam musical instrument
-found in Africa. Note the difference in spelling.</p>
-
-<s2 title="Xalan">
-<p>Xalan has moved out of the XML project and is now a project in its own right. 
-You will find links to all the Xalan subprojects as well as our charter on the menu 
-at the left of the screen. </p>
-
-<p>The old releases of Xalan still reside in the XML Project archives.</p>
-<ul>
-<!--
-* Xalan C++ Version 1.10 [xml.apache.org/xalan-c]
-* Xalan Java Version 2.7.1 [xml.apache.org/xalan-j]
--->
-  <li><jump href="old/xalan-c/index.html">Xalan C++ Version 1.10</jump></li>
-  <li><jump href="old/xalan-j/index.html">Xalan Java Version 2.7.1</jump></li>
-</ul>
-
-<p>The links on the left navigation panel point to the current documentation.</p>
-</s2>
-
-<s2 title="What is Xalan?">
-<p>
-As our charter will tell you, the Apache Xalan Project is a collaborative software development 
-project dedicated to providing robust, full-featured, commercial-quality, and 
-freely available XSLT support on a wide variety of platforms.</p>
-<p>There are currently two subprojects under the Apache Xalan Project:  
-<jump href="old/xalan-c/index.html">Xalan C++</jump>, and 
-<jump href="old/xalan-j/index.html">Xalan Java</jump>, representing
-C++ and Java implementations of the <jump href="http://www.w3.org/TR/xslt">W3C XSL Transformations (XSLT) 
+<p>We are proud to release version 1.11 of our Xalan C++ project. This is 
+the first product distribution release since Apache Xalan was reformed in 2011.
+</p>
+<p>The Apache Xalan Project develops and maintains libraries and programs
+that transform XML documents using XSLT standard stylesheets.  Our
+subprojects use the Java and C++ programing languages to implement
+the XSLT libraries.
+</p>
+<p>The Apache Xalan Project was reformed in 2011. It started as a
+subproject of Apache XML which has since been officially retired. 
+The Apache Xalan Project continues as a top-level project governed by the
+Apache Software Foundation as a collaborative software development community
+dedicated to providing robust, full-featured, commercial-quality, and 
+freely available XSLT support on a wide variety of platforms.
+</p>
+<p>The supported specifications are defined by the
+<jump href="http://www.w3.org/TR/xslt">W3C XSL Transformations (XSLT) 
 Version 1.0</jump> and the <jump href="http://www.w3.org/TR/xpath">XML Path Language (XPath) Version 1.0</jump> 
-recommendations.</p> 
+recommendations.
+</p> 
+<p><em>Contents:</em></p>
+<ul>
+<li><link anchor="XalanProjects">Apache Xalan Projects</link></li>
+<li><link anchor="XsltAndXpath">What is XSLT and XPath?</link></li>
+<li><link anchor="License">License information</link></li>
+<li><link anchor="GetInvolved">Getting Involved</link></li>
+</ul>
+<p>The project name and logo are derived from the ancient Xalam musical
+instrument found in Africa.  Note the difference in spelling. The project
+name and logo are trademarks of the Apache Software Foundation.
+</p>
+<anchor name="XalanProjects"/>
+<s2 title="Apache Xalan Projects">
+<p>There are currently two subprojects under the Apache Xalan Project:  
+<jump href="xalan-c/index.html">Xalan C++</jump>, and 
+<jump href="xalan-j/index.html">Xalan Java</jump>, representing
+C++ and Java implementations of the 
+<jump href="http://www.w3.org/TR/xslt">W3C XSL Transformations (XSLT) 
+Version 1.0</jump> and the 
+<jump href="http://www.w3.org/TR/xpath">XML Path Language (XPath) Version 1.0</jump> 
+recommendations.
+</p> 
+<p>Both the Java and C++ development teams provide libraries and 
+executable programs to transform XML documents using XSLT stylesheets.
+</p>
+<s3 title="Xalan C++ Project">
+<p>The <jump href="xalan-c/index.html">Xalan-C</jump> project officially
+released version 1.11 on November 2, 2012.  The most significant
+enhancement is the ability to supply top-level stylesheet parameters of
+various types.  They include string, nodeset, and number.  A nodeset
+paramter can be any parsed XML document or XML fragment.  A number
+parameter can be any value of type double.  A string parameter is any
+unicode text string.
+</p>
+<p>Xalan-C 1.11 supports C++ development and has been successfully tested on the
+following platforms</p>
+<ul>
+<li>Microsoft Visual Studio 2003</li>
+<li>Microsoft Visual Studio 2005</li>
+<li>Microsoft Visual Studio 2008</li>
+<li>Microsoft Visual Studio 2010</li>
+<li>Linux and GCC 4.4.5</li>
+<li>Solaris-10 with SunStudio-12.3</li>
+<li>FreeBSD-9 with GCC 4.2</li>
+<li>OpenBSD with GCC</li>
+<li>AIX</li>
+</ul>
+<p>Xalan-C builds should also work for Mac OsX, HPUX, and some IBM mainframe
+and AS400 platforms.
+</p>
+<p>The GNU make utility should be used with the UNIX/POSIX platforms.
+</p>
+<p>The <jump href="old/xalan-c/index.html">Xalan-1.10</jump> and older
+releases are available on the <jump href="http://archive.apache.org/dist/xml/xalan-c">
+Apache Archives</jump>.
+</p>
+</s3>
+<s3 title="Xalan Java Project">
+<p>There are no new Java products available since Apache Xalan was reformed.
+The current development for <jump href="xalan-j/index.html">Version 2.7.D2</jump>
+reflects the work in progress in the 
+<jump href="http://svn.apache.org/repos/asf/xalan/xalan-j/trunk/">subversion repository</jump>.
+</p>
+<p>The old <jump href="old/xalan-j/index.html">Xalan-J 2.7.1</jump>
+distributions are still available on the 
+<jump href="http://archive.apache.org/dist/xml/xalan-j">Apache Archives</jump>.
+</p>
+<p>There is continuing effort to prepare for a new Xalan Java patch release. 
+You can follow the efforts and post your own contributions 
+on the Java users and developers mail lists.
+</p>
+</s3>
 </s2>
-
+<anchor name="XsltAndXpath"/>
 <s2 title="What is XSLT and XPath?">
-<p>XSLT is the first part of the <jump href="http://www.w3.org/TR/xsl/">Extensible Stylesheet Language (XSL)</jump>. 
-It includes the XSL Transformation (XSLT) vocabulary and XPath, a language for addressing parts of XML documents. 
+<p>XSLT is the first part of the 
+<jump href="http://www.w3.org/TR/xsl/">Extensible Stylesheet Language (XSL)</jump>. 
+It includes the XSL Transformation (XSLT) vocabulary and 
+XPath, a language for addressing parts of XML documents. 
 XSL also includes a vocabulary for specifying formatting semantics, however, 
 this is not part of the Apache Xalan Project.  For more information on formatting objects, see the 
-<jump href="http://xml.apache.org/fop/">Apache XML FOP (Formatting Objects Project)</jump>.
- </p>
-
+<jump href="http://xmlgraphics.apache.org/fop/">Apache XML Graphics (Formatting Objects Project)</jump>.
+</p>
 <p>XSLT implementations, sometimes referred to as XSLT processors, use an XSL stylesheet to transform
-XML documents into HTML, text, or other XML document types.   In structural terms, an XSL stylesheet 
-specifies the transformation of one tree of nodes (the XML input) into another tree of nodes (the output or 
-transformation result).</p>
+XML documents into HTML, text, or other XML document types.  
+In structural terms, an XSL stylesheet 
+specifies the transformation of one tree of nodes (the XML input) 
+into another tree of nodes (the output or transformation result).
+</p>
 </s2>
-
+<anchor name="License"/>
 <s2 title="License information">
 <p>Xalan C++ and Xalan Java are made available under the <jump href="http://www.apache.org/licenses/LICENSE-2.0">
 Apache Software License, Version 2.0.</jump></p>
 </s2>
-
+<anchor name="GetInvolved"/>
 <s2 title="Getting Involved"> 
 <p>We always appreciate people and organizations that wish to help
 in the development and project support efforts.</p>
@@ -87,7 +145,7 @@ coordinate the activites related to the our projects.</p>
 Both the Java and C/C++ groups monitor the developers list.
 All project change notices are posted to the developers list.</p>
 
-<p>Each sub-project has its own mail list for project specific user
+<p>Each subproject has its own mail list for project specific user
 issues.</p>
 
 <p>The user list for Xalan C++ 
