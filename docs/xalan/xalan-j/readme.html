@@ -72,10 +72,10 @@
 <br />
 </li>
 <li>
-<a href="../index.html">Home</a>
+<a href="http://xalan.apache.org/index.html">Home</a>
 </li></ul><hr /><ul>
 <li>
-<a href="index.html">Xalan-J 2.7.D2</a>
+<a href="index.html">Xalan-J 2.7.2</a>
 </li>
 <li>
 <a href="charter.html">Charter</a>
@@ -146,7 +146,7 @@
 <a href="builds.html">Building a release</a>
 </li>
 <li>
-<a href="http://xalan.apache.org/old/xalan-j/test/overview.html">Testing</a>
+<a href="http://xml.apache.org/xalan-j/test/overview.html">Testing</a>
 </li>
 <li>
 <a href="bugreporting.html">Bug Reporting</a>
@@ -160,7 +160,10 @@
 <h2>Release Notes</h2>
  <ul>
   <li>
-<a href="#notes_latest">Release notes for  version 2.7.1</a>
+<a href="#notes_latest">Release notes for  version 2.7.2</a>
+</li>
+  <li>
+<a href="#notes_271">Release notes for version 2.7.1</a>
 </li>
   <li>
 <a href="#notes_270">Release notes for version 2.7.0</a>
@@ -191,7 +194,86 @@
 </li>
  </ul>
   
-   <a name="notes_latest">‌</a>
+  <a name="notes_latest">‌</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Release notes for Xalan-Java 2.7.2</h3>
+    <p>
+      Xalan-Java 2.7.2 was released in April 2014.
+    </p>
+     
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Fix for CVE-2014-0107 insufficient secure processing</h4>
+      <p>
+        When using FEATURE_SECURE_PROCESSING ("http://javax.xml.XMLConstants/feature/secure-processing") on a TransformerFactory, the output properties:
+      </p>
+      <ul>
+        <li>{http://xml.apache.org/xalan}content-handler</li>
+        <li>{http://xml.apache.org/xalan}entities</li>
+        <li>{http://xml.apache.org/xslt}content-handler</li>
+        <li>{http://xml.apache.org/xslt}entities</li>
+      </ul>
+      <p>
+        should be ignored (see http://xml.apache.org/xalan-j/usagepatterns.html#outputprops)
+      </p>
+      <p>
+        These properties can be used to load an arbitrary class or access an arbitrary URL/resource so are problematic when secure processing is desired.
+      </p>
+      <p>      
+        <code>  
+          &lt;xsl:output xalan:content-handler="org.example.BadClass" ...
+        </code>   
+      </p>
+      <p>      
+        <code>  
+          &lt;xsl:output xalan:entities="http://example.org/reallyLargeFile.bin" ...
+        </code>   
+      </p>
+      <p>
+        These features could be used to load a class that had undesirable side-effects or to load a large file and exhaust memory, etc. 
+      </p>
+      <p>
+        See <a href="#https://issues.apache.org/jira/browse/XALANJ-2435">XALANJ-2435</a>. 
+      </p>
+    
+    
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Upgrade to Xerces-J 2.11.0 and XML Commons External 1.4.01</h4>
+      The distributions contain upgraded versions of <code>xercesImpl.jar</code>
+      (Xerces-J 2.11.0) and <code>xml-apis.jar</code> (XML Commons External 1.4.01).
+    
+    
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>XALANJ Jira bug fixes</h4>
+      <p>XALANJ Jira bug fixes:
+        <a href="https://issues.apache.org/jira/browse/XALANJ-2435">2435</a>,
+        <a href="https://issues.apache.org/jira/browse/XALANJ-2580">2580</a>,
+        <a href="https://issues.apache.org/jira/browse/XALANJ-2546">2546</a>,
+        <a href="https://issues.apache.org/jira/browse/XALANJ-2581">2581</a>,
+        <a href="https://issues.apache.org/jira/browse/XALANJ-2581">2582</a>,
+        <a href="https://issues.apache.org/jira/browse/XALANJ-2581">2583</a>,
+        <a href="https://issues.apache.org/jira/browse/XALANJ-2473">2473</a>,
+        <a href="https://issues.apache.org/jira/browse/XALANJ-2495">2495</a>,
+        <a href="https://issues.apache.org/jira/browse/XALANJ-2493">2493</a>,
+        <a href="https://issues.apache.org/jira/browse/XALANJ-2424">2424</a>,
+        <a href="https://issues.apache.org/jira/browse/XALANJ-2446">2446</a>,
+        <a href="https://issues.apache.org/jira/browse/XALANJ-2447">2447</a>
+      </p>
+      <p>You can also view the list in 
+        <a href="https://issues.apache.org/jira/browse/XALANJ-2424?jql=project%20%3D%20XALANJ%20AND%20fixVersion%20%3D%202.7.2%20ORDER%20BY%20due%20ASC%2C%20priority%20DESC%2C%20created%20ASC">Jira</a>
+      </p>
+     
+        
+      
+   
+   <a name="notes_271">‌</a>
    <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
@@ -535,9 +617,8 @@
       <a href="http://issues.apache.org/jira/secure/ViewIssue.jspa?key=XALANJ-2176">2176</a>,
       <a href="http://issues.apache.org/jira/secure/ViewIssue.jspa?key=XALANJ-2183">2183</a>
      </li>
-     <li>For a list of Xalan-Java commits, see xalan-cvs@xml.apache.org and commits@xalan.apache.org in the
-      <a href="http://mail-archives.apache.org/mod_mbox/">Apache mail archives</a>.  The commits@xalan.apache.org list was activated on
-      August 18, 2012.
+     <li>For a list of Xalan-Java commits, see xalan-cvs@xml.apache.org in the
+      <a href="http://mail-archives.apache.org/mod_mbox/">Apache mail archives</a>.
      </li>        
      </ul>
    
@@ -1023,7 +1104,7 @@
 </p>
 <h3>Other points of interest</h3>
      <ul>
-     <li>Xalan Java 2 is integrated with release 2 of Xerces-Java. Xalan-Java Version 2.7.D2 does not include support for the deprecated Xalan-Java 1 compatability API. 
+     <li>Xalan Java 2 is integrated with release 2 of Xerces-Java. Xalan-Java Version 2.7.2 does not include support for the deprecated Xalan-Java 1 compatability API. 
      The Xalan-Java 1 compatability code does NOT compile with Xerces-Java 2.<br />
 <br />
 </li>
@@ -1098,7 +1179,7 @@
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sat 09/08/2012</div>
+<div id="footer">Copyright © 1999-2014 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 2014-05-15</div>
 </div>
 </body>
 </html>

@@ -72,10 +72,10 @@
 <br />
 </li>
 <li>
-<a href="../index.html">Home</a>
+<a href="http://xalan.apache.org/index.html">Home</a>
 </li></ul><hr /><ul>
 <li>
-<a href="index.html">Xalan-J 2.7.D2</a>
+<a href="index.html">Xalan-J 2.7.2</a>
 </li>
 <li>
 <a href="charter.html">Charter</a>
@@ -146,7 +146,7 @@
 <li>Building a release<br />
 </li>
 <li>
-<a href="http://xalan.apache.org/old/xalan-j/test/overview.html">Testing</a>
+<a href="http://xml.apache.org/xalan-j/test/overview.html">Testing</a>
 </li>
 <li>
 <a href="bugreporting.html">Bug Reporting</a>
@@ -224,18 +224,17 @@
 </td>
 <td class="noteTxt">This section is meant to become a set of guidelines for all Xalan-Java
 committers and developers who wish to submit patches.  It's still in progress; 
-suggestions to xalan-dev@apache.org appreciated.</td>
+suggestions to xalan-dev@xml.apache.org appreciated.</td>
 </tr>
 </table> 
   <p>The project's technical mailing list for all committers and developers 
   interested in the API and inner workings is 
-  <a href="mailto:xalan-dev@apache.org">xalan-dev@apache.org</a>; 
+  <a href="mailto:xalan-dev@xml.apache.org">xalan-dev@xml.apache.org</a>; 
   it's a good idea to 
   <a href="contact_us.html#dev-mailing-list">subscribe</a>
   if you plan to work on Xalan-Java.  Logs of all Subversion 
-  commits are automatically sent to <a href="mailto:commits@xalan.apache.org">commits@xalan.apache.org</a>, although 
-  discussions should happen on xalan-dev.  You can read more 
-  <a href="http://www.apache.org/foundation/mailinglists.html">about mailing lists.</a>
+  commits are automatically sent to <a href="mailto:xalan-cvs@xml.apache.org">xalan-cvs@xml.apache.org</a>, although 
+  discussions should happen on xalan-dev.  You can read more <a href="http://xml.apache.org/mail.html">about mailing lists.</a>
 </p>
   <p>Xalan-Java is a fairly mature project; one where most committers and many 
   users expect that the daily build will be mostly functional.  Very risky changes 
@@ -247,7 +246,7 @@ suggestions to xalan-dev@apache.org appreciated.</td>
   it's OK to break the Smoketest temporarily.  The Smoketest is a selection of 
   API functionality tests and a pass through a wide variety of XSLT conformance 
   tests that ensure basic functionality.  You can also read a full set of 
-  <a href="../old/xalan-j/test/overview.html">documentation about the tests</a>.</p>
+  <a href="http://xml.apache.org/xalan-j/test/overview.html">documentation about the tests</a>.</p>
   <p>
   (Smoketest doc is TBD!)
 <blockquote class="source">
@@ -291,7 +290,7 @@ make critical bugfixes for existing customers who want to stay on the stable rel
 <br />
 </li>
 <li>Developer releases are very ad hoc; they represent a chunk of progress along the 
-HEAD of our CVS tree towards a new major or minor release. The developer release 
+HEAD of our Subversion tree towards a new major or minor release. The developer release 
 versions would be going from 2.3 to a new 2.4.D1 - the developer release is somewhat 
 like a 'beta' towards a new 2.4 minor version release.  Quality standards for developer 
 releases are much less stringent than other releases.<br />
@@ -437,15 +436,15 @@ xml-xalan/java/src/org/apache/xalan/xslt/EnvironmentCheck.java</li>
 <ul>
 <li>Do a clean checkout and tag the sources.</li>
 </ul>
-<p>Of course, you checked in all your earlier work to the CVS repository, right?</p>
+<p>Of course, you checked in all your earlier work to the Subversion repository, right?</p>
 <p>The safest way to perform a build for distribution is to check out a fresh 
-new copy of the repository from CVS.  This avoids any potential problems with 
+new copy of the repository from Subversion.  This avoids any potential problems with 
 uncommitted changes or extra files on your local machine.</p>
 <p>Check out a new copy of both xml-xalan/java and xml-xalan/test repositories 
 to a blank directory on your local machine.  You then need to tag the files in 
 the repository with a marker noting that these versions are the actual ones 
 being used in the build (you could actually do this after running the build below). 
-Use the CVS tag command to add the tag to both repositories (/java and /test). 
+Use the Subversion tag command to add the tag to both repositories (/java and /test). 
 The tag name should be something like 'xalan-j_2_4'; look at the log of any file 
 to see the exact format of previous builds.</p>
 
@@ -554,7 +553,7 @@ either scp them or login to the apache machines and use scp or pftp from there
 outbound to some server that you've copied them to.</p>
 <p>(Subject to change as www.apache.org/dist gets ready for mirroring) 
 You'll need to log on to xml.apache.org (which is a separate machine 
-from cvs.apache.org) and upload the files to /www/xml.apache.org/xalan-j/dist</p>
+from svn.apache.org) and upload the files to /www/xml.apache.org/xalan-j/dist</p>
 <p>You should also update the distribution directory's html files 
 to note the new build numbers.  Carefully edit the .htaccess file 
 to update the 'Latest Stable Build' and 'Latest Developers Build' lines  
@@ -674,7 +673,7 @@ a couple of the highlights of the new build, and a link to the
 distribution area.</p>
 
 <p>Make the subject something like:  [ANN] Xalan-J 2.x Point/Developers/Whatever Release posted to xml.apache.org
-and send your email to:  general@xml.apache.org, xalan-dev@apache.org, xalan-j-users@apache.org.  Note 
+and send your email to:  general@xml.apache.org, xalan-dev@xml.apache.org, xalan-j-users@xml.apache.org.  Note 
 that for developers releases, you can omit the general@xml.apache.org address if you 
 don't think it will be of interest to the larger audience.
 </p>
@@ -686,7 +685,7 @@ don't think it will be of interest to the larger audience.
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sat 09/08/2012</div>
+<div id="footer">Copyright © 1999-2014 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 2014-05-15</div>
 </div>
 </body>
 </html>
