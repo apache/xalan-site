@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
 <!--
- * Copyright 1999-2012 The Apache Software Foundation.
+ * Copyright 1999-2014 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,10 @@
  * limitations under the License.
 -->
 <s1 title="The Apache Xalan Project">
-<p>We are proud to release version 1.11 of our Xalan C++ project. This is 
-the first product distribution release since Apache Xalan was reformed in 2011.
+<p>We are proud to release version 2.7.2 of our Xalan Java project.  This is
+the first product distribution release of Xalan Java since Apache Xalan was
+reformed in 2011.  It also fixes a security issue reported against the
+previous version.
 </p>
 <p>The Apache Xalan Project develops and maintains libraries and programs
 that transform XML documents using XSLT standard stylesheets.  Our
@@ -89,21 +91,24 @@ and AS400 platforms.
 <p>The GNU make utility should be used with the UNIX/POSIX platforms.
 </p>
 <p>The <jump href="old/xalan-c/index.html">Xalan-1.10</jump> and older
-releases are available on the <jump href="http://archive.apache.org/dist/xml/xalan-c">
+releases are available on the <jump href="http://archive.apache.org/dist/xalan/xalan-c">
 Apache Archives</jump>.
 </p>
 </s3>
 <s3 title="Xalan Java Project">
-<p>There are no new Java products available since Apache Xalan was reformed.
-The current development for <jump href="xalan-j/index.html">Version 2.7.D2</jump>
-reflects the work in progress in the 
+<p>The <jump href="xalan-j/index.html">Xalan-Java 2.7.2</jump> was released in April 2014.  You can download the current release
+the current <jump href="&xslt4j-distdir;">Xalan-Java 2.7.2</jump> release for your development. The
+current work in progress can be found in the 
 <jump href="http://svn.apache.org/repos/asf/xalan/xalan-j/trunk/">subversion repository</jump>.
+</p>
+<p>The current release fixes a security issue that was registered against version 2.7.1.
 </p>
 <p>The old <jump href="old/xalan-j/index.html">Xalan-J 2.7.1</jump>
 distributions are still available on the 
 <jump href="http://archive.apache.org/dist/xml/xalan-j">Apache Archives</jump>.
 </p>
-<p>There is continuing effort to prepare for a new Xalan Java patch release. 
+<p>This is a mature project. There has been some discussion about supporting XPath-2.
+We could use your support in this major rework of the library. 
 You can follow the efforts and post your own contributions 
 on the Java users and developers mail lists.
 </p>

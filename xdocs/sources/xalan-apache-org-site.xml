@@ -2,7 +2,7 @@
 <!DOCTYPE book SYSTEM "../style/dtd/book.dtd">
 
 <!--
- * Copyright 2000-2012 The Apache Software Foundation.
+ * Copyright 2000-2014 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  * limitations under the License.
 -->
 
-<book title="Apache Xalan Project " copyright="2011 The Apache Software Foundation">
+<book title="Apache Xalan Project " copyright="2014 The Apache Software Foundation">
   <document id="index" label="Apache Xalan" source="xalan-apache-org/index.xml"/>
   <document id="charter" label="Charter" source="xalan-apache-org/charter.xml"/>
   <external href="http://wiki.apache.org/xalan" label = "Xalan Wiki"/>
@@ -27,9 +27,9 @@
   <external href="http://xml.apache.org/xalan-j" label="Xalan Java 2"/>
 -->
 <group label="Projects">
-  <external href="xalan-c/index.html" label="Xalan C++"/>  
-  <external href="xalan-j/index.html" label="Xalan Java (dev)"/>
-  <external href="old/xalan-j/index.html" label="Xalan Java (old)"/>
+  <external href="xalan-c/index.html" label="Xalan C++ 1.11"/>  
+  <external href="xalan-j/index.html" label="Xalan Java 2.7.2"/>
+  <external href="old/xalan-j/index.html" label="Xalan Java 2.7.1"/>
 </group>
   <separator/>
 <group label="Mail Lists">
