@@ -91,7 +91,7 @@ and AS400 platforms.
 <p>The GNU make utility should be used with the UNIX/POSIX platforms.
 </p>
 <p>The <jump href="old/xalan-c/index.html">Xalan-1.10</jump> and older
-releases are available on the <jump href="http://archive.apache.org/dist/xalan/xalan-c">
+releases are available on the <jump href="http://archive.apache.org/dist/xml/xalan-c">
 Apache Archives</jump>.
 </p>
 </s3>
