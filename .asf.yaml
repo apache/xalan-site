@@ -1,2 +1,6 @@
 publish:
   whoami: master
+
+pelican:
+  whoami: master
+  target: asf-site
