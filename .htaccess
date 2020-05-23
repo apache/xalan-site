@@ -23,3 +23,4 @@ Redirect 301 /xalan-c/test-faqs.html https://apache.github.io/xalan-c/faq.html
 Redirect 301 /xalan-c/testdownload.html https://apache.github.io/xalan-c/download.html
 Redirect 301 /xalan-c/usagepatterns.html https://apache.github.io/xalan-c/usagepatterns.html
 Redirect 301 /xalan-c/whatsnew.html https://apache.github.io/xalan-c/releases.html
+Redirect 301 /xalan-c https://apache.github.io/xalan-c/
