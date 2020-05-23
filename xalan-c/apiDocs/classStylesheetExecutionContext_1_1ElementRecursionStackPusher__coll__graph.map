@@ -1,7 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classStylesheetExecutionContext.html" title="StylesheetExecutionContext" alt="" coords="107,261,309,291"/>
-<area shape="rect" id="node4" href="$classXPathExecutionContext.html" title="XPathExecutionContext" alt="" coords="121,181,295,211"/>
-<area shape="rect" id="node6" href="$classExecutionContext.html" title="ExecutionContext" alt="" coords="29,85,163,115"/>
-<area shape="rect" id="node8" href="$classProblemListenerBase.html" title="This is the abstract class that is used when reporting a problem some kind, that requires a message..." alt="" coords="17,5,175,35"/>
-<area shape="rect" id="node10" href="$classXObjectFactory.html" title="This class handles the creation of XObjects and manages their lifetime." alt="" coords="187,85,304,115"/>
-</map>

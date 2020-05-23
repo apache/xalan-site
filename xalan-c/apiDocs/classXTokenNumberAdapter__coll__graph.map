@@ -1,9 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classXNumberBase.html" title="XNumberBase" alt="" coords="235,397,349,427"/>
-<area shape="rect" id="node4" href="$classXObject.html" title="Class to hold XPath return types." alt="" coords="256,317,328,347"/>
-<area shape="rect" id="node14" href="$classXToken.html" title="XToken" alt="" coords="141,397,211,427"/>
-<area shape="rect" id="node6" href="$classXalanReferenceCountedObject.html" title="Class to hold reference count information." alt="" coords="228,101,447,131"/>
-<area shape="rect" id="node8" href="$classXObjectFactory.html" title="This class handles the creation of XObjects and manages their lifetime." alt="" coords="471,101,588,131"/>
-<area shape="rect" id="node10" href="$classXalanDOMString.html" title="XalanDOMString" alt="" coords="55,101,183,131"/>
-<area shape="rect" id="node12" href="$classXalanVector.html" title="XalanVector\&lt; XalanDOMChar \&gt;" alt="" coords="5,5,232,35"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classXercesDOMWalker.html" title="XercesDOMWalker" alt="" coords="5,197,144,227"/>
-<area shape="rect" id="node4" href="$classFormatterListener.html" title="A SAX&#45;based formatter interface for the XSL processor." alt="" coords="168,197,304,227"/>
-<area shape="rect" id="node6" href="$classPrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs..." alt="" coords="111,101,220,131"/>
-<area shape="rect" id="node8" href="$classXalanDOMString.html" title="XalanDOMString" alt="" coords="244,101,372,131"/>
-<area shape="rect" id="node10" href="$classXalanVector.html" title="XalanVector\&lt; XalanDOMChar \&gt;" alt="" coords="195,5,421,35"/>
-</map>

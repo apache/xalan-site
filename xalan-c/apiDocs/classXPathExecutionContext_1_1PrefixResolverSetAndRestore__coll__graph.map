@@ -1,7 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classPrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs..." alt="" coords="56,181,165,211"/>
-<area shape="rect" id="node4" href="$classXPathExecutionContext.html" title="XPathExecutionContext" alt="" coords="189,181,363,211"/>
-<area shape="rect" id="node6" href="$classExecutionContext.html" title="ExecutionContext" alt="" coords="108,85,241,115"/>
-<area shape="rect" id="node8" href="$classProblemListenerBase.html" title="This is the abstract class that is used when reporting a problem some kind, that requires a message..." alt="" coords="96,5,253,35"/>
-<area shape="rect" id="node10" href="$classXObjectFactory.html" title="This class handles the creation of XObjects and manages their lifetime." alt="" coords="265,85,383,115"/>
-</map>

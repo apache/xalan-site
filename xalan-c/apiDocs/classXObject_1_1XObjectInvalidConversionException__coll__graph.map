@@ -1,7 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classXObject_1_1XObjectException.html" title="XObject::XObjectException" alt="" coords="60,373,255,403"/>
-<area shape="rect" id="node4" href="$classXalanXPathException.html" title="XalanXPathException" alt="" coords="77,293,237,323"/>
-<area shape="rect" id="node6" href="$classXSLException.html" title="XSLException" alt="" coords="103,213,212,243"/>
-<area shape="rect" id="node8" href="$classXalanDOMString.html" title="XalanDOMString" alt="" coords="93,101,221,131"/>
-<area shape="rect" id="node10" href="$classXalanVector.html" title="XalanVector\&lt; XalanDOMChar \&gt;" alt="" coords="44,5,271,35"/>
-</map>
