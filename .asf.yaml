@@ -1,2 +1,6 @@
 publish:
   whoami: master
+
+staging:
+  profile: ~
+  whoami:  stage
