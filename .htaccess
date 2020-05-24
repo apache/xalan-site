@@ -10,7 +10,7 @@ Redirect 301 /xalan-c/faq.html https://apache.github.io/xalan-c/faq.html
 Redirect 301 /xalan-c/getstarted.html https://apache.github.io/xalan-c/introduction.html
 Redirect 301 /xalan-c/index.html https://apache.github.io/xalan-c/
 Redirect 301 /xalan-c/install.html https://apache.github.io/xalan-c/install.html
-Redirect 301 /xalan-c/license.html https://apache.github.io/xalan-c/license.html
+Redirect 301 /xalan-c/license.html https://apache.github.io/xalan-c/licensing.html
 Redirect 301 /xalan-c/overview.html https://apache.github.io/xalan-c/overview.html
 Redirect 301 /xalan-c/programming.html https://apache.github.io/xalan-c/programming.html
 Redirect 301 /xalan-c/readme.html https://apache.github.io/xalan-c/releases.html
