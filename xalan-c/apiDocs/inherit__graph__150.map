@@ -1,7 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node1" href="$classWriter.html" title="Writer" alt="" coords="5,59,64,88"/>
-<area shape="rect" id="node3" href="$classPrintWriter.html" title="PrintWriter" alt="" coords="112,59,200,88"/>
-<area shape="rect" id="node5" href="$classDOMStringPrintWriter.html" title="DOMStringPrintWriter" alt="" coords="279,5,436,35"/>
-<area shape="rect" id="node7" href="$classNullPrintWriter.html" title="NullPrintWriter" alt="" coords="301,59,413,88"/>
-<area shape="rect" id="node9" href="$classXalanOutputStreamPrintWriter.html" title="XalanOutputStreamPrintWriter" alt="" coords="249,112,465,141"/>
-</map>

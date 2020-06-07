@@ -1,9 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classPrintWriter.html" title="PrintWriter" alt="" coords="147,197,235,227"/>
-<area shape="rect" id="node4" href="$classWriter.html" title="Writer" alt="" coords="5,101,64,131"/>
-<area shape="rect" id="node6" href="$classXalanOutputStream.html" title="XalanOutputStream" alt="" coords="348,197,497,227"/>
-<area shape="rect" id="node8" href="$classXalanVector.html" title="XalanVector\&lt; char \&gt;" alt="" coords="88,101,245,131"/>
-<area shape="rect" id="node10" href="$classXalanOutputTranscoder.html" title="XalanOutputTranscoder" alt="" coords="269,101,443,131"/>
-<area shape="rect" id="node12" href="$classXalanDOMString.html" title="XalanDOMString" alt="" coords="572,101,700,131"/>
-<area shape="rect" id="node14" href="$classXalanVector.html" title="XalanVector\&lt; XalanDOMChar \&gt;" alt="" coords="424,5,651,35"/>
-</map>

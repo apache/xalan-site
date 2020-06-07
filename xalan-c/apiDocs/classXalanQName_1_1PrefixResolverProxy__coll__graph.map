@@ -1,8 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classPrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs..." alt="" coords="5,421,115,451"/>
-<area shape="rect" id="node4" href="$classXalanDOMString.html" title="XalanDOMString" alt="" coords="109,101,237,131"/>
-<area shape="rect" id="node12" href="$classXalanNamespace.html" title="XalanNamespace" alt="" coords="217,213,353,243"/>
-<area shape="rect" id="node6" href="$classXalanVector.html" title="XalanVector\&lt; XalanDOMChar \&gt;" alt="" coords="60,5,287,35"/>
-<area shape="rect" id="node8" href="$classXalanDeque.html" title="Xalan implementation of deque." alt="" coords="189,421,472,451"/>
-<area shape="rect" id="node10" href="$classXalanVector.html" title="XalanVector\&lt; BlockType * \&gt;" alt="" coords="221,309,424,339"/>
-</map>

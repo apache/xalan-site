@@ -1,9 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classTraceListener.html" title="TraceListener" alt="" coords="5,181,112,211"/>
-<area shape="rect" id="node4" href="$classPrintWriter.html" title="PrintWriter" alt="" coords="136,181,224,211"/>
-<area shape="rect" id="node6" href="$classWriter.html" title="Writer" alt="" coords="151,85,209,115"/>
-<area shape="rect" id="node8" href="$classXPathExecutionContext.html" title="XPathExecutionContext" alt="" coords="248,181,421,211"/>
-<area shape="rect" id="node10" href="$classExecutionContext.html" title="ExecutionContext" alt="" coords="251,85,384,115"/>
-<area shape="rect" id="node12" href="$classProblemListenerBase.html" title="This is the abstract class that is used when reporting a problem some kind, that requires a message..." alt="" coords="239,5,396,35"/>
-<area shape="rect" id="node14" href="$classXObjectFactory.html" title="This class handles the creation of XObjects and manages their lifetime." alt="" coords="408,85,525,115"/>
-</map>

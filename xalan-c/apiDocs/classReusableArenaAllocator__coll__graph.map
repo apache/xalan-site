@@ -1,8 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classArenaAllocator.html" title="ArenaAllocator\&lt; ObjectType, ReusableArenaBlock\&lt; ObjectType \&gt; \&gt;" alt="" coords="132,315,585,344"/>
-<area shape="rect" id="node4" href="$classReusableArenaBlock.html" title="ReusableArenaBlock\&lt; ObjectType \&gt;" alt="" coords="44,219,295,248"/>
-<area shape="rect" id="node6" href="$classArenaBlockBase.html" title="ArenaBlockBase\&lt; ObjectType, unsigned short \&gt;" alt="" coords="5,104,333,133"/>
-<area shape="rect" id="node10" href="$classXalanAllocator.html" title="XalanAllocator\&lt; ObjectType \&gt;" alt="" coords="151,5,364,35"/>
-<area shape="rect" id="node12" href="$classXalanList.html" title="XalanList\&lt; ReusableArenaBlock\&lt; ObjectType \&gt; * \&gt;" alt="" coords="319,219,671,248"/>
-<area shape="rect" id="node14" href="$structXalanList_1_1Node.html" title="XalanList\&lt; Type \&gt;::Node" alt="" coords="404,104,585,133"/>
-</map>

@@ -1,9 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node1" href="$classXalanParsedSource.html" title="This is abstract base class designed to allow a XalanTranfomer object to reuse a parsed document..." alt="" coords="7,112,153,141"/>
-<area shape="rect" id="node3" href="$classXalanDefaultParsedSource.html" title="This is designed to allow a XalanTranfomer object to reuse a parsed document." alt="" coords="243,5,437,35"/>
-<area shape="rect" id="node5" href="$classXalanDocumentBuilder.html" title="This is abstract base class designed to allow a XalanTranfomer object to use a document that is build..." alt="" coords="255,59,425,88"/>
-<area shape="rect" id="node9" href="$classXalanSourceTreeWrapperParsedSource.html" title="This is designed to allow a XalanTranfomer object to wrap a parsed Xerces document." alt="" coords="204,112,476,141"/>
-<area shape="rect" id="node11" href="$classXercesDOMParsedSource.html" title="This is designed to allow a XalanTranfomer object to reuse a parsed document." alt="" coords="247,165,433,195"/>
-<area shape="rect" id="node13" href="$classXercesDOMWrapperParsedSource.html" title="This is designed to allow a XalanTranfomer object to wrap a parsed Xerces document." alt="" coords="220,219,460,248"/>
-<area shape="rect" id="node7" href="$classXalanDefaultDocumentBuilder.html" title="This is class is designed to allow a XalanTranfomer object to use a document that is build dynamicall..." alt="" coords="525,59,741,88"/>
-</map>

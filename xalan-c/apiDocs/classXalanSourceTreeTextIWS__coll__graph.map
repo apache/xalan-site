@@ -1,8 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classXalanSourceTreeText.html" title="XalanSourceTreeText" alt="" coords="75,328,232,357"/>
-<area shape="rect" id="node4" href="$classXalanText.html" title="XalanText" alt="" coords="111,216,196,245"/>
-<area shape="rect" id="node6" href="$classXalanCharacterData.html" title="XalanCharacterData" alt="" coords="53,85,205,115"/>
-<area shape="rect" id="node8" href="$classXalanNode.html" title="XalanNode" alt="" coords="5,5,99,35"/>
-<area shape="rect" id="node11" href="$classXalanDOMString.html" title="XalanDOMString" alt="" coords="249,216,377,245"/>
-<area shape="rect" id="node13" href="$classXalanVector.html" title="XalanVector\&lt; XalanDOMChar \&gt;" alt="" coords="229,85,456,115"/>
-</map>
