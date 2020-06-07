@@ -65,34 +65,29 @@ executable programs to transform XML documents using XSLT stylesheets.
 </p>
 <s3 title="Xalan C++ Project">
 <p>The <jump href="xalan-c/index.html">Xalan-C</jump> project officially
-released version 1.11 on November 2, 2012.  The most significant
-enhancement is the ability to supply top-level stylesheet parameters of
-various types.  They include string, nodeset, and number.  A nodeset
-paramter can be any parsed XML document or XML fragment.  A number
-parameter can be any value of type double.  A string parameter is any
-unicode text string.
+released version 1.12 on the 7th June, 2020.  The focus of this release
+was stability and compatibility, fixing critical bugs and updating the
+codebase to work with modern C++ standards and compilers, and adding a
+CMake-based build to support all platforms with a single well-supported
+build tool.  The full changes are documented in the
+<jump href="xalan-c/releases.html">Release History</jump>.
 </p>
-<p>Xalan-C 1.11 supports C++ development and has been successfully tested on the
-following platforms</p>
+<p>Xalan-C 1.12 supports C++ development and has been successfully
+tested on the following platforms</p>
 <ul>
-<li>Microsoft Visual Studio 2003</li>
-<li>Microsoft Visual Studio 2005</li>
-<li>Microsoft Visual Studio 2008</li>
-<li>Microsoft Visual Studio 2010</li>
-<li>Linux and GCC 4.4.5</li>
-<li>Solaris-10 with SunStudio-12.3</li>
-<li>FreeBSD-9 with GCC 4.2</li>
-<li>OpenBSD with GCC</li>
-<li>AIX</li>
+<li>FreeBSD-12 with LLVM 8</li>
+<li>Linux and GCC 7.4 and GCC 9.3</li>
+<li>MacOS and Xcode 9.4</li>
+<li>Microsoft Visual Studio 2019</li>
+<li>Microsoft Visual Studio 2017</li>
+<li>Microsoft Visual Studio 2015</li>
 </ul>
-<p>Xalan-C builds should also work for Mac OsX, HPUX, and some IBM mainframe
-and AS400 platforms.
+<p>Xalan-C should work on any platform supported by CMake with a
+standard C++ compiler.
 </p>
-<p>The GNU make utility should be used with the UNIX/POSIX platforms.
-</p>
-<p>The <jump href="old/xalan-c/index.html">Xalan-1.10</jump> and older
-releases are available on the <jump href="http://archive.apache.org/dist/xml/xalan-c">
-Apache Archives</jump>.
+<p>
+Older releases are available on the
+<jump href="http://archive.apache.org/dist/xml/xalan-c">Apache Archives</jump>.
 </p>
 </s3>
 <s3 title="Xalan Java Project">
