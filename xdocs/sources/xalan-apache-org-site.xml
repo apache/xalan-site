@@ -20,7 +20,7 @@
 <book title="Apache Xalan Project " copyright="2014 The Apache Software Foundation">
   <document id="index" label="Apache Xalan" source="xalan-apache-org/index.xml"/>
   <document id="charter" label="Charter" source="xalan-apache-org/charter.xml"/>
-  <external href="http://wiki.apache.org/xalan" label = "Xalan Wiki"/>
+  <external href="https://wiki.apache.org/xalan" label = "Xalan Wiki"/>
   <separator/>  
 <!--
   <external href="http://xml.apache.org/xalan-c" label="Xalan C++"/>  
@@ -33,18 +33,18 @@
 </group>
   <separator/>
 <group label="Mail Lists">
-  <external href="http://marc.info/?l=xalan-dev" label="Developers"/>
-  <external href="http://marc.info/?l=xalan-c-users" label="C Users"/>
-  <external href="http://marc.info/?l=xalan-j-users" label="J Users"/>
+  <external href="https://marc.info/?l=xalan-dev" label="Developers"/>
+  <external href="https://marc.info/?l=xalan-c-users" label="C Users"/>
+  <external href="https://marc.info/?l=xalan-j-users" label="J Users"/>
 </group>
   <separator/>
 <group label="Resources">
-  <external href="http://www.apache.org/" label="Apache"/>
-  <external href="http://www.apache.org/foundation/getinvolved.html" label="Get Involved"/>
-  <external href="http://www.apache.org/licenses/" label="Licenses"/>
-  <external href="http://www.apache.org/foundation/sponsorship.html" label="Sponsorship"/>
-  <external href="http://www.apache.org/foundation/thanks.html" label="Thanks"/>
-  <external href="http://www.apache.org/security/" label="Security"/>
+  <external href="https://www.apache.org/" label="Apache"/>
+  <external href="https://www.apache.org/foundation/getinvolved.html" label="Get Involved"/>
+  <external href="https://www.apache.org/licenses/" label="Licenses"/>
+  <external href="https://www.apache.org/foundation/sponsorship.html" label="Sponsorship"/>
+  <external href="https://www.apache.org/foundation/thanks.html" label="Thanks"/>
+  <external href="/index.html#Security" label="Security"/>
 </group>
   <separator/>
 </book>

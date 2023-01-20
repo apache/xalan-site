@@ -160,5 +160,12 @@ for general user comments on the Xalan Java project.</p>
  <jump href="http://www.apache.org/foundation/getinvolved.html">how to 
 participate</jump> in the various development efforts.</p>
 </s2>
+<anchor name="Security"/>
+<s2 title="Security">
+<p>Xerces and Xalan do what the XML specifications require by default. In some cases, this may not be appropriate behavior when working with untrusted input: the <jump href="https://apache.github.io/xalan-c/secureweb.html">XML Security Overview</jump> mentions some potential risks. There are multiple methods for blocking access to external entities and for disallowing DOCTYPE declarations, and it is up to the downstream user of Xalan to block/reject these constructs where appropriate.</p>
+
+<p>If you think you have found a security issue in Apache Xalan, please follow the <jump href="https://www.apache.org/security/#reporting-a-vulnerability">reporting guidelines</jump></p>
+
+</s2>
 
 </s1>
