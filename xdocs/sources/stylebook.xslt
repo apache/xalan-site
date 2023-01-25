@@ -35,7 +35,7 @@
 <!-- THE TOP-LEVEL PARAMETERS 
 
   logoimage   = resource image for active logo (resources/asf_logo.png)
-  logolink    = logo active hyperlink          (http://xalan.apache.org)
+  logolink    = logo active hyperlink          (https://xalan.apache.org)
   logowidth   = width of trademark logo in pixels
   logoheight  = height of tracemark logo in pixels
 
@@ -53,7 +53,7 @@
 
   EXSLT -p sectionid='getstarted' -p createdate='Aug 7, 2011'
     -p logoimage='resources/xalan-logo.png'
-    -p logolink='http://xalan.apache.org'
+    -p logolink='https://xalan.apache.org'
     -p logowidth='144'
     -p logoheight='75'
     -p bookxml='xalan.xml'
@@ -62,7 +62,7 @@
 -->
 
 <xsl:param name="logoimage">resources/asf_logo.png</xsl:param>
-<xsl:param name="logolink">http://www.apache.org</xsl:param>
+<xsl:param name="logolink">https://www.apache.org</xsl:param>
 <xsl:param name="logowidth">144</xsl:param>
 <xsl:param name="logoheight">75</xsl:param>
 
@@ -228,7 +228,7 @@
   <xsl:param name="headtitlelink">index.html</xsl:param>
   <xsl:param name="headsubtitle">Documentation Test Example</xsl:param>
   <xsl:param name="headlogoimg">resources/asf_logo.png</xsl:param>
-  <xsl:param name="headlogolink">http://www.apache.org</xsl:param>
+  <xsl:param name="headlogolink">https://www.apache.org</xsl:param>
   <xsl:param name="headlogoheight"><xsl:value-of select="$logoheight"/></xsl:param>
   <xsl:param name="headlogowidth"><xsl:value-of select="$logowidth"/></xsl:param>
   <xsl:element name="div">
@@ -273,11 +273,11 @@
     <table class="HdrButtons" align="center" border="1">
      <tbody>
       <tr>
-       <td><a href="http://www.apache.org">Apache Foundation</a></td>
-       <td><a href="http://xalan.apache.org">Xalan Project</a></td>
-       <td><a href="http://xerces.apache.org">Xerces Project</a></td>
-       <td><a href="http://www.w3.org/TR">Web Consortium</a></td>
-       <td><a href="http://www.oasis-open.org/standards">Oasis Open</a></td>
+       <td><a href="https://www.apache.org">Apache Foundation</a></td>
+       <td><a href="https://xalan.apache.org">Xalan Project</a></td>
+       <td><a href="https://xerces.apache.org">Xerces Project</a></td>
+       <td><a href="https://www.w3.org/TR">Web Consortium</a></td>
+       <td><a href="https://www.oasis-open.org/standards">Oasis Open</a></td>
       </tr>
      </tbody>
     </table>
@@ -469,7 +469,7 @@
     <xsl:attribute name="id">footer</xsl:attribute>
     <!-- copyright byline information -->
     <!-- &#169; is the (c) copyright symbol -->
-    <xsl:text>Copyright &#169; 1999-2014 The Apache Software Foundation</xsl:text><br/>
+    <xsl:text>Copyright &#169; 1999-2023 The Apache Software Foundation</xsl:text><br/>
     <xsl:text>Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation</xsl:text>
     <xsl:element name="div">
       <xsl:attribute name="class">small</xsl:attribute>

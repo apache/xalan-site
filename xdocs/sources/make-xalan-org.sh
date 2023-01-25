@@ -103,7 +103,7 @@ XALANLOGOWIDTH=190
 
 XALANLOGOHEIGHT=90
 
-XALANLOGOLINK=http://xalan.apache.org/index.html
+XALANLOGOLINK=https://xalan.apache.org/index.html
 
 XALANTITLELINK=index.html
 
