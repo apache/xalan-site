@@ -82,11 +82,9 @@
 <a href="xalan-c/index.html">Xalan C++</a>
 </li>
 <li>
-<a href="xalan-j/index.html">Xalan Java 2.7.2</a>
+<a href="xalan-j/index.html">Xalan Java</a>
 </li>
-<li>
-<a href="old/xalan-j/index.html">Xalan Java 2.7.1</a>
-</li></ul><hr /><ul></ul>
+</ul><hr/><ul></ul>
 <p class="navGroup">
 <em>Mail Lists</em>
 </p><ul>
@@ -123,10 +121,7 @@
 </div>
 <div id="content">
 <h2>The Apache Xalan Project</h2>
-<p>We are proud to release version 2.7.2 of our Xalan Java project.  This is
-the first product distribution release of Xalan Java since Apache Xalan was
-reformed in 2011.  It also fixes a security issue reported against the
-previous version.
+<p>We are proud to release version 2.7.3 of our Xalan Java project.
 </p>
 <p>The Apache Xalan Project develops and maintains libraries and programs
 that transform XML documents using XSLT standard stylesheets.  Our
@@ -134,17 +129,17 @@ subprojects use the Java and C++ programing languages to implement
 the XSLT libraries.
 </p>
 <p>The Apache Xalan Project was reformed in 2011. It started as a
-subproject of Apache XML which has since been officially retired. 
+subproject of Apache XML which has since been officially retired.
 The Apache Xalan Project continues as a top-level project governed by the
 Apache Software Foundation as a collaborative software development community
-dedicated to providing robust, full-featured, commercial-quality, and 
+dedicated to providing robust, full-featured, commercial-quality, and
 freely available XSLT support on a wide variety of platforms.
 </p>
 <p>The supported specifications are defined by the
-<a href="http://www.w3.org/TR/xslt">W3C XSL Transformations (XSLT) 
-Version 1.0</a> and the <a href="http://www.w3.org/TR/xpath">XML Path Language (XPath) Version 1.0</a> 
+<a href="https://www.w3.org/TR/1999/REC-xslt-19991116">W3C XSL Transformations (XSLT)
+Version 1.0</a> and the <a href="https://www.w3.org/TR/1999/REC-xpath-19991116">XML Path Language (XPath) Version 1.0</a>
 recommendations.
-</p> 
+</p>
 <p>
 <b>Contents:</b>
 </p>
@@ -171,16 +166,16 @@ name and logo are trademarks of the Apache Software Foundation.
 <a href="#content">(top)</a>
 </p>
 <h3>Apache Xalan Projects</h3>
-<p>There are currently two subprojects under the Apache Xalan Project:  
-<a href="xalan-c/index.html">Xalan C++</a>, and 
+<p>There are currently two subprojects under the Apache Xalan Project:
+<a href="xalan-c/index.html">Xalan C++</a>, and
 <a href="xalan-j/index.html">Xalan Java</a>, representing
-C++ and Java implementations of the 
-<a href="http://www.w3.org/TR/xslt">W3C XSL Transformations (XSLT) 
-Version 1.0</a> and the 
-<a href="http://www.w3.org/TR/xpath">XML Path Language (XPath) Version 1.0</a> 
+C++ and Java implementations of the
+<a href="http://www.w3.org/TR/xslt">W3C XSL Transformations (XSLT)
+Version 1.0</a> and the
+<a href="http://www.w3.org/TR/xpath">XML Path Language (XPath) Version 1.0</a>
 recommendations.
-</p> 
-<p>Both the Java and C++ development teams provide libraries and 
+</p>
+<p>Both the Java and C++ development teams provide libraries and
 executable programs to transform XML documents using XSLT stylesheets.
 </p>
 <p align="right" size="2">
@@ -217,20 +212,19 @@ Older releases are available on the
 <a href="#content">(top)</a>
 </p>
 <h4>Xalan Java Project</h4>
-<p>The <a href="xalan-j/index.html">Xalan-Java 2.7.2</a> was released in April 2014.  You can download the current release
-the current <a href="http://www.apache.org/dyn/closer.cgi/xalan/xalan-j/">Xalan-Java 2.7.2</a> release for your development. The
-current work in progress can be found in the 
-<a href="http://svn.apache.org/repos/asf/xalan/xalan-j/trunk/">subversion repository</a>.
+<p>The <a href="xalan-j/index.html">Xalan-Java 2.7.3</a> was released in April 2023. You may download the current Xalan-Java
+release <a href="http://www.apache.org/dyn/closer.cgi/xalan/xalan-j/">Xalan-Java 2.7.3</a> for your development. The
+current work in progress can be found in the
+<a href="https://gitbox.apache.org/repos/asf?p=xalan-java.git">git repository</a>.
 </p>
-<p>The current release fixes a security issue that was registered against version 2.7.1.
+<p>The current release among other Xalan-J implementation features, fixes a Xalan-J XSLTC security issue that was registered
+against version 2.7.2.
 </p>
-<p>The old <a href="old/xalan-j/index.html">Xalan-J 2.7.1</a>
-distributions are still available on the 
-<a href="http://archive.apache.org/dist/xml/xalan-j">Apache Archives</a>.
+<p>Many of the earlier Xalan-J distributions are still available on the <a href="http://archive.apache.org/dist/xml/xalan-j">Apache Archives</a>.
 </p>
 <p>This is a mature project. There has been some discussion about supporting XPath-2.
-We could use your support in this major rework of the library. 
-You can follow the efforts and post your own contributions 
+We could use your support in this major rework of the library.
+You can follow the efforts and post your own contributions
 on the Java users and developers mail lists.
 </p>
 
@@ -240,18 +234,18 @@ on the Java users and developers mail lists.
 <a href="#content">(top)</a>
 </p>
 <h3>What is XSLT and XPath?</h3>
-<p>XSLT is the first part of the 
-<a href="http://www.w3.org/TR/xsl/">Extensible Stylesheet Language (XSL)</a>. 
-It includes the XSL Transformation (XSLT) vocabulary and 
-XPath, a language for addressing parts of XML documents. 
-XSL also includes a vocabulary for specifying formatting semantics, however, 
-this is not part of the Apache Xalan Project.  For more information on formatting objects, see the 
+<p>XSLT is the first part of the
+<a href="http://www.w3.org/TR/xsl/">Extensible Stylesheet Language (XSL)</a>.
+It includes the XSL Transformation (XSLT) vocabulary and
+XPath, a language for addressing parts of XML documents.
+XSL also includes a vocabulary for specifying formatting semantics, however,
+this is not part of the Apache Xalan Project.  For more information on formatting objects, see the
 <a href="http://xmlgraphics.apache.org/fop/">Apache XML Graphics (Formatting Objects Project)</a>.
 </p>
 <p>XSLT implementations, sometimes referred to as XSLT processors, use an XSL stylesheet to transform
-XML documents into HTML, text, or other XML document types.  
-In structural terms, an XSL stylesheet 
-specifies the transformation of one tree of nodes (the XML input) 
+XML documents into HTML, text, or other XML document types.
+In structural terms, an XSL stylesheet
+specifies the transformation of one tree of nodes (the XML input)
 into another tree of nodes (the output or transformation result).
 </p>
 
@@ -268,7 +262,7 @@ Apache Software License, Version 2.0.</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
-<h3>Getting Involved</h3> 
+<h3>Getting Involved</h3>
 <p>We always appreciate people and organizations that wish to help
 in the development and project support efforts.</p>
 
@@ -284,16 +278,16 @@ All project change notices are posted to the developers list.</p>
 <p>Each subproject has its own mail list for project specific user
 issues.</p>
 
-<p>The user list for Xalan C++ 
- [<a href="mailto:c-users@xalan.apache.org">xalan-c-users</a>] is 
+<p>The user list for Xalan C++
+ [<a href="mailto:c-users@xalan.apache.org">xalan-c-users</a>] is
 for general user comments on the Xalan C++ project.</p>
 
-<p>The user list for Xalan Java 
+<p>The user list for Xalan Java
  [<a href="mailto:j-users@xalan.apache.org">xalan-j-users</a>] is
 for general user comments on the Xalan Java project.</p>
 
-<p>The Apache Software Foundation has guidance on 
- <a href="http://www.apache.org/foundation/getinvolved.html">how to 
+<p>The Apache Software Foundation has guidance on
+ <a href="http://www.apache.org/foundation/getinvolved.html">how to
 participate</a> in the various development efforts.</p>
 
 <a name="Security">‌</a>
@@ -312,7 +306,7 @@ participate</a> in the various development efforts.</p>
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright © 1999-2023 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sat 2023-01-21</div>
+<div id="footer">Copyright © 1999-2023 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Tue 2023-04-04</div>
 </div>
 </body>
 </html>

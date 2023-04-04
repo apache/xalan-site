@@ -75,7 +75,7 @@
 <a href="http://xalan.apache.org/index.html">Home</a>
 </li></ul><hr /><ul>
 <li>
-<a href="index.html">Xalan-J 2.7.2</a>
+<a href="index.html">Xalan-J 2.7.3</a>
 </li>
 <li>
 <a href="charter.html">Charter</a>
@@ -162,71 +162,13 @@
   <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
-<h3>What's new in Xalan-Java Version 2.7.2</h3>  
+<h3>Xalan-Java's latest version is 2.7.3, released in April 2023</h3>  
     <p>
-      Here's what new in Xalan-Java Version 2.7.2.
+      Please read the Xalan-J release notes, within these documentation pages, to know what new improvements are
+      available within Xalan-J 2.7.3.
     </p>
-
-    <p align="right" size="2">
-<a href="#content">(top)</a>
-</p>
-<h4>Fix for CVE-2014-0107 insufficient secure processing</h4>
-      <p>
-        When using FEATURE_SECURE_PROCESSING ("http://javax.xml.XMLConstants/feature/secure-processing") on a TransformerFactory, the output properties:
-      </p>
-      <ul>
-        <li>{http://xml.apache.org/xalan}content-handler</li>
-        <li>{http://xml.apache.org/xalan}entities</li>
-        <li>{http://xml.apache.org/xslt}content-handler</li>
-        <li>{http://xml.apache.org/xslt}entities</li>
-      </ul>
-      <p>
-        should be ignored (see http://xml.apache.org/xalan-j/usagepatterns.html#outputprops)
-      </p>
-      <p>
-        These properties can be used to load an arbitrary class or access an arbitrary URL/resource so are problematic when secure processing is desired.
-      </p>
-      <p>      
-        <code>  
-          &lt;xsl:output xalan:content-handler="org.example.BadClass" ...
-        </code>   
-      </p>
-      <p>      
-        <code>  
-          &lt;xsl:output xalan:entities="http://example.org/reallyLargeFile.bin" ...
-        </code>   
-      </p>
-      <p>
-        These features could be used to load a class that had undesirable side-effects or to load a large file and exhaust memory, etc. 
-      </p>
-      <p>
-        See <a href="#https://issues.apache.org/jira/browse/XALANJ-2435">XALANJ-2435</a>. 
-      </p>
-    
-    
-    <p align="right" size="2">
-<a href="#content">(top)</a>
-</p>
-<h4>Upgrade to Xerces-J 2.11.0 and XML Commons External 1.4.01</h4>
-      The distributions contain upgraded versions of <code>xercesImpl.jar</code>
-      (Xerces-J 2.11.0) and <code>xml-apis.jar</code> (XML Commons External 1.4.01).
-    
-    
-    <p align="right" size="2">
-<a href="#content">(top)</a>
-</p>
-<h4>Bug fixes</h4>
-      Xalan-Java Version 2.7.2 contains performance enhancements and other bug fixes since 2.7.1. You can find the list 
-      in <a href="readme.html#notes_latest">the release notes</a>.
-    
-    
-  
-
-<p align="right" size="2">
-<a href="#content">(top)</a>
-</p>
 </div>
-<div id="footer">Copyright © 1999-2014 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 2014-05-15</div>
+<div id="footer">Copyright © 1999-2023 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 2023-04-04</div>
 </div>
 </body>
 </html>
