@@ -285,7 +285,7 @@ the unbundled jar approach, put the following on the system classpath:</p>
 </tr>
 <tr>
   <td class="content" rowspan="1" colspan="1">the translet</td>
-  <td class="content" rowspan="1" colspan="1" />
+  <td class="content" rowspan="1" colspan="1"/>
   <td class="content" rowspan="1" colspan="1">required</td>
 </tr>
 <tr>
@@ -296,32 +296,12 @@ the unbundled jar approach, put the following on the system classpath:</p>
 <tr>
   <td class="content" rowspan="1" colspan="1">runtime.jar</td>
   <td class="content" rowspan="1" colspan="1">required</td>
-  <td class="content" rowspan="1" colspan="1">required</td>
+  <td class="content" rowspan="1" colspan="1"/>
 </tr>
 <tr>
   <td class="content" rowspan="1" colspan="1">bcel-6.7.0.jar</td>
   <td class="content" rowspan="1" colspan="1">required</td>
-  <td class="content" rowspan="1" colspan="1" />
-</tr>
-<tr>
-  <td class="content" rowspan="1" colspan="1">JLex.jar</td>
-  <td class="content" rowspan="1" colspan="1">required</td>
-  <td class="content" rowspan="1" colspan="1" />
-</tr>
-<tr>
-  <td class="content" rowspan="1" colspan="1">java_cup.jar</td>
-  <td class="content" rowspan="1" colspan="1">required</td>
-  <td class="content" rowspan="1" colspan="1" />
-</tr>
-<tr>
-  <td class="content" rowspan="1" colspan="1">regexp.jar</td>
-  <td class="content" rowspan="1" colspan="1">required</td>
-  <td class="content" rowspan="1" colspan="1" />
-</tr>
-<tr>
-  <td class="content" rowspan="1" colspan="1">xml-dtm.jar</td>
-  <td class="content" rowspan="1" colspan="1" />
-  <td class="content" rowspan="1" colspan="1">required</td>
+  <td class="content" rowspan="1" colspan="1"/>
 </tr>
 </table>
 <p>The translet is the set of class files or the JAR file that you generate with
@@ -950,7 +930,7 @@ use XSLTC with the JAXP Transform API.</p>
     to run, or contain jump offsets that are too large for the JVM to handle. 
     Now the default is not to inline templates. Instead, compilation creates separate 
     methods for each template. Inlining was thought to improve performance, 
-    but with recent hotspot technology in the Java 1.4.x JVM, performance is better with 
+    but with the hotspot technology within Java VMs, performance is better with 
     inlining off. From the command line, you would use <code>"-n"</code> 
     to turn on inlining, or with JAXP set the "enable-inlining" attribute to the TransformerFactory. 
     For example, 
@@ -970,8 +950,7 @@ tfac.setAttribute("enable-inlining", Boolean.TRUE);</pre>
     variable declarations.<br />
 </li>
 </ul>
-<p>To check on the open bugs in the current Apache xml-xalan/java repository, 
-  follow the instructions below:</p>
+<p>To check on the open bugs in the current Apache xalan-java repository, follow the instructions below:</p>
 <ol>
   <li>Go to <a href="http://issues.apache.org/jira">http://issues.apache.org/jira</a>.</li>
   <li>Select project <b>XalanJ2</b>.</li>
