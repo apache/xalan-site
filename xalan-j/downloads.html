@@ -243,11 +243,11 @@
 <h3>Downloading what else you might need</h3>
   <p>To use Xalan-Java, you need the following:</p>
   <ul>
-    <li>The JDK or JRE 1.3.x, 1.4.x, or 5.x</li>
+    <li>The JDK or JRE 1.8 or above</li>
   </ul>
   <p>
-    You can get the JDK or JRE from <a href="http://www-128.ibm.com/developerworks/java/jdk/index.html">
-    IBM developerWorks</a> or <a href="http://www.java.sun.com">java.sun.com</a>.
+    You can get the JDK or JRE from <a href="https://www.ibm.com/support/pages/java-sdk-downloads">
+    IBM Java SDK downloads</a> or <a href="https://www.oracle.com/in/java/technologies/downloads/">Oracle Java downloads</a>.
   </p>
   <p>If you plan to run <a href="extensions.html">XSLT extensions</a>
      through extension functions or elements, and you want to implement
@@ -315,15 +315,12 @@
 </p>
 <h3>How do I view Xalan code in a browser?</h3>
   <p>
-    If you wish to view some of Xalan's files in a browser without downloading the
-    whole project you can view it at
-    <a href="http://svn.apache.org/viewvc/xalan/">http://svn.apache.org/viewvc/xalan/</a>
-    or at
-    <a href="http://svn.apache.org/repos/asf/xalan/">http://svn.apache.org/repos/asf/xalan/</a>.
-    The link with "viewvc" in it is slightly prettier.
+    Xalan's codebase files may be viewed on browser at
+    <a href="https://gitbox.apache.org/repos/asf/xalan-java.git">https://gitbox.apache.org/repos/asf/xalan-java.git</a>.
   </p>
   <p>
-    The java/trunk and test/trunk subdirectories are the ones with the latest development code.
+    The Xalan git repositories xalan-java (branches 'master', xalan-j_xslt3.0) and xalan-test (branch 'master') are the ones 
+    with the latest development code.
   </p>
 
 
@@ -335,70 +332,25 @@
 <h3>How do I download the latest development code to build myself?</h3>
   <p>
     If you have downloaded a source distribution, or obtained source code
-    using subversion, this section may be of interest to you.
+    using git, this section may be of interest to you.
   </p>
   <p>
     If you wish to download Xalan and build it yourself, perhaps because you want to
-    apply a patch and test it, you will need a subversion client and anonymous access
+    apply a patch and test it, you will need a git client and anonymous access
     to the repository.
     Don't worry, everyone has anonymous access.
-    You can find pre-built binaries of subversion clients for different
-    operating systems here:
-    <a href="http://subversion.tigris.org/project_packages.html#binary-packages">
-    http://subversion.tigris.org/project_packages.html#binary-packages</a>.
-    See
-    <a href="http://www.apache.org/dev/version-control.html">
-    http://www.apache.org/dev/version-control.html
-    </a> for more information on Apache and subversion.
+    You can find pre-built binaries of git clients for different operating systems here:
+    <a href="https://git-scm.com/">https://git-scm.com/</a>.    
   </p>
   <p>
-    Once the subverion client is installed on your local machine you
-    can use the command line client program <b>svn</b>
-    to get the latest Xalan-J using a command line something like this:
-    <blockquote class="source">
-<pre>
-    svn checkout http://svn.apache.org/repos/asf/xalan/java/trunk java
-    </pre>
-</blockquote>
-    where the argument after <b>checkout</b> is the Subversion repository location,
-    in this case the location of the latest development code, and the last argument,
-    in this case <b>java</b> is the location of the local directory that the repository is
-    copied to.
-  </p>
-  <p>
-    Similarly for the test harness, you can download the latest test harness with a Subversion command
-    something like this:
-    <blockquote class="source">
-<pre>
-    svn checkout http://svn.apache.org/repos/asf/xalan/test/trunk test
-    </pre>
-</blockquote>
-  </p>
-  <p>
-    Those two commands will put a copy of the latest parts in the local
-    directories <b>java</b> and <b>test</b>,
-    which are sibling directories.  If you
-    want to test your build with
-    the test harness provided with Xalan then it is easiest if you keep the
-    local directory names
-    as suggested. With your paths set up to compile Java code, go into the local <b>java</b>
-    directory and issue these two commands:
-    <blockquote class="source">
-<pre>
-  build clean
-  build
-  </pre>
-</blockquote>
-  </p>
-  <p>
-  The <b>build.bat</b> batch file, or <b>build.sh</b> shell script (depending on
-  your operating system use <b>ant</b> and the buildfile <b>build.xml</b>. See
+  You may use the Xalan-J build scripts, <b>build.bat</b> or <b>build.sh</b> (depending on
+  your operating system), and use <b>ant</b> and the buildfile <b>build.xml</b> to build Xalan-J. See
   the section <a href="#jar">Using ant</a> for more information.
   </p>
   <p>
-  Other useful targets may be <code>xsltc.jar</code> or <code>serializer.jar</code>.
-  If you want to test the jars you just built in the directory <b>java/build</b>, change to
-  directory <b>test</b> and issue this command:
+  Few of the useful Xalan-J build targets are : <code>jar</code>, <code>xsltc.jar</code>, <code>serializer.jar</code>.
+  If you want to test the jars you just built in the directory <b>xalan-java/build</b>, change to
+  directory <b>xalan-test</b> and issue following commands:
   <blockquote class="source">
 <pre>
   build jar
