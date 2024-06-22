@@ -20,5 +20,5 @@ Copyright 1999-2024 The Apache Software Foundation
 Authors:
    Mukul Gandhi <mukulg@apache.org>
 
-This Xalan-J site location, has few XSL 3 test data files for use with Xalan-J 
-XSL 3 implementation's test suite.
+This Xalan-J site location, has few XSL3 test data files for use with Xalan-J 
+XSLT 3.0 & XPath 3.1 implementation's test suite.
