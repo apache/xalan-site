@@ -1,0 +1,890 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="AllXsl3Tests" project="xalan-j_xslt3.0" tests="704" started="704" failures="0" errors="0" ignored="0">
+  <testsuite name="org.apache.xalan.xslt3.AllXsl3Tests" time="29.379">
+    <testsuite name="org.apache.xalan.xslt3.Xsl3TestSuite1" time="18.454">
+      <testsuite name="org.apache.xalan.xpath3.FnDocTests" time="6.984">
+        <testcase name="xslFnDocTest1" classname="org.apache.xalan.xpath3.FnDocTests" time="6.984"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnDataTests" time="0.313">
+        <testcase name="xslFnDataTest1" classname="org.apache.xalan.xpath3.FnDataTests" time="0.085"/>
+        <testcase name="xslFnDataTest2" classname="org.apache.xalan.xpath3.FnDataTests" time="0.228"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xslt3.RecursiveFunctionTests" time="0.953">
+        <testcase name="xslRecursiveFunctionTest1" classname="org.apache.xalan.xslt3.RecursiveFunctionTests" time="0.251"/>
+        <testcase name="xslRecursiveFunctionTest2" classname="org.apache.xalan.xslt3.RecursiveFunctionTests" time="0.189"/>
+        <testcase name="xslRecursiveFunctionTest3" classname="org.apache.xalan.xslt3.RecursiveFunctionTests" time="0.26"/>
+        <testcase name="xslRecursiveFunctionTest4" classname="org.apache.xalan.xslt3.RecursiveFunctionTests" time="0.041"/>
+        <testcase name="xslRecursiveFunctionTest5" classname="org.apache.xalan.xslt3.RecursiveFunctionTests" time="0.06"/>
+        <testcase name="xslRecursiveFunctionTest6" classname="org.apache.xalan.xslt3.RecursiveFunctionTests" time="0.033"/>
+        <testcase name="xslRecursiveFunctionTest7" classname="org.apache.xalan.xslt3.RecursiveFunctionTests" time="0.042"/>
+        <testcase name="xslRecursiveFunctionTest8" classname="org.apache.xalan.xslt3.RecursiveFunctionTests" time="0.076"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xslt3.XslFunctionTests" time="1.023">
+        <testcase name="xslFunctionTest10" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.029"/>
+        <testcase name="xslFunctionTest11" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.025"/>
+        <testcase name="xslFunctionTest12" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.017"/>
+        <testcase name="xslFunctionTest13" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.017"/>
+        <testcase name="xslFunctionTest14" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.023"/>
+        <testcase name="xslFunctionTest15" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.027"/>
+        <testcase name="xslFunctionTest16" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.028"/>
+        <testcase name="xslFunctionTest17" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.025"/>
+        <testcase name="xslFunctionTest1" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.027"/>
+        <testcase name="xslFunctionTest2" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.505"/>
+        <testcase name="xslFunctionTest3" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.043"/>
+        <testcase name="xslFunctionTest4" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.036"/>
+        <testcase name="xslFunctionTest5" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.096"/>
+        <testcase name="xslFunctionTest6" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.051"/>
+        <testcase name="xslFunctionTest7" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.021"/>
+        <testcase name="xslFunctionTest8" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.034"/>
+        <testcase name="xslFunctionTest9" classname="org.apache.xalan.xslt3.XslFunctionTests" time="0.018"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xslt3.HigherOrderFunctionTests" time="0.182">
+        <testcase name="xslHigherOrderFunctionTest1" classname="org.apache.xalan.xslt3.HigherOrderFunctionTests" time="0.025"/>
+        <testcase name="xslHigherOrderFunctionTest2" classname="org.apache.xalan.xslt3.HigherOrderFunctionTests" time="0.026"/>
+        <testcase name="xslHigherOrderFunctionTest3" classname="org.apache.xalan.xslt3.HigherOrderFunctionTests" time="0.023"/>
+        <testcase name="xslHigherOrderFunctionTest4" classname="org.apache.xalan.xslt3.HigherOrderFunctionTests" time="0.04"/>
+        <testcase name="xslHigherOrderFunctionTest5" classname="org.apache.xalan.xslt3.HigherOrderFunctionTests" time="0.019"/>
+        <testcase name="xslHigherOrderFunctionTest6" classname="org.apache.xalan.xslt3.HigherOrderFunctionTests" time="0.021"/>
+        <testcase name="xslHigherOrderFunctionTest7" classname="org.apache.xalan.xslt3.HigherOrderFunctionTests" time="0.028"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.XsDateTimeTests" time="0.129">
+        <testcase name="xsDateTimeTest1" classname="org.apache.xalan.xpath3.XsDateTimeTests" time="0.019"/>
+        <testcase name="xsDateTimeTest2" classname="org.apache.xalan.xpath3.XsDateTimeTests" time="0.015"/>
+        <testcase name="xsDateTimeTest3" classname="org.apache.xalan.xpath3.XsDateTimeTests" time="0.033"/>
+        <testcase name="xsDateTimeTest4" classname="org.apache.xalan.xpath3.XsDateTimeTests" time="0.026"/>
+        <testcase name="xsDateTimeTest5" classname="org.apache.xalan.xpath3.XsDateTimeTests" time="0.036"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.ValueComparisonTests" time="0.502">
+        <testcase name="xslValueComparison10" classname="org.apache.xalan.xpath3.ValueComparisonTests" time="0.02"/>
+        <testcase name="xslValueComparison11" classname="org.apache.xalan.xpath3.ValueComparisonTests" time="0.045"/>
+        <testcase name="xslValueComparison12" classname="org.apache.xalan.xpath3.ValueComparisonTests" time="0.045"/>
+        <testcase name="xslValueComparison13" classname="org.apache.xalan.xpath3.ValueComparisonTests" time="0.037"/>
+        <testcase name="xslValueComparison14" classname="org.apache.xalan.xpath3.ValueComparisonTests" time="0.027"/>
+        <testcase name="xslValueComparison1" classname="org.apache.xalan.xpath3.ValueComparisonTests" time="0.015"/>
+        <testcase name="xslValueComparison2" classname="org.apache.xalan.xpath3.ValueComparisonTests" time="0.025"/>
+        <testcase name="xslValueComparison3" classname="org.apache.xalan.xpath3.ValueComparisonTests" time="0.073"/>
+        <testcase name="xslValueComparison4" classname="org.apache.xalan.xpath3.ValueComparisonTests" time="0.048"/>
+        <testcase name="xslValueComparison5" classname="org.apache.xalan.xpath3.ValueComparisonTests" time="0.03"/>
+        <testcase name="xslValueComparison6" classname="org.apache.xalan.xpath3.ValueComparisonTests" time="0.027"/>
+        <testcase name="xslValueComparison7" classname="org.apache.xalan.xpath3.ValueComparisonTests" time="0.057"/>
+        <testcase name="xslValueComparison8" classname="org.apache.xalan.xpath3.ValueComparisonTests" time="0.024"/>
+        <testcase name="xslValueComparison9" classname="org.apache.xalan.xpath3.ValueComparisonTests" time="0.028"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.InlineFunctionItemExprTests" time="0.341">
+        <testcase name="xslInlineFunctionExprTest10" classname="org.apache.xalan.xpath3.InlineFunctionItemExprTests" time="0.018"/>
+        <testcase name="xslInlineFunctionExprTest11" classname="org.apache.xalan.xpath3.InlineFunctionItemExprTests" time="0.041"/>
+        <testcase name="xslInlineFunctionExprTest12" classname="org.apache.xalan.xpath3.InlineFunctionItemExprTests" time="0.039"/>
+        <testcase name="xslInlineFunctionExprTest1" classname="org.apache.xalan.xpath3.InlineFunctionItemExprTests" time="0.018"/>
+        <testcase name="xslInlineFunctionExprTest2" classname="org.apache.xalan.xpath3.InlineFunctionItemExprTests" time="0.017"/>
+        <testcase name="xslInlineFunctionExprTest3" classname="org.apache.xalan.xpath3.InlineFunctionItemExprTests" time="0.021"/>
+        <testcase name="xslInlineFunctionExprTest4" classname="org.apache.xalan.xpath3.InlineFunctionItemExprTests" time="0.05"/>
+        <testcase name="xslInlineFunctionExprTest5" classname="org.apache.xalan.xpath3.InlineFunctionItemExprTests" time="0.02"/>
+        <testcase name="xslInlineFunctionExprTest6" classname="org.apache.xalan.xpath3.InlineFunctionItemExprTests" time="0.027"/>
+        <testcase name="xslInlineFunctionExprTest7" classname="org.apache.xalan.xpath3.InlineFunctionItemExprTests" time="0.033"/>
+        <testcase name="xslInlineFunctionExprTest8" classname="org.apache.xalan.xpath3.InlineFunctionItemExprTests" time="0.025"/>
+        <testcase name="xslInlineFunctionExprTest9" classname="org.apache.xalan.xpath3.InlineFunctionItemExprTests" time="0.032"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnForEachTests" time="0.284">
+        <testcase name="xslFnForEachTest1" classname="org.apache.xalan.xpath3.FnForEachTests" time="0.027"/>
+        <testcase name="xslFnForEachTest2" classname="org.apache.xalan.xpath3.FnForEachTests" time="0.027"/>
+        <testcase name="xslFnForEachTest3" classname="org.apache.xalan.xpath3.FnForEachTests" time="0.033"/>
+        <testcase name="xslFnForEachTest4" classname="org.apache.xalan.xpath3.FnForEachTests" time="0.015"/>
+        <testcase name="xslFnForEachTest5" classname="org.apache.xalan.xpath3.FnForEachTests" time="0.024"/>
+        <testcase name="xslFnForEachTest6" classname="org.apache.xalan.xpath3.FnForEachTests" time="0.023"/>
+        <testcase name="xslFnForEachTest7" classname="org.apache.xalan.xpath3.FnForEachTests" time="0.027"/>
+        <testcase name="xslFnForEachTest8" classname="org.apache.xalan.xpath3.FnForEachTests" time="0.022"/>
+        <testcase name="xslFnForEachTest9" classname="org.apache.xalan.xpath3.FnForEachTests" time="0.011"/>
+        <testcase name="xslFnForEachTest10" classname="org.apache.xalan.xpath3.FnForEachTests" time="0.013"/>
+        <testcase name="xslFnForEachTest11" classname="org.apache.xalan.xpath3.FnForEachTests" time="0.036"/>
+        <testcase name="xslFnForEachTest12" classname="org.apache.xalan.xpath3.FnForEachTests" time="0.025"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.664">
+        <testcase name="XsConstructorFunctionsTest10" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.034"/>
+        <testcase name="XsConstructorFunctionsTest11" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.016"/>
+        <testcase name="XsConstructorFunctionsTest12" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.018"/>
+        <testcase name="XsConstructorFunctionsTest13" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.05"/>
+        <testcase name="XsConstructorFunctionsTest14" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.02"/>
+        <testcase name="XsConstructorFunctionsTest15" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.054"/>
+        <testcase name="XsConstructorFunctionsTest16" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.022"/>
+        <testcase name="XsConstructorFunctionsTest17" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.016"/>
+        <testcase name="XsConstructorFunctionsTest18" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.029"/>
+        <testcase name="XsConstructorFunctionsTest19" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.027"/>
+        <testcase name="XsConstructorFunctionsTest20" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.024"/>
+        <testcase name="XsConstructorFunctionsTest21" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.021"/>
+        <testcase name="XsConstructorFunctionsTest22" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.023"/>
+        <testcase name="XsConstructorFunctionsTest23" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.024"/>
+        <testcase name="XsConstructorFunctionsTest24" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.015"/>
+        <testcase name="XsConstructorFunctionsTest25" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.021"/>
+        <testcase name="XsConstructorFunctionsTest26" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.034"/>
+        <testcase name="XsConstructorFunctionsTest27" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.021"/>
+        <testcase name="XsConstructorFunctionsTest1" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.023"/>
+        <testcase name="XsConstructorFunctionsTest2" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.019"/>
+        <testcase name="XsConstructorFunctionsTest4" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.03"/>
+        <testcase name="XsConstructorFunctionsTest5" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.025"/>
+        <testcase name="XsConstructorFunctionsTest6" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.02"/>
+        <testcase name="XsConstructorFunctionsTest7" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.023"/>
+        <testcase name="XsConstructorFunctionsTest8" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.015"/>
+        <testcase name="XsConstructorFunctionsTest9" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.022"/>
+        <testcase name="XslTransformTest3" classname="org.apache.xalan.xpath3.XsConstructorFunctionTests" time="0.017"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnAbsTests" time="0.04">
+        <testcase name="xslFnAbsTest1" classname="org.apache.xalan.xpath3.FnAbsTests" time="0.04"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.StringTests" time="0.029">
+        <testcase name="xslStringTest1" classname="org.apache.xalan.xpath3.StringTests" time="0.029"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.XsDateTimeArithmeticTests" time="0.1">
+        <testcase name="xsDateTimeTest1" classname="org.apache.xalan.xpath3.XsDateTimeArithmeticTests" time="0.024"/>
+        <testcase name="xsDateTimeTest2" classname="org.apache.xalan.xpath3.XsDateTimeArithmeticTests" time="0.028"/>
+        <testcase name="xsDateTimeTest3" classname="org.apache.xalan.xpath3.XsDateTimeArithmeticTests" time="0.023"/>
+        <testcase name="xsDateTimeTest4" classname="org.apache.xalan.xpath3.XsDateTimeArithmeticTests" time="0.024"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.XsTimeWithArithmeticTests" time="0.101">
+        <testcase name="xsTimeTest1" classname="org.apache.xalan.xpath3.XsTimeWithArithmeticTests" time="0.018"/>
+        <testcase name="xsTimeTest2" classname="org.apache.xalan.xpath3.XsTimeWithArithmeticTests" time="0.022"/>
+        <testcase name="xsTimeTest3" classname="org.apache.xalan.xpath3.XsTimeWithArithmeticTests" time="0.019"/>
+        <testcase name="xsTimeTest4" classname="org.apache.xalan.xpath3.XsTimeWithArithmeticTests" time="0.042"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.XsDurationSubtypes" time="0.177">
+        <testcase name="XsDurationSubtypesTest1" classname="org.apache.xalan.xpath3.XsDurationSubtypes" time="0.053"/>
+        <testcase name="XsDurationSubtypesTest2" classname="org.apache.xalan.xpath3.XsDurationSubtypes" time="0.016"/>
+        <testcase name="XsDurationSubtypesTest3" classname="org.apache.xalan.xpath3.XsDurationSubtypes" time="0.016"/>
+        <testcase name="XsDurationSubtypesTest4" classname="org.apache.xalan.xpath3.XsDurationSubtypes" time="0.013"/>
+        <testcase name="XsDurationSubtypesTest5" classname="org.apache.xalan.xpath3.XsDurationSubtypes" time="0.015"/>
+        <testcase name="XsDurationSubtypesTest6" classname="org.apache.xalan.xpath3.XsDurationSubtypes" time="0.018"/>
+        <testcase name="XsDurationSubtypesTest7" classname="org.apache.xalan.xpath3.XsDurationSubtypes" time="0.011"/>
+        <testcase name="XsDurationSubtypesTest8" classname="org.apache.xalan.xpath3.XsDurationSubtypes" time="0.016"/>
+        <testcase name="XsDurationSubtypesTest9" classname="org.apache.xalan.xpath3.XsDurationSubtypes" time="0.018"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.78">
+        <testcase name="xslFnDeepEqualTest1" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.133"/>
+        <testcase name="xslFnDeepEqualTest2" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.02"/>
+        <testcase name="xslFnDeepEqualTest3" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.073"/>
+        <testcase name="xslFnDeepEqualTest4" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.026"/>
+        <testcase name="xslFnDeepEqualTest5" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.034"/>
+        <testcase name="xslFnDeepEqualTest6" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.024"/>
+        <testcase name="xslFnDeepEqualTest7" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.036"/>
+        <testcase name="xslFnDeepEqualTest8" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.015"/>
+        <testcase name="xslFnDeepEqualTest9" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.014"/>
+        <testcase name="xslFnDeepEqualTest10" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.025"/>
+        <testcase name="xslFnDeepEqualTest11" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.016"/>
+        <testcase name="xslFnDeepEqualTest12" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.022"/>
+        <testcase name="xslFnDeepEqualTest13" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.036"/>
+        <testcase name="xslFnDeepEqualTest14" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.017"/>
+        <testcase name="xslFnDeepEqualTest15" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.014"/>
+        <testcase name="xslFnDeepEqualTest16" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.017"/>
+        <testcase name="xslFnDeepEqualTest17" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.046"/>
+        <testcase name="xslFnDeepEqualTest18" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.039"/>
+        <testcase name="xslFnDeepEqualTest19" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.031"/>
+        <testcase name="xslFnDeepEqualTest20" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.08"/>
+        <testcase name="xslFnDeepEqualTest21" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.028"/>
+        <testcase name="xslFnDeepEqualTest22" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.015"/>
+        <testcase name="xslFnDeepEqualTest23" classname="org.apache.xalan.xpath3.FnDeepEqualTests" time="0.016"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xslt3.XSLImportSchemaTests" time="0.412">
+        <testcase name="xslImportSchemaTest1" classname="org.apache.xalan.xslt3.XSLImportSchemaTests" time="0.185"/>
+        <testcase name="xslImportSchemaTest2" classname="org.apache.xalan.xslt3.XSLImportSchemaTests" time="0.044"/>
+        <testcase name="xslImportSchemaTest3" classname="org.apache.xalan.xslt3.XSLImportSchemaTests" time="0.023"/>
+        <testcase name="xslImportSchemaTest4" classname="org.apache.xalan.xslt3.XSLImportSchemaTests" time="0.02"/>
+        <testcase name="xslImportSchemaTest5" classname="org.apache.xalan.xslt3.XSLImportSchemaTests" time="0.028"/>
+        <testcase name="xslImportSchemaTest6" classname="org.apache.xalan.xslt3.XSLImportSchemaTests" time="0.053"/>
+        <testcase name="xslImportSchemaTest7" classname="org.apache.xalan.xslt3.XSLImportSchemaTests" time="0.059"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnDateTimeTests" time="0.514">
+        <testcase name="xslFnDateTimeTest1" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.031"/>
+        <testcase name="xslFnDateTimeTest2" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.025"/>
+        <testcase name="xslFnDateTimeTest3" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.021"/>
+        <testcase name="xslFnDateTimeTest4" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.022"/>
+        <testcase name="xslFnDateTimeTest5" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.026"/>
+        <testcase name="xslFnDateTimeTest6" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.022"/>
+        <testcase name="xslFnDateTimeTest7" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.027"/>
+        <testcase name="xslFnDateTimeTest8" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.038"/>
+        <testcase name="xslFnDateTimeTest9" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.031"/>
+        <testcase name="xslFnDateTimeTest10" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.022"/>
+        <testcase name="xslFnDateTimeTest11" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.016"/>
+        <testcase name="xslFnDateTimeTest12" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.032"/>
+        <testcase name="xslFnDateTimeTest13" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.022"/>
+        <testcase name="xslFnDateTimeTest14" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.015"/>
+        <testcase name="xslFnDateTimeTest15" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.024"/>
+        <testcase name="xslFnDateTimeTest16" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.02"/>
+        <testcase name="xslFnDateTimeTest17" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.044"/>
+        <testcase name="xslFnDateTimeTest18" classname="org.apache.xalan.xpath3.FnDateTimeTests" time="0.075"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xslt3.XmlDotComHigherOrderFunctionsTests" time="0.337">
+        <testcase name="xslXmlDotComHofTest10" classname="org.apache.xalan.xslt3.XmlDotComHigherOrderFunctionsTests" time="0.031"/>
+        <testcase name="xslXmlDotComHofTest11" classname="org.apache.xalan.xslt3.XmlDotComHigherOrderFunctionsTests" time="0.023"/>
+        <testcase name="xslXmlDotComHofTest1" classname="org.apache.xalan.xslt3.XmlDotComHigherOrderFunctionsTests" time="0.029"/>
+        <testcase name="xslXmlDotComHofTest2" classname="org.apache.xalan.xslt3.XmlDotComHigherOrderFunctionsTests" time="0.029"/>
+        <testcase name="xslXmlDotComHofTest3" classname="org.apache.xalan.xslt3.XmlDotComHigherOrderFunctionsTests" time="0.026"/>
+        <testcase name="xslXmlDotComHofTest4" classname="org.apache.xalan.xslt3.XmlDotComHigherOrderFunctionsTests" time="0.016"/>
+        <testcase name="xslXmlDotComHofTest5" classname="org.apache.xalan.xslt3.XmlDotComHigherOrderFunctionsTests" time="0.045"/>
+        <testcase name="xslXmlDotComHofTest6" classname="org.apache.xalan.xslt3.XmlDotComHigherOrderFunctionsTests" time="0.028"/>
+        <testcase name="xslXmlDotComHofTest7" classname="org.apache.xalan.xslt3.XmlDotComHigherOrderFunctionsTests" time="0.027"/>
+        <testcase name="xslXmlDotComHofTest8" classname="org.apache.xalan.xslt3.XmlDotComHigherOrderFunctionsTests" time="0.045"/>
+        <testcase name="xslXmlDotComHofTest9" classname="org.apache.xalan.xslt3.XmlDotComHigherOrderFunctionsTests" time="0.036"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnDefaultCollation" time="0.066">
+        <testcase name="xslFnDefaultCollationTest1" classname="org.apache.xalan.xpath3.FnDefaultCollation" time="0.027"/>
+        <testcase name="xslFnDefaultCollationTest2" classname="org.apache.xalan.xpath3.FnDefaultCollation" time="0.039"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnBaseUriTests" time="1.532">
+        <testcase name="xslFnBaseUriTest1" classname="org.apache.xalan.xpath3.FnBaseUriTests" time="1.506"/>
+        <testcase name="xslFnBaseUriTest2" classname="org.apache.xalan.xpath3.FnBaseUriTests" time="0.026"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnDocumentUriTests" time="0.042">
+        <testcase name="xslFnDocumentUriTest1" classname="org.apache.xalan.xpath3.FnDocumentUriTests" time="0.042"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnResolveQNameTests" time="0.03">
+        <testcase name="xslFnResolveQNameTest1" classname="org.apache.xalan.xpath3.FnResolveQNameTests" time="0.03"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnQNameTests" time="0.242">
+        <testcase name="xslFnQNameTest1" classname="org.apache.xalan.xpath3.FnQNameTests" time="0.018"/>
+        <testcase name="xslFnQNameTest2" classname="org.apache.xalan.xpath3.FnQNameTests" time="0.039"/>
+        <testcase name="xslFnQNameTest3" classname="org.apache.xalan.xpath3.FnQNameTests" time="0.029"/>
+        <testcase name="xslFnQNameTest4" classname="org.apache.xalan.xpath3.FnQNameTests" time="0.024"/>
+        <testcase name="xslFnQNameTest5" classname="org.apache.xalan.xpath3.FnQNameTests" time="0.022"/>
+        <testcase name="xslFnQNameTest6" classname="org.apache.xalan.xpath3.FnQNameTests" time="0.027"/>
+        <testcase name="xslFnQNameTest7" classname="org.apache.xalan.xpath3.FnQNameTests" time="0.02"/>
+        <testcase name="xslFnQNameTest8" classname="org.apache.xalan.xpath3.FnQNameTests" time="0.035"/>
+        <testcase name="xslFnQNameTest9" classname="org.apache.xalan.xpath3.FnQNameTests" time="0.028"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.XPathMapTests" time="0.558">
+        <testcase name="xslMapTest1" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.027"/>
+        <testcase name="xslMapTest2" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.022"/>
+        <testcase name="xslMapTest3" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.023"/>
+        <testcase name="xslMapTest4" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.022"/>
+        <testcase name="xslMapTest5" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.022"/>
+        <testcase name="xslMapTest6" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.021"/>
+        <testcase name="xslMapTest7" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.033"/>
+        <testcase name="xslMapTest8" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.029"/>
+        <testcase name="xslMapTest9" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.021"/>
+        <testcase name="xslMapTest10" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.014"/>
+        <testcase name="xslMapTest11" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.022"/>
+        <testcase name="xslMapTest12" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.049"/>
+        <testcase name="xslMapTest13" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.022"/>
+        <testcase name="xslMapTest14" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.009"/>
+        <testcase name="xslMapTest15" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.032"/>
+        <testcase name="xslMapTest16" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.02"/>
+        <testcase name="xslMapTest17" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.015"/>
+        <testcase name="xslMapTest18" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.013"/>
+        <testcase name="xslMapTest19" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.019"/>
+        <testcase name="xslMapTest20" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.018"/>
+        <testcase name="xslMapTest21" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.043"/>
+        <testcase name="xslMapTest22" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.024"/>
+        <testcase name="xslMapTest23" classname="org.apache.xalan.xpath3.XPathMapTests" time="0.037"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.XPathArrayTests" time="0.505">
+        <testcase name="xslArrayTest10" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.034"/>
+        <testcase name="xslArrayTest11" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.028"/>
+        <testcase name="xslArrayTest12" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.022"/>
+        <testcase name="xslArrayTest13" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.027"/>
+        <testcase name="xslArrayTest14" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.022"/>
+        <testcase name="xslArrayTest15" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.02"/>
+        <testcase name="xslArrayTest16" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.027"/>
+        <testcase name="xslArrayTest17" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.023"/>
+        <testcase name="xslArrayTest18" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.023"/>
+        <testcase name="xslArrayTest19" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.022"/>
+        <testcase name="xslArrayTest20" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.012"/>
+        <testcase name="xslArrayTest21" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.026"/>
+        <testcase name="xslArrayTest22" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.039"/>
+        <testcase name="xslArrayTest1" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.02"/>
+        <testcase name="xslArrayTest2" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.021"/>
+        <testcase name="xslArrayTest3" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.02"/>
+        <testcase name="xslArrayTest4" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.037"/>
+        <testcase name="xslArrayTest5" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.019"/>
+        <testcase name="xslArrayTest6" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.02"/>
+        <testcase name="xslArrayTest7" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.01"/>
+        <testcase name="xslArrayTest8" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.018"/>
+        <testcase name="xslArrayTest9" classname="org.apache.xalan.xpath3.XPathArrayTests" time="0.012"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnLangTests" time="0.025">
+        <testcase name="xslFnLangTest1" classname="org.apache.xalan.xpath3.FnLangTests" time="0.025"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnRootTests" time="0.05">
+        <testcase name="xslFnRootTest1" classname="org.apache.xalan.xpath3.FnRootTests" time="0.05"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.XPathCastTests" time="0.04">
+        <testcase name="xslCastableasTest1" classname="org.apache.xalan.xpath3.XPathCastTests" time="0.019"/>
+        <testcase name="xslCastasTest1" classname="org.apache.xalan.xpath3.XPathCastTests" time="0.021"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.XPathArrowOpTests" time="0.101">
+        <testcase name="xslXPathArrowOpTest1" classname="org.apache.xalan.xpath3.XPathArrowOpTests" time="0.017"/>
+        <testcase name="xslXPathArrowOpTest2" classname="org.apache.xalan.xpath3.XPathArrowOpTests" time="0.02"/>
+        <testcase name="xslXPathArrowOpTest3" classname="org.apache.xalan.xpath3.XPathArrowOpTests" time="0.029"/>
+        <testcase name="xslXPathArrowOpTest4" classname="org.apache.xalan.xpath3.XPathArrowOpTests" time="0.034"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnMapMerge" time="0.159">
+        <testcase name="xslFnMapMergeTest1" classname="org.apache.xalan.xpath3.FnMapMerge" time="0.016"/>
+        <testcase name="xslFnMapMergeTest2" classname="org.apache.xalan.xpath3.FnMapMerge" time="0.022"/>
+        <testcase name="xslFnMapMergeTest3" classname="org.apache.xalan.xpath3.FnMapMerge" time="0.031"/>
+        <testcase name="xslFnMapMergeTest4" classname="org.apache.xalan.xpath3.FnMapMerge" time="0.019"/>
+        <testcase name="xslFnMapMergeTest5" classname="org.apache.xalan.xpath3.FnMapMerge" time="0.024"/>
+        <testcase name="xslFnMapMergeTest6" classname="org.apache.xalan.xpath3.FnMapMerge" time="0.014"/>
+        <testcase name="xslFnMapMergeTest7" classname="org.apache.xalan.xpath3.FnMapMerge" time="0.032"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnParseJsonTests" time="0.18">
+        <testcase name="xslFnParseJsonTest1" classname="org.apache.xalan.xpath3.FnParseJsonTests" time="0.032"/>
+        <testcase name="xslFnParseJsonTest2" classname="org.apache.xalan.xpath3.FnParseJsonTests" time="0.02"/>
+        <testcase name="xslFnParseJsonTest3" classname="org.apache.xalan.xpath3.FnParseJsonTests" time="0.071"/>
+        <testcase name="xslFnParseJsonTest4" classname="org.apache.xalan.xpath3.FnParseJsonTests" time="0.027"/>
+        <testcase name="xslFnParseJsonTest5" classname="org.apache.xalan.xpath3.FnParseJsonTests" time="0.029"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnJsonDocTests" time="0.403">
+        <testcase name="xslFnJsonDocTest1" classname="org.apache.xalan.xpath3.FnJsonDocTests" time="0.403"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnJsonToXmlTests" time="0.117">
+        <testcase name="xslFnJsonToXmlTest1" classname="org.apache.xalan.xpath3.FnJsonToXmlTests" time="0.027"/>
+        <testcase name="xslFnJsonToXmlTest2" classname="org.apache.xalan.xpath3.FnJsonToXmlTests" time="0.015"/>
+        <testcase name="xslFnJsonToXmlTest3" classname="org.apache.xalan.xpath3.FnJsonToXmlTests" time="0.019"/>
+        <testcase name="xslFnJsonToXmlTest4" classname="org.apache.xalan.xpath3.FnJsonToXmlTests" time="0.019"/>
+        <testcase name="xslFnJsonToXmlTest5" classname="org.apache.xalan.xpath3.FnJsonToXmlTests" time="0.036"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnXmlToJsonTests" time="0.157">
+        <testcase name="xslFnXmlToJsonTest1" classname="org.apache.xalan.xpath3.FnXmlToJsonTests" time="0.069"/>
+        <testcase name="xslFnXmlToJsonTest2" classname="org.apache.xalan.xpath3.FnXmlToJsonTests" time="0.047"/>
+        <testcase name="xslFnXmlToJsonTest3" classname="org.apache.xalan.xpath3.FnXmlToJsonTests" time="0.041"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnAnalyzeStringTests" time="0.246">
+        <testcase name="xslFnAnalyzeStringTest1" classname="org.apache.xalan.xpath3.FnAnalyzeStringTests" time="0.054"/>
+        <testcase name="xslFnAnalyzeStringTest2" classname="org.apache.xalan.xpath3.FnAnalyzeStringTests" time="0.037"/>
+        <testcase name="xslFnAnalyzeStringTest3" classname="org.apache.xalan.xpath3.FnAnalyzeStringTests" time="0.023"/>
+        <testcase name="xslFnAnalyzeStringTest4" classname="org.apache.xalan.xpath3.FnAnalyzeStringTests" time="0.021"/>
+        <testcase name="xslFnAnalyzeStringTest5" classname="org.apache.xalan.xpath3.FnAnalyzeStringTests" time="0.025"/>
+        <testcase name="xslFnAnalyzeStringTest6" classname="org.apache.xalan.xpath3.FnAnalyzeStringTests" time="0.022"/>
+        <testcase name="xslFnAnalyzeStringTest7" classname="org.apache.xalan.xpath3.FnAnalyzeStringTests" time="0.064"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.XPathMapOtherTests" time="0.062">
+        <testcase name="xslMapOtherTest1" classname="org.apache.xalan.xpath3.XPathMapOtherTests" time="0.024"/>
+        <testcase name="xslMapOtherTest2" classname="org.apache.xalan.xpath3.XPathMapOtherTests" time="0.016"/>
+        <testcase name="xslMapOtherTest3" classname="org.apache.xalan.xpath3.XPathMapOtherTests" time="0.022"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.JiraIssuesTests" time="0.067">
+        <testcase name="xslJiraIssuesTest1" classname="org.apache.xalan.xpath3.JiraIssuesTests" time="0.033"/>
+        <testcase name="xslJiraIssuesTest2" classname="org.apache.xalan.xpath3.JiraIssuesTests" time="0.034"/>
+      </testsuite>
+    </testsuite>
+    <testsuite name="org.apache.xalan.xslt3.Xsl3TestSuite2" time="10.924">
+      <testsuite name="org.apache.xalan.xslt3.AnalyzeStringTests" time="0.499">
+        <testcase name="xslAnalyzeStringTest10" classname="org.apache.xalan.xslt3.AnalyzeStringTests" time="0.027"/>
+        <testcase name="xslAnalyzeStringTest11" classname="org.apache.xalan.xslt3.AnalyzeStringTests" time="0.028"/>
+        <testcase name="xslAnalyzeStringTest12" classname="org.apache.xalan.xslt3.AnalyzeStringTests" time="0.029"/>
+        <testcase name="xslAnalyzeStringTest13" classname="org.apache.xalan.xslt3.AnalyzeStringTests" time="0.069"/>
+        <testcase name="xslAnalyzeStringTest1" classname="org.apache.xalan.xslt3.AnalyzeStringTests" time="0.124"/>
+        <testcase name="xslAnalyzeStringTest2" classname="org.apache.xalan.xslt3.AnalyzeStringTests" time="0.034"/>
+        <testcase name="xslAnalyzeStringTest3" classname="org.apache.xalan.xslt3.AnalyzeStringTests" time="0.031"/>
+        <testcase name="xslAnalyzeStringTest4" classname="org.apache.xalan.xslt3.AnalyzeStringTests" time="0.029"/>
+        <testcase name="xslAnalyzeStringTest5" classname="org.apache.xalan.xslt3.AnalyzeStringTests" time="0.019"/>
+        <testcase name="xslAnalyzeStringTest6" classname="org.apache.xalan.xslt3.AnalyzeStringTests" time="0.025"/>
+        <testcase name="xslAnalyzeStringTest7" classname="org.apache.xalan.xslt3.AnalyzeStringTests" time="0.03"/>
+        <testcase name="xslAnalyzeStringTest8" classname="org.apache.xalan.xslt3.AnalyzeStringTests" time="0.012"/>
+        <testcase name="xslAnalyzeStringTest9" classname="org.apache.xalan.xslt3.AnalyzeStringTests" time="0.042"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xslt3.AttributeTests" time="0.275">
+        <testcase name="xslAttributeTest1" classname="org.apache.xalan.xslt3.AttributeTests" time="0.039"/>
+        <testcase name="xslAttributeTest2" classname="org.apache.xalan.xslt3.AttributeTests" time="0.014"/>
+        <testcase name="xslAttributeTest3" classname="org.apache.xalan.xslt3.AttributeTests" time="0.012"/>
+        <testcase name="xslAttributeTest4" classname="org.apache.xalan.xslt3.AttributeTests" time="0.019"/>
+        <testcase name="xslAttributeTest5" classname="org.apache.xalan.xslt3.AttributeTests" time="0.101"/>
+        <testcase name="xslAttributeTest6" classname="org.apache.xalan.xslt3.AttributeTests" time="0.025"/>
+        <testcase name="xslAttributeTest7" classname="org.apache.xalan.xslt3.AttributeTests" time="0.064"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xslt3.GroupingTests" time="0.812">
+        <testcase name="xslGroupingTest1" classname="org.apache.xalan.xslt3.GroupingTests" time="0.028"/>
+        <testcase name="xslGroupingTest2" classname="org.apache.xalan.xslt3.GroupingTests" time="0.035"/>
+        <testcase name="xslGroupingTest3" classname="org.apache.xalan.xslt3.GroupingTests" time="0.03"/>
+        <testcase name="xslGroupingTest4" classname="org.apache.xalan.xslt3.GroupingTests" time="0.033"/>
+        <testcase name="xslGroupingTest5" classname="org.apache.xalan.xslt3.GroupingTests" time="0.008"/>
+        <testcase name="xslGroupingTest6" classname="org.apache.xalan.xslt3.GroupingTests" time="0.021"/>
+        <testcase name="xslGroupingTest7" classname="org.apache.xalan.xslt3.GroupingTests" time="0.021"/>
+        <testcase name="xslGroupingTest8" classname="org.apache.xalan.xslt3.GroupingTests" time="0.023"/>
+        <testcase name="xslGroupingTest9" classname="org.apache.xalan.xslt3.GroupingTests" time="0.019"/>
+        <testcase name="xslGroupingTest10" classname="org.apache.xalan.xslt3.GroupingTests" time="0.03"/>
+        <testcase name="xslGroupingTest11" classname="org.apache.xalan.xslt3.GroupingTests" time="0.023"/>
+        <testcase name="xslGroupingTest12" classname="org.apache.xalan.xslt3.GroupingTests" time="0.028"/>
+        <testcase name="xslGroupingTest13" classname="org.apache.xalan.xslt3.GroupingTests" time="0.036"/>
+        <testcase name="xslGroupingTest14" classname="org.apache.xalan.xslt3.GroupingTests" time="0.036"/>
+        <testcase name="xslGroupingTest15" classname="org.apache.xalan.xslt3.GroupingTests" time="0.023"/>
+        <testcase name="xslGroupingTest16" classname="org.apache.xalan.xslt3.GroupingTests" time="0.054"/>
+        <testcase name="xslGroupingTest17" classname="org.apache.xalan.xslt3.GroupingTests" time="0.053"/>
+        <testcase name="xslGroupingTest18" classname="org.apache.xalan.xslt3.GroupingTests" time="0.04"/>
+        <testcase name="xslGroupingTest19" classname="org.apache.xalan.xslt3.GroupingTests" time="0.017"/>
+        <testcase name="xslGroupingTest20" classname="org.apache.xalan.xslt3.GroupingTests" time="0.01"/>
+        <testcase name="xslGroupingTest21" classname="org.apache.xalan.xslt3.GroupingTests" time="0.012"/>
+        <testcase name="xslGroupingTest22" classname="org.apache.xalan.xslt3.GroupingTests" time="0.02"/>
+        <testcase name="xslGroupingTest23" classname="org.apache.xalan.xslt3.GroupingTests" time="0.014"/>
+        <testcase name="xslGroupingTest24" classname="org.apache.xalan.xslt3.GroupingTests" time="0.028"/>
+        <testcase name="xslGroupingTest25" classname="org.apache.xalan.xslt3.GroupingTests" time="0.033"/>
+        <testcase name="xslGroupingTest26" classname="org.apache.xalan.xslt3.GroupingTests" time="0.029"/>
+        <testcase name="xslGroupingTest27" classname="org.apache.xalan.xslt3.GroupingTests" time="0.032"/>
+        <testcase name="xslGroupingTest28" classname="org.apache.xalan.xslt3.GroupingTests" time="0.023"/>
+        <testcase name="xslGroupingTest29" classname="org.apache.xalan.xslt3.GroupingTests" time="0.026"/>
+        <testcase name="xslGroupingTest30" classname="org.apache.xalan.xslt3.GroupingTests" time="0.025"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xslt3.GroupingWithSortTests" time="0.262">
+        <testcase name="xslGroupingWithSortTest1" classname="org.apache.xalan.xslt3.GroupingWithSortTests" time="0.046"/>
+        <testcase name="xslGroupingWithSortTest2" classname="org.apache.xalan.xslt3.GroupingWithSortTests" time="0.037"/>
+        <testcase name="xslGroupingWithSortTest3" classname="org.apache.xalan.xslt3.GroupingWithSortTests" time="0.017"/>
+        <testcase name="xslGroupingWithSortTest4" classname="org.apache.xalan.xslt3.GroupingWithSortTests" time="0.024"/>
+        <testcase name="xslGroupingWithSortTest5" classname="org.apache.xalan.xslt3.GroupingWithSortTests" time="0.037"/>
+        <testcase name="xslGroupingWithSortTest6" classname="org.apache.xalan.xslt3.GroupingWithSortTests" time="0.02"/>
+        <testcase name="xslGroupingWithSortTest7" classname="org.apache.xalan.xslt3.GroupingWithSortTests" time="0.019"/>
+        <testcase name="xslGroupingWithSortTest8" classname="org.apache.xalan.xslt3.GroupingWithSortTests" time="0.037"/>
+        <testcase name="xslGroupingWithSortTest9" classname="org.apache.xalan.xslt3.GroupingWithSortTests" time="0.025"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xslt3.RtfMigrationTests" time="0.14">
+        <testcase name="xslRtfMigrationTest1" classname="org.apache.xalan.xslt3.RtfMigrationTests" time="0.051"/>
+        <testcase name="xslRtfMigrationTest2" classname="org.apache.xalan.xslt3.RtfMigrationTests" time="0.02"/>
+        <testcase name="xslRtfMigrationTest3" classname="org.apache.xalan.xslt3.RtfMigrationTests" time="0.016"/>
+        <testcase name="xslRtfMigrationTest4" classname="org.apache.xalan.xslt3.RtfMigrationTests" time="0.029"/>
+        <testcase name="xslRtfMigrationTest5" classname="org.apache.xalan.xslt3.RtfMigrationTests" time="0.024"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.398">
+        <testcase name="xslQuantifiedExprTest10" classname="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.037"/>
+        <testcase name="xslQuantifiedExprTest11" classname="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.027"/>
+        <testcase name="xslQuantifiedExprTest12" classname="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.014"/>
+        <testcase name="xslQuantifiedExprTest13" classname="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.024"/>
+        <testcase name="xslQuantifiedExprTest14" classname="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.015"/>
+        <testcase name="xslQuantifiedExprTest15" classname="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.023"/>
+        <testcase name="xslQuantifiedExprTest16" classname="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.049"/>
+        <testcase name="xslQuantifiedExprTest1" classname="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.03"/>
+        <testcase name="xslQuantifiedExprTest2" classname="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.03"/>
+        <testcase name="xslQuantifiedExprTest3" classname="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.032"/>
+        <testcase name="xslQuantifiedExprTest4" classname="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.022"/>
+        <testcase name="xslQuantifiedExprTest5" classname="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.024"/>
+        <testcase name="xslQuantifiedExprTest6" classname="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.017"/>
+        <testcase name="xslQuantifiedExprTest7" classname="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.017"/>
+        <testcase name="xslQuantifiedExprTest8" classname="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.018"/>
+        <testcase name="xslQuantifiedExprTest9" classname="org.apache.xalan.xpath3.QuantifiedExprTests" time="0.019"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnUnparsedTextTests" time="0.196">
+        <testcase name="xslFnUnparsedTextTest1" classname="org.apache.xalan.xpath3.FnUnparsedTextTests" time="0.024"/>
+        <testcase name="xslFnUnparsedTextTest2" classname="org.apache.xalan.xpath3.FnUnparsedTextTests" time="0.036"/>
+        <testcase name="xslFnUnparsedTextTest3" classname="org.apache.xalan.xpath3.FnUnparsedTextTests" time="0.025"/>
+        <testcase name="xslFnUnparsedTextTest4" classname="org.apache.xalan.xpath3.FnUnparsedTextTests" time="0.072"/>
+        <testcase name="xslFnUnparsedTextTest5" classname="org.apache.xalan.xpath3.FnUnparsedTextTests" time="0.039"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnTokenizeTests" time="0.332">
+        <testcase name="xslFnTokenizeTest1" classname="org.apache.xalan.xpath3.FnTokenizeTests" time="0.029"/>
+        <testcase name="xslFnTokenizeTest2" classname="org.apache.xalan.xpath3.FnTokenizeTests" time="0.034"/>
+        <testcase name="xslFnTokenizeTest3" classname="org.apache.xalan.xpath3.FnTokenizeTests" time="0.019"/>
+        <testcase name="xslFnTokenizeTest4" classname="org.apache.xalan.xpath3.FnTokenizeTests" time="0.021"/>
+        <testcase name="xslFnTokenizeTest5" classname="org.apache.xalan.xpath3.FnTokenizeTests" time="0.025"/>
+        <testcase name="xslFnTokenizeTest6" classname="org.apache.xalan.xpath3.FnTokenizeTests" time="0.057"/>
+        <testcase name="xslFnTokenizeTest7" classname="org.apache.xalan.xpath3.FnTokenizeTests" time="0.019"/>
+        <testcase name="xslFnTokenizeTest8" classname="org.apache.xalan.xpath3.FnTokenizeTests" time="0.02"/>
+        <testcase name="xslFnTokenizeTest9" classname="org.apache.xalan.xpath3.FnTokenizeTests" time="0.031"/>
+        <testcase name="xslFnTokenizeTest10" classname="org.apache.xalan.xpath3.FnTokenizeTests" time="0.029"/>
+        <testcase name="xslFnTokenizeTest11" classname="org.apache.xalan.xpath3.FnTokenizeTests" time="0.024"/>
+        <testcase name="xslFnTokenizeTest12" classname="org.apache.xalan.xpath3.FnTokenizeTests" time="0.024"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnStringJoinTests" time="0.129">
+        <testcase name="xslFnStringJoinTest1" classname="org.apache.xalan.xpath3.FnStringJoinTests" time="0.02"/>
+        <testcase name="xslFnStringJoinTest2" classname="org.apache.xalan.xpath3.FnStringJoinTests" time="0.031"/>
+        <testcase name="xslFnStringJoinTest3" classname="org.apache.xalan.xpath3.FnStringJoinTests" time="0.04"/>
+        <testcase name="xslFnStringJoinTest4" classname="org.apache.xalan.xpath3.FnStringJoinTests" time="0.02"/>
+        <testcase name="xslFnStringJoinTest5" classname="org.apache.xalan.xpath3.FnStringJoinTests" time="0.012"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnIndexOfTests" time="0.175">
+        <testcase name="xslFnIndexOfTest1" classname="org.apache.xalan.xpath3.FnIndexOfTests" time="0.016"/>
+        <testcase name="xslFnIndexOfTest2" classname="org.apache.xalan.xpath3.FnIndexOfTests" time="0.029"/>
+        <testcase name="xslFnIndexOfTest3" classname="org.apache.xalan.xpath3.FnIndexOfTests" time="0.013"/>
+        <testcase name="xslFnIndexOfTest4" classname="org.apache.xalan.xpath3.FnIndexOfTests" time="0.013"/>
+        <testcase name="xslFnIndexOfTest5" classname="org.apache.xalan.xpath3.FnIndexOfTests" time="0.019"/>
+        <testcase name="xslFnIndexOfTest6" classname="org.apache.xalan.xpath3.FnIndexOfTests" time="0.026"/>
+        <testcase name="xslFnIndexOfTest7" classname="org.apache.xalan.xpath3.FnIndexOfTests" time="0.057"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.SequenceTests" time="0.049">
+        <testcase name="xslSequenceTest1" classname="org.apache.xalan.xpath3.SequenceTests" time="0.02"/>
+        <testcase name="xslSequenceTest2" classname="org.apache.xalan.xpath3.SequenceTests" time="0.029"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.RangeExprTests" time="0.381">
+        <testcase name="xslRangeExprTest1" classname="org.apache.xalan.xpath3.RangeExprTests" time="0.022"/>
+        <testcase name="xslRangeExprTest2" classname="org.apache.xalan.xpath3.RangeExprTests" time="0.02"/>
+        <testcase name="xslRangeExprTest3" classname="org.apache.xalan.xpath3.RangeExprTests" time="0.026"/>
+        <testcase name="xslRangeExprTest4" classname="org.apache.xalan.xpath3.RangeExprTests" time="0.049"/>
+        <testcase name="xslRangeExprTest5" classname="org.apache.xalan.xpath3.RangeExprTests" time="0.034"/>
+        <testcase name="xslRangeExprTest6" classname="org.apache.xalan.xpath3.RangeExprTests" time="0.039"/>
+        <testcase name="xslRangeExprTest7" classname="org.apache.xalan.xpath3.RangeExprTests" time="0.024"/>
+        <testcase name="xslRangeExprTest8" classname="org.apache.xalan.xpath3.RangeExprTests" time="0.023"/>
+        <testcase name="xslRangeExprTest9" classname="org.apache.xalan.xpath3.RangeExprTests" time="0.017"/>
+        <testcase name="xslNumberRangeTest10" classname="org.apache.xalan.xpath3.RangeExprTests" time="0.021"/>
+        <testcase name="xslRangeExprTest11" classname="org.apache.xalan.xpath3.RangeExprTests" time="0.01"/>
+        <testcase name="xslRangeExprTest12" classname="org.apache.xalan.xpath3.RangeExprTests" time="0.023"/>
+        <testcase name="xslRangeExprTest13" classname="org.apache.xalan.xpath3.RangeExprTests" time="0.032"/>
+        <testcase name="xslRangeExprTest14" classname="org.apache.xalan.xpath3.RangeExprTests" time="0.04"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xslt3.W3c_xslt30_IterateTests" time="0.04">
+        <testcase name="xslIterateTest1" classname="org.apache.xalan.xslt3.W3c_xslt30_IterateTests" time="0.04"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.328">
+        <testcase name="xslAxesTest1" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.032"/>
+        <testcase name="xslAxesTest2" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.028"/>
+        <testcase name="xslAxesTest3" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.019"/>
+        <testcase name="xslAxesTest4" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.021"/>
+        <testcase name="xslAxesTest5" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.02"/>
+        <testcase name="xslAxesTest6" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.011"/>
+        <testcase name="xslAxesTest7" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.019"/>
+        <testcase name="xslAxesTest8" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.012"/>
+        <testcase name="xslAxesTest9" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.015"/>
+        <testcase name="xslAxesTest10" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.022"/>
+        <testcase name="xslAxesTest11" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.017"/>
+        <testcase name="xslAxesTest12" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.018"/>
+        <testcase name="xslAxesTest13" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.014"/>
+        <testcase name="xslAxesTest14" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.015"/>
+        <testcase name="xslAxesTest15" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.019"/>
+        <testcase name="xslAxesTest16" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.024"/>
+        <testcase name="xslAxesTest17" classname="org.apache.xalan.xslt3.W3c_xslt30_AxesTests" time="0.021"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.W3c_xslt30_fn_deep_equalTests" time="0.06">
+        <testcase name="xslFnDeepEqualTest1" classname="org.apache.xalan.xpath3.W3c_xslt30_fn_deep_equalTests" time="0.037"/>
+        <testcase name="xslFnDeepEqualTest2" classname="org.apache.xalan.xpath3.W3c_xslt30_fn_deep_equalTests" time="0.023"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xslt3.XslIterateTests" time="0.748">
+        <testcase name="xslIterateTest10" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.042"/>
+        <testcase name="xslIterateTest11" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.062"/>
+        <testcase name="xslIterateTest12" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.024"/>
+        <testcase name="xslIterateTest13" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.021"/>
+        <testcase name="xslIterateTest14" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.024"/>
+        <testcase name="xslIterateTest15" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.02"/>
+        <testcase name="xslIterateTest16" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.026"/>
+        <testcase name="xslIterateTest17" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.014"/>
+        <testcase name="xslIterateTest18" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.025"/>
+        <testcase name="xslIterateTest19" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.042"/>
+        <testcase name="xslIterateTest20" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.025"/>
+        <testcase name="xslIterateTest21" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.019"/>
+        <testcase name="xslIterateTest22" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.02"/>
+        <testcase name="xslIterateTest23" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.027"/>
+        <testcase name="xslIterateTest24" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.025"/>
+        <testcase name="xslIterateTest25" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.028"/>
+        <testcase name="xslIterateTest26" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.059"/>
+        <testcase name="xslIterateTest27" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.012"/>
+        <testcase name="xslIterateTest28" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.028"/>
+        <testcase name="xslIterateTest29" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.018"/>
+        <testcase name="xslIterateTest1" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.036"/>
+        <testcase name="xslIterateTest2" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.027"/>
+        <testcase name="xslIterateTest3" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.03"/>
+        <testcase name="xslIterateTest4" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.016"/>
+        <testcase name="xslIterateTest5" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.011"/>
+        <testcase name="xslIterateTest6" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.01"/>
+        <testcase name="xslIterateTest7" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.011"/>
+        <testcase name="xslIterateTest8" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.014"/>
+        <testcase name="xslIterateTest9" classname="org.apache.xalan.xslt3.XslIterateTests" time="0.032"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnFilterTests" time="0.211">
+        <testcase name="xslFnFilterTest10" classname="org.apache.xalan.xpath3.FnFilterTests" time="0.036"/>
+        <testcase name="xslFnFilterTest1" classname="org.apache.xalan.xpath3.FnFilterTests" time="0.015"/>
+        <testcase name="xslFnFilterTest2" classname="org.apache.xalan.xpath3.FnFilterTests" time="0.02"/>
+        <testcase name="xslFnFilterTest3" classname="org.apache.xalan.xpath3.FnFilterTests" time="0.021"/>
+        <testcase name="xslFnFilterTest4" classname="org.apache.xalan.xpath3.FnFilterTests" time="0.026"/>
+        <testcase name="xslFnFilterTest5" classname="org.apache.xalan.xpath3.FnFilterTests" time="0.016"/>
+        <testcase name="xslFnFilterTest6" classname="org.apache.xalan.xpath3.FnFilterTests" time="0.004"/>
+        <testcase name="xslFnFilterTest7" classname="org.apache.xalan.xpath3.FnFilterTests" time="0.021"/>
+        <testcase name="xslFnFilterTest8" classname="org.apache.xalan.xpath3.FnFilterTests" time="0.034"/>
+        <testcase name="xslFnFilterTest9" classname="org.apache.xalan.xpath3.FnFilterTests" time="0.018"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.564">
+        <testcase name="xslDynamicFunctionCallTest10" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.036"/>
+        <testcase name="xslDynamicFunctionCallTest11" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.019"/>
+        <testcase name="xslDynamicFunctionCallTest12" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.03"/>
+        <testcase name="xslDynamicFunctionCallTest13" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.025"/>
+        <testcase name="xslDynamicFunctionCallTest14" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.023"/>
+        <testcase name="xslDynamicFunctionCallTest15" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.023"/>
+        <testcase name="xslDynamicFunctionCallTest16" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.035"/>
+        <testcase name="xslDynamicFunctionCallTest17" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.022"/>
+        <testcase name="xslDynamicFunctionCallTest18" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.017"/>
+        <testcase name="xslDynamicFunctionCallTest19" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.024"/>
+        <testcase name="xslDynamicFunctionCallTest20" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.035"/>
+        <testcase name="xslDynamicFunctionCallTest1" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.025"/>
+        <testcase name="xslDynamicFunctionCallTest2" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.06"/>
+        <testcase name="xslDynamicFunctionCallTest3" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.023"/>
+        <testcase name="xslDynamicFunctionCallTest4" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.012"/>
+        <testcase name="xslDynamicFunctionCallTest5" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.046"/>
+        <testcase name="xslDynamicFunctionCallTest6" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.03"/>
+        <testcase name="xslDynamicFunctionCallTest7" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.024"/>
+        <testcase name="xslDynamicFunctionCallTest8" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.034"/>
+        <testcase name="xslDynamicFunctionCallTest9" classname="org.apache.xalan.xpath3.DynamicFunctionCallTests" time="0.021"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.IfExprTests" time="0.361">
+        <testcase name="xslIfExprTest1" classname="org.apache.xalan.xpath3.IfExprTests" time="0.033"/>
+        <testcase name="xslIfExprTest2" classname="org.apache.xalan.xpath3.IfExprTests" time="0.023"/>
+        <testcase name="xslIfExprTest3" classname="org.apache.xalan.xpath3.IfExprTests" time="0.029"/>
+        <testcase name="xslIfExprTest4" classname="org.apache.xalan.xpath3.IfExprTests" time="0.022"/>
+        <testcase name="xslIfExprTest5" classname="org.apache.xalan.xpath3.IfExprTests" time="0.03"/>
+        <testcase name="xslIfExprTest6" classname="org.apache.xalan.xpath3.IfExprTests" time="0.035"/>
+        <testcase name="xslIfExprTest7" classname="org.apache.xalan.xpath3.IfExprTests" time="0.028"/>
+        <testcase name="xslIfExprTest8" classname="org.apache.xalan.xpath3.IfExprTests" time="0.023"/>
+        <testcase name="xslIfExprTest9" classname="org.apache.xalan.xpath3.IfExprTests" time="0.019"/>
+        <testcase name="xslIfExprTest10" classname="org.apache.xalan.xpath3.IfExprTests" time="0.021"/>
+        <testcase name="xslIfExprTest11" classname="org.apache.xalan.xpath3.IfExprTests" time="0.031"/>
+        <testcase name="xslIfExprTest12" classname="org.apache.xalan.xpath3.IfExprTests" time="0.029"/>
+        <testcase name="xslIfExprTest13" classname="org.apache.xalan.xpath3.IfExprTests" time="0.024"/>
+        <testcase name="xslIfExprTest14" classname="org.apache.xalan.xpath3.IfExprTests" time="0.014"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.ForExprTests" time="0.362">
+        <testcase name="xslForExprTest10" classname="org.apache.xalan.xpath3.ForExprTests" time="0.02"/>
+        <testcase name="xslForExprTest11" classname="org.apache.xalan.xpath3.ForExprTests" time="0.015"/>
+        <testcase name="xslForExprTest12" classname="org.apache.xalan.xpath3.ForExprTests" time="0.028"/>
+        <testcase name="xslForExprTest13" classname="org.apache.xalan.xpath3.ForExprTests" time="0.021"/>
+        <testcase name="xslForExprTest14" classname="org.apache.xalan.xpath3.ForExprTests" time="0.022"/>
+        <testcase name="xslForExprTest15" classname="org.apache.xalan.xpath3.ForExprTests" time="0.022"/>
+        <testcase name="xslForExprTest16" classname="org.apache.xalan.xpath3.ForExprTests" time="0.04"/>
+        <testcase name="xslForExprTest1" classname="org.apache.xalan.xpath3.ForExprTests" time="0.031"/>
+        <testcase name="xslForExprTest2" classname="org.apache.xalan.xpath3.ForExprTests" time="0.018"/>
+        <testcase name="xslForExprTest3" classname="org.apache.xalan.xpath3.ForExprTests" time="0.013"/>
+        <testcase name="xslForExprTest4" classname="org.apache.xalan.xpath3.ForExprTests" time="0.02"/>
+        <testcase name="xslForExprTest5" classname="org.apache.xalan.xpath3.ForExprTests" time="0.016"/>
+        <testcase name="xslForExprTest6" classname="org.apache.xalan.xpath3.ForExprTests" time="0.028"/>
+        <testcase name="xslForExprTest7" classname="org.apache.xalan.xpath3.ForExprTests" time="0.037"/>
+        <testcase name="xslForExprTest8" classname="org.apache.xalan.xpath3.ForExprTests" time="0.024"/>
+        <testcase name="xslForExprTest9" classname="org.apache.xalan.xpath3.ForExprTests" time="0.006"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.LetExprTests" time="0.241">
+        <testcase name="xslLetExprTest1" classname="org.apache.xalan.xpath3.LetExprTests" time="0.016"/>
+        <testcase name="xslLetExprTest2" classname="org.apache.xalan.xpath3.LetExprTests" time="0.012"/>
+        <testcase name="xslLetExprTest3" classname="org.apache.xalan.xpath3.LetExprTests" time="0.023"/>
+        <testcase name="xslLetExprTest4" classname="org.apache.xalan.xpath3.LetExprTests" time="0.007"/>
+        <testcase name="xslLetExprTest5" classname="org.apache.xalan.xpath3.LetExprTests" time="0.041"/>
+        <testcase name="xslLetExprTest6" classname="org.apache.xalan.xpath3.LetExprTests" time="0.032"/>
+        <testcase name="xslLetExprTest7" classname="org.apache.xalan.xpath3.LetExprTests" time="0.024"/>
+        <testcase name="xslLetExprTest8" classname="org.apache.xalan.xpath3.LetExprTests" time="0.021"/>
+        <testcase name="xslLetExprTest9" classname="org.apache.xalan.xpath3.LetExprTests" time="0.019"/>
+        <testcase name="xslLetExprTest10" classname="org.apache.xalan.xpath3.LetExprTests" time="0.02"/>
+        <testcase name="xslLetExprTest11" classname="org.apache.xalan.xpath3.LetExprTests" time="0.026"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnDistinctValuesTests" time="0.273">
+        <testcase name="xslFnDistinctValuesTest1" classname="org.apache.xalan.xpath3.FnDistinctValuesTests" time="0.019"/>
+        <testcase name="xslFnDistinctValuesTest2" classname="org.apache.xalan.xpath3.FnDistinctValuesTests" time="0.027"/>
+        <testcase name="xslFnDistinctValuesTest3" classname="org.apache.xalan.xpath3.FnDistinctValuesTests" time="0.021"/>
+        <testcase name="xslFnDistinctValuesTest4" classname="org.apache.xalan.xpath3.FnDistinctValuesTests" time="0.015"/>
+        <testcase name="xslFnDistinctValuesTest5" classname="org.apache.xalan.xpath3.FnDistinctValuesTests" time="0.058"/>
+        <testcase name="xslFnDistinctValuesTest6" classname="org.apache.xalan.xpath3.FnDistinctValuesTests" time="0.018"/>
+        <testcase name="xslFnDistinctValuesTest7" classname="org.apache.xalan.xpath3.FnDistinctValuesTests" time="0.031"/>
+        <testcase name="xslFnDistinctValuesTest8" classname="org.apache.xalan.xpath3.FnDistinctValuesTests" time="0.022"/>
+        <testcase name="xslFnDistinctValuesTest9" classname="org.apache.xalan.xpath3.FnDistinctValuesTests" time="0.037"/>
+        <testcase name="xslFnDistinctValuesTest10" classname="org.apache.xalan.xpath3.FnDistinctValuesTests" time="0.024"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.TrignometricAndExponentialFunctionTests" time="0.115">
+        <testcase name="xslTrignometricAndExponentialFunctionTest1" classname="org.apache.xalan.xpath3.TrignometricAndExponentialFunctionTests" time="0.023"/>
+        <testcase name="xslTrignometricAndExponentialFunctionTest2" classname="org.apache.xalan.xpath3.TrignometricAndExponentialFunctionTests" time="0.02"/>
+        <testcase name="xslTrignometricAndExponentialFunctionTest3" classname="org.apache.xalan.xpath3.TrignometricAndExponentialFunctionTests" time="0.031"/>
+        <testcase name="xslTrignometricAndExponentialFunctionTest4" classname="org.apache.xalan.xpath3.TrignometricAndExponentialFunctionTests" time="0.041"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.BuiltinFunctionsNamespceTests" time="0.028">
+        <testcase name="xslBuiltinFunctionsNamespceTest1" classname="org.apache.xalan.xpath3.BuiltinFunctionsNamespceTests" time="0.028"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.384">
+        <testcase name="xslSequenceConstructorTest10" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.035"/>
+        <testcase name="xslSequenceConstructorTest11" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.028"/>
+        <testcase name="xslSequenceConstructorTest12" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.01"/>
+        <testcase name="xslSequenceConstructorTest13" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.024"/>
+        <testcase name="xslSequenceConstructorTest14" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.012"/>
+        <testcase name="xslSequenceConstructorTest15" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.019"/>
+        <testcase name="xslSequenceConstructorTest16" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.011"/>
+        <testcase name="xslSequenceConstructorTest17" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.018"/>
+        <testcase name="xslSequenceConstructorTest18" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.022"/>
+        <testcase name="xslSequenceConstructorTest1" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.026"/>
+        <testcase name="xslSequenceConstructorTest2" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.026"/>
+        <testcase name="xslSequenceConstructorTest3" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.051"/>
+        <testcase name="xslSequenceConstructorTest4" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.022"/>
+        <testcase name="xslSequenceConstructorTest5" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.014"/>
+        <testcase name="xslSequenceConstructorTest6" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.019"/>
+        <testcase name="xslSequenceConstructorTest7" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.019"/>
+        <testcase name="xslSequenceConstructorTest8" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.011"/>
+        <testcase name="xslSequenceConstructorTest9" classname="org.apache.xalan.xpath3.SequenceConstructorTests" time="0.017"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.StringConcatExprTests" time="0.154">
+        <testcase name="xslStringConcatExprTest1" classname="org.apache.xalan.xpath3.StringConcatExprTests" time="0.019"/>
+        <testcase name="xslStringConcatExprTest2" classname="org.apache.xalan.xpath3.StringConcatExprTests" time="0.025"/>
+        <testcase name="xslStringConcatExprTest3" classname="org.apache.xalan.xpath3.StringConcatExprTests" time="0.021"/>
+        <testcase name="xslStringConcatExprTest4" classname="org.apache.xalan.xpath3.StringConcatExprTests" time="0.025"/>
+        <testcase name="xslStringConcatExprTest5" classname="org.apache.xalan.xpath3.StringConcatExprTests" time="0.063"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.XsDurationComponentExtractionFunctionTests" time="0.047">
+        <testcase name="xslComponentExtractionFunctionTest1" classname="org.apache.xalan.xpath3.XsDurationComponentExtractionFunctionTests" time="0.021"/>
+        <testcase name="xslComponentExtractionFunctionTest2" classname="org.apache.xalan.xpath3.XsDurationComponentExtractionFunctionTests" time="0.026"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.XPathArithmeticOnDurationValuesTests" time="0.209">
+        <testcase name="xslArithmeticOnDurationValuesTest1" classname="org.apache.xalan.xpath3.XPathArithmeticOnDurationValuesTests" time="0.017"/>
+        <testcase name="xslArithmeticOnDurationValuesTest2" classname="org.apache.xalan.xpath3.XPathArithmeticOnDurationValuesTests" time="0.033"/>
+        <testcase name="xslArithmeticOnDurationValuesTest3" classname="org.apache.xalan.xpath3.XPathArithmeticOnDurationValuesTests" time="0.015"/>
+        <testcase name="xslArithmeticOnDurationValuesTest4" classname="org.apache.xalan.xpath3.XPathArithmeticOnDurationValuesTests" time="0.022"/>
+        <testcase name="xslArithmeticOnDurationValuesTest5" classname="org.apache.xalan.xpath3.XPathArithmeticOnDurationValuesTests" time="0.02"/>
+        <testcase name="xslArithmeticOnDurationValuesTest6" classname="org.apache.xalan.xpath3.XPathArithmeticOnDurationValuesTests" time="0.02"/>
+        <testcase name="xslArithmeticOnDurationValuesTest7" classname="org.apache.xalan.xpath3.XPathArithmeticOnDurationValuesTests" time="0.024"/>
+        <testcase name="xslArithmeticOnDurationValuesTest8" classname="org.apache.xalan.xpath3.XPathArithmeticOnDurationValuesTests" time="0.03"/>
+        <testcase name="xslArithmeticOnDurationValuesTest9" classname="org.apache.xalan.xpath3.XPathArithmeticOnDurationValuesTests" time="0.026"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.NodeComparisonTests" time="0.087">
+        <testcase name="xslNodeComparisonTest1" classname="org.apache.xalan.xpath3.NodeComparisonTests" time="0.029"/>
+        <testcase name="xslNodeComparisonTest2" classname="org.apache.xalan.xpath3.NodeComparisonTests" time="0.019"/>
+        <testcase name="xslNodeComparisonTest3" classname="org.apache.xalan.xpath3.NodeComparisonTests" time="0.039"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.SimpleMapOperatorTests" time="0.207">
+        <testcase name="xslSimpleMapOperatorTest1" classname="org.apache.xalan.xpath3.SimpleMapOperatorTests" time="0.03"/>
+        <testcase name="xslSimpleMapOperatorTest2" classname="org.apache.xalan.xpath3.SimpleMapOperatorTests" time="0.023"/>
+        <testcase name="xslSimpleMapOperatorTest3" classname="org.apache.xalan.xpath3.SimpleMapOperatorTests" time="0.025"/>
+        <testcase name="xslSimpleMapOperatorTest4" classname="org.apache.xalan.xpath3.SimpleMapOperatorTests" time="0.025"/>
+        <testcase name="xslSimpleMapOperatorTest5" classname="org.apache.xalan.xpath3.SimpleMapOperatorTests" time="0.022"/>
+        <testcase name="xslSimpleMapOperatorTest6" classname="org.apache.xalan.xpath3.SimpleMapOperatorTests" time="0.026"/>
+        <testcase name="xslSimpleMapOperatorTest7" classname="org.apache.xalan.xpath3.SimpleMapOperatorTests" time="0.025"/>
+        <testcase name="xslSimpleMapOperatorTest8" classname="org.apache.xalan.xpath3.SimpleMapOperatorTests" time="0.031"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnFoldLeftTests" time="0.053">
+        <testcase name="xslFnFoldLeftTest1" classname="org.apache.xalan.xpath3.FnFoldLeftTests" time="0.021"/>
+        <testcase name="xslFnFoldLeftTest2" classname="org.apache.xalan.xpath3.FnFoldLeftTests" time="0.019"/>
+        <testcase name="xslFnFoldLeftTest3" classname="org.apache.xalan.xpath3.FnFoldLeftTests" time="0.012"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnFoldRightTests" time="0.065">
+        <testcase name="xslFnFoldRightTest1" classname="org.apache.xalan.xpath3.FnFoldRightTests" time="0.017"/>
+        <testcase name="xslFnFoldRightTest2" classname="org.apache.xalan.xpath3.FnFoldRightTests" time="0.026"/>
+        <testcase name="xslFnFoldRightTest3" classname="org.apache.xalan.xpath3.FnFoldRightTests" time="0.022"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnForEachPairTests" time="0.09">
+        <testcase name="xslFnForEachPairTest1" classname="org.apache.xalan.xpath3.FnForEachPairTests" time="0.023"/>
+        <testcase name="xslFnForEachPairTest2" classname="org.apache.xalan.xpath3.FnForEachPairTests" time="0.047"/>
+        <testcase name="xslFnForEachPairTest3" classname="org.apache.xalan.xpath3.FnForEachPairTests" time="0.02"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnSortTests" time="0.549">
+        <testcase name="xslFnSortTest10" classname="org.apache.xalan.xpath3.FnSortTests" time="0.025"/>
+        <testcase name="xslFnSortTest11" classname="org.apache.xalan.xpath3.FnSortTests" time="0.019"/>
+        <testcase name="xslFnSortTest12" classname="org.apache.xalan.xpath3.FnSortTests" time="0.025"/>
+        <testcase name="xslFnSortTest13" classname="org.apache.xalan.xpath3.FnSortTests" time="0.037"/>
+        <testcase name="xslFnSortTest14" classname="org.apache.xalan.xpath3.FnSortTests" time="0.026"/>
+        <testcase name="xslFnSortTest15" classname="org.apache.xalan.xpath3.FnSortTests" time="0.028"/>
+        <testcase name="xslFnSortTest16" classname="org.apache.xalan.xpath3.FnSortTests" time="0.042"/>
+        <testcase name="xslFnSortTest17" classname="org.apache.xalan.xpath3.FnSortTests" time="0.023"/>
+        <testcase name="xslFnSortTest18" classname="org.apache.xalan.xpath3.FnSortTests" time="0.036"/>
+        <testcase name="xslFnSortTest19" classname="org.apache.xalan.xpath3.FnSortTests" time="0.052"/>
+        <testcase name="xslFnSortTest1" classname="org.apache.xalan.xpath3.FnSortTests" time="0.024"/>
+        <testcase name="xslFnSortTest2" classname="org.apache.xalan.xpath3.FnSortTests" time="0.031"/>
+        <testcase name="xslFnSortTest3" classname="org.apache.xalan.xpath3.FnSortTests" time="0.023"/>
+        <testcase name="xslFnSortTest4" classname="org.apache.xalan.xpath3.FnSortTests" time="0.032"/>
+        <testcase name="xslFnSortTest5" classname="org.apache.xalan.xpath3.FnSortTests" time="0.021"/>
+        <testcase name="xslFnSortTest6" classname="org.apache.xalan.xpath3.FnSortTests" time="0.029"/>
+        <testcase name="xslFnSortTest7" classname="org.apache.xalan.xpath3.FnSortTests" time="0.037"/>
+        <testcase name="xslFnSortTest8" classname="org.apache.xalan.xpath3.FnSortTests" time="0.019"/>
+        <testcase name="xslFnSortTest9" classname="org.apache.xalan.xpath3.FnSortTests" time="0.019"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnCodepointsToStringTests" time="0.044">
+        <testcase name="xslFnCodepointsToStringTest1" classname="org.apache.xalan.xpath3.FnCodepointsToStringTests" time="0.012"/>
+        <testcase name="xslFnCodepointsToStringTest2" classname="org.apache.xalan.xpath3.FnCodepointsToStringTests" time="0.032"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnStringToCodepointsTests" time="0.065">
+        <testcase name="xslFnStringToCodepointsTest1" classname="org.apache.xalan.xpath3.FnStringToCodepointsTests" time="0.019"/>
+        <testcase name="xslFnStringToCodepointsTest2" classname="org.apache.xalan.xpath3.FnStringToCodepointsTests" time="0.046"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnCompareTests" time="0.079">
+        <testcase name="xslFnCompareTest1" classname="org.apache.xalan.xpath3.FnCompareTests" time="0.021"/>
+        <testcase name="xslFnCompareTest2" classname="org.apache.xalan.xpath3.FnCompareTests" time="0.029"/>
+        <testcase name="xslFnCompareTest3" classname="org.apache.xalan.xpath3.FnCompareTests" time="0.028"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnCodepointEqualTests" time="0.059">
+        <testcase name="xslFnCodepointEqualTest1" classname="org.apache.xalan.xpath3.FnCodepointEqualTests" time="0.03"/>
+        <testcase name="xslFnCodepointEqualTest2" classname="org.apache.xalan.xpath3.FnCodepointEqualTests" time="0.029"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.356">
+        <testcase name="xslSequenceFunctionTest1" classname="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.021"/>
+        <testcase name="xslSequenceFunctionTest2" classname="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.027"/>
+        <testcase name="xslSequenceFunctionTest3" classname="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.012"/>
+        <testcase name="xslSequenceFunctionTest4" classname="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.019"/>
+        <testcase name="xslSequenceFunctionTest5" classname="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.021"/>
+        <testcase name="xslSequenceFunctionTest6" classname="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.026"/>
+        <testcase name="xslSequenceFunctionTest7" classname="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.015"/>
+        <testcase name="xslSequenceFunctionTest8" classname="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.031"/>
+        <testcase name="xslSequenceFunctionTest9" classname="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.009"/>
+        <testcase name="xslSequenceFunctionTest10" classname="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.023"/>
+        <testcase name="xslSequenceFunctionTest11" classname="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.018"/>
+        <testcase name="xslSequenceFunctionTest12" classname="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.035"/>
+        <testcase name="xslSequenceFunctionTest13" classname="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.022"/>
+        <testcase name="xslSequenceFunctionTest14" classname="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.019"/>
+        <testcase name="xslSequenceFunctionTest15" classname="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.021"/>
+        <testcase name="xslSequenceFunctionTest16" classname="org.apache.xalan.xpath3.SequenceFunctionTests" time="0.034"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnParseXmlTests" time="0.064">
+        <testcase name="xslFnParseXmlTest1" classname="org.apache.xalan.xpath3.FnParseXmlTests" time="0.03"/>
+        <testcase name="xslFnParseXmlTest2" classname="org.apache.xalan.xpath3.FnParseXmlTests" time="0.034"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnParseXmlFragmentTests" time="0.03">
+        <testcase name="xslFnParseXmlFragmentTest1" classname="org.apache.xalan.xpath3.FnParseXmlFragmentTests" time="0.03"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xslt3.TemplateTests" time="0.11">
+        <testcase name="xslTemplateTest1" classname="org.apache.xalan.xslt3.TemplateTests" time="0.034"/>
+        <testcase name="xslTemplateTest2" classname="org.apache.xalan.xslt3.TemplateTests" time="0.024"/>
+        <testcase name="xslTemplateTest3" classname="org.apache.xalan.xslt3.TemplateTests" time="0.02"/>
+        <testcase name="xslTemplateTest4" classname="org.apache.xalan.xslt3.TemplateTests" time="0.032"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnAvgTests" time="0.061">
+        <testcase name="xslFnAvgTest1" classname="org.apache.xalan.xpath3.FnAvgTests" time="0.025"/>
+        <testcase name="xslFnAvgTest2" classname="org.apache.xalan.xpath3.FnAvgTests" time="0.036"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnMaxTests" time="0.112">
+        <testcase name="xslFnMaxTest1" classname="org.apache.xalan.xpath3.FnMaxTests" time="0.019"/>
+        <testcase name="xslFnMaxTest2" classname="org.apache.xalan.xpath3.FnMaxTests" time="0.025"/>
+        <testcase name="xslFnMaxTest3" classname="org.apache.xalan.xpath3.FnMaxTests" time="0.023"/>
+        <testcase name="xslFnMaxTest4" classname="org.apache.xalan.xpath3.FnMaxTests" time="0.022"/>
+        <testcase name="xslFnMaxTest5" classname="org.apache.xalan.xpath3.FnMaxTests" time="0.023"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnMinTests" time="0.093">
+        <testcase name="xslFnMinTest1" classname="org.apache.xalan.xpath3.FnMinTests" time="0.023"/>
+        <testcase name="xslFnMinTest2" classname="org.apache.xalan.xpath3.FnMinTests" time="0.031"/>
+        <testcase name="xslFnMinTest3" classname="org.apache.xalan.xpath3.FnMinTests" time="0.018"/>
+        <testcase name="xslFnMinTest4" classname="org.apache.xalan.xpath3.FnMinTests" time="0.021"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnContainsTokenTests" time="0.047">
+        <testcase name="xslFnContainsTokenTest1" classname="org.apache.xalan.xpath3.FnContainsTokenTests" time="0.021"/>
+        <testcase name="xslFnContainsTokenTest2" classname="org.apache.xalan.xpath3.FnContainsTokenTests" time="0.026"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xslt3.XslVariableAttributeAsTests" time="0.281">
+        <testcase name="xslVariableAttributeAsTest10" classname="org.apache.xalan.xslt3.XslVariableAttributeAsTests" time="0.021"/>
+        <testcase name="xslVariableAttributeAsTest11" classname="org.apache.xalan.xslt3.XslVariableAttributeAsTests" time="0.016"/>
+        <testcase name="xslVariableAttributeAsTest12" classname="org.apache.xalan.xslt3.XslVariableAttributeAsTests" time="0.013"/>
+        <testcase name="xslVariableAttributeAsTest13" classname="org.apache.xalan.xslt3.XslVariableAttributeAsTests" time="0.028"/>
+        <testcase name="xslVariableAttributeAsTest1" classname="org.apache.xalan.xslt3.XslVariableAttributeAsTests" time="0.03"/>
+        <testcase name="xslVariableAttributeAsTest2" classname="org.apache.xalan.xslt3.XslVariableAttributeAsTests" time="0.029"/>
+        <testcase name="xslVariableAttributeAsTest3" classname="org.apache.xalan.xslt3.XslVariableAttributeAsTests" time="0.013"/>
+        <testcase name="xslVariableAttributeAsTest4" classname="org.apache.xalan.xslt3.XslVariableAttributeAsTests" time="0.028"/>
+        <testcase name="xslVariableAttributeAsTest5" classname="org.apache.xalan.xslt3.XslVariableAttributeAsTests" time="0.029"/>
+        <testcase name="xslVariableAttributeAsTest6" classname="org.apache.xalan.xslt3.XslVariableAttributeAsTests" time="0.017"/>
+        <testcase name="xslVariableAttributeAsTest7" classname="org.apache.xalan.xslt3.XslVariableAttributeAsTests" time="0.017"/>
+        <testcase name="xslVariableAttributeAsTest8" classname="org.apache.xalan.xslt3.XslVariableAttributeAsTests" time="0.016"/>
+        <testcase name="xslVariableAttributeAsTest9" classname="org.apache.xalan.xslt3.XslVariableAttributeAsTests" time="0.024"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.InstanceOfExprTests" time="0.183">
+        <testcase name="xslInstanceOfExprTest1" classname="org.apache.xalan.xpath3.InstanceOfExprTests" time="0.032"/>
+        <testcase name="xslInstanceOfExprTest2" classname="org.apache.xalan.xpath3.InstanceOfExprTests" time="0.036"/>
+        <testcase name="xslInstanceOfExprTest3" classname="org.apache.xalan.xpath3.InstanceOfExprTests" time="0.021"/>
+        <testcase name="xslInstanceOfExprTest4" classname="org.apache.xalan.xpath3.InstanceOfExprTests" time="0.021"/>
+        <testcase name="xslInstanceOfExprTest5" classname="org.apache.xalan.xpath3.InstanceOfExprTests" time="0.022"/>
+        <testcase name="xslInstanceOfExprTest6" classname="org.apache.xalan.xpath3.InstanceOfExprTests" time="0.019"/>
+        <testcase name="xslInstanceOfExprTest7" classname="org.apache.xalan.xpath3.InstanceOfExprTests" time="0.012"/>
+        <testcase name="xslInstanceOfExprTest8" classname="org.apache.xalan.xpath3.InstanceOfExprTests" time="0.02"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xslt3.XslTemplateAttributeAsTests" time="0.163">
+        <testcase name="xslTemplateAttributeAsTest1" classname="org.apache.xalan.xslt3.XslTemplateAttributeAsTests" time="0.016"/>
+        <testcase name="xslTemplateAttributeAsTest2" classname="org.apache.xalan.xslt3.XslTemplateAttributeAsTests" time="0.012"/>
+        <testcase name="xslTemplateAttributeAsTest3" classname="org.apache.xalan.xslt3.XslTemplateAttributeAsTests" time="0.01"/>
+        <testcase name="xslTemplateAttributeAsTest4" classname="org.apache.xalan.xslt3.XslTemplateAttributeAsTests" time="0.011"/>
+        <testcase name="xslTemplateAttributeAsTest5" classname="org.apache.xalan.xslt3.XslTemplateAttributeAsTests" time="0.012"/>
+        <testcase name="xslTemplateAttributeAsTest6" classname="org.apache.xalan.xslt3.XslTemplateAttributeAsTests" time="0.02"/>
+        <testcase name="xslTemplateAttributeAsTest7" classname="org.apache.xalan.xslt3.XslTemplateAttributeAsTests" time="0.015"/>
+        <testcase name="xslTemplateAttributeAsTest8" classname="org.apache.xalan.xslt3.XslTemplateAttributeAsTests" time="0.028"/>
+        <testcase name="xslTemplateAttributeAsTest9" classname="org.apache.xalan.xslt3.XslTemplateAttributeAsTests" time="0.038"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xpath3.FnRoundTests" time="0.066">
+        <testcase name="xslFnRoundTest1" classname="org.apache.xalan.xpath3.FnRoundTests" time="0.026"/>
+        <testcase name="xslFnRoundTest2" classname="org.apache.xalan.xpath3.FnRoundTests" time="0.04"/>
+      </testsuite>
+      <testsuite name="org.apache.xalan.xslt3.XslSequenceInstTests" time="0.283">
+        <testcase name="xslSequenceTest10" classname="org.apache.xalan.xslt3.XslSequenceInstTests" time="0.031"/>
+        <testcase name="xslSequenceTest1" classname="org.apache.xalan.xslt3.XslSequenceInstTests" time="0.023"/>
+        <testcase name="xslSequenceTest2" classname="org.apache.xalan.xslt3.XslSequenceInstTests" time="0.029"/>
+        <testcase name="xslSequenceTest3" classname="org.apache.xalan.xslt3.XslSequenceInstTests" time="0.046"/>
+        <testcase name="xslSequenceTest4" classname="org.apache.xalan.xslt3.XslSequenceInstTests" time="0.04"/>
+        <testcase name="xslSequenceTest5" classname="org.apache.xalan.xslt3.XslSequenceInstTests" time="0.033"/>
+        <testcase name="xslSequenceTest6" classname="org.apache.xalan.xslt3.XslSequenceInstTests" time="0.028"/>
+        <testcase name="xslSequenceTest7" classname="org.apache.xalan.xslt3.XslSequenceInstTests" time="0.017"/>
+        <testcase name="xslSequenceTest8" classname="org.apache.xalan.xslt3.XslSequenceInstTests" time="0.017"/>
+        <testcase name="xslSequenceTest9" classname="org.apache.xalan.xslt3.XslSequenceInstTests" time="0.017"/>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testrun>
