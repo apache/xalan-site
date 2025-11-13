@@ -37,3 +37,4 @@ org.apache.xpath.operations
 org.apache.xpath.patterns
 org.apache.xpath.regex
 org.apache.xpath.types
+org.json
