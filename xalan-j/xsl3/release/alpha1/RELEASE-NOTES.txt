@@ -9,7 +9,7 @@ Following are the details for this Xalan-J, project release.
 
 1) This Xalan-J release named 'xslt3.0_alpha1', provides XSLT 3.0 and XPath 3.1 language various feature implementations. 
 
-2) The list of Jira issues addressed by this Xalan-J release, are available here, https://xalan.apache.org/xalan-j/xsl3/xalanj_xslt3.0_alpha1_jira_issue_list.pdf
+2) The list of Jira issues addressed by this Xalan-J release, are available here, https://xalan.apache.org/xalan-j/xsl3/release/alpha1/xalanj_xslt3.0_alpha1_jira_issue_list.pdf
 
 3) Description of Xalan-J XSLT 3.0 implementation status, is available here, https://xalan.apache.org/xalan-j/xsl3/xalanj_xslt3.0_implementation_status.pdf
 
