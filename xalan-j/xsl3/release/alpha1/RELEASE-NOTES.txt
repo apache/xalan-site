@@ -1,0 +1,65 @@
+
+									Apache Xalan XSLT 3.0 alpha1 release notes
+									------------------------------------------
+
+										Modification date : 2026-03-03
+
+
+Following are the details for this Xalan-J, project release.
+
+1) This Xalan-J release named 'xslt3.0_alpha1', provides XSLT 3.0 and XPath 3.1 language various feature implementations. 
+
+2) The list of Jira issues addressed by this Xalan-J release, are available here, https://xalan.apache.org/xalan-j/xsl3/xalanj_xslt3.0_alpha1_jira_issue_list.pdf
+
+3) Description of Xalan-J XSLT 3.0 implementation status, is available here, https://xalan.apache.org/xalan-j/xsl3/xalanj_xslt3.0_implementation_status.pdf
+
+4) This Xalan-J release src archive contains document BUILDING.txt, that describes steps about how to build Xalan-J XSLT 3.0 project from its source code.
+
+5) Xalan XSLT 3.0 development code’s latest conformance results with W3C XSLT 3.0 test suite, are available here : https://github.com/apache/xalan-java/blob/xalan-j_xslt3.0_mvn/src/test/java/org/apache/xalan/tests/w3c/xslt3/result/w3c_xslt3_testsuite_xalan-j_result.xml
+
+
+Acknowledgements
+----------------
+Following people have contributed to the development for this Xalan-J release.
+
+1) Xalan-J team members
+
+1.1) Gary Gregory <ggregory@apache.org>
+
+> Xalan-J implementation design guidance
+> Guidance for Xalan-J build configuration to Maven
+> Release reviews
+
+1.2) Joseph Kesselman <keshlam@alum.mit.edu>
+
+> Xalan-J implementation design guidance
+> Guidance for Xalan-J build configuration to Maven 
+> Release reviews
+
+1.3) Mukul Gandhi <mukulg@apache.org>
+
+> Xalan-J implementation for, various XSLT 3.0 and XPath 3.1 language features
+
+2) Xalan-J community members
+
+2.1) Martin Honnen
+
+> Verification of Xalan-J XSLT 3.0 build integrity
+> Reporting of various Xalan-J XSL 3 implementation defects and verification of fixes.
+
+2.2) Vladimir Sitnikov
+
+Suggestions to improve Xalan-J XSL 3 implementation tests design
+ 
+
+Release milestone information
+-----------------------------
+This Xalan-J release is a software alpha release.
+
+(A software alpha release is defined as an initial, unstable version of a product, often feature-incomplete and intended solely for internal testing, bug identification, and quality assurance by developers and QA teams. This represents the first phase of software testing, focusing on core functionality rather than user experience)
+
+
+
+									Copyright © 1999-2026 The Apache Software Foundation
+
+
