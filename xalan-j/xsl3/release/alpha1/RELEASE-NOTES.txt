@@ -2,7 +2,7 @@
 									Apache Xalan XSLT 3.0 alpha1 release notes
 									------------------------------------------
 
-										Modification date : 2026-03-07
+										Modification date : 2026-04-08
 
 
 Following are the details for this Xalan-J, project release.
@@ -74,6 +74,6 @@ This Xalan-J release is a software alpha release.
 
 
 
-									Copyright © 1999-2026 The Apache Software Foundation
+									Copyright 1999-2026 The Apache Software Foundation
 
 
