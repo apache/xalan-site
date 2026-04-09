@@ -5,13 +5,14 @@
 										Modification date : 2026-04-10
 
 
-Following are the details for this Xalan-J, project release.
+Details about this Xalan-J, project release
+-------------------------------------------
 
 1) This Xalan-J release named 'xslt3.0_alpha1', provides XSLT 3.0 and XPath 3.1 language various feature implementations.
 
-2) JDK releases supported
+2) The following JDK releases are supported
   
-   JDK 1.8 upto 25
+   JDK 1.5 upto 25
 
 3) The list of Jira issues addressed by this Xalan-J release, are available here, https://xalan.apache.org/xalan-j/xsl3/release/alpha1/xalanj_xslt3.0_alpha1_jira_issue_list.pdf
    There are few Xalan-J XSLT 3.0 implementation aspects, that're not specified within this web link, and are available as prose within point 3) below.
@@ -30,6 +31,28 @@ Following are the details for this Xalan-J, project release.
    XML Schema data type classes. The design reuse for these XML Schema data type classes has been helpful for Xalan-J XSLT 3.0 project implementation, 
    The code for these Java classes have been modified little bit by Xalan-J project to add XPath context information and XSLT transformation exception handling.
    Few of Xalan-J team members who're also Xerces-J project committers, have previously contributed to WTP XPath 2.0 project src code.
+
+
+Deploying/running Xalan-J XSLT 3.0 alpha1 release from JVM classpath / module path
+----------------------------------------------------------------------------------
+
+The following steps are for, Xalan-J XSLT 3.0 alpha1 interpretive processor.
+
+Assumption: Xalan-J XSLT 3.0 implementation jars are, available within local folder "lib" relative to user's current directory
+
+A) Running Xalan-J via JVM classpath
+
+a.1) Running via JVM 1.5+ classpath
+
+java -Djava.endorsed.dirs=lib org.apache.xalan.xslt.Process -in file.xml -xsl file.xsl
+
+a.2) Running via JVM 25 classpath
+
+java -classpath lib/* org.apache.xalan.xslt.Process -in file.xml -xsl file.xsl
+
+B) Running Xalan-J via JVM module path
+
+java --module-path lib/xalan-java-3.0.1-SNAPSHOT.jar --module moduleName/org.apache.xalan.xslt.Process 
 
 
 Acknowledgements
