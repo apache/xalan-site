@@ -1,0 +1,59 @@
+
+  Apache Xalan Java XSLT 3.0 alpha1 vs alpha2 releases, W3C XSLT 3.0 test suite compliance improvement
+  ----------------------------------------------------------------------------------------------------
+
+  alpha1 : <testResult dateTime="2026-03-12T11:40:49Z" desc="W3C XSLT 3.0 test suite results" fail="1314" pass="3450" run="4770" skipped="609" success="72.33%" xslt_processor="Apache Xalan XSLT 3.0 development code">
+
+  alpha2 : <testResult dateTime="2026-04-28T10:38:22Z" desc="W3C XSLT 3.0 test suite results" fail="1302" pass="3510" run="4816" skipped="627" success="72.88%" xslt_processor="Apache Xalan XSLT 3.0 development code">
+
+  <attr>
+  alpha1 : <expand-text fail="7" pass="52" run="59" skipped="3" success="88.14%"/>
+  alpha2 : <expand-text fail="2" pass="57" run="59" skipped="3" success="96.61%"/>
+
+  alpha1 : <match fail="81" pass="101" run="182" skipped="112" success="55.49%"/>
+  alpha2 : <match fail="74" pass="108" run="182" skipped="112" success="59.34%"/>
+
+  alpha1 : <select fail="26" pass="105" run="132" skipped="26" success="79.55%"/>
+  alpha2 : <select fail="26" pass="106" run="132" skipped="26" success="80.3%"/>
+
+  alpha1 : <tunnel fail="40" pass="18" run="58" skipped="0" success="31.03%"/>
+  alpha2 : <tunnel fail="36" pass="22" run="58" skipped="0" success="37.93%"/>
+
+  <decl>
+  alpha1 : <function fail="25" pass="62" run="87" skipped="23" success="71.26%"/>
+  alpha2 : <function fail="24" pass="63" run="87" skipped="23" success="72.41%"/>
+
+  alpha1 : <strip-space fail="9" pass="17" run="26" skipped="4" success="65.38%"/>
+  alpha2 : <strip-space fail="8" pass="18" run="26" skipped="4" success="69.23%"/>
+
+  <expr>
+  alpha1 : <expression fail="12" pass="87" run="100" skipped="5" success="87.0%"/>
+  alpha2 : <expression fail="12" pass="88" run="100" skipped="5" success="88.0%"/>
+
+  alpha1 : <higher-order-functions fail="35" pass="34" run="69" skipped="7" success="49.28%"/>
+  alpha2 : <higher-order-functions fail="30" pass="39" run="69" skipped="7" success="56.52%"/>
+
+  <fn>
+  new, in alpha2 : <copy-of fail="3" pass="7" run="10" skipped="3" success="70.0%"/>
+
+  alpha1 : <position fail="18" pass="192" run="210" skipped="1" success="91.43%"/>
+  alpha2 : <position fail="15" pass="196" run="211" skipped="1" success="92.89%"/>
+
+  <insn>
+  alpha1 : <call-template fail="6" pass="34" run="40" skipped="2" success="85.0%"/>
+  alpha2 : <call-template fail="5" pass="35" run="40" skipped="2" success="87.5%"/>
+
+  alpha1 : <copy fail="47" pass="78" run="125" skipped="23" success="62.4%"/>
+  alpha2 : <copy fail="48" pass="77" run="125" skipped="23" success="61.6%"/>
+    
+  alpha1 : <for-each-group fail="8" pass="72" run="80" skipped="5" success="90.0%"/>
+  alpha2 : <for-each-group fail="4" pass="74" run="78" skipped="7" success="94.87%"/>
+
+  alpha1 : <message fail="5" pass="36" run="42" skipped="3" success="85.71%"/>
+  alpha2 : <message fail="3" pass="38" run="42" skipped="3" success="90.48%"/>
+
+  <type>
+  new, in alpha2 : <maps fail="21" pass="16" run="37" skipped="13" success="43.24%"/>
+
+  alpha1 : <namespace fail="78" pass="143" run="221" skipped="3" success="64.71%"/>
+  alpha2 : <namespace fail="74" pass="147" run="221" skipped="3" success="66.52%"/>

@@ -1,5 +1,5 @@
 
-									Apache Xalan XSLT 3.0 'alpha1' release notes
+									Apache Xalan XSLT 3.0 'alpha2' release notes
 									------------------------------------------
 
 										Modification date : 2026-04-29
@@ -8,35 +8,37 @@
 Details about this Xalan-J, project release
 -------------------------------------------
 
-1) This Xalan-J release named 'xslt3.0_alpha1', provides XSLT 3.0 and XPath 3.1 language various feature implementations.
+1) This Xalan-J release named 'xslt3.0_alpha2', provides XSLT 3.0 and XPath 3.1 language various feature implementations.
 
 2) The following JDK releases are supported
   
    JDK 1.5 upto 25
 
-3) The list of Jira issues addressed by this Xalan-J release, are available here, https://xalan.apache.org/xalan-j/xsl3/release/alpha1/xalanj_xslt3.0_alpha1_jira_issue_list.pdf
-   There are few Xalan-J XSLT 3.0 implementation aspects, that're not specified within this web link, and are mentioned as prose within point 4) below.
+3) The list of Jira issues addressed by this Xalan-J release, are available here, https://xalan.apache.org/xalan-j/xsl3/release/alpha2/xalanj_xslt3.0_alpha2_jira_issue_list.pdf
+   There are few Xalan-J XSLT 3.0 implementation aspects, that're not specified within jira issues web link, and are mentioned as prose within point 4) below.
 
-4) Description of Xalan-J XSLT 3.0 implementation status, is available here, https://xalan.apache.org/xalan-j/xsl3/xalanj_xslt3.0_implementation_status.pdf
+4) A broad description of Xalan-J XSLT 3.0 implementation status, is available here, https://xalan.apache.org/xalan-j/xsl3/xalanj_xslt3.0_implementation_status.pdf
 
 5) This Xalan-J release src archive contains document README, that describes steps about how to build Xalan-J XSLT 3.0 project from the src code.
 
 6) Xalan XSLT 3.0 development code’s latest conformance results with W3C XSLT 3.0 test suite, are available here : https://github.com/apache/xalan-java/blob/xalan-j_xslt3.0_mvn/src/test/java/org/apache/xalan/tests/w3c/xslt3/result/w3c_xslt3_testsuite_xalan-j_result.xml
 
-7) Xalan-J XSLT 3.0 implementation, contains copy of software code from Java org.json library, to help implement XPath 3.1 functions that use JSON documents.
-   This has been helpful for Xalan-J project, to be able to reuse org.json library's JSON document parse support. Xalan-J has little bit modified org.json 
+7) Xalan-J XSLT 3.0 implementation src repository, contains copy of software code from Java org.json library, to support implementation of XPath 3.1 functions that 
+   use JSON documents. This has been helpful for Xalan-J project, to be able to reuse org.json library's JSON document parse support. Xalan-J has little bit modified org.json 
    library's Java classes org.json.JSONObject & org.json.JSONParserConfiguration for Xalan-J XPath 3.1 JSON function implementations.    
 
 8) Xalan-J XSLT 3.0 implementation, contains copy of small parts of Eclipse WTP (Web Tools Platform) project XPath 2.0 processor implementation's
-   XML Schema data type classes. The design reuse for these XML Schema data type classes has been helpful for Xalan-J XSLT 3.0 project implementation, 
-   The code for these Java classes have been modified little bit by Xalan-J project to add XPath context information and XSLT transformation exception handling.
+   XML Schema data type Java classes. The design reuse for these XML Schema data type classes has been helpful for Xalan-J XSLT 3.0 project implementation. 
+   The code for these Java classes have been modified little bit by Xalan-J project primarily adding XPath 3.1 static and dynamic context support and 
+   XSLT transformation exception handling.
+   
    Few of Xalan-J team members who're also Xerces-J project committers, have previously contributed to WTP XPath 2.0 project src code.
 
 
-Deploying/running Xalan-J XSLT 3.0 alpha1 release from JVM classpath / module path
+Deploying/running Xalan-J XSLT 3.0 alpha2 release from JVM classpath / module path
 ----------------------------------------------------------------------------------
 
-The following steps are for, Xalan-J XSLT 3.0 alpha1 interpretive processor.
+The description of steps below are for, Xalan-J XSLT 3.0 alpha2 interpretive processor.
 
 Assumption: Xalan-J XSLT 3.0 implementation jars are, available within local folder "lib" relative to user's current directory
 
@@ -95,7 +97,7 @@ Following people have contributed to the development for this Xalan-J release.
 
 > Various design and code suggestions to help refactor and improve, Xalan-J XSL 3 implementation 
   software tests construction.
- 
+
 
 Release milestone information
 -----------------------------
