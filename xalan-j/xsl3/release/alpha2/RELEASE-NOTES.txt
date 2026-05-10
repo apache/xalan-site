@@ -2,7 +2,7 @@
 									Apache Xalan XSLT 3.0 'alpha2' release notes
 									------------------------------------------
 
-										Modification date : 2026-04-29
+										Modification date : 2026-05-10
 
 
 Details about this Xalan-J, project release
@@ -33,6 +33,8 @@ Details about this Xalan-J, project release
    XSLT transformation exception handling.
    
    Few of Xalan-J team members who're also Xerces-J project committers, have previously contributed to WTP XPath 2.0 project src code.
+
+9) XSLT 1.0 implementation support using XSLTC has been maintained
 
 
 Deploying/running Xalan-J XSLT 3.0 alpha2 release from JVM classpath / module path
