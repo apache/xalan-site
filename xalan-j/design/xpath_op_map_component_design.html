@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="en-us" http-equiv="Content-Language" />
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>XPath parser OpMap component design</title>
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+
+<body>
+<br/>
+<p style="text-align: center;"><strong>Design for Xalan Java class org.apache.xpath.compiler.OpMap<br /><br />
+</strong>(Answer, reproduced from Google Gemini AI Overview)</p>
+<p><br />
+The org.apache.xpath.compiler.OpMap class in Apache Xalan-Java serves as the 
+structural foundation for XPath expression representation. It is designed to act 
+as an optimized, flat data structure (an array of integers) to represent an 
+XPath abstract syntax tree (AST), prioritizing fast execution speeds and low 
+memory overhead.<br />
+<br /><br />
+<strong>1. The Core Design Concept: The "OpMap"</strong><br />
+<br />
+Instead of building a traditional tree of objects (which introduces heavy memory 
+and allocation overhead), Xalan parses an XPath string into a flat integer array 
+called the Operations Map (OpMap). <br />
+<br />
+1.1) Flat Array Representation: Each node and its parameters (like operations, 
+step operators, and literals) are stored sequentially in an OpMapVector.<br />
+<br />
+1.2) Opcode + Arguments: The array is traversed in chunks. A specific opcode 
+(e.g., OpCodes.OP_LOCATIONPATH) sits at a given position, immediately followed 
+by the length of the operation and the lengths/pointers to its child nodes.<br />
+<br />
+1.3) Helper Methods: OpMap is equipped with protected/utility methods like 
+getArgLength() and getFirstChildPos() to parse and navigate this array structure 
+without writing explicit, repetitive pointer math.<br />
+<br />
+<br />
+<strong>2. Primary Components</strong><br />
+<br />
+The OpMap encapsulates the basic state and memory structures required to store a 
+parsed XPath:<br />
+<br />
+2.1) m_opMap: An OpMapVector (a custom array-based list) that holds the actual 
+tree of integer opcodes and their arguments.<br />
+<br />
+2.2) m_tokenQueue: An ObjectVector containing the literal tokens (e.g., string 
+literals, node names, and numeric constants) referenced by the opcodes in 
+m_opMap.<br />
+<br />
+2.3) m_currentPattern: Stores the raw XPath string, which is mostly kept for 
+diagnostic and debugging purposes.<br />
+<br />
+<br />
+<strong>3. Structural Hierarchy</strong><br />
+<br />
+3.1) Base Class (OpMap): Contains the data structures and basic navigation 
+algorithms for traversing the opcode array.<br />
+<br />
+3.2) Derived Class (Compiler): Extends OpMap to actually iterate over the flat 
+integer map and build a proper executable expression tree (e.g., Expression 
+objects) that evaluates the XPath dynamically against context nodes.<br />
+<br />
+This design, for Xalan Java XPath parser creating a flat array (OpMap) and a 
+compiler traversing it was chosen to balance Xalan's need for both 
+interpretative tooling and fast, compiled runtime performance.<br /><br />
+</p>
+
+</body>
+
+</html>
