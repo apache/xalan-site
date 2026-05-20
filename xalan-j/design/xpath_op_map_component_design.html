@@ -6,14 +6,22 @@
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <title>XPath parser OpMap component design</title>
 <link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+<style type="text/css">
+.auto-style1 {
+	font-size: small;
+}
+</style>
 </head>
 
 <body>
 <br/>
-<p style="text-align: center;"><strong>Design for Xalan Java class org.apache.xpath.compiler.OpMap<br /><br />
-</strong>(Answer, reproduced from Google Gemini AI Overview)</p>
-<p><br />
-The org.apache.xpath.compiler.OpMap class in Apache Xalan-Java serves as the 
+<p style="text-align: center;"><strong>Design for Xalan-J class org.apache.xpath.compiler.OpMap<br />
+</strong></p>
+<p style="text-align: center;" class="auto-style1">Last modified: 2026-05-20</p>
+<p style="text-align: center;"><span class="auto-style1">(Apache Xalan-J team)</span><strong><br />
+</strong></p>
+<p>
+The org.apache.xpath.compiler.OpMap class in Apache Xalan-J serves as the 
 structural foundation for XPath expression representation. It is designed to act 
 as an optimized, flat data structure (an array of integers) to represent an 
 XPath abstract syntax tree (AST), prioritizing fast execution speeds and low 
@@ -22,7 +30,7 @@ memory overhead.<br />
 <strong>1. The Core Design Concept: The "OpMap"</strong><br />
 <br />
 Instead of building a traditional tree of objects (which introduces heavy memory 
-and allocation overhead), Xalan parses an XPath string into a flat integer array 
+and allocation overhead), Xalan-J parses an XPath string into a flat integer array 
 called the Operations Map (OpMap). <br />
 <br />
 1.1) Flat Array Representation: Each node and its parameters (like operations, 
@@ -62,8 +70,8 @@ algorithms for traversing the opcode array.<br />
 integer map and build a proper executable expression tree (e.g., Expression 
 objects) that evaluates the XPath dynamically against context nodes.<br />
 <br />
-This design, for Xalan Java XPath parser creating a flat array (OpMap) and a 
-compiler traversing it was chosen to balance Xalan's need for both 
+This design, for Xalan-J XPath parser creating a flat array (OpMap) and a 
+compiler traversing it was chosen to balance Xalan-J's need for both 
 interpretative tooling and fast, compiled runtime performance.<br /><br />
 </p>
 
