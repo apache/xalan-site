@@ -1,6 +1,6 @@
 
-									Apache Xalan XSLT 3.0 'alpha2' release notes
-									------------------------------------------
+									Apache Xalan-J XSLT 3.0 'alpha2' release notes
+									----------------------------------------------
 
 										Modification date : 2026-05-23
 
