@@ -1,0 +1,112 @@
+
+									Apache Xalan-J XSLT 3.0 'beta1' release notes
+									----------------------------------------------
+
+										Modification date : 2026-06-23
+
+
+Xalan-J XSLT 3.0 'beta1', project release details
+-------------------------------------------------
+
+1) This Xalan-J release named 'xslt3.0_beta1', provides XSLT 3.0 and XPath 3.1 language feature implementations.
+
+2) The following JDK releases are supported
+  
+   JDK 1.5 upto 25
+
+3) The list of Jira issues addressed by this Xalan-J release, are available here, https://xalan.apache.org/xalan-j/xsl3/release/beta1/xalanj_xslt3.0_beta1_jira_issue_list.pdf
+   There are few Xalan-J XSLT 3.0 implementation aspects, that're not specified within jira issues web link, and are mentioned as prose within point 4) below.
+
+4) An overall description for Xalan-J XSLT 3.0 implementation status, is available here, https://xalan.apache.org/xalan-j/xsl3/xalanj_xslt3.0_implementation_status.pdf
+
+5) This Xalan-J release src archive contains the document README, that describes steps about how to build Xalan-J XSLT 3.0 project from the src code.
+
+6) Xalan-J XSLT 3.0 development code latest conformance results with W3C XSLT 3.0 and XPath 3.1 test suites, are available here : 
+
+https://github.com/apache/xalan-java/blob/xalan-j_xslt3.0_mvn/src/test/java/org/apache/xalan/tests/w3c/xslt3/result/w3c_xslt3_testsuite_xalan-j_result.xml
+
+https://github.com/apache/xalan-java/blob/xalan-j_xslt3.0_mvn/src/test/java/org/apache/xalan/tests/w3c/xpath3/result/w3c_xpath3_testsuite_xalan-j_result.xml
+
+7) Xalan-J XSLT 3.0 implementation src repository, contains copy of software code from Java org.json library, to support implementation of XPath 3.1 functions that 
+   use JSON documents. This has been helpful for Xalan-J project, to be able to reuse org.json library's JSON document parse support. Xalan-J has little bit modified org.json 
+   library's Java classes org.json.JSONObject & org.json.JSONParserConfiguration for Xalan-J XPath 3.1 JSON function implementations.    
+
+8) Xalan-J XSLT 3.0 implementation, has copy of small parts of Eclipse WTP (Web Tools Platform) project XPath 2.0 processor implementation's
+   XML Schema data type Java classes. The design reuse for these XML Schema data type classes has been helpful for Xalan-J XSLT 3.0 project implementation. 
+   The code for these Java classes have been little bit modified by Xalan-J project, primarily by adding XPath 3.1 static and dynamic context support and 
+   XSL transformation exception handling.
+   
+   Few of Xalan-J team members who're also Xerces-J project committers, have previously contributed to WTP XPath 2.0 project src code.
+
+9) XSLT 1.0 implementation support using XSLTC has been maintained, within this Xalan-J release.
+
+
+Deploying/running Xalan-J XSLT 3.0 beta1 release from JVM classpath / module path
+----------------------------------------------------------------------------------
+
+The description below are for, Xalan-J XSLT 3.0 beta1 interpretive processor.
+
+Assumption: Xalan-J XSLT 3.0 implementation jars are, available within local folder "lib" relative to user's current directory.
+
+1) Running Xalan-J via JVM classpath
+
+   1.1) Running via JVM 1.5+ classpath
+
+        java -Djava.endorsed.dirs=lib org.apache.xalan.xslt.Process -in file.xml -xsl file.xsl
+
+   1.2) Running via JVM 25 classpath
+
+        java -classpath lib/* org.apache.xalan.xslt.Process -in file.xml -xsl file.xsl
+
+2) Running Xalan-J via JVM module path
+
+   java --module-path lib/xalan-java-3.0.1_alpha2.jar --module moduleName/org.apache.xalan.xslt.Process 
+
+
+Acknowledgements
+----------------
+Following people have contributed to the development for this Xalan-J release.
+
+1) Xalan-J team members
+
+1.1) Gary Gregory <ggregory@apache.org>
+
+> Xalan-J implementation design guidance
+> Guidance for Xalan-J build configuration to Maven
+> Release reviews
+
+1.2) Joseph Kesselman <keshlam@alum.mit.edu>
+
+> Xalan-J implementation design guidance
+> Guidance for Xalan-J build configuration to Maven 
+> Release reviews
+
+1.3) Michael Glavassevich <mrglavas@ca.ibm.com>
+
+> Xalan-J implementation review and design guidance, from Xerces-J perspective 
+
+1.4) Mukul Gandhi <mukulg@apache.org>
+
+> Xalan-J implementation for, various XSLT 3.0 and XPath 3.1 language features
+
+2) Xalan-J community members
+
+2.1) Martin Honnen <martin.honnen@gmx.de>  
+
+> Verification of Xalan-J XSLT 3.0 build integrity
+> Reporting of various Xalan-J XSL 3 implementation defects and verification of fixes.
+
+2.2) Vladimir Sitnikov <sitnikov.vladimir@gmail.com>
+
+> Various Xalan-J project, process improvement suggestions and helpful reviews while setting up 
+  Xalan's XSLT 3.0 code repository branch.
+
+> Various design and code suggestions to help refactor and improve, Xalan-J XSL 3 implementation 
+  software tests construction.
+
+
+
+
+									Copyright 1999-2026 The Apache Software Foundation
+
+
