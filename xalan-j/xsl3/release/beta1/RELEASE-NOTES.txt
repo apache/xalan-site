@@ -2,7 +2,7 @@
 									Apache Xalan-J XSLT 3.0 'beta1' release notes
 									----------------------------------------------
 
-										Modification date : 2026-06-23
+										Modification date : 2026-06-24
 
 
 Xalan-J XSLT 3.0 'beta1', project release details
@@ -21,11 +21,17 @@ Xalan-J XSLT 3.0 'beta1', project release details
 
 5) This Xalan-J release src archive contains the document README, that describes steps about how to build Xalan-J XSLT 3.0 project from the src code.
 
-6) Xalan-J XSLT 3.0 development code latest conformance results with W3C XSLT 3.0 and XPath 3.1 test suites, are available here : 
+6) Xalan-J XSLT 3.0 development code latest conformance results with various test suites, are available here: 
 
-https://github.com/apache/xalan-java/blob/xalan-j_xslt3.0_mvn/src/test/java/org/apache/xalan/tests/w3c/xslt3/result/w3c_xslt3_testsuite_xalan-j_result.xml
+   6.1) W3C XSLT 3.0 test suite, Xalan-J results : https://xalan.apache.org/xalan-j/xsl3/release/beta1/tests/w3c/xslt3/result/w3c_xslt3_testsuite_xalan-j_result.xml
 
-https://github.com/apache/xalan-java/blob/xalan-j_xslt3.0_mvn/src/test/java/org/apache/xalan/tests/w3c/xpath3/result/w3c_xpath3_testsuite_xalan-j_result.xml
+   6.2) W3C XPath 3.1 test suite, Xalan-J results : https://xalan.apache.org/xalan-j/xsl3/release/beta1/tests/w3c/xpath3/result/w3c_xpath3_testsuite_xalan-j_result.xml
+
+   6.3) Xalan-J XSL3 test suite
+
+          Part 1 : https://xalan.apache.org/xalan-j/xsl3/release/beta1/tests/xalan-j/result/XalanXsl3TestSuite1.xml
+
+          Part 2 : https://xalan.apache.org/xalan-j/xsl3/release/beta1/tests/xalan-j/result/XalanXsl3TestSuite2.xml
 
 7) Xalan-J XSLT 3.0 implementation src repository, contains copy of software code from Java org.json library, to support implementation of XPath 3.1 functions that 
    use JSON documents. This has been helpful for Xalan-J project, to be able to reuse org.json library's JSON document parse support. Xalan-J has little bit modified org.json 
