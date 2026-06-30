@@ -2,7 +2,7 @@
 									Apache Xalan-J XSLT 3.0 'beta1' release notes
 									----------------------------------------------
 
-										Modification date : 2026-06-24
+										Modification date : 2026-06-30
 
 
 Xalan-J XSLT 3.0 'beta1', project release details
@@ -75,34 +75,34 @@ Following people have contributed to the development for this Xalan-J release.
 
 1) Xalan-J team members
 
-1.1) Gary Gregory <ggregory@apache.org>
+Gary Gregory <ggregory@apache.org>
 
 > Xalan-J implementation design guidance
 > Guidance for Xalan-J build configuration to Maven
 > Release reviews
 
-1.2) Joseph Kesselman <keshlam@alum.mit.edu>
+Joseph Kesselman <keshlam@alum.mit.edu>
 
 > Xalan-J implementation design guidance
 > Guidance for Xalan-J build configuration to Maven 
 > Release reviews
 
-1.3) Michael Glavassevich <mrglavas@ca.ibm.com>
+Michael Glavassevich <mrglavas@ca.ibm.com>
 
 > Xalan-J implementation review and design guidance, from Xerces-J perspective 
 
-1.4) Mukul Gandhi <mukulg@apache.org>
+Mukul Gandhi <mukulg@apache.org>
 
 > Xalan-J implementation for, various XSLT 3.0 and XPath 3.1 language features
 
 2) Xalan-J community members
 
-2.1) Martin Honnen <martin.honnen@gmx.de>  
+Martin Honnen <martin.honnen@gmx.de>
 
 > Verification of Xalan-J XSLT 3.0 build integrity
 > Reporting of various Xalan-J XSL 3 implementation defects and verification of fixes.
 
-2.2) Vladimir Sitnikov <sitnikov.vladimir@gmail.com>
+Vladimir Sitnikov <sitnikov.vladimir@gmail.com>
 
 > Various Xalan-J project, process improvement suggestions and helpful reviews while setting up 
   Xalan's XSLT 3.0 code repository branch.

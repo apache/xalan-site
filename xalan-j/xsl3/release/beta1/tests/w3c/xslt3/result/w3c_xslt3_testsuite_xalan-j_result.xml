@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult dateTime="2026-06-23T12:45:44Z" desc="W3C XSLT 3.0 test suite results" fail="1277" pass="3535" run="4816" skipped="627" success="73.4%" xslt_processor="Apache Xalan-J XSLT 3.0 development code">
+<testResult dateTime="2026-06-30T11:07:05Z" desc="W3C XSLT 3.0 test suite results" fail="1274" pass="3538" run="4816" skipped="627" success="73.46%" xslt_processor="Apache Xalan-J XSLT 3.0 development code">
   <attr>
     <as fail="15" pass="90" run="105" skipped="99" success="85.71%"/>
     <avt fail="0" pass="34" run="34" skipped="1" success="100.0%"/>
@@ -39,7 +39,7 @@
     <deep-equal fail="0" pass="2" run="2" skipped="0" success="100.0%"/>
     <format-number fail="26" pass="38" run="64" skipped="10" success="59.38%"/>
     <json-to-xml fail="6" pass="18" run="24" skipped="36" success="75.0%"/>
-    <key fail="34" pass="62" run="96" skipped="3" success="64.58%"/>
+    <key fail="33" pass="63" run="96" skipped="3" success="65.62%"/>
     <position fail="15" pass="196" run="211" skipped="1" success="92.89%"/>
     <root fail="3" pass="7" run="10" skipped="0" success="70.0%"/>
     <xml-to-json fail="38" pass="49" run="88" skipped="65" success="55.68%"/>
@@ -50,7 +50,7 @@
     <attribute fail="11" pass="11" run="23" skipped="7" success="47.83%"/>
     <call-template fail="5" pass="35" run="40" skipped="2" success="87.5%"/>
     <choose fail="3" pass="51" run="54" skipped="1" success="94.44%"/>
-    <construct-node fail="12" pass="22" run="34" skipped="0" success="64.71%"/>
+    <construct-node fail="11" pass="23" run="34" skipped="0" success="67.65%"/>
     <copy fail="49" pass="76" run="125" skipped="23" success="60.8%"/>
     <element fail="14" pass="15" run="29" skipped="0" success="51.72%"/>
     <for-each-group fail="4" pass="74" run="78" skipped="7" success="94.87%"/>
@@ -73,6 +73,6 @@
     <maps fail="21" pass="16" run="37" skipped="13" success="43.24%"/>
     <namespace fail="69" pass="152" run="221" skipped="3" success="68.78%"/>
     <node fail="1" pass="31" run="32" skipped="0" success="96.88%"/>
-    <string fail="5" pass="129" run="134" skipped="2" success="96.27%"/>
+    <string fail="4" pass="130" run="134" skipped="2" success="97.01%"/>
   </type>
 </testResult>
